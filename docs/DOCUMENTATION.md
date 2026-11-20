@@ -824,7 +824,9 @@ sent or received, most first. Your own addresses are left out, and so are
 no-reply senders, bounce addresses, the mail system's own, and senders
 whose mail is only in Trash or Junk. Address books that fill themselves
 from mail, such as Evolution's Collected Addresses, do not count as
-Contacts here. **Look in** narrows the list to one account's mail. The
+Contacts here. **Look in** narrows the list to one account's mail, or to
+one folder: its list has each account with its folders under it, and
+typing finds one by name. The
 search box filters by name and address, **Select All** and **Select None**
 act on the people the search shows, and **Import** adds the ones ticked
 to the book chosen in **Import into**, each with the name the mail gives

@@ -16,14 +16,28 @@ pub(crate) struct FromMailStart {
     pub(crate) books: Vec<Book>,
     /// The book to start on, when the import was asked for in one.
     pub(crate) book: Option<String>,
-    /// The accounts to look in, by id, with their labels.
-    pub(crate) accounts: Vec<(u32, String)>,
+    /// The accounts and folders to look in, each account followed by its
+    /// folders.
+    pub(crate) places: Vec<Place>,
     /// The user's own addresses, lower case.
     pub(crate) own: HashSet<String>,
     /// The saved contacts' addresses, lower case.
     pub(crate) saved: HashSet<String>,
     /// Trash and Junk, by account and path.
     pub(crate) skip: HashSet<(u32, String)>,
+}
+
+/// An account, or one of its folders, to look in.
+#[derive(Debug, Clone)]
+pub(crate) struct Place {
+    pub(crate) account: u32,
+    /// The folder's path; `None` for the whole account.
+    pub(crate) folder: Option<String>,
+    /// What the list of places shows: the account's label, or the
+    /// folder's name under it.
+    pub(crate) name: String,
+    /// What the row shows once it is picked.
+    pub(crate) label: String,
 }
 
 /// Someone the mail has an address for.

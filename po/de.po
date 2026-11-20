@@ -4537,6 +4537,13 @@ msgstr "Download-Passwort für {name}: {password}"
 msgid "Reply-To"
 msgstr "Antwort an"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Alle E-Mails"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Mbox-Dateien importieren"
@@ -4546,13 +4553,6 @@ msgstr "Importieren"
 
 msgid "Import into"
 msgstr "Importieren nach"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Alle Konten"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8278,6 +8278,10 @@ msgstr "Kontakte konnten nicht importiert werden: {e}"
 msgid "Could not read: {files}"
 msgstr "Konnte nicht gelesen werden: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Vorlage wurde in »{folder}« ({account}) gespeichert."
+
 msgid "Search filters"
 msgstr "Suchfilter"
 
@@ -9297,6 +9301,10 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Alle Konten"
 
 #~ msgid "vCard and CSV files"
 #~ msgstr "vCard- und CSV-Dateien"

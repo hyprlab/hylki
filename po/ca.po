@@ -4566,6 +4566,13 @@ msgstr "Contrasenya de descàrrega per a {name}: {password}"
 msgid "Reply-To"
 msgstr "Respon a"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Afegeix un correu"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Importa un fitxer…"
@@ -4577,13 +4584,6 @@ msgstr "Importa…"
 #, fuzzy
 msgid "Import into"
 msgstr "Importa una signatura"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Tots els comptes"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8330,6 +8330,10 @@ msgstr "No s'han pogut importar els contactes: {e}"
 msgid "Could not read: {files}"
 msgstr "No s'ha pogut llegir: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Crea una carpeta nova per a aquest compte."
+
 msgid "Search filters"
 msgstr "Cerca filtres"
 
@@ -9317,6 +9321,10 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Tots els comptes"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"

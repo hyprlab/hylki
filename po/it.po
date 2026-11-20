@@ -4661,6 +4661,13 @@ msgstr "Password di download per {name}: {password}"
 msgid "Reply-To"
 msgstr "Rispondi a"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Aggiungi e-mail"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Importa file…"
@@ -4672,13 +4679,6 @@ msgstr "Importa…"
 #, fuzzy
 msgid "Import into"
 msgstr "Importa firma"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Tutti gli account"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8512,6 +8512,10 @@ msgstr "Impossibile importare i contatti: {e}"
 msgid "Could not read: {files}"
 msgstr "Impossibile leggere: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Crea una nuova cartella per questo account."
+
 msgid "Search filters"
 msgstr "Filtri di ricerca"
 
@@ -9544,6 +9548,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Tutti gli account"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"

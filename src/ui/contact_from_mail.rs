@@ -12,7 +12,7 @@ use std::rc::Rc;
 use adw::prelude::*;
 
 use crate::cache::AddressScope;
-use crate::contacts::from_mail::{cards_for, people_in_mail, FromMailStart, MailPerson};
+use crate::contacts::from_mail::{cards_for, people_in_mail, FromMailStart, MailPerson, Place};
 use crate::contacts::import::{ImportFile, ImportRequest};
 use crate::i18n::{i18n, ni18n_f};
 
@@ -59,6 +59,62 @@ impl State {
     }
 }
 
+/// The Look in row: all mail, then each account with its folders under it.
+/// The list shows a folder by its name, set in under its account; the row,
+/// once one is picked, says which account it is in. Typing finds a place,
+/// as there can be many.
+fn look_in_row(places: &Rc<Vec<Place>>) -> adw::ComboRow {
+    let row = adw::ComboRow::new();
+    row.set_title(&i18n("Look in"));
+    let mut labels = vec![i18n("All Mail")];
+    labels.extend(places.iter().map(|p| p.label.clone()));
+    let refs: Vec<&str> = labels.iter().map(String::as_str).collect();
+    row.set_model(Some(&gtk::StringList::new(&refs)));
+    row.set_expression(Some(gtk::PropertyExpression::new(
+        gtk::StringObject::static_type(),
+        gtk::Expression::NONE,
+        "string",
+    )));
+    row.set_enable_search(true);
+    let factory = gtk::SignalListItemFactory::new();
+    factory.connect_setup(|_, item| {
+        let Some(item) = item.downcast_ref::<gtk::ListItem>() else {
+            return;
+        };
+        let label = gtk::Label::new(None);
+        label.set_xalign(0.0);
+        label.set_ellipsize(gtk::pango::EllipsizeMode::End);
+        label.set_max_width_chars(40);
+        item.set_child(Some(&label));
+    });
+    let places = places.clone();
+    factory.connect_bind(move |_, item| {
+        let Some(item) = item.downcast_ref::<gtk::ListItem>() else {
+            return;
+        };
+        let Some(label) = item.child().and_downcast::<gtk::Label>() else {
+            return;
+        };
+        let Some(text) = item.item().and_downcast::<gtk::StringObject>() else {
+            return;
+        };
+        // The search filters the list, so the place is found by its label,
+        // not by its position.
+        let text = text.string();
+        let place = places.iter().find(|p| p.label == text.as_str());
+        label.set_label(place.map_or(text.as_str(), |p| p.name.as_str()));
+        let folder = place.is_some_and(|p| p.folder.is_some());
+        label.set_margin_start(if folder { 18 } else { 0 });
+        if folder {
+            label.remove_css_class("heading");
+        } else {
+            label.add_css_class("heading");
+        }
+    });
+    row.set_list_factory(Some(&factory));
+    row
+}
+
 /// Show the window over `parent`; `done` gets what to import, never called
 /// when it is cancelled.
 pub(crate) fn show(
@@ -102,20 +158,13 @@ pub(crate) fn show(
         .and_then(|uid| books.iter().position(|b| b.uid == uid))
         .unwrap_or(0);
     book_row.set_selected(at as u32);
-    let scope_row = adw::ComboRow::new();
-    scope_row.set_title(&i18n("Look in"));
-    let mut scopes = vec![i18n("All Accounts")];
-    scopes.extend(start.accounts.iter().map(|(_, label)| label.clone()));
-    let scope_refs: Vec<&str> = scopes.iter().map(String::as_str).collect();
-    scope_row.set_model(Some(&gtk::StringList::new(&scope_refs)));
+    let places = Rc::new(start.places);
+    let scope_row = look_in_row(&places);
     let choices = gtk::ListBox::new();
     choices.add_css_class("boxed-list");
     choices.set_selection_mode(gtk::SelectionMode::None);
     choices.append(&book_row);
-    // One account has nothing to choose between.
-    if start.accounts.len() > 1 {
-        choices.append(&scope_row);
-    }
+    choices.append(&scope_row);
 
     let search = gtk::SearchEntry::new();
     search.set_placeholder_text(Some(&i18n("Search names and addresses")));
@@ -326,13 +375,13 @@ pub(crate) fn show(
         .build();
 
     // Read the people in the mail the scope row names.
-    let accounts = start.accounts;
     let (own, saved, skip) = (
         Rc::new(start.own),
         Rc::new(start.saved),
         Rc::new(start.skip),
     );
     let reread: Rc<dyn Fn()> = {
+        let places = places.clone();
         let (state, model, scope_row, body, show_list, count) = (
             state.clone(),
             model.clone(),
@@ -342,11 +391,12 @@ pub(crate) fn show(
             count.clone(),
         );
         Rc::new(move || {
+            let place = (scope_row.selected() as usize)
+                .checked_sub(1)
+                .and_then(|i| places.get(i));
             let scope = AddressScope {
-                account: (scope_row.selected() as usize)
-                    .checked_sub(1)
-                    .and_then(|i| accounts.get(i))
-                    .map(|(id, _)| *id),
+                account: place.map(|p| p.account),
+                folder: place.and_then(|p| p.folder.clone()),
                 skip: (*skip).clone(),
             };
             let (own, saved) = ((*own).clone(), (*saved).clone());
@@ -463,11 +513,27 @@ pub(crate) fn show(
     reread();
     search.grab_focus();
     // HYLKI_SHOWCASE_IMPORT=<png> (demo only) captures the window three
-    // seconds after it opens.
+    // seconds after it opens; HYLKI_SHOWCASE_LOOK_IN=<text> first picks
+    // the first place whose label starts with it, and "open" opens the
+    // list of them.
     if let (Ok(png), Some(_)) = (
         std::env::var("HYLKI_SHOWCASE_IMPORT"),
         std::env::var_os("HYLKI_DEMO"),
     ) {
+        match std::env::var("HYLKI_SHOWCASE_LOOK_IN").as_deref() {
+            Ok("open") => {
+                let row = scope_row.clone();
+                gtk::glib::timeout_add_seconds_local_once(1, move || {
+                    WidgetExt::activate(&row);
+                });
+            }
+            Ok(text) => {
+                if let Some(at) = places.iter().position(|p| p.label.starts_with(text)) {
+                    scope_row.set_selected(at as u32 + 1);
+                }
+            }
+            Err(_) => {}
+        }
         gtk::glib::timeout_add_seconds_local_once(3, move || {
             crate::ui::showcase::showcase_capture(window.upcast_ref(), &png);
         });

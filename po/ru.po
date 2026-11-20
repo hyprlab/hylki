@@ -4512,6 +4512,13 @@ msgstr "Пароль для скачивания {name}: {password}"
 msgid "Reply-To"
 msgstr "Адрес для ответа"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Вся почта"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Импорт файлов Mbox"
@@ -4521,13 +4528,6 @@ msgstr "Импорт"
 
 msgid "Import into"
 msgstr "Импортировать в"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Все учётные записи"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8233,6 +8233,10 @@ msgstr "Не удалось импортировать контакты: {e}"
 msgid "Could not read: {files}"
 msgstr "Не удалось прочитать: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Шаблон сохранён в папку «{folder}» учётной записи «{account}»"
+
 msgid "Search filters"
 msgstr "Поиск фильтров"
 
@@ -9212,6 +9216,10 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Все учётные записи"
 
 #~ msgid "vCard and CSV files"
 #~ msgstr "Файлы vCard и CSV"

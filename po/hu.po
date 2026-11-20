@@ -4719,6 +4719,13 @@ msgstr "Letöltési jelszó ehhez: {name}: {password}"
 msgid "Reply-To"
 msgstr "Válaszcím"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "E-mail hozzáadása"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Fájl importálása…"
@@ -4730,13 +4737,6 @@ msgstr "Importálás…"
 #, fuzzy
 msgid "Import into"
 msgstr "Aláírás importálása"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Összes fiók"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8570,6 +8570,10 @@ msgstr "A fiók nem importálható: {e}"
 msgid "Could not read: {files}"
 msgstr "A alkalmazás újraindítása nem sikerült"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Új mappa létrehozása ehhez a fiókhoz."
+
 msgid "Search filters"
 msgstr "Keresési szűrők"
 
@@ -9605,6 +9609,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Összes fiók"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"

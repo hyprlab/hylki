@@ -22,6 +22,8 @@ pub(crate) struct AddressSeen {
 pub(crate) struct AddressScope {
     /// One account's mail, or every account's.
     pub(crate) account: Option<u32>,
+    /// One folder of that account, by path.
+    pub(crate) folder: Option<String>,
     /// Folders left out, by account and path: Trash and Junk, whose
     /// senders are mostly not people anyone wants as contacts.
     pub(crate) skip: std::collections::HashSet<(u32, String)>,
@@ -118,6 +120,7 @@ impl Cache {
             if let Ok(rows) = rows {
                 for (from_name, from_addr, to, cc, message_id, account, folder) in rows.flatten() {
                     if scope.account.is_some_and(|a| a != account)
+                        || scope.folder.as_ref().is_some_and(|f| *f != folder)
                         || scope.skip.contains(&(account, folder))
                     {
                         continue;
@@ -259,7 +262,7 @@ mod tests {
     }
 
     /// A scope leaves out the folders it skips, and with one account the
-    /// sends recorded with none.
+    /// sends recorded with none; with a folder, it reads that folder alone.
     #[test]
     fn a_scope_reads_only_its_mail() {
         let c = Cache::in_memory().unwrap();
@@ -267,17 +270,28 @@ mod tests {
         add(&c, "Junk", 2, "spam@example.net", "me@example.org", "<b>");
         c.record_addresses(&[("Bob".into(), "bob@example.org".into())]);
         let own = ["me@example.org".to_string()].into_iter().collect();
-        let scope = super::AddressScope {
+        add(&c, "Work", 3, "cy@example.org", "me@example.org", "<c>");
+        let mut scope = super::AddressScope {
             account: Some(1),
+            folder: None,
             skip: [(1, "Junk".to_string())].into_iter().collect(),
         };
-        let found: Vec<String> = c
-            .address_history_in(&own, &scope)
-            .into_iter()
-            .map(|a| a.email)
-            .collect();
-        assert!(found.contains(&"ann@example.org".to_string()));
-        assert!(!found.contains(&"spam@example.net".to_string()));
-        assert!(!found.contains(&"bob@example.org".to_string()));
+        let found = |scope: &super::AddressScope| -> Vec<String> {
+            c.address_history_in(&own, scope)
+                .into_iter()
+                .map(|a| a.email)
+                .collect()
+        };
+        let all = found(&scope);
+        assert!(all.contains(&"ann@example.org".to_string()));
+        assert!(all.contains(&"cy@example.org".to_string()));
+        assert!(!all.contains(&"spam@example.net".to_string()));
+        assert!(!all.contains(&"bob@example.org".to_string()));
+        scope.folder = Some("Work".to_string());
+        // The user's own address is a recipient there too; the importer
+        // drops it, not the history.
+        let mut work = found(&scope);
+        work.sort();
+        assert_eq!(work, vec!["cy@example.org", "me@example.org"]);
     }
 }

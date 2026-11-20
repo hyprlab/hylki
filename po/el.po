@@ -4556,6 +4556,13 @@ msgstr "Κωδικός λήψης για {name}: {password}"
 msgid "Reply-To"
 msgstr "Απάντηση προς"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Όλη η αλληλογραφία"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Εισαγωγή αρχείων Mbox"
@@ -4566,13 +4573,6 @@ msgstr "Εισαγωγή"
 #, fuzzy
 msgid "Import into"
 msgstr "Εισαγωγή υπογραφής"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Όλοι οι λογαριασμοί"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8313,6 +8313,10 @@ msgstr "Δεν ήταν δυνατή η εισαγωγή επαφών: {e}"
 msgid "Could not read: {files}"
 msgstr "Δεν ήταν δυνατή η ανάγνωση: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
+
 msgid "Search filters"
 msgstr "Αναζήτηση φίλτρων"
 
@@ -9328,6 +9332,10 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Όλοι οι λογαριασμοί"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"

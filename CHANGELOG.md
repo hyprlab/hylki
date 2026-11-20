@@ -6,7 +6,7 @@
   DarkStarCrashes123). **From Mail…** in the Contacts view's import menu
   lists everyone in the cached mail who is not a contact yet, with how many
   messages each is on, most first. The list can be searched, narrowed to
-  one account, and ticked person by person or all at once; **Import** adds
+  one account or one folder, and ticked person by person or all at once; **Import** adds
   the ones ticked to the book chosen. Your own addresses, no-reply and
   bounce senders, and senders found only in Trash or Junk are left out.
 

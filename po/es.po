@@ -4514,6 +4514,13 @@ msgstr "Contraseña de descarga para {name}: {password}"
 msgid "Reply-To"
 msgstr "Responder a"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Todo el correo"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Importar archivos Mbox"
@@ -4524,13 +4531,6 @@ msgstr "Importar"
 #, fuzzy
 msgid "Import into"
 msgstr "Importar firma"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Todas las cuentas"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8247,6 +8247,10 @@ msgstr "No se pudieron importar los contactos: {e}"
 msgid "Could not read: {files}"
 msgstr "No se pudo leer: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Plantilla guardada en {folder} de {account}"
+
 msgid "Search filters"
 msgstr "Buscar filtros"
 
@@ -9248,6 +9252,10 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Todas las cuentas"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"

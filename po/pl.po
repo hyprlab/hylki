@@ -4775,6 +4775,13 @@ msgstr "Hasło do pobrania pliku {name}: {password}"
 msgid "Reply-To"
 msgstr "Odpowiedź do"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Dodaj adres e-mail"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Importuj plik…"
@@ -4786,13 +4793,6 @@ msgstr "Importuj…"
 #, fuzzy
 msgid "Import into"
 msgstr "Importuj podpis"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Wszystkie konta"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8648,6 +8648,10 @@ msgstr "Nie udało się zaimportować konta: {e}"
 msgid "Could not read: {files}"
 msgstr "Nie udało się ponownie uruchomić aplikacji Pliki"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Utwórz nowy katalog na tym koncie."
+
 msgid "Search filters"
 msgstr "Wyszukaj filtry"
 
@@ -9682,6 +9686,10 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Wszystkie konta"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"

@@ -4533,6 +4533,13 @@ msgstr "Mot de passe de téléchargement pour {name} : {password}"
 msgid "Reply-To"
 msgstr "Répondre à"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Tout le courrier"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Importer des fichiers mbox"
@@ -4542,13 +4549,6 @@ msgstr "Importer"
 
 msgid "Import into"
 msgstr "Importer dans"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Tous les comptes"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8248,6 +8248,10 @@ msgstr "Impossible d’importer les contacts : {e}"
 msgid "Could not read: {files}"
 msgstr "Impossible de lire : {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Modèle enregistré dans {folder} du compte {account}"
+
 msgid "Search filters"
 msgstr "Filtres de recherche"
 
@@ -9251,6 +9255,10 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Tous les comptes"
 
 #~ msgid "vCard and CSV files"
 #~ msgstr "Fichiers vCard et CSV"

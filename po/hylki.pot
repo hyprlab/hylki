@@ -4144,6 +4144,12 @@ msgstr ""
 msgid "Reply-To"
 msgstr ""
 
+msgid "Look in"
+msgstr ""
+
+msgid "All Mail"
+msgstr ""
+
 msgid "Import from Mail"
 msgstr ""
 
@@ -4151,12 +4157,6 @@ msgid "Import"
 msgstr ""
 
 msgid "Import into"
-msgstr ""
-
-msgid "Look in"
-msgstr ""
-
-msgid "All Accounts"
 msgstr ""
 
 msgid "Search names and addresses"
@@ -7583,6 +7583,9 @@ msgid "Could not import contacts: {e}"
 msgstr ""
 
 msgid "Could not read: {files}"
+msgstr ""
+
+msgid "{folder} in {account}"
 msgstr ""
 
 msgid "Search filters"

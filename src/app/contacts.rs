@@ -565,13 +565,7 @@ impl AppModel {
 
             AppMsg::ImportFromMail { book } => {
                 let own = self.own_addresses();
-                let accounts: Vec<(u32, String)> = self
-                    .effective_config()
-                    .iter()
-                    .enumerate()
-                    .map(|(i, _)| i as u32 + 1)
-                    .map(|id| (id, self.account_label(id)))
-                    .collect();
+                let places = self.places_to_import_from();
                 let skip: std::collections::HashSet<(u32, String)> = self
                     .folders
                     .iter()
@@ -603,7 +597,7 @@ impl AppModel {
                         crate::contacts::from_mail::FromMailStart {
                             books,
                             book,
-                            accounts,
+                            places,
                             own,
                             saved,
                             skip,
@@ -669,6 +663,44 @@ impl AppModel {
             }
             _ => unreachable!("not routed to on_contacts"),
         }
+    }
+}
+
+impl AppModel {
+    /// Where Import from Mail can look (#677): each account, then its
+    /// folders, less Trash and Junk, which it never reads.
+    fn places_to_import_from(&self) -> Vec<crate::contacts::from_mail::Place> {
+        use crate::contacts::from_mail::Place;
+        use crate::models::FolderKind;
+        let mut out = Vec::new();
+        for id in (1..=self.effective_config().len()).map(|i| i as u32) {
+            let short = self
+                .account_config(id)
+                .map(|c| c.display_label())
+                .unwrap_or_else(|| self.account_label(id));
+            let label = self.account_label(id);
+            out.push(Place {
+                account: id,
+                folder: None,
+                name: label.clone(),
+                label,
+            });
+            for f in self.folders.get(&id).into_iter().flatten() {
+                if matches!(f.kind, FolderKind::Trash | FolderKind::Junk) {
+                    continue;
+                }
+                out.push(Place {
+                    account: id,
+                    folder: Some(f.path.clone()),
+                    name: f.name.clone(),
+                    label: i18n_f(
+                        "{folder} in {account}",
+                        &[("folder", &f.name), ("account", &short)],
+                    ),
+                });
+            }
+        }
+        out
     }
 }
 

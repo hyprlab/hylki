@@ -4526,6 +4526,13 @@ msgstr "Palavra-passe de transferência de {name}: {password}"
 msgid "Reply-To"
 msgstr "Responder a"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Todo o correio"
+
 #, fuzzy
 msgid "Import from Mail"
 msgstr "Importar ficheiros Mbox"
@@ -4536,13 +4543,6 @@ msgstr "Importar"
 #, fuzzy
 msgid "Import into"
 msgstr "Importar assinatura"
-
-msgid "Look in"
-msgstr ""
-
-#, fuzzy
-msgid "All Accounts"
-msgstr "Todas as contas"
 
 #, fuzzy
 msgid "Search names and addresses"
@@ -8242,6 +8242,10 @@ msgstr "Não foi possível importar os contactos: {e}"
 msgid "Could not read: {files}"
 msgstr "Não foi possível ler: {files}"
 
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Modelo guardado em {folder}, na conta {account}"
+
 msgid "Search filters"
 msgstr "Pesquisar filtros"
 
@@ -9240,6 +9244,10 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Todas as contas"
 
 #, fuzzy
 #~ msgid "vCard and CSV files"
