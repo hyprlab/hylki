@@ -529,11 +529,49 @@ impl AppModel {
                 });
             }
 
+            AppMsg::ImportThunderbird { book } => {
+                let s = sender.clone();
+                std::thread::spawn(move || {
+                    let paths = crate::contacts::thunderbird::profile_roots();
+                    s.input(if paths.is_empty() {
+                        AppMsg::ChooseThunderbirdFolder { book }
+                    } else {
+                        AppMsg::ImportContacts { paths, book }
+                    });
+                });
+            }
+
+            // A profile kept somewhere of its own, or a sandbox that cannot
+            // see the usual folders: the folder chosen opens through the
+            // portal.
+            AppMsg::ChooseThunderbirdFolder { book } => {
+                let dialog = gtk::FileDialog::builder()
+                    .title(i18n("Choose Thunderbird's Profile Folder"))
+                    .build();
+                let s = sender.input_sender().clone();
+                dialog.select_folder(
+                    self.dialog_parent().as_ref(),
+                    gtk::gio::Cancellable::NONE,
+                    move |res| {
+                        if let Some(path) = res.ok().and_then(|f| f.path()) {
+                            let _ = s.send(AppMsg::ImportContacts {
+                                paths: vec![path],
+                                book,
+                            });
+                        }
+                    },
+                );
+            }
+
             AppMsg::ContactImportReady(start) => {
                 let s = sender.input_sender().clone();
-                crate::ui::contact_import::show(self.dialog_parent().as_ref(), *start, move |req| {
-                    let _ = s.send(AppMsg::RunContactImport(req));
-                });
+                crate::ui::contact_import::show(
+                    self.dialog_parent().as_ref(),
+                    *start,
+                    move |req| {
+                        let _ = s.send(AppMsg::RunContactImport(req));
+                    },
+                );
             }
 
             AppMsg::RunContactImport(req) => {

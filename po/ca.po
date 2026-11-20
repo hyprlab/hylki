@@ -609,6 +609,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "{name} no ha respost: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Encara no s'ha trobat cap llibreta d'adreces a {name}."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 "Un contacte necessita un nom, una adreça de correu o un número de telèfon"
@@ -624,6 +628,18 @@ msgstr "El fitxer no és un fitxer de text"
 
 msgid "The file is larger than {size} MB"
 msgstr "El fitxer és més gran de {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Canvia el nom de la llibreta d'adreces"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Comprova l'adreça"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Mou a una altra llibreta d'adreces"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5104,8 +5120,15 @@ msgid "Sort and filter contacts"
 msgstr "Ordena i filtra contactes"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Fitxers vCard"
+msgid "From Files…"
+msgstr "Importa un fitxer…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Contactes"
 
 msgid "All files"
 msgstr "Tots els fitxers"
@@ -5242,10 +5265,6 @@ msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Això eliminarà {n} contacte de la teva llibreta d'adreces."
 msgstr[1] "Això eliminarà {n} contactes de les teves llibretes d'adreces."
-
-#, fuzzy
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Importa fitxers vCard a la llibreta d'adreces de l'Hylki"
 
 msgid "New contact or group"
 msgstr "Contacte o grup nou"
@@ -8259,6 +8278,9 @@ msgstr[1] "{n} contactes no s'han pogut moure: {e}"
 msgid "Could not update contact: {e}"
 msgstr "No s'ha pogut actualitzar el contacte: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "No s'han pogut importar els contactes: {e}"
 
@@ -9256,6 +9278,14 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Fitxers vCard"
+
+#, fuzzy
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Importa fitxers vCard a la llibreta d'adreces de l'Hylki"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Esperant per enviar"

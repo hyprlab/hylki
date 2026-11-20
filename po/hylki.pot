@@ -541,6 +541,9 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr ""
 
+msgid "No Thunderbird address books were found in this folder"
+msgstr ""
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 
@@ -554,6 +557,15 @@ msgid "The file is not a text file"
 msgstr ""
 
 msgid "The file is larger than {size} MB"
+msgstr ""
+
+msgid "Personal Address Book"
+msgstr ""
+
+msgid "Collected Addresses"
+msgstr ""
+
+msgid "This is not a Thunderbird address book"
 msgstr ""
 
 msgid "{n} person, in Bcc"
@@ -4625,7 +4637,13 @@ msgstr ""
 msgid "Sort and filter contacts"
 msgstr ""
 
-msgid "vCard and CSV files"
+msgid "From Files…"
+msgstr ""
+
+msgid "From Thunderbird…"
+msgstr ""
+
+msgid "Contact files"
 msgstr ""
 
 msgid "All files"
@@ -4737,9 +4755,6 @@ msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr ""
 
 msgid "New contact or group"
 msgstr ""
@@ -7524,6 +7539,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Could not update contact: {e}"
+msgstr ""
+
+msgid "Choose Thunderbird's Profile Folder"
 msgstr ""
 
 msgid "Could not import contacts: {e}"

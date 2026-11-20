@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **New: contacts imported straight from Thunderbird** (#681, requested by
+  DarkStarCrashes123). The Contacts view's import button is a menu, and
+  **From Thunderbird…** finds Thunderbird's profiles (its own folder, the
+  Flatpak's and the Snap's) and lists each address book with a switch in
+  **Import Contacts**, Collected Addresses off. Cards keep Thunderbird's
+  IDs, so importing again updates them, and mailing lists become groups.
+  Without a profile in those places a folder chooser asks for it, and
+  **From Files…** takes an `abook.sqlite`. The Flatpak reads the
+  Thunderbird Flatpak's folder, read-only.
+
 - **Fixed: a message could be lost when Hylki was closed before it went**
   (#678, reported by DarkStarCrashes123). A message waited in memory between
   Send and the server taking it, and on a slow server it could wait behind

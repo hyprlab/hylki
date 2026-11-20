@@ -621,6 +621,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "{name} nem válaszolt: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Névjegyek hozzáadásához nem érhető el címjegyzék"
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 
@@ -636,6 +640,18 @@ msgstr "A mappa nincs a kiszolgálón"
 
 msgid "The file is larger than {size} MB"
 msgstr ""
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Címjegyzék"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Feladó címe"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "El akarod menteni a könyvtárat?"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5276,8 +5292,15 @@ msgid "Sort and filter contacts"
 msgstr "{n} db üzenet"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Nagy fájlok"
+msgid "From Files…"
+msgstr "Fájl importálása…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Névjegyek"
 
 msgid "All files"
 msgstr "Minden fájl"
@@ -5397,9 +5420,6 @@ msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
-
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr ""
 
 #, fuzzy
 msgid "New contact or group"
@@ -8496,6 +8516,9 @@ msgstr[1] "A napló exportálva ide: {display}"
 msgid "Could not update contact: {e}"
 msgstr "A névjegy nem frissíthető: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 #, fuzzy
 msgid "Could not import contacts: {e}"
 msgstr "A fiók nem importálható: {e}"
@@ -9543,6 +9566,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Nagy fájlok"
 
 #, fuzzy
 #~ msgid "Waiting to send"

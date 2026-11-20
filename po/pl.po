@@ -616,6 +616,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr ""
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Brak książki adresowej, do której można dodać kontakty"
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 
@@ -631,6 +635,18 @@ msgstr "Tego katalogu nie ma na serwerze"
 
 msgid "The file is larger than {size} MB"
 msgstr ""
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Książka adresowa"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "DMARC (czy adres „Od” jest prawdziwy)"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Czy zapisać filtr?"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5329,8 +5345,15 @@ msgid "Sort and filter contacts"
 msgstr "wiadomości: {n}"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Duże pliki"
+msgid "From Files…"
+msgstr "Importuj plik…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Kontakty"
 
 msgid "All files"
 msgstr "Wszystkie pliki"
@@ -5457,9 +5480,6 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr ""
 
 #, fuzzy
 msgid "New contact or group"
@@ -8573,6 +8593,9 @@ msgstr[2] "Wyeksportowano dziennik do {display}"
 msgid "Could not update contact: {e}"
 msgstr "Nie udało się zaktualizować kontaktu: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 #, fuzzy
 msgid "Could not import contacts: {e}"
 msgstr "Nie udało się zaimportować konta: {e}"
@@ -9619,6 +9642,10 @@ msgstr "Zbiorcza skrzynka odbiorcza w jasnym motywie"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Duże pliki"
 
 #, fuzzy
 #~ msgid "Displays in the message header for each message."

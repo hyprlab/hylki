@@ -24,7 +24,7 @@ mod move_dialog;
 mod rows;
 mod types;
 
-use menus::{new_menu, FilterMenu};
+use menus::{import_menu, new_menu, FilterMenu};
 use rows::{row_factory, DragKeys};
 
 pub(crate) use menus::{book_label_factory, choose_contact_files};
@@ -75,9 +75,9 @@ impl Component for ContactsPage {
                     },
                     pack_end = &gtk::Button {
                         set_icon_name: "document-open-symbolic",
-                        set_tooltip_text: Some(i18n("Import vCard or CSV files into the Hylki address book").as_str()),
+                        set_tooltip_text: Some(i18n("Import Contacts").as_str()),
                         add_css_class: "flat",
-                        connect_clicked => ContactsPageInput::ImportContacts,
+                        connect_clicked[sender] => move |b| import_menu(b, &sender),
                     },
                     pack_end = &gtk::Button {
                         set_icon_name: "list-add-symbolic",
@@ -180,9 +180,9 @@ impl Component for ContactsPage {
                         },
                         pack_end = &gtk::Button {
                             set_icon_name: "document-open-symbolic",
-                            set_tooltip_text: Some(i18n("Import vCard or CSV files into the Hylki address book").as_str()),
+                            set_tooltip_text: Some(i18n("Import Contacts").as_str()),
                             add_css_class: "flat",
-                            connect_clicked => ContactsPageInput::ImportContacts,
+                            connect_clicked[sender] => move |b| import_menu(b, &sender),
                         },
                         pack_end = &gtk::Button {
                             set_icon_name: "list-add-symbolic",
@@ -495,6 +495,12 @@ impl Component for ContactsPage {
                 self.on_add_to_group(sender.clone(), group, person)
             }
             ContactsPageInput::ImportContacts => self.on_import_contacts(sender.clone()),
+            ContactsPageInput::ImportThunderbird => {
+                let _ = sender.output(ContactsPageOutput::ImportThunderbird {
+                    book: self.import_book(),
+                });
+                Flow::Continue(())
+            }
             ContactsPageInput::CancelEdit => self.on_cancel_edit(widgets, sender.clone()),
             ContactsPageInput::SaveEdit => self.on_save_edit(widgets, sender.clone()),
             ContactsPageInput::OpenInGnome(idx) => self.on_open_in_gnome(idx),

@@ -1,11 +1,12 @@
 //! Importing contacts into an address book (#655): `.vcf` files as they
-//! are, and CSV files with their columns matched to contact fields in the
-//! import dialog. The Hylki book takes them in one transaction; an EDS book
+//! are, CSV files with their columns matched to contact fields in the
+//! import dialog, and Thunderbird's books read in place (#681). The Hylki book takes them in one transaction; an EDS book
 //! through its CreateContacts and ModifyContacts calls.
 
 use std::collections::HashSet;
 use std::path::PathBuf;
 
+use super::csv_import::CsvContacts;
 pub(crate) use super::csv_import::{can_import, contacts_from, detect, targets, Target};
 use super::details::{parse_vcard_fields, ContactDetails, GroupFormat, Member};
 use super::edit::{save_group, GroupEdit};
@@ -14,6 +15,8 @@ use super::eds_write::{
 };
 use super::local::{self, content_uid, insert_uid, ImportOutcome, MAX_VCARD_BYTES};
 use super::read::{is_local_book, Book};
+use super::thunderbird::{self, TbBook};
+use crate::i18n::i18n;
 use crate::mail::merge::{parse_csv, Table};
 
 /// A file chosen for import, as the dialog shows it.
@@ -34,6 +37,8 @@ pub(crate) struct ImportStart {
     pub(crate) books: Vec<Book>,
     /// The book to start on, when the import was asked for in one.
     pub(crate) book: Option<String>,
+    /// Thunderbird's books, from a profile folder or a book file chosen.
+    pub(crate) thunderbird: Vec<TbBook>,
 }
 
 /// One file to import, as the dialog leaves it.
@@ -41,6 +46,7 @@ pub(crate) struct ImportStart {
 pub(crate) enum ImportFile {
     Vcard(PathBuf),
     Csv { path: PathBuf, fields: Vec<Target> },
+    Thunderbird(PathBuf),
 }
 
 /// What the import dialog asks for.
@@ -58,33 +64,71 @@ fn file_name(path: &std::path::Path) -> String {
 }
 
 /// Read what the dialog needs: each file's kind and a CSV file's table
-/// (blocking: call from a background thread). `books` are the writable
-/// books; the Hylki book is added when they lack it, as it is always
-/// there to import into, even before it is used.
+/// (blocking: call from a background thread). A folder is searched for
+/// Thunderbird's profiles, and a SQLite file read as one of its books.
+/// `books` are the writable books; the Hylki book is added when they lack
+/// it, as it is always there to import into, even before it is used.
 pub(crate) fn prepare(
     paths: Vec<PathBuf>,
     mut books: Vec<Book>,
     book: Option<String>,
 ) -> ImportStart {
+    let mut found: Vec<TbBook> = Vec::new();
     let files = paths
         .into_iter()
-        .map(|path| {
+        .filter_map(|path| {
+            let tb = if path.is_dir() {
+                Some(
+                    Some(thunderbird::books_in(&path))
+                        .filter(|b| !b.is_empty())
+                        .ok_or_else(|| {
+                            i18n("No Thunderbird address books were found in this folder")
+                        }),
+                )
+            } else if thunderbird::is_sqlite(&path) {
+                Some(thunderbird::book_at(&path).map(|b| vec![b]))
+            } else {
+                None
+            };
+            match tb {
+                Some(Ok(books)) => {
+                    for b in books {
+                        if !found.iter().any(|f| f.path == b.path) {
+                            found.push(b);
+                        }
+                    }
+                    return None;
+                }
+                Some(Err(e)) => {
+                    return Some(FileStart {
+                        name: file_name(&path),
+                        path,
+                        table: Some(Err(e)),
+                    })
+                }
+                None => {}
+            }
             let table = match local::read_file(&path) {
                 Ok(bytes) if !local::is_csv(&path, &bytes) => None,
                 Ok(bytes) => Some(parse_csv(&bytes)),
                 Err(e) => Some(Err(e)),
             };
-            FileStart {
+            Some(FileStart {
                 name: file_name(&path),
                 path,
                 table,
-            }
+            })
         })
         .collect();
     if !books.iter().any(|b| is_local_book(&b.uid)) {
         books.push(crate::contacts::local_book());
     }
-    ImportStart { files, books, book }
+    ImportStart {
+        files,
+        books,
+        book,
+        thunderbird: found,
+    }
 }
 
 /// Import the files into the book (blocking: call from a background thread).
@@ -94,26 +138,30 @@ pub(crate) fn run(req: &ImportRequest) -> Result<ImportOutcome, String> {
     let mut groups: Vec<(String, Vec<usize>)> = Vec::new();
     for file in &req.files {
         let path = match file {
-            ImportFile::Vcard(p) | ImportFile::Csv { path: p, .. } => p,
-        };
-        let bytes = match local::read_file(path) {
-            Ok(b) => b,
-            Err(e) => {
-                out.failed_files.push(format!("{}: {e}", file_name(path)));
-                continue;
+            ImportFile::Vcard(p) | ImportFile::Csv { path: p, .. } | ImportFile::Thunderbird(p) => {
+                p
             }
         };
         let read = match file {
-            ImportFile::Vcard(_) => local::vcard_cards(&bytes).map(|(found, truncated)| {
-                out.errors += truncated;
-                (found, Vec::new())
+            ImportFile::Thunderbird(_) => thunderbird::read_book(path),
+            _ => local::read_file(path).and_then(|bytes| match file {
+                ImportFile::Csv { fields, .. } => {
+                    parse_csv(&bytes).map(|table| contacts_from(&table, fields))
+                }
+                _ => local::vcard_cards(&bytes).map(|(cards, truncated)| {
+                    out.errors += truncated;
+                    CsvContacts {
+                        cards,
+                        groups: Vec::new(),
+                        skipped: 0,
+                    }
+                }),
             }),
-            ImportFile::Csv { fields, .. } => parse_csv(&bytes).map(|table| {
-                let found = contacts_from(&table, fields);
-                out.skipped += found.skipped;
-                (found.cards, found.groups)
-            }),
-        };
+        }
+        .map(|found| {
+            out.skipped += found.skipped;
+            (found.cards, found.groups)
+        });
         match read {
             Ok((found, named)) => {
                 let base = cards.len();

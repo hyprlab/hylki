@@ -610,6 +610,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "Το {name} δεν αποκρίθηκε: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Δεν βρέθηκαν ακόμη κατάλογοι διευθύνσεων στο {name}."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
 
@@ -624,6 +628,18 @@ msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
 
 msgid "The file is larger than {size} MB"
 msgstr "Το αρχείο είναι μεγαλύτερο από {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Μετονομασία καταλόγου διευθύνσεων"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Ελέγξτε τη διεύθυνση"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Μετακίνηση σε άλλον κατάλογο διευθύνσεων"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5097,8 +5113,15 @@ msgid "Sort and filter contacts"
 msgstr "Ταξινόμηση και φιλτράρισμα επαφών"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Αρχεία vCard"
+msgid "From Files…"
+msgstr "Εισαγωγή αρχείου…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Επαφές"
 
 msgid "All files"
 msgstr "Όλα τα αρχεία"
@@ -5238,10 +5261,6 @@ msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Αυτό θα αφαιρέσει {n} επαφή από τον κατάλογο διευθύνσεών σας."
 msgstr[1] "Αυτό θα αφαιρέσει {n} επαφές από τους καταλόγους διευθύνσεών σας."
-
-#, fuzzy
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
 
 msgid "New contact or group"
 msgstr "Νέα επαφή ή ομάδα"
@@ -8242,6 +8261,9 @@ msgstr[1] "{n} επαφές δεν μετακινήθηκαν: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Αδυναμία ενημέρωσης επαφής: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Δεν ήταν δυνατή η εισαγωγή επαφών: {e}"
 
@@ -9267,6 +9289,14 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Αρχεία vCard"
+
+#, fuzzy
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Αναμονή για αποστολή"

@@ -578,6 +578,10 @@ msgstr "O diretório requer uma senha. Adicione-a em Configurações → Contato
 msgid "{name} did not answer: {error}"
 msgstr "{name} não respondeu: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Ainda não foram encontrados catálogos de endereços em {name}."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 "Um contato precisa de um nome, um endereço de email ou um número de telefone"
@@ -593,6 +597,18 @@ msgstr "O arquivo não é um arquivo de texto"
 
 msgid "The file is larger than {size} MB"
 msgstr "O arquivo tem mais de {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Renomear catálogo de endereços"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Verificar o endereço"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Mover para outro catálogo de endereços"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5041,8 +5057,15 @@ msgid "Sort and filter contacts"
 msgstr "Ordenar e filtrar contatos"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Arquivos vCard"
+msgid "From Files…"
+msgstr "Importar arquivo…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Contatos"
 
 msgid "All files"
 msgstr "Todos os arquivos"
@@ -5181,10 +5204,6 @@ msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Esta ação removerá {n} contato de seu catálogo de endereços."
 msgstr[1] "Esta ação removerá {n} contatos de seus catálogos de endereços."
-
-#, fuzzy
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Importar arquivos vCard para o catálogo de endereços do Hylki"
 
 msgid "New contact or group"
 msgstr "Novo contato ou grupo"
@@ -8149,6 +8168,9 @@ msgstr[1] "{n} contatos não foram movidos: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Não foi possível atualizar o contato: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Não foi possível importar os contatos: {e}"
 
@@ -9146,6 +9168,14 @@ msgstr "A caixa de entrada unificada no modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Arquivos vCard"
+
+#, fuzzy
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Importar arquivos vCard para o catálogo de endereços do Hylki"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Aguardando envio"

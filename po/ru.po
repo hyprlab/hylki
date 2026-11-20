@@ -561,6 +561,10 @@ msgstr "Для каталога требуется пароль. Добавьт�
 msgid "{name} did not answer: {error}"
 msgstr "Сервер {name} не ответил: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "На сайте {name} пока не найдено ни одной адресной книги."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
 
@@ -575,6 +579,18 @@ msgstr "Файл не является текстовым файлом"
 
 msgid "The file is larger than {size} MB"
 msgstr "Размер файла превышает {size} МБ."
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Переименовать адресную книгу"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Проверьте адрес"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Перейти в другую адресную книгу"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5040,8 +5056,16 @@ msgstr "Нет адреса электронной почты · {book}"
 msgid "Sort and filter contacts"
 msgstr "Сортировка и фильтрация контактов"
 
-msgid "vCard and CSV files"
-msgstr "Файлы vCard и CSV"
+#, fuzzy
+msgid "From Files…"
+msgstr "Импортировать файл…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Контакты"
 
 msgid "All files"
 msgstr "Все файлы"
@@ -5177,9 +5201,6 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Контакт {n} будет удалён из адресной книги."
 msgstr[1] "Контакты {n} будут удалены из адресных книг."
 msgstr[2] "Контакты {n} будут удалены из адресных книг."
-
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Импортировать файлы vCard или CSV в адресную книгу Hylki"
 
 msgid "New contact or group"
 msgstr "Новый контакт или группа"
@@ -8160,6 +8181,9 @@ msgstr[2] "{n} контактов не перемещены: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Не удалось обновить контакт: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Не удалось импортировать контакты: {e}"
 
@@ -9148,6 +9172,12 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "vCard and CSV files"
+#~ msgstr "Файлы vCard и CSV"
+
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Импортировать файлы vCard или CSV в адресную книгу Hylki"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Ожидание отправки"

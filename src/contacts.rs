@@ -32,6 +32,7 @@ pub(crate) mod directory;
 pub(crate) mod graph_directory;
 pub(crate) mod import;
 pub(crate) mod local;
+pub(crate) mod thunderbird;
 
 pub(crate) use demo::*;
 pub(crate) use details::*;

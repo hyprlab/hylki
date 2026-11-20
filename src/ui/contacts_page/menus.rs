@@ -201,6 +201,26 @@ pub(super) fn new_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPa
     );
 }
 
+/// The import button's menu: files, or Thunderbird's books (#681).
+pub(super) fn import_menu(button: &gtk::Button, sender: &ComponentSender<ContactsPage>) {
+    let (sf, st) = (sender.input_sender().clone(), sender.input_sender().clone());
+    show_context_menu(
+        button,
+        (button.width() / 2) as f64,
+        button.height() as f64,
+        vec![vec![
+            MenuEntry::new(i18n("From Files…"), move || {
+                let _ = sf.send(ContactsPageInput::ImportContacts);
+            })
+            .icon("document-open-symbolic"),
+            MenuEntry::new(i18n("From Thunderbird…"), move || {
+                let _ = st.send(ContactsPageInput::ImportThunderbird);
+            })
+            .icon("x-office-address-book-symbolic"),
+        ]],
+    );
+}
+
 /// The address book dropdown's labels, and the calendar picker's (#685);
 /// `ellipsize` for its own, which the pane's width holds, and which
 /// carries the whole name as a tooltip: two books of one CardDAV account
@@ -294,8 +314,9 @@ pub(crate) fn choose_contact_files(
         .title(i18n("Import Contacts"))
         .build();
     let filter = gtk::FileFilter::new();
-    filter.set_name(Some(&i18n("vCard and CSV files")));
-    for pattern in ["*.vcf", "*.vcard", "*.csv", "*.tsv"] {
+    filter.set_name(Some(&i18n("Contact files")));
+    // A Thunderbird book (#681): abook.sqlite in its profile.
+    for pattern in ["*.vcf", "*.vcard", "*.csv", "*.tsv", "*.sqlite"] {
         filter.add_pattern(pattern);
     }
     for mime in [
@@ -303,6 +324,7 @@ pub(crate) fn choose_contact_files(
         "text/x-vcard",
         "text/csv",
         "text/tab-separated-values",
+        "application/vnd.sqlite3",
     ] {
         filter.add_mime_type(mime);
     }

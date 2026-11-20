@@ -619,6 +619,10 @@ msgid "{name} did not answer: {error}"
 msgstr "{name} non ha risposto: {error}"
 
 #, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Nessuna rubrica disponibile per aggiungere contatti"
+
+#, fuzzy
 msgid "A contact needs a name, an email address or a phone number"
 msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
 
@@ -633,6 +637,18 @@ msgstr "Il file non è un file di testo"
 
 msgid "The file is larger than {size} MB"
 msgstr "Il file è più grande di {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Rubrica"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Controlla l'indirizzo"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Salvare la directory?"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5230,8 +5246,15 @@ msgid "Sort and filter contacts"
 msgstr "Messaggi e-mail"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "File vCard"
+msgid "From Files…"
+msgstr "Importa file…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Contatti"
 
 msgid "All files"
 msgstr "Tutti i file"
@@ -5389,10 +5412,6 @@ msgstr[0] ""
 msgstr[1] ""
 "{name} viene rimosso dalla rubrica, e per una rubrica sincronizzata, anche "
 "dal server."
-
-#, fuzzy
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Importa file vCard nella rubrica Hylki"
 
 #, fuzzy
 msgid "New contact or group"
@@ -8441,6 +8460,9 @@ msgstr[1] "{n} contatti esportati in {path}"
 msgid "Could not update contact: {e}"
 msgstr "Impossibile aggiornare il contatto: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Impossibile importare i contatti: {e}"
 
@@ -9483,6 +9505,14 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "File vCard"
+
+#, fuzzy
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Importa file vCard nella rubrica Hylki"
 
 #, fuzzy
 #~ msgid "Displays in the message header for each message."

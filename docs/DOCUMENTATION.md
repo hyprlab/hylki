@@ -773,9 +773,9 @@ contacts made in Hylki, from the Contacts view or with **Add Sender to
 Contacts**. Until it is set, a new contact goes to the first writable EDS
 book, or to the Hylki book when there is none.
 
-Importing reads `.vcf` and `.csv` files, from Settings or from the import
-button in the Contacts view's header. Once the files are chosen, **Import
-Contacts** asks which address book they go to: the Hylki book or any EDS
+Importing reads `.vcf` and `.csv` files, from Settings or from **From
+Files…** in the menu of the import button in the Contacts view's header.
+Once the files are chosen, **Import Contacts** asks which address book they go to: the Hylki book or any EDS
 book that can be written to. It starts on the book the Contacts view is
 showing, and from Settings on the Hylki book. A `.vcf` file can hold many
 contacts, in vCard 2.1, 3.0 or 4.0. A contact with the same ID as one
@@ -805,6 +805,18 @@ the file makes; it imports nothing until a column is matched to a name, an
 email address or a phone number. Commas, semicolons and tabs all work as
 the separator, and the file can be UTF-8, UTF-16 or Windows-1252. A row
 with no name, address, phone number or company is skipped.
+
+**From Thunderbird…**, in the same menu, reads Thunderbird's address books
+where they are, with no export first: from `~/.thunderbird`, the
+Thunderbird Flatpak's folder or the Snap's. **Import Contacts** lists each
+book of each profile with its number of contacts and groups, each with a
+switch; Collected Addresses, everyone Thunderbird has seen you write to,
+starts switched off. When no profile is found, a folder chooser asks for
+the profile folder, and an `abook.sqlite` file can be chosen with **From
+Files…**. Thunderbird can stay open while it reads. Contacts keep
+Thunderbird's IDs, so a second import updates them, and mailing lists
+become groups. Thunderbird 78 or later is needed; photos on cards made
+before Thunderbird 102 are not imported.
 
 Google's labels, Outlook's categories, or a column matched to **Groups**,
 put each person in the group of that name, which is made when the book has

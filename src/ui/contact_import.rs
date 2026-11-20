@@ -1,5 +1,6 @@
 //! The Import Contacts window (#655): the address book the contacts go to,
-//! and, for each CSV file, the contact field each of its columns fills.
+//! for each CSV file, the contact field each of its columns fills, and a
+//! switch for each Thunderbird book found (#681).
 //! The columns start matched by their headers; a column no row has a
 //! value in is not listed.
 //!
@@ -72,6 +73,17 @@ fn sample(table: &Table, col: usize) -> String {
     }
 }
 
+/// How many contacts and lists a Thunderbird book holds.
+fn book_counts(contacts: usize, lists: usize) -> String {
+    let count =
+        |one: &str, many: &str, n: usize| ni18n_f(one, many, n as u32, &[("n", &n.to_string())]);
+    let mut parts = vec![count("{n} contact", "{n} contacts", contacts)];
+    if lists > 0 {
+        parts.push(count("{n} group", "{n} groups", lists));
+    }
+    parts.join(" · ")
+}
+
 /// A file's name, for a group title.
 fn file_title(path: &std::path::Path) -> String {
     path.file_name()
@@ -140,15 +152,23 @@ pub(crate) fn show(
     let mut vcards: Vec<PathBuf> = Vec::new();
     let forms: Rc<RefCell<Vec<Rc<CsvForm>>>> = Rc::default();
     let has_vcards = Rc::new(Cell::new(false));
-    // Import needs a file to import, and every CSV file matched.
+    // Each Thunderbird book, and whether its switch is on.
+    let tb_books: Rc<RefCell<Vec<(PathBuf, bool)>>> = Rc::default();
+    // Import needs a file or a book to import, and every CSV file matched.
     let check: Rc<dyn Fn()> = {
-        let (forms, has_vcards, import) = (forms.clone(), has_vcards.clone(), import.downgrade());
+        let (forms, has_vcards, tb_books, import) = (
+            forms.clone(),
+            has_vcards.clone(),
+            tb_books.clone(),
+            import.downgrade(),
+        );
         Rc::new(move || {
             let Some(import) = import.upgrade() else {
                 return;
             };
             let forms = forms.borrow();
-            let ready = (!forms.is_empty() || has_vcards.get())
+            let some_book = tb_books.borrow().iter().any(|(_, on)| *on);
+            let ready = (!forms.is_empty() || has_vcards.get() || some_book)
                 && forms.iter().all(|f| can_import(&f.fields.borrow()));
             import.set_sensitive(ready);
         })
@@ -225,6 +245,38 @@ pub(crate) fn show(
         }
         page.add(&group);
     }
+    let mut profiles: Vec<&str> = Vec::new();
+    for b in &start.thunderbird {
+        if !profiles.contains(&b.profile.as_str()) {
+            profiles.push(&b.profile);
+        }
+    }
+    for profile in &profiles {
+        let group = adw::PreferencesGroup::new();
+        group.set_title("Thunderbird");
+        if profiles.len() > 1 {
+            group.set_description(Some(profile));
+        }
+        for b in start.thunderbird.iter().filter(|b| b.profile == *profile) {
+            let row = adw::SwitchRow::new();
+            row.set_title(&b.name);
+            row.set_subtitle(&book_counts(b.contacts, b.lists));
+            // Collected Addresses is everyone ever written to.
+            row.set_active(!b.collected);
+            let at = {
+                let mut books = tb_books.borrow_mut();
+                books.push((b.path.clone(), row.is_active()));
+                books.len() - 1
+            };
+            let (tb_books, check) = (tb_books.clone(), check.clone());
+            row.connect_active_notify(move |row| {
+                tb_books.borrow_mut()[at].1 = row.is_active();
+                check();
+            });
+            group.add(&row);
+        }
+        page.add(&group);
+    }
     if any_unreadable {
         page.add(&unreadable);
     }
@@ -259,6 +311,13 @@ pub(crate) fn show(
             path: f.path.clone(),
             fields: f.fields.borrow().clone(),
         }));
+        files.extend(
+            tb_books
+                .borrow()
+                .iter()
+                .filter(|(_, on)| *on)
+                .map(|(path, _)| ImportFile::Thunderbird(path.clone())),
+        );
         done(ImportRequest { book, files });
         w.close();
     });

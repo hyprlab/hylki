@@ -565,6 +565,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "{name} hat nicht geantwortet: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Auf {name} wurden noch keine Adressbücher gefunden."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 "Ein Name, eine E-Mail-Adresse oder eine Telefonnummer ist erforderlich."
@@ -580,6 +584,18 @@ msgstr "Die Datei ist keine Textdatei."
 
 msgid "The file is larger than {size} MB"
 msgstr "Diese Datei ist größer als {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Adressbuch umbenennen"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Adresse überprüfen"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "In ein anderes Adressbuch verschieben"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -5076,8 +5092,16 @@ msgstr "Ohne E-Mail-Adresse · {book}"
 msgid "Sort and filter contacts"
 msgstr "Kontakte sortieren und filtern"
 
-msgid "vCard and CSV files"
-msgstr "vCard- und CSV-Dateien"
+#, fuzzy
+msgid "From Files…"
+msgstr "Datei importieren…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Kontakte"
 
 msgid "All files"
 msgstr "Alle Dateien"
@@ -5211,9 +5235,6 @@ msgid "This will remove {n} contact from your address book."
 msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Entfernt {n} Kontakt aus dem Adressbuch."
 msgstr[1] "Entfernt {n} Kontakte aus dem Adressbuch."
-
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "vCard- oder CSV-Dateien in das Hylki-Adressbuch importieren"
 
 msgid "New contact or group"
 msgstr "Neuer Kontakt oder Kontaktliste"
@@ -8206,6 +8227,9 @@ msgstr[1] "{n} Kontakte konnten nicht verschoben werden: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Kontakt konnte nicht aktualisiert werden: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Kontakte konnten nicht importiert werden: {e}"
 
@@ -9234,6 +9258,12 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "vCard and CSV files"
+#~ msgstr "vCard- und CSV-Dateien"
+
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "vCard- oder CSV-Dateien in das Hylki-Adressbuch importieren"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Wartet auf Versand"

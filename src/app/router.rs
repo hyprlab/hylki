@@ -232,6 +232,8 @@ impl AppModel {
             | AppMsg::MoveContacts { .. }
             | AppMsg::ContactWriteDone(..)
             | AppMsg::ImportContacts { .. }
+            | AppMsg::ImportThunderbird { .. }
+            | AppMsg::ChooseThunderbirdFolder { .. }
             | AppMsg::ContactImportReady(..)
             | AppMsg::RunContactImport(..)
             | AppMsg::ContactsImported(..)) => self.on_contacts(msg, sender),

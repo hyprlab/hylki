@@ -763,6 +763,10 @@ pub(crate) enum AppMsg {
         paths: Vec<std::path::PathBuf>,
         book: Option<String>,
     },
+    /// Import from Thunderbird's profiles, or a folder chosen when none is
+    /// found (#681).
+    ImportThunderbird { book: Option<String> },
+    ChooseThunderbirdFolder { book: Option<String> },
     /// The files are read: ask where they go and what their columns are.
     ContactImportReady(Box<crate::contacts::import::ImportStart>),
     RunContactImport(crate::contacts::import::ImportRequest),

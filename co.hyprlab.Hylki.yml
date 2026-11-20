@@ -59,6 +59,11 @@ finish-args:
   # 1.34.0); nothing there is written to. See src/legacy.rs.
   - --filesystem=~/.var/app/co.hyprlab.Vireo:ro
   - --filesystem=~/.var/app/com.getveem.Veem:ro
+  # Contacts → Import → From Thunderbird (#681) reads the Thunderbird
+  # Flatpak's address books; home:ro below leaves out other apps' folders.
+  # ~/.thunderbird and the Snap's profile come with home:ro.
+  - --filesystem=~/.var/app/org.mozilla.thunderbird:ro
+  - --filesystem=~/.var/app/org.mozilla.Thunderbird:ro
   # The chosen app icon (Settings → App icon) is written over the app's icon
   # name in the user's icon directory, which every desktop searches before the
   # Flatpak export's — that is how the dock and app grid follow the choice.
