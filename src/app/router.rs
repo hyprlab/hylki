@@ -235,7 +235,6 @@ impl AppModel {
             | AppMsg::ImportThunderbird { .. }
             | AppMsg::ChooseThunderbirdFolder { .. }
             | AppMsg::ImportFromMail { .. }
-            | AppMsg::FromMailReady(..)
             | AppMsg::ContactImportReady(..)
             | AppMsg::RunContactImport(..)
             | AppMsg::ContactsImported(..)) => self.on_contacts(msg, sender),

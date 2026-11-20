@@ -4597,6 +4597,10 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} μήνυμα"
 msgstr[1] "{n} μηνύματα"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Ανάγνωση {n} μηνυμάτων…"
+
 msgid "No One New"
 msgstr ""
 

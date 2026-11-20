@@ -4178,6 +4178,9 @@ msgid_plural "{n} messages"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Reading your mail…"
+msgstr ""
+
 msgid "No One New"
 msgstr ""
 

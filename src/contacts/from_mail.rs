@@ -9,11 +9,13 @@ use super::edit::{new_vcard, ContactEdit};
 use super::read::Book;
 use crate::cache::{AddressScope, Cache};
 
-/// What the Import from Mail window opens with.
+/// What the Import from Mail window opens with: what the app knows at
+/// once. The books and the saved contacts take a while to read, so the
+/// window reads them itself, with [`books_and_saved`].
 #[derive(Debug)]
 pub(crate) struct FromMailStart {
-    /// The books contacts can go to, the default first.
-    pub(crate) books: Vec<Book>,
+    /// The demo's books and contacts, not the system's.
+    pub(crate) demo: bool,
     /// The book to start on, when the import was asked for in one.
     pub(crate) book: Option<String>,
     /// The accounts and folders to look in, each account followed by its
@@ -21,8 +23,6 @@ pub(crate) struct FromMailStart {
     pub(crate) places: Vec<Place>,
     /// The user's own addresses, lower case.
     pub(crate) own: HashSet<String>,
-    /// The saved contacts' addresses, lower case.
-    pub(crate) saved: HashSet<String>,
     /// Trash and Junk, by account and path.
     pub(crate) skip: HashSet<(u32, String)>,
 }
@@ -77,6 +77,23 @@ pub(crate) fn people_in_mail(
             seen: a.seen,
         })
         .collect()
+}
+
+/// The books contacts can go to, the default first and the Hylki book
+/// among them, and the saved contacts' addresses (blocking: both go to
+/// Evolution Data Server).
+pub(crate) fn books_and_saved(demo: bool) -> (Vec<Book>, HashSet<String>) {
+    let (mut books, saved) = if demo {
+        let saved = super::demo_contacts()
+            .iter()
+            .flat_map(|c| c.emails.iter().map(|e| e.value.to_lowercase()))
+            .collect();
+        (super::demo_books(), saved)
+    } else {
+        (super::writable_books(), saved_addresses())
+    };
+    super::import::with_local_book(&mut books);
+    (books, saved)
 }
 
 /// The saved contacts' addresses, lower case, read now (blocking). The

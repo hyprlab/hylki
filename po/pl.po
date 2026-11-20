@@ -4819,6 +4819,10 @@ msgstr[0] "{n} wiadomość"
 msgstr[1] "{n} wiadomości"
 msgstr[2] "{n} wiadomości"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Indeksowanie wiadomości ({n})…"
+
 msgid "No One New"
 msgstr ""
 

@@ -4761,6 +4761,10 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} üzenet"
 msgstr[1] "{n} üzenet"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "{n} üzenet indexelése…"
+
 msgid "No One New"
 msgstr ""
 

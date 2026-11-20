@@ -767,10 +767,8 @@ pub(crate) enum AppMsg {
     /// found (#681).
     ImportThunderbird { book: Option<String> },
     ChooseThunderbirdFolder { book: Option<String> },
-    /// Pick people from the mail to import (#677); the window opens once
-    /// the books and the saved addresses are read.
+    /// Pick people from the mail to import (#677).
     ImportFromMail { book: Option<String> },
-    FromMailReady(Box<crate::contacts::from_mail::FromMailStart>),
     /// The files are read: ask where they go and what their columns are.
     ContactImportReady(Box<crate::contacts::import::ImportStart>),
     RunContactImport(crate::contacts::import::ImportRequest),

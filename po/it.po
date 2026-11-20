@@ -4703,6 +4703,10 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} messaggio"
 msgstr[1] "{n} messaggi"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Indicizzazione di {n} messaggi…"
+
 msgid "No One New"
 msgstr ""
 

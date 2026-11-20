@@ -4553,6 +4553,10 @@ msgstr[0] "{n} письмо"
 msgstr[1] "{n} письма"
 msgstr[2] "{n} писем"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Люди в вашей почте"
+
 msgid "No One New"
 msgstr ""
 

@@ -578,39 +578,16 @@ impl AppModel {
                     })
                     .map(|(aid, f)| (aid, f.path.clone()))
                     .collect();
-                let s = sender.clone();
-                std::thread::spawn(move || {
-                    let (mut books, saved) = if demo_mode() {
-                        let saved = crate::contacts::demo_contacts()
-                            .iter()
-                            .flat_map(|c| c.emails.iter().map(|e| e.value.to_lowercase()))
-                            .collect();
-                        (crate::contacts::demo_books(), saved)
-                    } else {
-                        (
-                            crate::contacts::writable_books(),
-                            crate::contacts::from_mail::saved_addresses(),
-                        )
-                    };
-                    crate::contacts::import::with_local_book(&mut books);
-                    s.input(AppMsg::FromMailReady(Box::new(
-                        crate::contacts::from_mail::FromMailStart {
-                            books,
-                            book,
-                            places,
-                            own,
-                            saved,
-                            skip,
-                        },
-                    )));
-                });
-            }
-
-            AppMsg::FromMailReady(start) => {
                 let s = sender.input_sender().clone();
                 crate::ui::contact_from_mail::show(
                     self.dialog_parent().as_ref(),
-                    *start,
+                    crate::contacts::from_mail::FromMailStart {
+                        demo: demo_mode(),
+                        book,
+                        places,
+                        own,
+                        skip,
+                    },
                     move |req| {
                         let _ = s.send(AppMsg::RunContactImport(req));
                     },

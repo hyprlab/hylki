@@ -4608,6 +4608,10 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} missatge"
 msgstr[1] "{n} missatges"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "S'estan indexant {n} missatges…"
+
 msgid "No One New"
 msgstr ""
 

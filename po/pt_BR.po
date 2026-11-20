@@ -4545,6 +4545,10 @@ msgid_plural "{n} messages"
 msgstr[0] "{n} mensagem"
 msgstr[1] "{n} mensagens"
 
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Pessoas em seus emails"
+
 msgid "No One New"
 msgstr ""
 

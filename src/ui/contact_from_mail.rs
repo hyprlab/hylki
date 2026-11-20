@@ -12,8 +12,11 @@ use std::rc::Rc;
 use adw::prelude::*;
 
 use crate::cache::AddressScope;
-use crate::contacts::from_mail::{cards_for, people_in_mail, FromMailStart, MailPerson, Place};
+use crate::contacts::from_mail::{
+    books_and_saved, cards_for, people_in_mail, FromMailStart, MailPerson, Place,
+};
 use crate::contacts::import::{ImportFile, ImportRequest};
+use crate::contacts::Book;
 use crate::i18n::{i18n, ni18n_f};
 
 /// One row's check button, and the address it shows now.
@@ -148,16 +151,12 @@ pub(crate) fn show(
         read: Cell::new(0),
     });
 
-    let books = start.books;
+    // Filled once the books are read, which takes a moment: the window
+    // opens at once and says it is reading.
+    let books: Rc<RefCell<Vec<Book>>> = Rc::default();
     let book_row = adw::ComboRow::new();
     book_row.set_title(&i18n("Import into"));
-    let names: Vec<&str> = books.iter().map(|b| b.name.as_str()).collect();
-    book_row.set_model(Some(&gtk::StringList::new(&names)));
-    let at = start
-        .book
-        .and_then(|uid| books.iter().position(|b| b.uid == uid))
-        .unwrap_or(0);
-    book_row.set_selected(at as u32);
+    book_row.set_sensitive(false);
     let places = Rc::new(start.places);
     let scope_row = look_in_row(&places);
     let choices = gtk::ListBox::new();
@@ -195,7 +194,12 @@ pub(crate) fn show(
 
     // Say how many are ticked, and let Import go once one is.
     let count: Rc<dyn Fn()> = {
-        let (state, label, import) = (state.clone(), picked_label.clone(), import.downgrade());
+        let (state, label, import, books) = (
+            state.clone(),
+            picked_label.clone(),
+            import.downgrade(),
+            books.clone(),
+        );
         Rc::new(move || {
             let n = state.picked.borrow().len();
             label.set_label(&ni18n_f(
@@ -205,7 +209,7 @@ pub(crate) fn show(
                 &[("n", &n.to_string())],
             ));
             if let Some(import) = import.upgrade() {
-                import.set_sensitive(n > 0);
+                import.set_sensitive(n > 0 && !books.borrow().is_empty());
             }
         })
     };
@@ -329,10 +333,15 @@ pub(crate) fn show(
     let empty = adw::StatusPage::new();
     empty.add_css_class("compact");
     empty.set_vexpand(true);
-    let reading = adw::Spinner::new();
-    reading.set_size_request(32, 32);
+    let spinner = adw::Spinner::new();
+    spinner.set_size_request(32, 32);
+    let reading_label = gtk::Label::new(Some(&i18n("Reading your mail…")));
+    reading_label.add_css_class("dim-label");
+    let reading = gtk::Box::new(gtk::Orientation::Vertical, 12);
     reading.set_valign(gtk::Align::Center);
     reading.set_vexpand(true);
+    reading.append(&spinner);
+    reading.append(&reading_label);
     let body = gtk::Stack::new();
     body.add_named(&reading, Some("reading"));
     body.add_named(&scroller, Some("list"));
@@ -374,14 +383,12 @@ pub(crate) fn show(
         .child(&content)
         .build();
 
-    // Read the people in the mail the scope row names.
-    let (own, saved, skip) = (
-        Rc::new(start.own),
-        Rc::new(start.saved),
-        Rc::new(start.skip),
-    );
+    // Read the people in the mail the scope row names, once the saved
+    // contacts are known.
+    let saved: Rc<RefCell<Option<HashSet<String>>>> = Rc::default();
+    let (own, skip) = (Rc::new(start.own), Rc::new(start.skip));
     let reread: Rc<dyn Fn()> = {
-        let places = places.clone();
+        let (places, saved) = (places.clone(), saved.clone());
         let (state, model, scope_row, body, show_list, count) = (
             state.clone(),
             model.clone(),
@@ -399,7 +406,10 @@ pub(crate) fn show(
                 folder: place.and_then(|p| p.folder.clone()),
                 skip: (*skip).clone(),
             };
-            let (own, saved) = ((*own).clone(), (*saved).clone());
+            let Some(saved) = saved.borrow().clone() else {
+                return;
+            };
+            let own = (*own).clone();
             let gen = state.read.get() + 1;
             state.read.set(gen);
             body.set_visible_child_name("reading");
@@ -486,8 +496,9 @@ pub(crate) fn show(
     ));
     window.add_controller(escape);
     let w = window.clone();
+    let (books_read, book_choice) = (books.clone(), book_row.clone());
     import.connect_clicked(move |_| {
-        let Some(book) = books.get(book_row.selected() as usize).cloned() else {
+        let Some(book) = books.borrow().get(book_row.selected() as usize).cloned() else {
             return;
         };
         let picked: Vec<MailPerson> = {
@@ -510,8 +521,24 @@ pub(crate) fn show(
         w.close();
     });
     window.present();
-    reread();
     search.grab_focus();
+    let (demo, first_book) = (start.demo, start.book);
+    gtk::glib::spawn_future_local(async move {
+        let Ok((read, contacts)) = gtk::gio::spawn_blocking(move || books_and_saved(demo)).await
+        else {
+            return;
+        };
+        let names: Vec<&str> = read.iter().map(|b| b.name.as_str()).collect();
+        book_choice.set_model(Some(&gtk::StringList::new(&names)));
+        let at = first_book
+            .and_then(|uid| read.iter().position(|b| b.uid == uid))
+            .unwrap_or(0);
+        book_choice.set_selected(at as u32);
+        book_choice.set_sensitive(true);
+        *books_read.borrow_mut() = read;
+        *saved.borrow_mut() = Some(contacts);
+        reread();
+    });
     // HYLKI_SHOWCASE_IMPORT=<png> (demo only) captures the window three
     // seconds after it opens; HYLKI_SHOWCASE_LOOK_IN=<text> first picks
     // the first place whose label starts with it, and "open" opens the
