@@ -697,6 +697,47 @@ msgstr "No hi ha cap carpeta d'esborranys disponible per a aquest compte"
 msgid "No Templates folder available for this account"
 msgstr "No hi ha cap carpeta de plantilles disponible per a aquest compte"
 
+msgid "Empty “{name}”?"
+msgstr "Vols buidar «{name}»?"
+
+msgid "Empty"
+msgstr "Buida"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Tots els missatges que conté s'esborraran del servidor. Això no es pot "
+"desfer."
+msgstr[1] ""
+"Tots els missatges que conté s'esborraran del servidor. Això no es pot "
+"desfer."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Tots els missatges que conté s'esborraran del servidor. Això no es pot "
+"desfer."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Vols buidar la paperera de tots els comptes?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Vols buidar la brossa de tots els comptes?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Tots els missatges que contenen s'esborraran del servidor. Això no es pot "
+"desfer."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Cerca al missatge"
+msgstr[1] "Cerca al missatge"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -842,30 +883,6 @@ msgid ""
 msgstr ""
 "Els seus missatges es mouran a la paperera i la carpeta s'eliminarà del "
 "servidor. Això no es pot desfer."
-
-msgid "Empty “{name}”?"
-msgstr "Vols buidar «{name}»?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Tots els missatges que conté s'esborraran del servidor. Això no es pot "
-"desfer."
-
-msgid "Empty"
-msgstr "Buida"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Vols buidar la paperera de tots els comptes?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Vols buidar la brossa de tots els comptes?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Tots els missatges que contenen s'esborraran del servidor. Això no es pot "
-"desfer."
 
 msgid "This account can't have folders at the top level."
 msgstr ""

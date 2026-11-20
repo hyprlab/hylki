@@ -621,6 +621,37 @@ msgstr ""
 msgid "No Templates folder available for this account"
 msgstr ""
 
+msgid "Empty “{name}”?"
+msgstr ""
+
+msgid "Empty"
+msgstr ""
+
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+
+msgid "Empty Trash in Every Account?"
+msgstr ""
+
+msgid "Empty Junk in Every Account?"
+msgstr ""
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -754,26 +785,6 @@ msgstr ""
 msgid ""
 "Its messages are moved to Trash and the folder is removed from the server. "
 "This cannot be undone."
-msgstr ""
-
-msgid "Empty “{name}”?"
-msgstr ""
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-
-msgid "Empty"
-msgstr ""
-
-msgid "Empty Trash in Every Account?"
-msgstr ""
-
-msgid "Empty Junk in Every Account?"
-msgstr ""
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
 msgstr ""
 
 msgid "This account can't have folders at the top level."

@@ -646,6 +646,47 @@ msgstr "Für dieses Konto ist kein Entwurfsordner verfügbar."
 msgid "No Templates folder available for this account"
 msgstr "Für dieses Konto ist kein Vorlagenordner verfügbar."
 
+msgid "Empty “{name}”?"
+msgstr "»{name}« leeren?"
+
+msgid "Empty"
+msgstr "Leeren"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
+"gemacht werden."
+msgstr[1] ""
+"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
+"gemacht werden."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
+"gemacht werden."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Alle Papierkörbe leeren?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Alle Spam-Ordner leeren?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Alle darin enthaltenen Nachrichten werden dauerhaft vom Server gelöscht. "
+"Dieser Vorgang kann nicht rückgängig gemacht werden."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "{n} E-Mail gesendet"
+msgstr[1] "{n} E-Mails gesendet"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -791,30 +832,6 @@ msgid ""
 msgstr ""
 "Die Nachrichten werden in den Papierkorb verschoben und der Ordner wird vom "
 "Server entfernt. Das kann nicht rückgängig gemacht werden."
-
-msgid "Empty “{name}”?"
-msgstr "»{name}« leeren?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
-"gemacht werden."
-
-msgid "Empty"
-msgstr "Leeren"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Alle Papierkörbe leeren?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Alle Spam-Ordner leeren?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Alle darin enthaltenen Nachrichten werden dauerhaft vom Server gelöscht. "
-"Dieser Vorgang kann nicht rückgängig gemacht werden."
 
 msgid "This account can't have folders at the top level."
 msgstr "Dieses Konto kann keine Ordner auf der obersten Ebene enthalten."

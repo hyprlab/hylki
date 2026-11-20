@@ -671,6 +671,22 @@ impl<E: Emit> ImapWorker<E> {
         After::Done
     }
 
+    /// How many messages a folder holds (#676). EXAMINE, not STATUS, which
+    /// lags behind on some servers (see the sweep); read-only, so the
+    /// folder's flags are left alone.
+    pub(super) async fn on_count_folder(&mut self, path: String) -> After {
+        let sess = ensured(&mut self.session);
+        let count = match exam(sess, &path).await {
+            Ok(mb) => Some(mb.exists),
+            Err(e) => {
+                tracing::debug!("count: cannot examine {path}: {e}");
+                None
+            }
+        };
+        (self.emit)(WorkerEvent::FolderCounted { path, count });
+        After::Done
+    }
+
     /// Bring the cached keywords of every folder in step with the server (#166).
     pub(super) async fn on_refresh_keywords(&mut self, keywords: Vec<String>) -> After {
         let account_id = self.account_id;

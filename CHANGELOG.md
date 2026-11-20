@@ -17,6 +17,13 @@
   which on Yahoo with large drafts was two minutes. A message being sent now
   goes ahead of them.
 
+- **New: Empty Trash and Empty Junk say how many messages they erase**
+  (#676, requested by DarkStarCrashes123). The question asks the server for
+  the folder's count first: "47 messages will be erased from the server".
+  Emptying every account's Trash or Junk from the unified row gives the
+  total and each account's own count. A server that does not answer within
+  a second and a half leaves the question as it was, without a number.
+
 ## 1.49.0 — 2026-11-19
 
 Everything from 1.49.0-beta.1 to 1.49.0-beta.4: Autocrypt, the message source

@@ -100,6 +100,10 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
                 emit(WorkerEvent::FlagsSynced { paths: Vec::new() })
             }
             MailRequest::Quota => emit(WorkerEvent::Quota(None)),
+            MailRequest::CountFolder { path } => {
+                let count = Some(self.store.counts(&path).0);
+                emit(WorkerEvent::FolderCounted { path, count });
+            }
             MailRequest::LoadRelated { message_id, ids } => {
                 let messages = self
                     .cache

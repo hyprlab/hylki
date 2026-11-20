@@ -708,6 +708,52 @@ msgstr "To konto nie ma katalogu szkiców"
 msgid "No Templates folder available for this account"
 msgstr "To konto nie ma katalogu szkiców"
 
+msgid "Empty “{name}”?"
+msgstr "Czy opróżnić katalog „{name}”?"
+
+msgid "Empty"
+msgstr "Opróżnij"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
+"czynności nie można cofnąć."
+msgstr[1] ""
+"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
+"czynności nie można cofnąć."
+msgstr[2] ""
+"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
+"czynności nie można cofnąć."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
+"czynności nie można cofnąć."
+
+msgid "Empty Trash in Every Account?"
+msgstr ""
+
+msgid "Empty Junk in Every Account?"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
+"czynności nie można cofnąć."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Znajdź w wiadomości"
+msgstr[1] "Znajdź w wiadomości"
+msgstr[2] "Znajdź w wiadomości"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -870,31 +916,6 @@ msgid ""
 msgstr ""
 "Wiadomości z katalogu zostaną przeniesione do kosza, a sam katalog zostanie "
 "usunięty z serwera. Tej czynności nie można cofnąć."
-
-msgid "Empty “{name}”?"
-msgstr "Czy opróżnić katalog „{name}”?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
-"czynności nie można cofnąć."
-
-msgid "Empty"
-msgstr "Opróżnij"
-
-msgid "Empty Trash in Every Account?"
-msgstr ""
-
-msgid "Empty Junk in Every Account?"
-msgstr ""
-
-#, fuzzy
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Wszystkie wiadomości z tego katalogu zostaną trwale usunięte z serwera. Tej "
-"czynności nie można cofnąć."
 
 msgid "This account can't have folders at the top level."
 msgstr ""

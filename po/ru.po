@@ -646,6 +646,46 @@ msgstr "Для этой учётной записи недоступна пап�
 msgid "No Templates folder available for this account"
 msgstr "Для этой учётной записи недоступна папка «Шаблоны»"
 
+msgid "Empty “{name}”?"
+msgstr "Очистить «{name}»?"
+
+msgid "Empty"
+msgstr "Очистить"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr[1] ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr[2] ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Очистить корзину во всех учётных записях?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Очистить папку «Спам» во всех учётных записях?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Каждое сообщение в них будет удалено с сервера. Это невозможно отменить."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Отправлено {n} сообщение"
+msgstr[1] "Отправлено {n} сообщения"
+msgstr[2] "Отправлено {n} сообщений"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -806,28 +846,6 @@ msgid ""
 msgstr ""
 "Её сообщения переносятся в «Корзину», а папка удаляется с сервера. Это "
 "действие нельзя отменить."
-
-msgid "Empty “{name}”?"
-msgstr "Очистить «{name}»?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
-
-msgid "Empty"
-msgstr "Очистить"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Очистить корзину во всех учётных записях?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Очистить папку «Спам» во всех учётных записях?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Каждое сообщение в них будет удалено с сервера. Это невозможно отменить."
 
 msgid "This account can't have folders at the top level."
 msgstr "В этой учётной записи не может быть папок верхнего уровня."

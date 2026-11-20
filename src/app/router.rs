@@ -106,6 +106,9 @@ impl AppModel {
             | AppMsg::RenameFolderTo { .. }
             | AppMsg::EmptyFolder { .. }
             | AppMsg::DeleteFolder { .. }) => self.on_folder_menu(msg, sender),
+            msg @ (AppMsg::FolderCounted { .. } | AppMsg::EmptyCountWait(..)) => {
+                self.on_empty_count(msg, sender)
+            }
             msg @ (AppMsg::SearchPoolLoaded { .. }
             | AppMsg::SearchPoolBuilt { .. }
             | AppMsg::SearchActive(..)) => self.on_search(msg, sender),

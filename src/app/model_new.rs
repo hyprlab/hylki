@@ -101,6 +101,8 @@ impl AppModel {
             mid_searches: HashMap::new(),
             tag_scan: None,
             tag_scan_gen: 0,
+            empty_ask: None,
+            empty_ask_gen: 0,
             demo_config: if demo_mode() && config.is_empty() {
                 demo_account_configs_saved()
             } else {

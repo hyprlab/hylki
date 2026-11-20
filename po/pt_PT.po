@@ -665,6 +665,47 @@ msgstr "Não existe uma pasta Rascunhos disponível para esta conta"
 msgid "No Templates folder available for this account"
 msgstr "Não existe uma pasta Modelos disponível para esta conta"
 
+msgid "Empty “{name}”?"
+msgstr "Esvaziar «{name}»?"
+
+msgid "Empty"
+msgstr "Esvaziar"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Todas as mensagens nela contidas serão apagadas do servidor. Esta ação não "
+"pode ser anulada."
+msgstr[1] ""
+"Todas as mensagens nela contidas serão apagadas do servidor. Esta ação não "
+"pode ser anulada."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Todas as mensagens nela contidas serão apagadas do servidor. Esta ação não "
+"pode ser anulada."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Esvaziar o Lixo de todas as contas?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Esvaziar o Lixo eletrónico de todas as contas?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Todas as mensagens nessas pastas serão eliminadas do servidor. Esta ação não "
+"pode ser anulada."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "{n} mensagem enviada"
+msgstr[1] "{n} mensagens enviadas"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -813,30 +854,6 @@ msgid ""
 msgstr ""
 "As mensagens nela contidas são movidas para o Lixo e a pasta é removida do "
 "servidor. Esta ação não pode ser anulada."
-
-msgid "Empty “{name}”?"
-msgstr "Esvaziar «{name}»?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Todas as mensagens nela contidas serão apagadas do servidor. Esta ação não "
-"pode ser anulada."
-
-msgid "Empty"
-msgstr "Esvaziar"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Esvaziar o Lixo de todas as contas?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Esvaziar o Lixo eletrónico de todas as contas?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Todas as mensagens nessas pastas serão eliminadas do servidor. Esta ação não "
-"pode ser anulada."
 
 msgid "This account can't have folders at the top level."
 msgstr "Esta conta não permite criar pastas no nível superior."

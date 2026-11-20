@@ -707,6 +707,47 @@ msgstr "Nessuna cartella Bozze disponibile per questo account"
 msgid "No Templates folder available for this account"
 msgstr "Nessuna cartella Modelli disponibile per questo account"
 
+msgid "Empty “{name}”?"
+msgstr "Svuotare \"{name}\"?"
+
+msgid "Empty"
+msgstr "Svuota"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+msgstr[1] ""
+"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Svuotare il Cestino in tutti gli account?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Svuotare la Posta indesiderata in tutti gli account?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Ogni messaggio in essi verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Trova nel messaggio"
+msgstr[1] "Trova nel messaggio"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -855,30 +896,6 @@ msgid ""
 msgstr ""
 "I messaggi vengono spostati nel Cestino e la cartella viene rimossa dal "
 "server. Questa operazione non può essere annullata."
-
-msgid "Empty “{name}”?"
-msgstr "Svuotare \"{name}\"?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
-"essere annullata."
-
-msgid "Empty"
-msgstr "Svuota"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Svuotare il Cestino in tutti gli account?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Svuotare la Posta indesiderata in tutti gli account?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Ogni messaggio in essi verrà cancellato dal server. Questa azione non può "
-"essere annullata."
 
 msgid "This account can't have folders at the top level."
 msgstr ""

@@ -363,6 +363,7 @@ impl<E: Emit> ImapWorker<E> {
             }
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::Quota => self.on_quota().await,
+            MailRequest::CountFolder { path } => self.on_count_folder(path).await,
             // Only On This Computer imports mail (#552).
             MailRequest::ImportMail { .. } => After::Done,
             MailRequest::RefreshKeywords { keywords } => self.on_refresh_keywords(keywords).await,

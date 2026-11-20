@@ -712,6 +712,44 @@ msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
 msgid "No Templates folder available for this account"
 msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
 
+msgid "Empty “{name}”?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid "Empty"
+msgstr "Kiürítés"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+msgstr[1] ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+
+msgid "Empty Trash in Every Account?"
+msgstr ""
+
+msgid "Empty Junk in Every Account?"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Keresés az üzenetben"
+msgstr[1] "Keresés az üzenetben"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -856,29 +894,6 @@ msgid ""
 msgstr ""
 "Az üzenetei a Kukába kerülnek, és a mappa eltávolításra kerül a "
 "kiszolgálóról. Ez a művelet visszafordíthatatlan."
-
-msgid "Empty “{name}”?"
-msgstr "Kiüríti ezt: „{name}”?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
-
-msgid "Empty"
-msgstr "Kiürítés"
-
-msgid "Empty Trash in Every Account?"
-msgstr ""
-
-msgid "Empty Junk in Every Account?"
-msgstr ""
-
-#, fuzzy
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
 
 msgid "This account can't have folders at the top level."
 msgstr ""

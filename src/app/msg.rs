@@ -272,6 +272,16 @@ pub(crate) enum AppMsg {
     /// Delete a custom folder (its contents are moved to Trash first).
     DeleteFolder { account_id: u32, path: String },
 
+    // ---- on_empty_count (empty_count.rs) ----
+    /// A server's count for a folder about to be emptied (#676).
+    FolderCounted {
+        account_id: u32,
+        path: String,
+        count: Option<u32>,
+    },
+    /// The empty numbered by this generation asks with what it has.
+    EmptyCountWait(u32),
+
     // ---- on_search (search.rs) ----
     /// The indexes of the folders not opened this run, read from disk for
     /// the search `gen` started (#472).

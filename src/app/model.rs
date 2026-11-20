@@ -61,6 +61,10 @@ pub(crate) struct AppModel {
     pub(super) tag_scan: Option<TagScan>,
     /// Counts scans, so a stale timeout cannot end a later one.
     pub(super) tag_scan_gen: u32,
+    /// An Empty Trash / Empty Junk waiting for its counts (#676).
+    pub(super) empty_ask: Option<super::empty_count::EmptyAsk>,
+    /// Counts those, so a stale wait cannot ask a later one.
+    pub(super) empty_ask_gen: u32,
     pub(super) config: Vec<AccountConfig>,
     /// Demo mode's stand-in account configs (the sample accounts live only
     /// at the backend): what the Accounts panel edits, kept in memory so a

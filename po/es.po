@@ -658,6 +658,47 @@ msgstr "No hay ninguna carpeta de borradores disponible para esta cuenta"
 msgid "No Templates folder available for this account"
 msgstr "No hay ninguna carpeta de plantillas disponible para esta cuenta"
 
+msgid "Empty “{name}”?"
+msgstr "¿Vaciar «{name}»?"
+
+msgid "Empty"
+msgstr "Vaciar"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Todos los mensajes que contiene se eliminarán del servidor. Esta acción no "
+"se puede deshacer."
+msgstr[1] ""
+"Todos los mensajes que contiene se eliminarán del servidor. Esta acción no "
+"se puede deshacer."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Todos los mensajes que contiene se eliminarán del servidor. Esta acción no "
+"se puede deshacer."
+
+msgid "Empty Trash in Every Account?"
+msgstr "¿Vaciar la papelera de todas las cuentas?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "¿Vaciar el correo no deseado de todas las cuentas?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Se eliminarán del servidor todos los mensajes de esas carpetas. Esta acción "
+"no se puede deshacer."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Se ha enviado {n} mensaje"
+msgstr[1] "Se han enviado {n} mensajes"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -804,30 +845,6 @@ msgid ""
 msgstr ""
 "Sus mensajes se moverán a la Papelera y la carpeta se eliminará del "
 "servidor. Esta acción no se puede deshacer."
-
-msgid "Empty “{name}”?"
-msgstr "¿Vaciar «{name}»?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Todos los mensajes que contiene se eliminarán del servidor. Esta acción no "
-"se puede deshacer."
-
-msgid "Empty"
-msgstr "Vaciar"
-
-msgid "Empty Trash in Every Account?"
-msgstr "¿Vaciar la papelera de todas las cuentas?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "¿Vaciar el correo no deseado de todas las cuentas?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Se eliminarán del servidor todos los mensajes de esas carpetas. Esta acción "
-"no se puede deshacer."
 
 msgid "This account can't have folders at the top level."
 msgstr "Esta cuenta no permite crear carpetas en el nivel superior."

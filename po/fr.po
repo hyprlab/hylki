@@ -648,6 +648,47 @@ msgstr "Aucun dossier Brouillons disponible pour ce compte"
 msgid "No Templates folder available for this account"
 msgstr "Aucun dossier Modèles disponible pour ce compte"
 
+msgid "Empty “{name}”?"
+msgstr "Vider « {name} » ?"
+
+msgid "Empty"
+msgstr "Vider"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Tous les messages qu’il contient seront supprimés du serveur. Cette action "
+"est irréversible."
+msgstr[1] ""
+"Tous les messages qu’il contient seront supprimés du serveur. Cette action "
+"est irréversible."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Tous les messages qu’il contient seront supprimés du serveur. Cette action "
+"est irréversible."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Vider la corbeille de tous les comptes ?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Vider les indésirables de tous les comptes ?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Tous les messages qu’ils contiennent seront effacés du serveur. Cette action "
+"est irréversible."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "{n} message envoyé"
+msgstr[1] "{n} messages envoyés"
+
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
 "and will be tried again"
@@ -791,30 +832,6 @@ msgid ""
 msgstr ""
 "Ses messages sont déplacés vers la Corbeille et le dossier est supprimé du "
 "serveur. Cette action est irréversible."
-
-msgid "Empty “{name}”?"
-msgstr "Vider « {name} » ?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Tous les messages qu’il contient seront supprimés du serveur. Cette action "
-"est irréversible."
-
-msgid "Empty"
-msgstr "Vider"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Vider la corbeille de tous les comptes ?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Vider les indésirables de tous les comptes ?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Tous les messages qu’ils contiennent seront effacés du serveur. Cette action "
-"est irréversible."
 
 msgid "This account can't have folders at the top level."
 msgstr "Ce compte ne peut pas avoir de dossiers à la racine."
