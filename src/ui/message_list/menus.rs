@@ -113,8 +113,8 @@ impl MessageList {
         ];
         let sections = vec![
             self.reply_section(&item),
-            flag_section,
             move_section,
+            flag_section,
             vec![
                 MenuEntry::submenu(i18n("Create"), create).icon("list-add-symbolic"),
                 MenuEntry::submenu(i18n("More"), more).icon("view-more-horizontal-symbolic"),
@@ -533,47 +533,9 @@ impl MessageList {
                 .keys(hint.and_then(|a| a.keys(KeysOf::Main)))
         };
 
+        // Where the selection goes comes before its star, read state and
+        // tags, as on a single message's menu.
         let sections = vec![
-            {
-                let mut section = Vec::new();
-                // Drafts are neither read nor unread.
-                // One entry, the way the bar's button toggles.
-                if !self.in_drafts {
-                    section.push(if self.selection_any_unread() {
-                        item(
-                            BulkAction::MarkRead,
-                            &i18n("Mark as Read"),
-                            "hylki-mail-read-symbolic",
-                        )
-                    } else {
-                        item(
-                            BulkAction::MarkUnread,
-                            &i18n("Mark as Unread"),
-                            "mail-unread-symbolic",
-                        )
-                    });
-                }
-                // The Bulk handler turns this into Unflag for a starred
-                // selection.
-                section.push(if self.selection_all_starred() {
-                    item(
-                        BulkAction::Flag,
-                        &i18n("Remove Star"),
-                        "hylki-non-starred-symbolic",
-                    )
-                } else {
-                    item(BulkAction::Flag, &i18n("Star"), "starred-symbolic")
-                });
-                let tags = self.bulk_tag_entries(sender);
-                if !tags.is_empty() {
-                    section.push(
-                        MenuEntry::submenu(i18n("Tags"), vec![tags])
-                            .icon("tag-outline-symbolic")
-                            .keys(A::Tags.keys(KeysOf::Main)),
-                    );
-                }
-                section
-            },
             {
                 let mut section = Vec::new();
                 if self.in_junk {
@@ -652,6 +614,46 @@ impl MessageList {
                     &i18n("Delete"),
                     "user-trash-symbolic",
                 ));
+                section
+            },
+            {
+                let mut section = Vec::new();
+                // Drafts are neither read nor unread.
+                // One entry, the way the bar's button toggles.
+                if !self.in_drafts {
+                    section.push(if self.selection_any_unread() {
+                        item(
+                            BulkAction::MarkRead,
+                            &i18n("Mark as Read"),
+                            "hylki-mail-read-symbolic",
+                        )
+                    } else {
+                        item(
+                            BulkAction::MarkUnread,
+                            &i18n("Mark as Unread"),
+                            "mail-unread-symbolic",
+                        )
+                    });
+                }
+                // The Bulk handler turns this into Unflag for a starred
+                // selection.
+                section.push(if self.selection_all_starred() {
+                    item(
+                        BulkAction::Flag,
+                        &i18n("Remove Star"),
+                        "hylki-non-starred-symbolic",
+                    )
+                } else {
+                    item(BulkAction::Flag, &i18n("Star"), "starred-symbolic")
+                });
+                let tags = self.bulk_tag_entries(sender);
+                if !tags.is_empty() {
+                    section.push(
+                        MenuEntry::submenu(i18n("Tags"), vec![tags])
+                            .icon("tag-outline-symbolic")
+                            .keys(A::Tags.keys(KeysOf::Main)),
+                    );
+                }
                 section
             },
         ];

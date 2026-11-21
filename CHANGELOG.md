@@ -13,9 +13,9 @@
   found by key id has to carry that id.
 
 - **New: a shorter right-click menu on messages** (#692). The menu of a
-  message in the list and of a card in the reader keeps replying, starring,
-  read state, tags and filing (Archive, Move To…, Snooze, Spam, Delete) on
-  its first page. **Create** holds Create Event…, Create Task…, Create
+  message in the list and of a card in the reader keeps replying, filing
+  (Spam, Move To…, Archive, Snooze, Delete), then starring, read state and
+  tags on its first page. **Create** holds Create Event…, Create Task…, Create
   Filter from Message… and Add Sender to Contacts. **More** holds Edit as
   New Message, Copy To…, View Source and Save as File…, and on a card the
   two print entries. A card's **View** holds remote content, the sender's

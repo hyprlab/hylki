@@ -2139,9 +2139,9 @@ Mode.
 The ⋯ at the end of a message's header opens the same menu as a right click on
 the message. It acts on that message, and has **Show Sender's Fonts and Colors**
 under **View** while **Settings → Reading → Use my own font** or **Use my own
-colors** is on. The menu's first page holds replying, starring, read state,
-tags and where the message goes; **Create**, **View** and **More** hold the
-rest.
+colors** is on. The menu's first page holds replying, where the message
+goes, then starring, read state and tags; **Create**, **View** and **More**
+hold the rest.
 
 The buttons above the message are in two groups. The left group, up to seven
 buttons, stays on the bar at every width: Reply, Reply All, Forward, Star,

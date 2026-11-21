@@ -268,8 +268,8 @@ impl AppModel {
         } else {
             let mut flags = flag_entries(&item, &m);
             flags.extend(self.card_tags_entry(&m, sender));
-            sections.push(flags);
             sections.push(self.card_place_entries(&item, &m, kind, popout, (x, y), sender));
+            sections.push(flags);
         }
         // The first page holds what is done to mail every day; the rest
         // waits one click away (#692), or the menu outgrew the window.
