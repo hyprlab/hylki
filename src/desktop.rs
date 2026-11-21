@@ -14,6 +14,7 @@ pub(crate) mod memory_report;
 pub(crate) mod nautilus_ext;
 pub(crate) mod notify;
 pub(crate) mod platform;
+pub(crate) mod portal;
 pub(crate) mod power;
 pub(crate) mod previewer;
 pub(crate) mod send_log;

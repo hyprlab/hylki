@@ -502,6 +502,31 @@ pub(crate) fn live_state() -> Option<GoaLiveState> {
     Some(state)
 }
 
+/// [`live_state`], given up on after `timeout`, for the main thread at
+/// startup. A zbus call has no timeout of its own, and a GOA daemon that
+/// never answers then held the window from ever appearing (#691). Giving
+/// up is the same "unknown" as an unreachable GOA; the call goes on in a
+/// thread of its own and its late answer is dropped.
+pub(crate) fn live_state_within(timeout: std::time::Duration) -> Option<GoaLiveState> {
+    let (tx, rx) = std::sync::mpsc::channel();
+    std::thread::Builder::new()
+        .name("hylki-goa-state".into())
+        .spawn(move || {
+            let _ = tx.send(live_state());
+        })
+        .ok()?;
+    match rx.recv_timeout(timeout) {
+        Ok(state) => state,
+        Err(_) => {
+            tracing::warn!(
+                "GNOME Online Accounts did not answer within {} s; its accounts are left as they are",
+                timeout.as_secs()
+            );
+            None
+        }
+    }
+}
+
 /// Watch GNOME Online Accounts for changes — accounts added and removed, and
 /// property edits (e.g. the Mail service being switched on or off) — and hand `on_change`
 /// a fresh [`GoaLiveState`] for each. Signals arrive in bursts for a single

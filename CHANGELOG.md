@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Fixed: no window when GNOME Online Accounts or the desktop portal does
+  not answer** (#691, reported by thopanX). Startup asked GNOME Online
+  Accounts for its accounts, and the date column asked the settings portal
+  for the clock format, on the main thread with no time limit. One that never
+  answered held the window from ever appearing, and every later launch timed
+  out handing off to that instance. GOA now has 5 seconds at startup, and its
+  accounts are left as they are without an answer. Portal calls give up
+  after 2 seconds and are not tried again for 5 minutes. A launch that finds
+  an instance that does not answer says so, with the command that ends it,
+  instead of waiting a second time.
+
 - **Fixed: "entity not found" opening a conversation in On This Computer**
   (#689, reported by samuel-edlmeier). With the empty Inbox left out of
   the folder list, the cache numbered the folders one off from the ids

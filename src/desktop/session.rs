@@ -12,14 +12,7 @@
 
 /// The string value of `key` in `namespace`, if the desktop has one.
 pub(crate) fn setting(namespace: &str, key: &str) -> Option<String> {
-    fn from_value(v: zbus::zvariant::Value<'_>) -> Option<String> {
-        match v {
-            zbus::zvariant::Value::Value(inner) => from_value(*inner),
-            zbus::zvariant::Value::Str(s) => Some(s.as_str().to_string()),
-            _ => None,
-        }
-    }
-    let portal = portal_setting(namespace, key).and_then(|v| from_value(v.into()));
+    let portal = portal_setting(namespace, key).and_then(|v| v.str().map(str::to_string));
     if portal.is_some() || std::env::var_os("FLATPAK_ID").is_some() {
         return portal;
     }
@@ -30,14 +23,7 @@ pub(crate) fn setting(namespace: &str, key: &str) -> Option<String> {
 
 /// The boolean value of `key` in `namespace`, if the desktop has one.
 fn flag(namespace: &str, key: &str) -> Option<bool> {
-    fn from_value(v: zbus::zvariant::Value<'_>) -> Option<bool> {
-        match v {
-            zbus::zvariant::Value::Value(inner) => from_value(*inner),
-            zbus::zvariant::Value::Bool(b) => Some(b),
-            _ => None,
-        }
-    }
-    let portal = portal_setting(namespace, key).and_then(|v| from_value(v.into()));
+    let portal = portal_setting(namespace, key).and_then(|v| v.get::<bool>());
     if portal.is_some() || std::env::var_os("FLATPAK_ID").is_some() {
         return portal;
     }
@@ -46,18 +32,16 @@ fn flag(namespace: &str, key: &str) -> Option<bool> {
     Some(settings.boolean(key))
 }
 
-fn portal_setting(namespace: &str, key: &str) -> Option<zbus::zvariant::OwnedValue> {
-    let conn = zbus::blocking::Connection::session().ok()?;
-    let reply = conn
-        .call_method(
-            Some("org.freedesktop.portal.Desktop"),
-            "/org/freedesktop/portal/desktop",
-            Some("org.freedesktop.portal.Settings"),
-            "ReadOne",
-            &(namespace, key),
-        )
-        .ok()?;
-    reply.body().deserialize().ok()
+/// Read on the main thread, as dates are drawn: hence the portal call with
+/// a timeout (#691).
+fn portal_setting(namespace: &str, key: &str) -> Option<gtk::glib::Variant> {
+    use gtk::glib::prelude::ToVariant;
+    let reply = super::portal::call(
+        "org.freedesktop.portal.Settings",
+        "ReadOne",
+        &(namespace, key).to_variant(),
+    )?;
+    Some(super::portal::unboxed(reply.try_child_value(0)?))
 }
 
 /// GSettings for `namespace`, where its schema is installed: looking a

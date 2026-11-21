@@ -116,6 +116,10 @@ fn load_sidebar_layout(
     (sidebar_state, focus, icon_only, rail_now)
 }
 
+/// How long startup waits for GOA, which answers in well under a second,
+/// starting itself included.
+const GOA_WAIT: std::time::Duration = std::time::Duration::from_secs(5);
+
 /// Load accounts, then reconcile against GNOME Online Accounts: drop any
 /// imported account GOA no longer has, pause any whose Mail service is
 /// switched off there. Reconciliation is skipped when GOA is unreachable,
@@ -126,7 +130,7 @@ fn load_accounts(sidebar_state: &mut config::SidebarState) -> Vec<AccountConfig>
     // Snapshot before reconciling: a removed account's alias-password
     // keyring entries are keyed by addresses only its config knows.
     let config_before_goa = config.clone();
-    let goa_outcome = match crate::services::goa::live_state() {
+    let goa_outcome = match crate::services::goa::live_state_within(GOA_WAIT) {
         Some(live) => reconcile_goa(&mut config, &live),
         None => GoaReconcile::default(),
     };

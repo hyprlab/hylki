@@ -89,6 +89,19 @@ pub(crate) fn primary_instance_running() -> bool {
     .is_some_and(|(owned,)| owned)
 }
 
+/// What came of handing a launch to the running instance.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum HandOff {
+    /// The running instance took it: this process is done.
+    Delivered,
+    /// No instance was there after all (it quit between the name check and
+    /// the hand-off): this one starts instead.
+    NoPrimary,
+    /// An instance holds the name but does not answer (#691). Starting would
+    /// only wait for it a second time, under the same name.
+    Unanswered,
+}
+
 /// Forward this invocation to the running primary instance and return once
 /// it has been accepted: `Open` with any mailto:/mid:/file arguments, plain
 /// `Activate` (present the window) otherwise.
@@ -109,10 +122,7 @@ pub(crate) fn primary_instance_running() -> bool {
 ///
 /// A `view` (a launcher action) is asked for with that app action instead of
 /// `Activate`; it goes through the same remote path, so it carries the token.
-///
-/// Returns false when no primary answered after all (it quit between the
-/// name check and the hand-off): the caller then starts normally.
-pub(crate) fn relay_to_primary(args: &[String], view: Option<StartView>) -> bool {
+pub(crate) fn relay_to_primary(args: &[String], view: Option<StartView>) -> HandOff {
     use gtk::gio::prelude::ApplicationExt;
     let files: Vec<gtk::gio::File> = args
         .iter()
@@ -132,15 +142,23 @@ pub(crate) fn relay_to_primary(args: &[String], view: Option<StartView>) -> bool
         .flags(gtk::gio::ApplicationFlags::HANDLES_OPEN)
         .build();
     if let Err(e) = remote.register(gtk::gio::Cancellable::NONE) {
+        if e.matches(gtk::gio::IOErrorEnum::TimedOut) {
+            tracing::error!(
+                "Hylki is already running but does not answer. End it with \
+                 `{}`, then start Hylki again.",
+                end_command()
+            );
+            return HandOff::Unanswered;
+        }
         tracing::warn!("hand-off to the running instance failed: {e}");
-        return false;
+        return HandOff::NoPrimary;
     }
     if !remote.is_remote() {
         // The name was free after all: we own it now, and releasing it
         // (dropping the object) lets the real app take it below.
         tracing::info!("the running instance left before the hand-off; starting instead");
         drop(remote);
-        return false;
+        return HandOff::NoPrimary;
     }
     tracing::info!(
         "handing off to the running instance ({} argument(s))",
@@ -166,7 +184,16 @@ pub(crate) fn relay_to_primary(args: &[String], view: Option<StartView>) -> bool
     // only print GLib's "did not unregister from D-Bus" warning to the
     // terminal, so it is deliberately left alive.
     std::mem::forget(remote);
-    true
+    HandOff::Delivered
+}
+
+/// The command that ends every running copy of this install.
+fn end_command() -> String {
+    if crate::desktop::platform::is_flatpak() {
+        format!("flatpak kill {APP_ID}")
+    } else {
+        "pkill -x hylki".to_string()
+    }
 }
 
 #[cfg(test)]
