@@ -331,8 +331,8 @@ as a draft, and POP3 has only an inbox.
 
 ### Copying mail to another folder
 
-**Copy To…**, in a message's right-click menu in the list and in the
-reader, opens the same picker as Move To. The message is stored again in
+**Copy To…**, under **More** in a message's right-click menu in the list
+and in the reader, opens the same picker as Move To. The message is stored again in
 the folder picked, with its read and starred state, and the original stays
 where it is. It works within an account and across accounts, into any
 folder of an account that can receive mail (see above), and a copy is not
@@ -2103,7 +2103,8 @@ conversation opens: **Never** shows every message, **Messages already read**
 folds what you have read, and **All but the newest** folds every message
 except the newest, read or not. The newest always opens, and so does a
 message you move to with `w` or `b`. Right-clicking anywhere in a
-conversation offers **Expand All Messages** and **Collapse All Messages**.
+conversation offers **Expand All Messages** and **Collapse All Messages**
+under **View**.
 What you fold or open stays that way while the conversation is on screen,
 and so does a message read while it is open.
 Printing shows every message in full.
@@ -2134,7 +2135,10 @@ Mode.
 
 The ⋯ at the end of a message's header opens the same menu as a right click on
 the message. It acts on that message, and has **Show Sender's Fonts and Colors**
-while **Settings → Reading → Use my own font** or **Use my own colors** is on.
+under **View** while **Settings → Reading → Use my own font** or **Use my own
+colors** is on. The menu's first page holds replying, starring, read state,
+tags and where the message goes; **Create**, **View** and **More** hold the
+rest.
 
 The buttons above the message are in two groups. The left group, up to seven
 buttons, stays on the bar at every width: Reply, Reply All, Forward, Star,
@@ -2172,8 +2176,8 @@ to star, move or delete. **Copy To…** in its right-click menu stores it in
 a folder of any account that takes mail, On This Computer included, marked
 read; the window stays open.
 
-**Save as File…**, in a message's right-click menu in the list or on its card,
-saves the message whole, as the server keeps it, under its subject with
+**Save as File…**, under **More** in a message's right-click menu in the list
+or on its card, saves the message whole, as the server keeps it, under its subject with
 `.eml` on the end. In a message window, the same menu also has **Copy To…**.
 
 A `.msg` keeps the headers the mail server sent when Outlook has them, and
@@ -2216,7 +2220,7 @@ where it is. A message in its own window follows the same setting.
 
 **Ctrl+P** prints the message or conversation in the reader, and
 **Ctrl+Shift+P**, the printer button in the reader's toolbar or **Print
-Preview** in the message's right-click menu shows it first, page by page,
+Preview** under **More** in the message's right-click menu shows it first, page by page,
 as it will come out. The preview prints from its **Print…** button and
 saves a PDF from **Save as PDF…**. A message opened in a window of its own
 has the same printer button, menu entries and keys.
@@ -2235,8 +2239,8 @@ your language's default paper size before that.
 
 ### Events and tasks from mail
 
-**Create Event…** and **Create Task…** in a message's right-click menu, in
-the list or the reader, open a dialog filled in from the message: its
+**Create Event…** and **Create Task…** under **Create** in a message's
+right-click menu, in the list or the reader, open a dialog filled in from the message: its
 subject as the title, and its sender, date and text as the notes. An event
 starts at the next whole hour and lasts an hour, or takes whole days with
 **All day**. **Alarm** and **Second alarm** each go off at the start or from
@@ -2255,8 +2259,8 @@ next time. Each is listed under its account's name in **Settings →
 Contacts**, else the nickname of the mail account with the same address,
 else the address.
 
-With text selected in the reader, the right-click menu has **Create Event
-from Selection…** and **Create Task from Selection…** in their place. The
+With text selected in the reader, the right-click menu's **Create** has
+**Create Event from Selection…** and **Create Task from Selection…** in their place. The
 dialog then starts from the date and times written in the selection:
 "Friday at 3pm", "Nov 20-22", "20/11/2026, 14:00-15:30", "tomorrow, 10-11am".
 A short one-line selection becomes the title, without its date and times;

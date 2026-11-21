@@ -40,11 +40,9 @@ impl MessageList {
             .keys(A::row_keys(action, msg.unread, KeysOf::Main))
         };
         let mut flag_section = vec![self.star_entry(msg, sender, &item)];
-        let move_entry = self.move_entry(msg, x, y, sender);
-        let copy_entry = self.copy_entry(msg, x, y, sender);
         flag_section.extend(self.read_entry(msg, sender, &item));
-        let tag_section = self.tag_section(msg, sender);
-        let mut move_section = self.move_section(move_entry, copy_entry, &item);
+        flag_section.extend(self.tag_entry(msg, sender));
+        let mut move_section = self.move_section(self.move_entry(msg, x, y, sender), &item);
         if let Some(snoozed) = self.snooze_offer {
             let s = sender.clone();
             let m = msg.clone();
@@ -65,23 +63,29 @@ impl MessageList {
                     .keys(A::Snooze.keys(KeysOf::Main)),
             );
         }
-        let sections = vec![
-            self.reply_section(&item),
-            flag_section,
-            tag_section,
-            move_section,
+        // The first page holds what is done to mail every day; the rest
+        // waits one click away (#692), or the menu outgrew the window.
+        let mut more_first = Vec::new();
+        if !self.in_templates {
+            more_first.push(item(
+                RowAction::EditAsNew,
+                &i18n("Edit as New Message"),
+                "document-edit-symbolic",
+            ));
+        }
+        more_first.push(self.copy_entry(msg, x, y, sender));
+        let more = vec![
+            more_first,
             vec![
+                item(RowAction::ViewSource, &i18n("View Source"), "code-symbolic"),
                 item(
-                    RowAction::AddContact,
-                    &i18n("Add Sender to Contacts"),
-                    "contact-new-symbolic",
-                ),
-                item(
-                    RowAction::CreateFilter,
-                    &i18n("Create Filter from Message…"),
-                    "filter-folder-symbolic",
+                    RowAction::SaveAsFile,
+                    &i18n("Save as File…"),
+                    "document-save-symbolic",
                 ),
             ],
+        ];
+        let create = vec![
             vec![
                 item(
                     RowAction::CreateEvent,
@@ -95,20 +99,33 @@ impl MessageList {
                 ),
             ],
             vec![
-                item(RowAction::ViewSource, &i18n("View Source"), "code-symbolic"),
                 item(
-                    RowAction::SaveAsFile,
-                    &i18n("Save as File…"),
-                    "document-save-symbolic",
+                    RowAction::CreateFilter,
+                    &i18n("Create Filter from Message…"),
+                    "filter-folder-symbolic",
                 ),
+                item(
+                    RowAction::AddContact,
+                    &i18n("Add Sender to Contacts"),
+                    "contact-new-symbolic",
+                ),
+            ],
+        ];
+        let sections = vec![
+            self.reply_section(&item),
+            flag_section,
+            move_section,
+            vec![
+                MenuEntry::submenu(i18n("Create"), create).icon("list-add-symbolic"),
+                MenuEntry::submenu(i18n("More"), more).icon("view-more-horizontal-symbolic"),
             ],
         ];
 
         self.popup_menu(x, y, None, sections);
     }
 
-    /// Reply, Reply All, Forward and Edit as New; in Templates, the
-    /// template's two uses instead.
+    /// Reply, Reply All and Forward; in Templates, the template's two uses
+    /// instead.
     fn reply_section(&self, item: &MakeEntry<'_>) -> Vec<MenuEntry> {
         if self.in_templates {
             vec![
@@ -139,11 +156,6 @@ impl MessageList {
                     RowAction::Forward,
                     &i18n("Forward"),
                     "mail-forward-symbolic",
-                ),
-                item(
-                    RowAction::EditAsNew,
-                    &i18n("Edit as New Message"),
-                    "document-edit-symbolic",
                 ),
             ]
         }
@@ -318,7 +330,7 @@ impl MessageList {
     /// Tags (#71): one toggle per tag, a filled swatch where the message
     /// carries it, behind a "Tags" submenu so a long list never makes this
     /// menu too tall. Absent until a tag exists.
-    fn tag_section(&self, msg: &Message, sender: &ComponentSender<Self>) -> Vec<MenuEntry> {
+    fn tag_entry(&self, msg: &Message, sender: &ComponentSender<Self>) -> Option<MenuEntry> {
         let tags = self.shared.tags.borrow().clone();
         let s = sender.clone();
         let m = msg.clone();
@@ -329,23 +341,16 @@ impl MessageList {
                 add,
             });
         });
-        if entries.is_empty() {
-            Vec::new()
-        } else {
-            vec![MenuEntry::submenu(i18n("Tags"), vec![entries])
+        (!entries.is_empty()).then(|| {
+            MenuEntry::submenu(i18n("Tags"), vec![entries])
                 .icon("tag-outline-symbolic")
-                .keys(A::Tags.keys(KeysOf::Main))]
-        }
+                .keys(A::Tags.keys(KeysOf::Main))
+        })
     }
 
     /// Spam (or Not Spam in Junk), Move to Inbox where it applies, Move
     /// To…, Archive and Delete.
-    fn move_section(
-        &self,
-        move_entry: MenuEntry,
-        copy_entry: MenuEntry,
-        item: &MakeEntry<'_>,
-    ) -> Vec<MenuEntry> {
+    fn move_section(&self, move_entry: MenuEntry, item: &MakeEntry<'_>) -> Vec<MenuEntry> {
         let mut section = Vec::new();
         // In Junk the way back is "Not Spam" (#168): the server is
         // told, and the message returns to the Inbox. In Trash it
@@ -371,7 +376,6 @@ impl MessageList {
             ));
         }
         section.push(move_entry);
-        section.push(copy_entry);
         section.push(item(
             RowAction::Archive,
             &i18n("Archive"),

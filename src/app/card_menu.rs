@@ -54,8 +54,8 @@ fn keys_of(popout: Option<(u32, u32)>) -> KeysOf {
     }
 }
 
-/// Reply, Reply All, Forward and Edit as New; a template (#360) is used or
-/// edited, never answered.
+/// Reply, Reply All and Forward; a template (#360) is used or edited, never
+/// answered.
 fn answer_entries(
     item: &impl Fn(RowAction, String, &str) -> MenuEntry,
     kind: Option<FolderKind>,
@@ -78,11 +78,6 @@ fn answer_entries(
             item(RowAction::Reply, i18n("Reply"), "mail-reply-sender"),
             item(RowAction::ReplyAll, i18n("Reply All"), "mail-reply-all"),
             item(RowAction::Forward, i18n("Forward"), "mail-forward"),
-            item(
-                RowAction::EditAsNew,
-                i18n("Edit as New Message"),
-                "document-edit",
-            ),
         ]
     }
 }
@@ -187,30 +182,52 @@ fn selection_calendar_entries(
     ]
 }
 
-/// Translate (when the reader offers it), View Source and Save as File.
-fn source_entries(
+/// Create Event and Create Task (from the selected text when there is
+/// some), then a filter and a contact from the message.
+fn card_create_sections(
     item: &impl Fn(RowAction, String, &str) -> MenuEntry,
     m: &Message,
     hit: &crate::ui::message_view::MenuHit,
-) -> Vec<MenuEntry> {
-    let mut last = Vec::new();
-    if let Some(t) = hit.translate.clone() {
-        let (account_id, id) = (m.account_id, m.id);
-        last.push(
-            MenuEntry::new(t.label, move || {
-                t.reader
-                    .emit(crate::ui::message_view::MessageViewInput::Translate { account_id, id });
-            })
-            .icon("translate-symbolic"),
-        );
-    }
-    last.push(item(RowAction::ViewSource, i18n("View Source"), "code"));
-    last.push(item(
-        RowAction::SaveAsFile,
-        i18n("Save as File…"),
-        "document-save",
-    ));
-    last
+    sender: &ComponentSender<AppModel>,
+) -> Vec<Vec<MenuEntry>> {
+    vec![
+        match &hit.selection {
+            Some(text) => selection_calendar_entries(m, text, sender),
+            None => vec![
+                item(
+                    RowAction::CreateEvent,
+                    i18n("Create Event…"),
+                    "x-office-calendar",
+                ),
+                item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
+            ],
+        },
+        vec![
+            item(
+                RowAction::CreateFilter,
+                i18n("Create Filter from Message…"),
+                "filter-folder",
+            ),
+            item(
+                RowAction::AddContact,
+                i18n("Add Sender to Contacts"),
+                "contact-new",
+            ),
+        ],
+    ]
+}
+
+/// Translate, Show Original or Show Translation, when a service is set up.
+fn translate_entry(m: &Message, hit: &crate::ui::message_view::MenuHit) -> Option<MenuEntry> {
+    let t = hit.translate.clone()?;
+    let (account_id, id) = (m.account_id, m.id);
+    Some(
+        MenuEntry::new(t.label, move || {
+            t.reader
+                .emit(crate::ui::message_view::MessageViewInput::Translate { account_id, id });
+        })
+        .icon("translate-symbolic"),
+    )
 }
 
 impl AppModel {
@@ -243,49 +260,72 @@ impl AppModel {
             sections.push(here);
         }
         sections.push(answer_entries(&item, kind));
-        if m.folder_id == FILE_FOLDER {
+        let from_file = m.folder_id == FILE_FOLDER;
+        if from_file {
             // A message open from a file (#398) has no server to star,
             // tag, file or delete it on: it can only be copied into one.
             sections.push(vec![self.copy_to_entry(&m, popout, (x, y), sender)]);
         } else {
-            sections.push(flag_entries(&item, &m));
-            if let Some(tags) = self.card_tags_entry(&m, sender) {
-                sections.push(vec![tags]);
-            }
+            let mut flags = flag_entries(&item, &m);
+            flags.extend(self.card_tags_entry(&m, sender));
+            sections.push(flags);
             sections.push(self.card_place_entries(&item, &m, kind, popout, (x, y), sender));
         }
-        sections.push(vec![
-            item(
-                RowAction::AddContact,
-                i18n("Add Sender to Contacts"),
-                "contact-new",
-            ),
-            item(
-                RowAction::CreateFilter,
-                i18n("Create Filter from Message…"),
-                "filter-folder",
-            ),
-        ]);
-        sections.push(match &hit.selection {
-            Some(text) => selection_calendar_entries(&m, text, sender),
-            None => vec![
-                item(
-                    RowAction::CreateEvent,
-                    i18n("Create Event…"),
-                    "x-office-calendar",
-                ),
-                item(RowAction::CreateTask, i18n("Create Task…"), "task-due"),
-            ],
-        });
-        let mut content = vec![self.card_remote_entry(&m, sender)];
-        content.extend(sender_style_entry(&hit, &m));
-        sections.push(content);
-        if let Some(folds) = fold_entries(&hit) {
-            sections.push(folds);
+        // The first page holds what is done to mail every day; the rest
+        // waits one click away (#692), or the menu outgrew the window.
+        let mut last = Vec::from_iter(translate_entry(&m, &hit));
+        last.push(
+            MenuEntry::submenu(
+                i18n("Create"),
+                card_create_sections(&item, &m, &hit, sender),
+            )
+            .icon("list-add-symbolic"),
+        );
+        last.push(
+            MenuEntry::submenu(i18n("View"), self.card_view_sections(&m, &hit, sender))
+                .icon("eye-open-negative-filled-symbolic"),
+        );
+        let mut edit = Vec::new();
+        if kind != Some(FolderKind::Templates) {
+            edit.push(item(
+                RowAction::EditAsNew,
+                i18n("Edit as New Message"),
+                "document-edit",
+            ));
         }
-        sections.push(source_entries(&item, &m, &hit));
-        sections.push(self.card_print_entries(popout, sender));
+        if !from_file {
+            edit.push(self.copy_to_entry(&m, popout, (x, y), sender));
+        }
+        let more = vec![
+            edit,
+            vec![
+                item(RowAction::ViewSource, i18n("View Source"), "code"),
+                item(
+                    RowAction::SaveAsFile,
+                    i18n("Save as File…"),
+                    "document-save",
+                ),
+            ],
+            self.card_print_entries(popout, sender),
+        ];
+        last.push(MenuEntry::submenu(i18n("More"), more).icon("view-more-horizontal-symbolic"));
+        sections.push(last);
         show_context_menu(&parent, x, y, sections);
+    }
+
+    /// How the message shows: its remote content, the sender's fonts and
+    /// colors, and the conversation's folds.
+    fn card_view_sections(
+        &self,
+        m: &Message,
+        hit: &crate::ui::message_view::MenuHit,
+        sender: &ComponentSender<Self>,
+    ) -> Vec<Vec<MenuEntry>> {
+        let mut content = vec![self.card_remote_entry(m, sender)];
+        content.extend(sender_style_entry(hit, m));
+        let mut sections = vec![content];
+        sections.extend(fold_entries(hit));
+        sections
     }
 
     /// Copy To…, its picker over the window the menu is in.
@@ -390,7 +430,6 @@ impl AppModel {
                 .keys(MessageAction::MoveTo.keys(KeysOf::Main)),
             );
         }
-        acts.push(self.copy_to_entry(m, popout, (x, y), sender));
         acts.push(item(RowAction::Archive, i18n("Archive"), "mail-archive"));
         // Snooze (#527): the card's message alone, as its other actions.
         if let Some(snoozed) = self.snooze_offer(m.account_id, kind) {

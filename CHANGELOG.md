@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **New: a shorter right-click menu on messages** (#692). The menu of a
+  message in the list and of a card in the reader keeps replying, starring,
+  read state, tags and filing (Archive, Move To…, Snooze, Spam, Delete) on
+  its first page. **Create** holds Create Event…, Create Task…, Create
+  Filter from Message… and Add Sender to Contacts. **More** holds Edit as
+  New Message, Copy To…, View Source and Save as File…, and on a card the
+  two print entries. A card's **View** holds remote content, the sender's
+  fonts and colors, and Expand All and Collapse All. Translate stays on the
+  first page when a service is set up. In the Inbox the card menu went from
+  26 entries to 15, and the list's from 19 to 13.
+
 - **Fixed: no window when GNOME Online Accounts or the desktop portal does
   not answer** (#691, reported by thopanX). Startup asked GNOME Online
   Accounts for its accounts, and the date column asked the settings portal
