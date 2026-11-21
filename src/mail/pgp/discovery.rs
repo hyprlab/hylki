@@ -10,7 +10,7 @@ use std::sync::RwLock;
 use sha2::{Digest, Sha256};
 
 use super::autocrypt::{self, PeerState, PreferEncrypt, Recommendation};
-use super::keys::{import_summary, list_keys};
+use super::keys::{import_keys, import_summary, list_keys, ImportSummary};
 use super::{run, Gpg, KeyInfo};
 use crate::cache::Cache;
 
@@ -400,6 +400,89 @@ pub(crate) fn keyserver_lookup(fetch: &dyn Fetch, addr: &str) -> Result<Option<V
     Ok(fetch.get(&url)?.filter(|k| !k.is_empty()))
 }
 
+/// What **Fetch the sender's key** and **Fetch by address…** ask once gpg's
+/// own lookups found nothing: WKD again through [`Https`], which follows a
+/// redirect to another host where gpg refuses one (fsf.org sends its WKD
+/// to www.fsf.org), then keys.openpgp.org by address and by key id, which
+/// has many keys gpg's default keyserver lacks. Into `gpg`'s keyring, so
+/// nothing is taken on a server's word alone: a key found by address keeps
+/// only its user ids for that address and has to name it, and one found
+/// by key id has to carry that id, as `--recv-keys` insists.
+pub(crate) fn fetch_elsewhere(
+    fetch: &dyn Fetch,
+    gpg: &Gpg,
+    addr: &str,
+    key_id: Option<&str>,
+) -> Option<ImportSummary> {
+    let addr = addr.trim().to_ascii_lowercase();
+    if addr.contains('@') {
+        let wkd = wkd_lookup(fetch, &addr).ok().flatten();
+        if let Some(found) = wkd.and_then(|k| import_naming(gpg, &k, &addr)) {
+            return Some(found);
+        }
+        let served = keyserver_lookup(fetch, &addr).ok().flatten();
+        if let Some(found) = served.and_then(|k| import_naming(gpg, &k, &addr)) {
+            return Some(found);
+        }
+    }
+    let id = key_id
+        .map(|k| k.trim().trim_start_matches("0x").to_ascii_uppercase())
+        .filter(|k| matches!(k.len(), 16 | 40) && k.bytes().all(|b| b.is_ascii_hexdigit()))?;
+    let by = if id.len() == 16 {
+        "by-keyid"
+    } else {
+        "by-fingerprint"
+    };
+    let key = fetch
+        .get(&format!("https://keys.openpgp.org/vks/v1/{by}/{id}"))
+        .ok()
+        .flatten()?;
+    if !carries_id(gpg, &key, &id) {
+        return None;
+    }
+    import_keys(gpg, &key).ok()
+}
+
+/// Import `keydata` with only its user ids for `addr`, when a key that
+/// names `addr` comes of it.
+fn import_naming(gpg: &Gpg, keydata: &[u8], addr: &str) -> Option<ImportSummary> {
+    let filter = format!("keep-uid=mbox = {addr}");
+    let out = run(
+        gpg,
+        &[
+            "--import-options",
+            "import-clean",
+            "--import-filter",
+            &filter,
+            "--import",
+        ],
+        keydata,
+        None,
+    );
+    let summary = import_summary(&out);
+    // gpg names a key it already held as imported even when the filter
+    // left nothing of it, so the keyring has the last word.
+    let keys = list_keys(gpg, false);
+    let names = summary.fingerprints.iter().any(|f| {
+        keys.iter()
+            .any(|k| k.fingerprint == *f && k.matches_address(addr))
+    });
+    names.then_some(summary)
+}
+
+/// Whether `keydata` is one key whose primary key or a subkey has `id` (a
+/// long key id or a fingerprint, upper case): a signature names the subkey
+/// that made it.
+fn carries_id(gpg: &Gpg, keydata: &[u8], id: &str) -> bool {
+    let out = run(gpg, &["--with-colons", "--show-keys"], keydata, None);
+    let text = String::from_utf8_lossy(&out.stdout);
+    text.lines().filter(|l| l.starts_with("pub:")).count() == 1
+        && text
+            .lines()
+            .filter_map(|l| l.strip_prefix("fpr:"))
+            .any(|l| l.split(':').nth(8).is_some_and(|f| f.ends_with(id)))
+}
+
 /// Look `addr` up (WKD, then a keyserver when `keyserver` is allowed) and
 /// remember the outcome in its state, the key in Hylki's own keyring. The
 /// peer as it now stands.
@@ -722,6 +805,54 @@ mod tests {
             .map(|a| super::super::generate_key(&gpg, "", a, "never", "").expect("a key"))
             .unwrap_or_default();
         (gpg, home, fpr)
+    }
+
+    /// Hylki's own lookups past gpg's: a key served for an address has to
+    /// name it, one served for a key id has to carry it, and nothing else
+    /// reaches the user's keyring. Skipped where gpg is missing.
+    #[test]
+    fn fetch_elsewhere_takes_only_the_key_asked_for() {
+        if !super::super::available() {
+            eprintln!("gpg not installed; skipping");
+            return;
+        }
+        let (ada, ada_home, ada_fpr) = keyring("fe-ada", Some("ada@example.org"));
+        let (bob, bob_home, bob_fpr) = keyring("fe-bob", Some("bob@example.org"));
+        let (main, main_home, _) = keyring("fe-me", None);
+        let ada_key = export_key(&ada, &ada_fpr).expect("exported");
+        let bob_key = export_key(&bob, &bob_fpr).expect("exported");
+        let (carol_wkd, _) = wkd_urls("carol@example.org").unwrap();
+        let net = fake(vec![
+            (carol_wkd.as_str(), Ok(Some(ada_key.clone()))),
+            (
+                "https://keys.openpgp.org/vks/v1/by-email/",
+                Ok(Some(bob_key)),
+            ),
+            (
+                "https://keys.openpgp.org/vks/v1/by-keyid/",
+                Ok(Some(ada_key)),
+            ),
+        ]);
+
+        let none = fetch_elsewhere(&net, &main, "carol@example.org", Some("0x0123456789ABCDEF"));
+        assert!(none.is_none());
+        assert!(list_keys(&main, false).is_empty(), "nothing taken");
+        let asked = net.asked.borrow().clone();
+        assert_eq!(asked.len(), 3, "{asked:?}");
+        assert!(asked[0].starts_with(&carol_wkd));
+        assert!(asked[1].contains("/by-email/carol%40example.org"));
+        assert!(asked[2].ends_with("/by-keyid/0123456789ABCDEF"));
+
+        let bob = fetch_elsewhere(&net, &main, " Bob@Example.org ", None).expect("by address");
+        assert_eq!(bob.fingerprints, vec![bob_fpr]);
+        let ada = fetch_elsewhere(&net, &main, "", Some(&ada_fpr[24..].to_lowercase()))
+            .expect("by key id");
+        assert_eq!(ada.fingerprints, vec![ada_fpr]);
+        assert_eq!(list_keys(&main, false).len(), 2);
+
+        for home in [&ada_home, &bob_home, &main_home] {
+            super::super::drop_test_keyring(home);
+        }
     }
 
     /// Autocrypt and gossip against a real gpg: keys land in the keyring of

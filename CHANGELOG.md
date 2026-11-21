@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Fixed: Fetch the sender's key found nothing for many addresses** (#690,
+  by James Reilly). gpg asks only the keyserver it is set up with,
+  keyserver.ubuntu.com by default, which lacks many keys, and its WKD lookup
+  refuses a redirect to another host. edward-en@fsf.org fails both ways.
+  When gpg finds nothing, **Fetch the sender's key** and **Fetch by
+  address…** now ask the provider's WKD again through Hylki's own HTTPS
+  client, then keys.openpgp.org by address and by key id. A key found by
+  address keeps only the user ids for that address and has to name it. One
+  found by key id has to carry that id.
+
 - **New: a shorter right-click menu on messages** (#692). The menu of a
   message in the list and of a card in the reader keeps replying, starring,
   read state, tags and filing (Archive, Move To…, Snooze, Spam, Delete) on

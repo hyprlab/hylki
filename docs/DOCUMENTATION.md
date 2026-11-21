@@ -1840,14 +1840,17 @@ signature. There are four ways to get one, none of which need a terminal:
 - A signed message from someone whose key you don't have shows an amber shield
   beside their name. Click it and choose **Fetch the sender's key**. Hylki
   looks in the message itself first (many clients attach the key in an
-  Autocrypt header), then asks the sender's provider (WKD), then the keyservers.
+  Autocrypt header), then asks the sender's provider (WKD), then the keyserver
+  gpg is set up with. When none of them has the key, Hylki asks the provider
+  again itself and then keys.openpgp.org, whichever keyserver gpg uses.
   A key from the message's Autocrypt header is taken only when the header
   names the sender's own address, and it goes into Hylki's own keyring of
   found keys, never yours (see below).
 - A message with a key file attached shows an **Import OpenPGP key** button on
   that attachment.
 - Under *Settings → OpenPGP → Other people's keys*, **Fetch by address…**
-  looks a key up by email address, and **Import…** reads a key file.
+  looks a key up by email address the same way, and **Import…** reads a key
+  file.
 - A key someone sends you by any other route can be imported the same way.
 
 Other people's keys are listed by name. The search field above the list finds
