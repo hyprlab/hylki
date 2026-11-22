@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 use relm4::prelude::*;
 
+use crate::config;
 use crate::models::{FolderKind, Message};
 use crate::ui::message_list::{MessageListInput, SearchScope};
 
@@ -60,18 +61,40 @@ fn pool_rank(kind: Option<FolderKind>) -> u8 {
     }
 }
 
-/// Where a search starts in a view just opened (#472): across the mailbox
-/// from an Inbox, and in the folder or view itself from anywhere else, as a
-/// search of Trash or Junk most often means.
-pub(super) fn default_scope(inbox: bool) -> SearchScope {
-    if inbox {
-        SearchScope::AllFolders
-    } else {
-        SearchScope::ThisFolder
+/// Where a search starts in a view just opened, as Settings → Message List
+/// has it (#699). `one_account`: the view shows a single account's mail,
+/// which "This Account" needs.
+pub(super) fn default_scope(start: config::SearchStart, one_account: bool) -> SearchScope {
+    use config::SearchStart;
+    match start {
+        SearchStart::ThisFolder => SearchScope::ThisFolder,
+        SearchStart::AllFolders => SearchScope::AllFolders,
+        SearchStart::Account if one_account => SearchScope::Account,
+        // Across accounts, the nearest to every folder Trash and Junk
+        // included.
+        SearchStart::Account | SearchStart::Everywhere => SearchScope::Everywhere,
     }
 }
 
 impl AppModel {
+    /// The open folder or view's search starts where the setting now says
+    /// (#699). The Outbox, a smart view and a tag view keep their own.
+    pub(super) fn apply_search_start(&self) {
+        if self.showing_outbox
+            || (!self.unified && (self.tag_view.is_some() || self.smart_view.is_some()))
+        {
+            return;
+        }
+        let scope = if self.unified {
+            default_scope(self.list_search_start, self.unified_account.is_some())
+        } else if self.selected.is_some() {
+            default_scope(self.list_search_start, true)
+        } else {
+            return;
+        };
+        self.message_list.emit(MessageListInput::SetScope(scope));
+    }
+
     /// The cross-folder search pool: the folders opened this run as they
     /// are now, and `from_disk` for the rest, answered with
     /// [`AppMsg::SearchPoolBuilt`]. Copying a mailbox's messages took the
@@ -294,8 +317,16 @@ mod tests {
     }
 
     #[test]
-    fn a_search_from_the_inbox_spans_all_folders() {
-        assert_eq!(default_scope(true), SearchScope::AllFolders);
-        assert_eq!(default_scope(false), SearchScope::ThisFolder);
+    fn a_search_starts_where_the_setting_says() {
+        use config::SearchStart::*;
+        assert_eq!(config::SearchStart::default(), Everywhere);
+        for one in [true, false] {
+            assert_eq!(default_scope(ThisFolder, one), SearchScope::ThisFolder);
+            assert_eq!(default_scope(AllFolders, one), SearchScope::AllFolders);
+            assert_eq!(default_scope(Everywhere, one), SearchScope::Everywhere);
+        }
+        assert_eq!(default_scope(Account, true), SearchScope::Account);
+        // "This Account" has no meaning across accounts.
+        assert_eq!(default_scope(Account, false), SearchScope::Everywhere);
     }
 }

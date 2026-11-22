@@ -248,9 +248,6 @@ msgstr "Allen antworten"
 msgid "Forward"
 msgstr "Weiterleiten"
 
-msgid "Edit as New Message"
-msgstr "Als neue Nachricht bearbeiten"
-
 msgid "Remove Star"
 msgstr "Stern entfernen"
 
@@ -281,23 +278,35 @@ msgstr "Termin aus Auswahl erstellen…"
 msgid "Create Task from Selection…"
 msgstr "Aufgabe aus Auswahl erstellen…"
 
+msgid "Create Event…"
+msgstr "Erstelle Termin…"
+
+msgid "Create Task…"
+msgstr "Erstelle Aufgabe…"
+
+msgid "Create Filter from Message…"
+msgstr "Filterregel aus Nachricht erstellen…"
+
+msgid "Add Sender to Contacts"
+msgstr "Absender zu Kontakten hinzufügen"
+
+msgid "Create"
+msgstr "Erstellen"
+
+msgid "View"
+msgstr "Anzeigen"
+
+msgid "Edit as New Message"
+msgstr "Als neue Nachricht bearbeiten"
+
 msgid "View Source"
 msgstr "Quelltext anzeigen"
 
 msgid "Save as File…"
 msgstr "Speichern unter…"
 
-msgid "Add Sender to Contacts"
-msgstr "Absender zu Kontakten hinzufügen"
-
-msgid "Create Filter from Message…"
-msgstr "Filterregel aus Nachricht erstellen…"
-
-msgid "Create Event…"
-msgstr "Erstelle Termin…"
-
-msgid "Create Task…"
-msgstr "Erstelle Aufgabe…"
+msgid "More"
+msgstr "Mehr"
 
 msgid "Copy To…"
 msgstr "Kopieren nach…"
@@ -565,6 +574,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "{name} hat nicht geantwortet: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Auf {name} wurden noch keine Adressbücher gefunden."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 "Ein Name, eine E-Mail-Adresse oder eine Telefonnummer ist erforderlich."
@@ -580,6 +593,18 @@ msgstr "Die Datei ist keine Textdatei."
 
 msgid "The file is larger than {size} MB"
 msgstr "Diese Datei ist größer als {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Adressbuch umbenennen"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Adresse überprüfen"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "In ein anderes Adressbuch verschieben"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -645,6 +670,47 @@ msgstr "Für dieses Konto ist kein Entwurfsordner verfügbar."
 
 msgid "No Templates folder available for this account"
 msgstr "Für dieses Konto ist kein Vorlagenordner verfügbar."
+
+msgid "Empty “{name}”?"
+msgstr "»{name}« leeren?"
+
+msgid "Empty"
+msgstr "Leeren"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
+"gemacht werden."
+msgstr[1] ""
+"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
+"gemacht werden."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
+"gemacht werden."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Alle Papierkörbe leeren?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Alle Spam-Ordner leeren?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Alle darin enthaltenen Nachrichten werden dauerhaft vom Server gelöscht. "
+"Dieser Vorgang kann nicht rückgängig gemacht werden."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "{n} E-Mail gesendet"
+msgstr[1] "{n} E-Mails gesendet"
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -767,9 +833,6 @@ msgstr "Neuer Ordner"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-msgid "Create"
-msgstr "Erstellen"
-
 msgid "Folder name"
 msgstr "Name des Ordners"
 
@@ -791,30 +854,6 @@ msgid ""
 msgstr ""
 "Die Nachrichten werden in den Papierkorb verschoben und der Ordner wird vom "
 "Server entfernt. Das kann nicht rückgängig gemacht werden."
-
-msgid "Empty “{name}”?"
-msgstr "»{name}« leeren?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Jede Nachricht darin wird vom Server gelöscht. Das kann nicht rückgängig "
-"gemacht werden."
-
-msgid "Empty"
-msgstr "Leeren"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Alle Papierkörbe leeren?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Alle Spam-Ordner leeren?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Alle darin enthaltenen Nachrichten werden dauerhaft vom Server gelöscht. "
-"Dieser Vorgang kann nicht rückgängig gemacht werden."
 
 msgid "This account can't have folders at the top level."
 msgstr "Dieses Konto kann keine Ordner auf der obersten Ebene enthalten."
@@ -1404,9 +1443,6 @@ msgstr "Fokusmodus ein"
 
 msgid "Turn Focus Mode Off"
 msgstr "Fokusmodus aus"
-
-msgid "View"
-msgstr "Anzeigen"
 
 msgid "All accounts"
 msgstr "Alle Konten"
@@ -4241,9 +4277,6 @@ msgstr "Mit eigenem OpenPGP-Schlüssel signieren"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Mit OpenPGP für jeden Empfängerschlüssel verschlüsseln"
 
-msgid "More"
-msgstr "Mehr"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Cc, Bcc und Reply-To anzeigen"
 
@@ -4504,6 +4537,59 @@ msgstr "Download-Passwort für {name}: {password}"
 msgid "Reply-To"
 msgstr "Antwort an"
 
+msgid "Look in"
+msgstr ""
+
+#, fuzzy
+msgid "All Mail"
+msgstr "Alle E-Mails"
+
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Mbox-Dateien importieren"
+
+msgid "Import"
+msgstr "Importieren"
+
+msgid "Import into"
+msgstr "Importieren nach"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Nach Name, Adresse oder ID suchen"
+
+msgid "Select All"
+msgstr "Alles auswählen"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Ausgewählt"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "{n} Nachricht ausgewählt"
+msgstr[1] "{n} Nachrichten ausgewählt"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} Nachricht"
+msgstr[1] "{n} Nachrichten"
+
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Kontakte in Nachrichten"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Keine Ergebnisse"
+
 msgid "Match a column to a name, an email address or a phone number."
 msgstr ""
 "Eine Spalte einem Namen, einer E-Mail-Adresse oder einer Telefonnummer "
@@ -4511,12 +4597,6 @@ msgstr ""
 
 msgid "Import Contacts"
 msgstr "Kontakte importieren"
-
-msgid "Import"
-msgstr "Importieren"
-
-msgid "Import into"
-msgstr "Importieren nach"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5059,8 +5139,20 @@ msgstr "Ohne E-Mail-Adresse · {book}"
 msgid "Sort and filter contacts"
 msgstr "Kontakte sortieren und filtern"
 
-msgid "vCard and CSV files"
-msgstr "vCard- und CSV-Dateien"
+#, fuzzy
+msgid "From Files…"
+msgstr "Datei importieren…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "From Mail…"
+msgstr "Datei importieren…"
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Kontakte"
 
 msgid "All files"
 msgstr "Alle Dateien"
@@ -5195,9 +5287,6 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Entfernt {n} Kontakt aus dem Adressbuch."
 msgstr[1] "Entfernt {n} Kontakte aus dem Adressbuch."
 
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "vCard- oder CSV-Dateien in das Hylki-Adressbuch importieren"
-
 msgid "New contact or group"
 msgstr "Neuer Kontakt oder Kontaktliste"
 
@@ -5296,11 +5385,6 @@ msgstr "Ordner durchsuchen"
 
 msgid "Whole conversation"
 msgstr "Gesamte Unterhaltung"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} Nachricht"
-msgstr[1] "{n} Nachrichten"
 
 msgid "Later today ({time})"
 msgstr "Heute später ({time})"
@@ -5525,9 +5609,6 @@ msgstr "Nur der aktuell angezeigte Ordner oder die aktuelle Ansicht"
 
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Alle Ordner dieses Kontos inklusive Papierkorb und Spam."
-
-msgid "What this searches"
-msgstr "Durchsuchte Ordner"
 
 msgid "me"
 msgstr "ich"
@@ -7025,6 +7106,10 @@ msgstr "Zeigt den Betreff in voller Breite an."
 msgid "Search field position"
 msgstr "Position des Suchfelds"
 
+#, fuzzy
+msgid "Search starts in"
+msgstr "Einstellungen durchsuchen"
+
 msgid "Selection bar position"
 msgstr "Position der Auswahlleiste"
 
@@ -8189,11 +8274,18 @@ msgstr[1] "{n} Kontakte konnten nicht verschoben werden: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Kontakt konnte nicht aktualisiert werden: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Kontakte konnten nicht importiert werden: {e}"
 
 msgid "Could not read: {files}"
 msgstr "Konnte nicht gelesen werden: {files}"
+
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Vorlage wurde in »{folder}« ({account}) gespeichert."
 
 msgid "Search filters"
 msgstr "Suchfilter"
@@ -9077,9 +9169,6 @@ msgstr "Als reinen Text einfügen"
 msgid "Cut"
 msgstr "Ausschneiden"
 
-msgid "Select All"
-msgstr "Alles auswählen"
-
 msgid "Insert Emoji"
 msgstr "Emoji einfügen"
 
@@ -9217,6 +9306,19 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Durchsuchte Ordner"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Alle Konten"
+
+#~ msgid "vCard and CSV files"
+#~ msgstr "vCard- und CSV-Dateien"
+
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "vCard- oder CSV-Dateien in das Hylki-Adressbuch importieren"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Wartet auf Versand"

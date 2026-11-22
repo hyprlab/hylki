@@ -401,6 +401,7 @@ impl SortFilterPopover {
             dates.attach(&label, 0, row as i32, 1, 1);
             dates.attach(button, 1, row as i32, 1, 1);
         }
+        crate::ui::flat_calendar::style(&range.calendar);
         dates.attach(&range.calendar, 0, 2, 2, 1);
         dates_col.append(&dates);
         dates_col.append(&range.clear);

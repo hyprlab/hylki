@@ -120,6 +120,45 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         emit(WorkerEvent::Quota(quota));
     }
 
+    /// How many messages a mailbox holds (#676): its `totalEmails`.
+    pub(super) async fn on_count_folder(&mut self, path: String) {
+        let account_id = self.account_id;
+        let state = &mut self.state;
+        let emit = &self.emit;
+        let mut count = None;
+        if let (Some(s), Some((_, mailbox_id))) = (
+            jmap_session(&self.account, state, emit).await,
+            state.folders.get(&path).cloned(),
+        ) {
+            let sess = s.clone();
+            let r = blocking(move || {
+                jmap_call(
+                    &sess,
+                    &[CAP_CORE, CAP_MAIL],
+                    vec![call(
+                        0,
+                        "Mailbox/get",
+                        serde_json::json!({
+                            "accountId": sess.account,
+                            "ids": [mailbox_id],
+                            "properties": ["totalEmails"],
+                        }),
+                    )],
+                )
+            })
+            .await;
+            match r {
+                Ok(responses) => {
+                    count = args(&responses, 0)["list"][0]["totalEmails"]
+                        .as_u64()
+                        .map(|n| n.min(u64::from(u32::MAX)) as u32);
+                }
+                Err(e) => tracing::warn!("[account {account_id}] count {path}: {e}"),
+            }
+        }
+        emit(WorkerEvent::FolderCounted { path, count });
+    }
+
     /// The keywords in use across the account, for the tag finder.
     pub(super) async fn on_find_keywords(&mut self) {
         let account_id = self.account_id;

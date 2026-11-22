@@ -27,7 +27,7 @@ pub(super) fn show_message_picker<T: 'static>(
     new_instead: bool,
     on_pick: impl Fn(T, Option<Message>) + 'static,
 ) {
-    let dialog = adw::MessageDialog::new(Some(parent), Some(heading), Some(body));
+    let dialog = crate::ui::dialog::message_dialog(Some(parent), Some(heading), Some(body));
     dialog.add_response("cancel", &i18n("Cancel"));
     if new_instead {
         dialog.add_response("new", &i18n("New Message Instead"));

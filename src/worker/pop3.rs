@@ -153,6 +153,10 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
             MailRequest::FindKeywords => emit(WorkerEvent::KeywordsFound(Vec::new())),
             // POP3 has no way to say how much room is left.
             MailRequest::Quota => emit(WorkerEvent::Quota(None)),
+            // Nothing on a POP3 server is emptied.
+            MailRequest::CountFolder { path } => {
+                emit(WorkerEvent::FolderCounted { path, count: None })
+            }
             MailRequest::RefreshKeywords { .. } => {
                 emit(WorkerEvent::KeywordsSynced { paths: Vec::new() })
             }

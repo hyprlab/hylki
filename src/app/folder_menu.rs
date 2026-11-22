@@ -4,7 +4,6 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::i18n::{i18n, i18n_f};
-use crate::models::FolderKind;
 use crate::ui::sidebar::CtxAction;
 use crate::worker::MailRequest;
 
@@ -12,7 +11,6 @@ use super::model::AppModel;
 use super::msg::AppMsg;
 use super::sidebar::folder_key;
 use super::undo::UndoStep;
-use crate::ui::dialog::confirm_destructive;
 
 impl AppModel {
     /// Prompt for a new custom folder name and create it under `account_id`,
@@ -25,7 +23,7 @@ impl AppModel {
             }
             _ => i18n("Create a new folder for this account."),
         };
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(i18n("New Folder").as_str()),
             Some(body.as_str()),
@@ -63,7 +61,7 @@ impl AppModel {
         path: String,
         sender: &ComponentSender<Self>,
     ) {
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(&format!("Rename {name:?}")),
             Some(i18n("Sub-folders keep their place under the new name.").as_str()),
@@ -134,7 +132,7 @@ impl AppModel {
         path: String,
         sender: &ComponentSender<Self>,
     ) {
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(&format!("Delete “{name}”?")),
             Some(
@@ -158,88 +156,6 @@ impl AppModel {
             }
         });
         dialog.present();
-    }
-
-    /// Empty Trash / Empty Junk (#152): there is no undo, so always ask.
-    fn confirm_empty_folder(
-        &self,
-        account_id: u32,
-        folder_id: u32,
-        name: String,
-        path: String,
-        sender: &ComponentSender<Self>,
-    ) {
-        let s = sender.clone();
-        confirm_destructive(
-            Some(self.window.upcast_ref()),
-            &i18n_f("Empty “{name}”?", &[("name", &name)]),
-            &i18n("Every message in it will be erased from the server. This can’t be undone."),
-            "empty",
-            &i18n("Empty"),
-            move || {
-                s.input(AppMsg::EmptyFolder {
-                    account_id,
-                    folder_id,
-                    path,
-                })
-            },
-        );
-    }
-
-    /// Empty every unified account's Trash or Junk (#413). One folder asks
-    /// the way its own row does; more name each account they belong to.
-    fn confirm_empty_all(&self, kind: FolderKind, sender: &ComponentSender<Self>) {
-        let targets: Vec<(u32, u32, String, String, String)> = self
-            .accounts
-            .iter()
-            .filter(|a| self.in_unified(a.id))
-            .filter_map(|a| {
-                let f = self.folder_of_kind(a.id, kind)?;
-                Some((a.id, f.id, f.name.clone(), f.path.clone(), a.email.clone()))
-            })
-            .collect();
-        match targets.as_slice() {
-            [] => {}
-            [(account_id, folder_id, name, path, _)] => {
-                self.confirm_empty_folder(
-                    *account_id,
-                    *folder_id,
-                    name.clone(),
-                    path.clone(),
-                    sender,
-                );
-            }
-            _ => {
-                let heading = if kind == FolderKind::Trash {
-                    i18n("Empty Trash in Every Account?")
-                } else {
-                    i18n("Empty Junk in Every Account?")
-                };
-                let accounts: Vec<&str> = targets.iter().map(|t| t.4.as_str()).collect();
-                let body = format!(
-                    "{}\n\n{}",
-                    i18n("Every message in them will be erased from the server. This can’t be undone."),
-                    accounts.join("\n")
-                );
-                let s = sender.clone();
-                confirm_destructive(
-                    Some(self.window.upcast_ref()),
-                    &heading,
-                    &body,
-                    "empty",
-                    &i18n("Empty"),
-                    move || {
-                        for (account_id, folder_id, _, path, _) in targets {
-                            s.input(AppMsg::EmptyFolder {
-                                account_id,
-                                folder_id,
-                                path,
-                            });
-                        }
-                    },
-                );
-            }
-        }
     }
 
     /// The messages the router sends here (see `AppModel::route`).

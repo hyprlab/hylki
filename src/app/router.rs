@@ -106,6 +106,9 @@ impl AppModel {
             | AppMsg::RenameFolderTo { .. }
             | AppMsg::EmptyFolder { .. }
             | AppMsg::DeleteFolder { .. }) => self.on_folder_menu(msg, sender),
+            msg @ (AppMsg::FolderCounted { .. } | AppMsg::EmptyCountWait(..)) => {
+                self.on_empty_count(msg, sender)
+            }
             msg @ (AppMsg::SearchPoolLoaded { .. }
             | AppMsg::SearchPoolBuilt { .. }
             | AppMsg::SearchActive(..)) => self.on_search(msg, sender),
@@ -229,6 +232,9 @@ impl AppModel {
             | AppMsg::MoveContacts { .. }
             | AppMsg::ContactWriteDone(..)
             | AppMsg::ImportContacts { .. }
+            | AppMsg::ImportThunderbird { .. }
+            | AppMsg::ChooseThunderbirdFolder { .. }
+            | AppMsg::ImportFromMail { .. }
             | AppMsg::ContactImportReady(..)
             | AppMsg::RunContactImport(..)
             | AppMsg::ContactsImported(..)) => self.on_contacts(msg, sender),
@@ -536,6 +542,7 @@ impl AppModel {
             | PrefOutput::SetReplyToSender(..)
             | PrefOutput::SetListSearchBottom(..)
             | PrefOutput::SetListBulkBarBottom(..)
+            | PrefOutput::SetListSearchStart(..)
             | PrefOutput::SetGroupByDate(..)
             | PrefOutput::SetPillsBelow(..)
             | PrefOutput::SetListFollowsWindow(..)

@@ -45,11 +45,21 @@ impl AppModel {
                     self.message_cache
                         .get(&(account, f))
                         .and_then(|ms| ms.iter().max_by_key(|m| m.timestamp))
-                        .map(|m| (f, m.id, m.from_name.clone(), m.subject.clone()))
+                        .map(|m| {
+                            (
+                                f,
+                                m.id,
+                                m.from_name.clone(),
+                                m.shown_from_addr().to_string(),
+                                m.subject.clone(),
+                            )
+                        })
                 });
                 match newest {
-                    Some((folder, id, from, subject)) => {
-                        self.announce_new_mail(account, folder, id, &from, &subject, 0, true);
+                    Some((folder, id, from, addr, subject)) => {
+                        self.announce_new_mail(
+                            account, folder, id, &from, &addr, &subject, 0, true,
+                        );
                     }
                     None => tracing::warn!(
                         "showcase notify: no Inbox message cached for account {account}"

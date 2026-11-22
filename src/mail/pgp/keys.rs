@@ -457,7 +457,9 @@ pub(crate) fn generate_key(
 }
 
 /// Look a key up by address (WKD, then the keyservers), and by key id
-/// when the message named one, importing what is found.
+/// when the message named one, importing what is found. gpg asks first, as
+/// it is set up; what it cannot find is asked of WKD and keys.openpgp.org
+/// by [`super::discovery::fetch_elsewhere`] (#690).
 pub(crate) fn fetch_key(
     gpg: &Gpg,
     addr: &str,
@@ -490,7 +492,9 @@ pub(crate) fn fetch_key(
         }
     }
     if total.fingerprints.is_empty() {
-        return Err(detail.unwrap_or_else(|| i18n("No key was found for that address.")));
+        let https = super::discovery::Https;
+        return super::discovery::fetch_elsewhere(&https, gpg, addr, key_id)
+            .ok_or_else(|| detail.unwrap_or_else(|| i18n("No key was found for that address.")));
     }
     Ok(total)
 }

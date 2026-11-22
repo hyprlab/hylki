@@ -244,9 +244,6 @@ msgstr "Ответить всем"
 msgid "Forward"
 msgstr "Переслать"
 
-msgid "Edit as New Message"
-msgstr "Изменить как новое сообщение"
-
 msgid "Remove Star"
 msgstr "Снять отметку"
 
@@ -277,23 +274,35 @@ msgstr "Создать событие из выделенного текста�
 msgid "Create Task from Selection…"
 msgstr "Создать задачу из выделенного текста…"
 
+msgid "Create Event…"
+msgstr "Создать событие…"
+
+msgid "Create Task…"
+msgstr "Создать задачу…"
+
+msgid "Create Filter from Message…"
+msgstr "Создать фильтр из сообщения…"
+
+msgid "Add Sender to Contacts"
+msgstr "Добавить отправителя в контакты"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "View"
+msgstr "Вид"
+
+msgid "Edit as New Message"
+msgstr "Изменить как новое сообщение"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
 msgid "Save as File…"
 msgstr "Сохранить как файл…"
 
-msgid "Add Sender to Contacts"
-msgstr "Добавить отправителя в контакты"
-
-msgid "Create Filter from Message…"
-msgstr "Создать фильтр из сообщения…"
-
-msgid "Create Event…"
-msgstr "Создать событие…"
-
-msgid "Create Task…"
-msgstr "Создать задачу…"
+msgid "More"
+msgstr "Ещё"
 
 msgid "Copy To…"
 msgstr "Копировать в…"
@@ -561,6 +570,10 @@ msgstr "Для каталога требуется пароль. Добавьт�
 msgid "{name} did not answer: {error}"
 msgstr "Сервер {name} не ответил: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "На сайте {name} пока не найдено ни одной адресной книги."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr "Контакту необходимо имя, адрес электронной почты или номер телефона."
 
@@ -575,6 +588,18 @@ msgstr "Файл не является текстовым файлом"
 
 msgid "The file is larger than {size} MB"
 msgstr "Размер файла превышает {size} МБ."
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Переименовать адресную книгу"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Проверьте адрес"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Перейти в другую адресную книгу"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -645,6 +670,46 @@ msgstr "Для этой учётной записи недоступна пап�
 
 msgid "No Templates folder available for this account"
 msgstr "Для этой учётной записи недоступна папка «Шаблоны»"
+
+msgid "Empty “{name}”?"
+msgstr "Очистить «{name}»?"
+
+msgid "Empty"
+msgstr "Очистить"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr[1] ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+msgstr[2] ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Очистить корзину во всех учётных записях?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Очистить папку «Спам» во всех учётных записях?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Каждое сообщение в них будет удалено с сервера. Это невозможно отменить."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Отправлено {n} сообщение"
+msgstr[1] "Отправлено {n} сообщения"
+msgstr[2] "Отправлено {n} сообщений"
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -782,9 +847,6 @@ msgstr "Новая папка"
 msgid "Cancel"
 msgstr "Отмена"
 
-msgid "Create"
-msgstr "Создать"
-
 msgid "Folder name"
 msgstr "Название папки"
 
@@ -806,28 +868,6 @@ msgid ""
 msgstr ""
 "Её сообщения переносятся в «Корзину», а папка удаляется с сервера. Это "
 "действие нельзя отменить."
-
-msgid "Empty “{name}”?"
-msgstr "Очистить «{name}»?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Все сообщения в нем будут удалены с сервера. Это действие нельзя отменить."
-
-msgid "Empty"
-msgstr "Очистить"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Очистить корзину во всех учётных записях?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Очистить папку «Спам» во всех учётных записях?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Каждое сообщение в них будет удалено с сервера. Это невозможно отменить."
 
 msgid "This account can't have folders at the top level."
 msgstr "В этой учётной записи не может быть папок верхнего уровня."
@@ -1421,9 +1461,6 @@ msgstr "Включить режим фокусировки"
 
 msgid "Turn Focus Mode Off"
 msgstr "Выключить режим фокусировки"
-
-msgid "View"
-msgstr "Вид"
 
 msgid "All accounts"
 msgstr "Все учётные записи"
@@ -4225,9 +4262,6 @@ msgstr "Подписать вашим ключом OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Зашифровать с помощью OpenPGP для каждого получателя"
 
-msgid "More"
-msgstr "Ещё"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
@@ -4478,17 +4512,66 @@ msgstr "Пароль для скачивания {name}: {password}"
 msgid "Reply-To"
 msgstr "Адрес для ответа"
 
-msgid "Match a column to a name, an email address or a phone number."
-msgstr "Сопоставьте столбец с именем, адресом эл. почты или номером телефона."
+msgid "Look in"
+msgstr ""
 
-msgid "Import Contacts"
-msgstr "Импортировать контакты"
+#, fuzzy
+msgid "All Mail"
+msgstr "Вся почта"
+
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Импорт файлов Mbox"
 
 msgid "Import"
 msgstr "Импорт"
 
 msgid "Import into"
 msgstr "Импортировать в"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Поиск по имени, адресу или идентификатору ключа"
+
+msgid "Select All"
+msgstr "Выбрать всё"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Выбрано"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Выбрано {n} сообщение"
+msgstr[1] "Выбраны {n} сообщения"
+msgstr[2] "Выбрано {n} сообщений"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} письмо"
+msgstr[1] "{n} письма"
+msgstr[2] "{n} писем"
+
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Люди в вашей почте"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Ничего не найдено"
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Сопоставьте столбец с именем, адресом эл. почты или номером телефона."
+
+msgid "Import Contacts"
+msgstr "Импортировать контакты"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr "Не сохраняет группы: их названия остаются в карточке каждого контакта."
@@ -5022,8 +5105,20 @@ msgstr "Нет адреса электронной почты · {book}"
 msgid "Sort and filter contacts"
 msgstr "Сортировка и фильтрация контактов"
 
-msgid "vCard and CSV files"
-msgstr "Файлы vCard и CSV"
+#, fuzzy
+msgid "From Files…"
+msgstr "Импортировать файл…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "From Mail…"
+msgstr "Импортировать файл…"
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Контакты"
 
 msgid "All files"
 msgstr "Все файлы"
@@ -5160,9 +5255,6 @@ msgstr[0] "Контакт {n} будет удалён из адресной кн
 msgstr[1] "Контакты {n} будут удалены из адресных книг."
 msgstr[2] "Контакты {n} будут удалены из адресных книг."
 
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Импортировать файлы vCard или CSV в адресную книгу Hylki"
-
 msgid "New contact or group"
 msgstr "Новый контакт или группа"
 
@@ -5268,12 +5360,6 @@ msgstr "Папки поиска"
 
 msgid "Whole conversation"
 msgstr "Всё обсуждение"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} письмо"
-msgstr[1] "{n} письма"
-msgstr[2] "{n} писем"
 
 msgid "Later today ({time})"
 msgstr "Позже сегодня ({time})"
@@ -5505,9 +5591,6 @@ msgstr "Отображается только папка или просмотр
 
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Все папки этой учётной записи, включая «Корзину» и «Спам»."
-
-msgid "What this searches"
-msgstr "Что это ищет"
 
 msgid "me"
 msgstr "я"
@@ -6991,6 +7074,10 @@ msgstr "Придает объекту полную ширину."
 msgid "Search field position"
 msgstr "Положение поля поиска"
 
+#, fuzzy
+msgid "Search starts in"
+msgstr "Поиск по параметрам"
+
 msgid "Selection bar position"
 msgstr "Положение панели выбора"
 
@@ -8142,11 +8229,18 @@ msgstr[2] "{n} контактов не перемещены: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Не удалось обновить контакт: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Не удалось импортировать контакты: {e}"
 
 msgid "Could not read: {files}"
 msgstr "Не удалось прочитать: {files}"
+
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Шаблон сохранён в папку «{folder}» учётной записи «{account}»"
 
 msgid "Search filters"
 msgstr "Поиск фильтров"
@@ -8990,9 +9084,6 @@ msgstr "Вставить как обычный текст"
 msgid "Cut"
 msgstr "Вырезать"
 
-msgid "Select All"
-msgstr "Выбрать всё"
-
 msgid "Insert Emoji"
 msgstr "Вставить эмодзи"
 
@@ -9130,6 +9221,19 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Что это ищет"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Все учётные записи"
+
+#~ msgid "vCard and CSV files"
+#~ msgstr "Файлы vCard и CSV"
+
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Импортировать файлы vCard или CSV в адресную книгу Hylki"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Ожидание отправки"

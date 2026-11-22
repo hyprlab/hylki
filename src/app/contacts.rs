@@ -162,7 +162,7 @@ impl AppModel {
             return;
         }
 
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(i18n("Add to Contacts").as_str()),
             None,
@@ -529,11 +529,80 @@ impl AppModel {
                 });
             }
 
+            AppMsg::ImportThunderbird { book } => {
+                let s = sender.clone();
+                std::thread::spawn(move || {
+                    let paths = crate::contacts::thunderbird::profile_roots();
+                    s.input(if paths.is_empty() {
+                        AppMsg::ChooseThunderbirdFolder { book }
+                    } else {
+                        AppMsg::ImportContacts { paths, book }
+                    });
+                });
+            }
+
+            // A profile kept somewhere of its own, or a sandbox that cannot
+            // see the usual folders: the folder chosen opens through the
+            // portal.
+            AppMsg::ChooseThunderbirdFolder { book } => {
+                let dialog = gtk::FileDialog::builder()
+                    .title(i18n("Choose Thunderbird's Profile Folder"))
+                    .build();
+                let s = sender.input_sender().clone();
+                dialog.select_folder(
+                    self.dialog_parent().as_ref(),
+                    gtk::gio::Cancellable::NONE,
+                    move |res| {
+                        if let Some(path) = res.ok().and_then(|f| f.path()) {
+                            let _ = s.send(AppMsg::ImportContacts {
+                                paths: vec![path],
+                                book,
+                            });
+                        }
+                    },
+                );
+            }
+
+            AppMsg::ImportFromMail { book } => {
+                let own = self.own_addresses();
+                let places = self.places_to_import_from();
+                let skip: std::collections::HashSet<(u32, String)> = self
+                    .folders
+                    .iter()
+                    .flat_map(|(aid, fs)| fs.iter().map(move |f| (*aid, f)))
+                    .filter(|(_, f)| {
+                        matches!(
+                            f.kind,
+                            crate::models::FolderKind::Trash | crate::models::FolderKind::Junk
+                        )
+                    })
+                    .map(|(aid, f)| (aid, f.path.clone()))
+                    .collect();
+                let s = sender.input_sender().clone();
+                crate::ui::contact_from_mail::show(
+                    self.dialog_parent().as_ref(),
+                    crate::contacts::from_mail::FromMailStart {
+                        demo: demo_mode(),
+                        book,
+                        places,
+                        own,
+                        skip,
+                    },
+                    move |req| {
+                        let _ = s.send(AppMsg::RunContactImport(req));
+                    },
+                );
+            }
+
             AppMsg::ContactImportReady(start) => {
                 let s = sender.input_sender().clone();
-                crate::ui::contact_import::show(self.dialog_parent().as_ref(), *start, move |req| {
-                    let _ = s.send(AppMsg::RunContactImport(req));
-                });
+                crate::ui::contact_import::show(
+                    self.dialog_parent().as_ref(),
+                    *start,
+                    move |req| {
+                        let _ = s.send(AppMsg::RunContactImport(req));
+                    },
+                );
             }
 
             AppMsg::RunContactImport(req) => {
@@ -571,6 +640,44 @@ impl AppModel {
             }
             _ => unreachable!("not routed to on_contacts"),
         }
+    }
+}
+
+impl AppModel {
+    /// Where Import from Mail can look (#677): each account, then its
+    /// folders, less Trash and Junk, which it never reads.
+    fn places_to_import_from(&self) -> Vec<crate::contacts::from_mail::Place> {
+        use crate::contacts::from_mail::Place;
+        use crate::models::FolderKind;
+        let mut out = Vec::new();
+        for id in (1..=self.effective_config().len()).map(|i| i as u32) {
+            let short = self
+                .account_config(id)
+                .map(|c| c.display_label())
+                .unwrap_or_else(|| self.account_label(id));
+            let label = self.account_label(id);
+            out.push(Place {
+                account: id,
+                folder: None,
+                name: label.clone(),
+                label,
+            });
+            for f in self.folders.get(&id).into_iter().flatten() {
+                if matches!(f.kind, FolderKind::Trash | FolderKind::Junk) {
+                    continue;
+                }
+                out.push(Place {
+                    account: id,
+                    folder: Some(f.path.clone()),
+                    name: f.name.clone(),
+                    label: i18n_f(
+                        "{folder} in {account}",
+                        &[("folder", &f.name), ("account", &short)],
+                    ),
+                });
+            }
+        }
+        out
     }
 }
 

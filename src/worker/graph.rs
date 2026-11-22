@@ -212,6 +212,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             }
             // Graph reports no mailbox size or limit to the user it signs in.
             MailRequest::Quota => emit(WorkerEvent::Quota(None)),
+            MailRequest::CountFolder { path } => self.on_count_folder(path).await,
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::RefreshKeywords { .. } => self.on_refresh_keywords().await,
             // Not checked past the listing's newest page yet (#532).

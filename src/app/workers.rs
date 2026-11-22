@@ -99,6 +99,11 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
             findings,
         },
         WorkerEvent::Quota(quota) => AppMsg::QuotaFound { account_id, quota },
+        WorkerEvent::FolderCounted { path, count } => AppMsg::FolderCounted {
+            account_id,
+            path,
+            count,
+        },
         WorkerEvent::KeywordsSynced { paths } => AppMsg::KeywordsSynced { account_id, paths },
         WorkerEvent::FlagsSynced { paths } => AppMsg::FlagsSynced { account_id, paths },
         WorkerEvent::Restored {

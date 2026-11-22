@@ -290,22 +290,6 @@ impl MessageList {
                     crate::ui::showcase::showcase_capture(popover.upcast_ref(), &path);
                 });
             }
-            // HYLKI_SHOWCASE_SCOPE_INFO=<png> opens the first scope's
-            // info popover on top and captures that.
-            if let (Ok(path), Some(info)) = (
-                std::env::var("HYLKI_SHOWCASE_SCOPE_INFO"),
-                picker.infos.first(),
-            ) {
-                let info = info.clone();
-                gtk::glib::timeout_add_seconds_local_once(2, move || {
-                    info.popup();
-                    if let Some(popover) = info.popover() {
-                        gtk::glib::timeout_add_seconds_local_once(1, move || {
-                            crate::ui::showcase::showcase_capture(popover.upcast_ref(), &path);
-                        });
-                    }
-                });
-            }
         }
     }
 

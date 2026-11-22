@@ -275,9 +275,6 @@ msgstr "Válasz mindenkinek"
 msgid "Forward"
 msgstr "Továbbítás"
 
-msgid "Edit as New Message"
-msgstr "Szerkesztés új üzenetként"
-
 msgid "Remove Star"
 msgstr "Csillag eltávolítása"
 
@@ -314,6 +311,29 @@ msgstr "Nyomtatás…"
 msgid "Create Task from Selection…"
 msgstr "Létrehozás"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Létrehozás"
+
+#, fuzzy
+msgid "Create Filter from Message…"
+msgstr "Nyomtatás…"
+
+msgid "Add Sender to Contacts"
+msgstr "Feladó hozzáadása a névjegyekhez"
+
+msgid "Create"
+msgstr "Létrehozás"
+
+msgid "View"
+msgstr ""
+
+msgid "Edit as New Message"
+msgstr "Szerkesztés új üzenetként"
+
 msgid "View Source"
 msgstr "Forrás megtekintése"
 
@@ -321,19 +341,8 @@ msgstr "Forrás megtekintése"
 msgid "Save as File…"
 msgstr "Mentés PDF-ként…"
 
-msgid "Add Sender to Contacts"
-msgstr "Feladó hozzáadása a névjegyekhez"
-
-#, fuzzy
-msgid "Create Filter from Message…"
-msgstr "Nyomtatás…"
-
-msgid "Create Event…"
-msgstr ""
-
-#, fuzzy
-msgid "Create Task…"
-msgstr "Létrehozás"
+msgid "More"
+msgstr "Továbbiak"
 
 #, fuzzy
 msgid "Copy To…"
@@ -621,6 +630,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "{name} nem válaszolt: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Névjegyek hozzáadásához nem érhető el címjegyzék"
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 
@@ -636,6 +649,18 @@ msgstr "A mappa nincs a kiszolgálón"
 
 msgid "The file is larger than {size} MB"
 msgstr ""
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Címjegyzék"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Feladó címe"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "El akarod menteni a könyvtárat?"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -711,6 +736,44 @@ msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
 #, fuzzy
 msgid "No Templates folder available for this account"
 msgstr "Ehhez a fiókhoz nem érhető el Piszkozatok mappa"
+
+msgid "Empty “{name}”?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid "Empty"
+msgstr "Kiürítés"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+msgstr[1] ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+
+msgid "Empty Trash in Every Account?"
+msgstr ""
+
+msgid "Empty Junk in Every Account?"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Keresés az üzenetben"
+msgstr[1] "Keresés az üzenetben"
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -832,9 +895,6 @@ msgstr "Új mappa"
 msgid "Cancel"
 msgstr "Mégse"
 
-msgid "Create"
-msgstr "Létrehozás"
-
 msgid "Folder name"
 msgstr "Mappanév"
 
@@ -856,29 +916,6 @@ msgid ""
 msgstr ""
 "Az üzenetei a Kukába kerülnek, és a mappa eltávolításra kerül a "
 "kiszolgálóról. Ez a művelet visszafordíthatatlan."
-
-msgid "Empty “{name}”?"
-msgstr "Kiüríti ezt: „{name}”?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
-
-msgid "Empty"
-msgstr "Kiürítés"
-
-msgid "Empty Trash in Every Account?"
-msgstr ""
-
-msgid "Empty Junk in Every Account?"
-msgstr ""
-
-#, fuzzy
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"A benne lévő összes üzenet törlődik a kiszolgálóról. Ez nem vonható vissza."
 
 msgid "This account can't have folders at the top level."
 msgstr ""
@@ -1527,9 +1564,6 @@ msgstr "Fókusz mód"
 #, fuzzy
 msgid "Turn Focus Mode Off"
 msgstr "Fókusz mód"
-
-msgid "View"
-msgstr ""
 
 msgid "All accounts"
 msgstr "Összes fiók"
@@ -4426,9 +4460,6 @@ msgstr "Aláírás a saját OpenPGP-kulccsal"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Titkosítás OpenPGP-vel minden címzett kulcsára"
 
-msgid "More"
-msgstr "Továbbiak"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Másolat, titkos másolat és válaszcím megjelenítése"
 
@@ -4688,12 +4719,16 @@ msgstr "Letöltési jelszó ehhez: {name}: {password}"
 msgid "Reply-To"
 msgstr "Válaszcím"
 
-msgid "Match a column to a name, an email address or a phone number."
+msgid "Look in"
 msgstr ""
 
 #, fuzzy
-msgid "Import Contacts"
-msgstr "Névjegyek rendezése"
+msgid "All Mail"
+msgstr "E-mail hozzáadása"
+
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Fájl importálása…"
 
 #, fuzzy
 msgid "Import"
@@ -4702,6 +4737,50 @@ msgstr "Importálás…"
 #, fuzzy
 msgid "Import into"
 msgstr "Aláírás importálása"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Keresés, szűrők és rendezés"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Törlés"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Kijelöltek importálása"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Nincs kijelölt üzenet"
+msgstr[1] "Nincs kijelölt üzenet"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} üzenet"
+msgstr[1] "{n} üzenet"
+
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "{n} üzenet indexelése…"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Nincs találat"
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+#, fuzzy
+msgid "Import Contacts"
+msgstr "Névjegyek rendezése"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5261,8 +5340,19 @@ msgid "Sort and filter contacts"
 msgstr "{n} db üzenet"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Nagy fájlok"
+msgid "From Files…"
+msgstr "Fájl importálása…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "From Mail…"
+msgstr "Fájl importálása…"
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Névjegyek"
 
 msgid "All files"
 msgstr "Minden fájl"
@@ -5383,9 +5473,6 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr ""
-
 #, fuzzy
 msgid "New contact or group"
 msgstr "Új névjegy"
@@ -5483,11 +5570,6 @@ msgstr "Keresés a mappákban"
 
 msgid "Whole conversation"
 msgstr "A teljes beszélgetés"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} üzenet"
-msgstr[1] "{n} üzenet"
 
 #, fuzzy
 msgid "Later today ({time})"
@@ -5739,9 +5821,6 @@ msgstr ""
 #, fuzzy
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Keresés a mappákban"
-
-msgid "What this searches"
-msgstr ""
 
 #, fuzzy
 msgid "me"
@@ -7310,6 +7389,10 @@ msgid "Search field position"
 msgstr "Keresési szűrők"
 
 #, fuzzy
+msgid "Search starts in"
+msgstr "Keresési beállítások"
+
+#, fuzzy
 msgid "Selection bar position"
 msgstr "Műveletek"
 
@@ -8481,6 +8564,9 @@ msgstr[1] "A napló exportálva ide: {display}"
 msgid "Could not update contact: {e}"
 msgstr "A névjegy nem frissíthető: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 #, fuzzy
 msgid "Could not import contacts: {e}"
 msgstr "A fiók nem importálható: {e}"
@@ -8488,6 +8574,10 @@ msgstr "A fiók nem importálható: {e}"
 #, fuzzy
 msgid "Could not read: {files}"
 msgstr "A alkalmazás újraindítása nem sikerült"
+
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Új mappa létrehozása ehhez a fiókhoz."
 
 msgid "Search filters"
 msgstr "Keresési szűrők"
@@ -9383,10 +9473,6 @@ msgid "Cut"
 msgstr ""
 
 #, fuzzy
-msgid "Select All"
-msgstr "Törlés"
-
-#, fuzzy
 msgid "Insert Emoji"
 msgstr "Hivatkozás beszúrása"
 
@@ -9528,6 +9614,14 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Összes fiók"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Nagy fájlok"
 
 #, fuzzy
 #~ msgid "Waiting to send"

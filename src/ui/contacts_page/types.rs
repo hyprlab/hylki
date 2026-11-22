@@ -377,8 +377,12 @@ pub(crate) enum ContactsPageInput {
         group: usize,
         person: usize,
     },
-    /// The header's import button: choose `.vcf` or CSV files to import.
+    /// The import menu's From Files: choose `.vcf` or CSV files to import.
     ImportContacts,
+    /// The import menu's From Thunderbird (#681).
+    ImportThunderbird,
+    /// The import menu's From Mail (#677).
+    ImportFromMail,
     CancelEdit,
     SaveEdit,
     OpenInGnome(usize),
@@ -496,6 +500,10 @@ pub(crate) enum ContactsPageOutput {
         paths: Vec<std::path::PathBuf>,
         book: Option<String>,
     },
+    /// Import from Thunderbird's books, offering this book first.
+    ImportThunderbird { book: Option<String> },
+    /// Pick people from the mail to import, offering this book first.
+    ImportFromMail { book: Option<String> },
     /// Show the contact's photo in the app lightbox.
     ShowPhoto { name: String, data: Vec<u8> },
     /// Read the composer's suggestions for a group form

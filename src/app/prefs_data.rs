@@ -248,7 +248,7 @@ impl AppModel {
                 let parent = relm4::main_application()
                     .active_window()
                     .unwrap_or_else(|| self.window.clone().upcast());
-                let alert = adw::MessageDialog::new(
+                let alert = crate::ui::dialog::message_dialog(
                     Some(&parent),
                     Some(i18n("Settings Imported").as_str()),
                     Some(&i18n_f(

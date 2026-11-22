@@ -2,6 +2,76 @@
 
 ## 1.49.1-beta.1 — 2026-11-19
 
+- **New: choose where a search starts** (#699, requested by bjesus).
+  Settings → Message List → Search starts in sets the choice the scope
+  picker opens on in each folder: This folder, This Account (Except Trash &
+  Junk), This Account or Everywhere, the default. A search used to start in
+  all folders from an Inbox and in the folder itself elsewhere. This Account
+  becomes Everywhere in a view of several accounts. The info button beside each choice in the
+  picker is gone: holding the pointer over a choice shows what it searches.
+
+- **New: the sender's face on new-mail notifications** (#693, requested by
+  wokawoka). A notification about one message shows the sender's contact
+  photo, Gravatar or domain icon, round as in the list, in place of the app's
+  icon. It follows the Gravatar and sender-logo switches, waits up to a second
+  and a half for a face not looked up yet, and is left off a summary of
+  several messages and when Show sender and subject is off. Works on GNOME and Plasma,
+  in the Flatpak and outside it.
+
+- **Fixed: the date filter's calendar looked out of place** (#696, fixed by
+  José Miguel Sarasola). The calendar in the Dates column of the sort and
+  filter popover kept GtkCalendar's boxed look: a dark fill, a frame, square
+  filled arrows and an underlined today. It is now drawn like the rows beside
+  it, with no frame or fill, flat rounded arrows, dimmed day names, round days
+  that tint under the pointer, and today in the accent color. The Snooze and
+  Send Later date and time picker and the date popovers of Create Event and
+  Create Task have the same calendar, and the picker's hour and minute show
+  two digits (13:00, not 13:0).
+
+- **New: a shorter right-click menu on messages** (#692). The menu of a
+  message in the list and of a card in the reader keeps replying, filing
+  (Spam, Move To…, Archive, Snooze, Delete), then starring, read state and
+  tags on its first page. **Create** holds Create Event…, Create Task…, Create
+  Filter from Message… and Add Sender to Contacts. **More** holds Edit as
+  New Message, Copy To…, View Source and Save as File…, and on a card the
+  two print entries. A card's **View** holds remote content, the sender's
+  fonts and colors, and Expand All and Collapse All. Translate stays on the
+  first page when a service is set up. In the Inbox the card menu went from
+  26 entries to 15, and the list's from 19 to 13.
+
+- **New: contacts picked from the mail** (#677, requested by
+  DarkStarCrashes123). **From Mail…** in the Contacts view's import menu
+  lists everyone in the cached mail who is not a contact yet, with how many
+  messages each is on, most first. The list can be searched, narrowed to
+  one account or one folder, and ticked person by person or all at once; **Import** adds
+  the ones ticked to the book chosen. Your own addresses, no-reply and
+  bounce senders, and senders found only in Trash or Junk are left out.
+
+- **New: contacts imported straight from Thunderbird** (#681, requested by
+  DarkStarCrashes123). The Contacts view's import button is a menu, and
+  **From Thunderbird…** finds Thunderbird's profiles (its own folder, the
+  Flatpak's and the Snap's) and lists each address book with a switch in
+  **Import Contacts**, Collected Addresses off. Cards keep Thunderbird's
+  IDs, so importing again updates them, and mailing lists become groups.
+  Without a profile in those places a folder chooser asks for it, and
+  **From Files…** takes an `abook.sqlite`. The Flatpak reads the
+  Thunderbird Flatpak's folder, read-only.
+
+- **New: Empty Trash and Empty Junk say how many messages they erase**
+  (#676, requested by DarkStarCrashes123). The question asks the server for
+  the folder's count first: "47 messages will be erased from the server".
+  Emptying every account's Trash or Junk from the unified row gives the
+  total and each account's own count. A server that does not answer within
+  a second and a half leaves the question as it was, without a number.
+
+## 1.49.1 — 2026-11-22
+
+A patch release with eight fixes: a message is kept in the Outbox until the
+server takes it and goes ahead of background downloads, the window opens
+when GNOME Online Accounts or the desktop portal does not answer, m toggles
+a whole conversation, conversations open in On This Computer, and Fetch the
+sender's key asks WKD and keys.openpgp.org.
+
 - **Fixed: a message could be lost when Hylki was closed before it went**
   (#678, reported by DarkStarCrashes123). A message waited in memory between
   Send and the server taking it, and on a slow server it could wait behind
@@ -16,6 +86,51 @@
   behind folder syncs, flag checks and drafts downloaded in the background,
   which on Yahoo with large drafts was two minutes. A message being sent now
   goes ahead of them.
+
+- **Fixed: m marked an unread conversation unread** (#679, reported by
+  mbetrifork). Opening a conversation reads its newest message, and **m**
+  toggled that message alone, so the first press made it unread while the
+  others stayed unread. On a conversation's row **m** now toggles the whole
+  conversation: any unread message makes it all read. A card picked in the
+  reader still toggles that card.
+
+- **Fixed: "entity not found" opening a conversation in On This Computer**
+  (#689, reported by samuel-edlmeier). With the empty Inbox left out of
+  the folder list, the cache numbered the folders one off from the ids
+  the app knew, so a conversation's messages in other folders were looked
+  for in the wrong one. The cache now keeps each folder's own id.
+
+- **Fixed: no window when GNOME Online Accounts or the desktop portal does
+  not answer** (#691, reported by thopanX). Startup asked GNOME Online
+  Accounts for its accounts, and the date column asked the settings portal
+  for the clock format, on the main thread with no time limit. One that never
+  answered held the window from ever appearing, and every later launch timed
+  out handing off to that instance. GOA now has 5 seconds at startup, and its
+  accounts are left as they are without an answer. Portal calls give up
+  after 2 seconds and are not tried again for 5 minutes. A launch that finds
+  an instance that does not answer says so, with the command that ends it,
+  instead of waiting a second time. The Background portal's calls take
+  the same path, with their argument types fixed by José Miguel Sarasola
+  (#694).
+
+- **Fixed: Fetch the sender's key found nothing for many addresses** (#690,
+  by James Reilly). gpg asks only the keyserver it is set up with,
+  keyserver.ubuntu.com by default, which lacks many keys, and its WKD lookup
+  refuses a redirect to another host. edward-en@fsf.org fails both ways.
+  When gpg finds nothing, **Fetch the sender's key** and **Fetch by
+  address…** now ask the provider's WKD again through Hylki's own HTTPS
+  client, then keys.openpgp.org by address and by key id. A key found by
+  address keeps only the user ids for that address and has to name it. One
+  found by key id has to carry that id.
+
+- **Fixed: message dialogs drawn near twice GNOME's width.** A large
+  heading wider than the dialog never wraps, and libadwaita then sized the
+  dialog to the body's single line. Every message dialog now lets its
+  heading wrap and keeps GNOME's narrow width.
+
+- **Fixed: a new account showed the storage row of the last account
+  opened** in Settings → Accounts. The row is hidden until the account is
+  saved and its server can be asked.
 
 ## 1.49.0 — 2026-11-19
 

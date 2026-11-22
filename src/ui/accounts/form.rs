@@ -639,6 +639,9 @@ pub(super) fn set_connection_editable(widgets: &AccountsWindowWidgets, editable:
 }
 
 pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
+    // An account not yet saved has no server to ask; the row would
+    // otherwise still hold the last account opened.
+    show_quota(widgets, None);
     widgets.form.name_row.set_text("");
     widgets.form.email_row.set_text("");
     widgets.form.provider_row.set_selected(manual_index());

@@ -108,6 +108,7 @@ contact_names = false
 reply_to_sender = false
 list_search_bottom = false
 list_bulk_bar_bottom = false
+list_search_start = "everywhere"
 toolbar_fold_right = true
 single_key_shortcuts = true
 gmail_keys = false

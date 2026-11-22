@@ -31,6 +31,7 @@ mod text_index;
 mod thread_members;
 mod threads;
 
+pub(crate) use addresses::AddressScope;
 pub(crate) use assistant::{MailScope, ScopedFolder};
 pub(crate) use gallery::*;
 pub(crate) use local_copies::CopyKey;

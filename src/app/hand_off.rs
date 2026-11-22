@@ -209,7 +209,7 @@ impl AppModel {
         let n = hand_off.files.len() as u32;
         let names = hand_off_names(&hand_off.files);
         let size = crate::models::human_size(hand_off_size(&hand_off.files));
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
             Some(
                 ni18n_f(
@@ -343,7 +343,7 @@ impl AppModel {
             config::FilesLarge::Ask => {
                 let n = hand_off.files.len() as u32;
                 let names = hand_off_names(&hand_off.files);
-                let dialog = adw::MessageDialog::new(
+                let dialog = crate::ui::dialog::message_dialog(
                     Some(&self.window),
                     Some(i18n("Large files").as_str()),
                     Some(

@@ -243,6 +243,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                 self.on_find_text(gen, terms, paths).await
             }
             MailRequest::Quota => self.on_quota().await,
+            MailRequest::CountFolder { path } => self.on_count_folder(path).await,
             MailRequest::FindKeywords => self.on_find_keywords().await,
             MailRequest::RefreshKeywords { .. } => self.on_refresh_keywords().await,
             // Not checked past the listing's newest page yet (#532).

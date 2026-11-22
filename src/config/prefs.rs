@@ -390,6 +390,22 @@ pub(crate) enum LauncherBadge {
     NewSinceFront,
 }
 
+/// Where a search starts when a folder or view opens (#699): the scope
+/// picker beside the search field starts on it.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum SearchStart {
+    ThisFolder,
+    /// Every folder of the account, or of every account in a view across
+    /// them, except Trash and Junk.
+    AllFolders,
+    /// Every folder of the account, Trash and Junk too; in a view across
+    /// accounts, every folder of every account.
+    Account,
+    #[default]
+    Everywhere,
+}
+
 /// What new messages start out as, falling back to the plain-text
 /// switch this setting replaced (#180).
 pub(crate) fn load_compose_format() -> ComposeFormat {

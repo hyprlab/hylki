@@ -89,21 +89,19 @@ fn mail_id(account_id: u32) -> String {
 /// `in_place` says the anchor message still sits in `folder_id` (as opposed to
 /// having been filed elsewhere by a mail filter, where `folder_id` is only the
 /// folder to show); the action buttons need that to act on the right message.
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn new_mail(
     account_id: u32,
     folder_id: u32,
     message_id: u32,
     from: &str,
+    from_addr: &str,
     subject: &str,
     others: usize,
     in_place: bool,
 ) {
-    let (title, body) = compose_new_mail(
-        from,
-        subject,
-        others,
-        crate::config::load_privacy().notification_content,
-    );
+    let show_content = crate::config::load_privacy().notification_content;
+    let (title, body) = compose_new_mail(from, subject, others, show_content);
     let n = gio::Notification::new(&title);
     if !body.is_empty() {
         n.set_body(Some(&body));
@@ -134,9 +132,44 @@ pub(crate) fn new_mail(
             n.add_button_with_target_value(&label, &format!("app.{action}"), Some(&target));
         }
     }
-    send(&mail_id(account_id), &n);
-    POSTED.with(|p| p.borrow_mut().insert(account_id, (folder_id, message_id)));
-    sound_for_new_mail();
+    let serial = next_mail_serial(account_id);
+    let post = move |icon: Option<gio::Icon>| {
+        // A later batch, or the mail read meanwhile, has the last word.
+        if MAIL_SERIAL.with(|m| m.borrow().get(&account_id) != Some(&serial)) {
+            return;
+        }
+        if let Some(icon) = icon {
+            n.set_icon(&icon);
+        }
+        send(&mail_id(account_id), &n);
+        POSTED.with(|p| p.borrow_mut().insert(account_id, (folder_id, message_id)));
+        sound_for_new_mail();
+    };
+    // The sender's face (#693), only beside the sender's name: hidden
+    // content hides who wrote, and on a summary of several messages one face
+    // would say they all came from one person.
+    if show_content && others == 0 {
+        crate::desktop::notify_face::with_face(from_addr, post);
+    } else {
+        post(None);
+    }
+}
+
+thread_local! {
+    /// The newest new-mail notification asked for, by account: one waiting
+    /// for its sender's face must not land over a newer one, nor come back
+    /// once the mail it is about has been read.
+    static MAIL_SERIAL: std::cell::RefCell<std::collections::HashMap<u32, u64>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+fn next_mail_serial(account_id: u32) -> u64 {
+    MAIL_SERIAL.with(|m| {
+        let mut m = m.borrow_mut();
+        let serial = m.get(&account_id).map_or(0, |s| s.wrapping_add(1));
+        m.insert(account_id, serial);
+        serial
+    })
 }
 
 /// The sound for new mail, if Settings asks for one and the desktop does
@@ -262,6 +295,7 @@ pub(crate) fn play_sound(sound: &crate::config::SoundSource, restart: bool) {
 
 /// Withdraw an account's new-mail notification (once its mail has been read).
 pub(crate) fn withdraw_mail(account_id: u32) {
+    next_mail_serial(account_id);
     relm4::main_application().withdraw_notification(&mail_id(account_id));
     POSTED.with(|p| p.borrow_mut().remove(&account_id));
 }

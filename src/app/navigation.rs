@@ -207,7 +207,8 @@ impl AppModel {
         self.apply_view_sort();
         self.message_list
             .emit(MessageListInput::SetScope(default_scope(
-                view == UnifiedView::Kind(FolderKind::Inbox),
+                self.list_search_start,
+                account.is_some(),
             )));
         self.message_list
             .emit(MessageListInput::SetColorize(account.is_none()));
@@ -383,7 +384,8 @@ impl AppModel {
         self.message_list.emit(MessageListInput::ResetPaging);
         self.message_list
             .emit(MessageListInput::SetScope(default_scope(
-                self.folder_kind(account_id, folder_id) == Some(FolderKind::Inbox),
+                self.list_search_start,
+                true,
             )));
         self.message_list.emit(MessageListInput::SetColorize(false));
         self.message_list

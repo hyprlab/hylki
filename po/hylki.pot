@@ -235,9 +235,6 @@ msgstr ""
 msgid "Forward"
 msgstr ""
 
-msgid "Edit as New Message"
-msgstr ""
-
 msgid "Remove Star"
 msgstr ""
 
@@ -268,22 +265,34 @@ msgstr ""
 msgid "Create Task from Selection…"
 msgstr ""
 
+msgid "Create Event…"
+msgstr ""
+
+msgid "Create Task…"
+msgstr ""
+
+msgid "Create Filter from Message…"
+msgstr ""
+
+msgid "Add Sender to Contacts"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "Edit as New Message"
+msgstr ""
+
 msgid "View Source"
 msgstr ""
 
 msgid "Save as File…"
 msgstr ""
 
-msgid "Add Sender to Contacts"
-msgstr ""
-
-msgid "Create Filter from Message…"
-msgstr ""
-
-msgid "Create Event…"
-msgstr ""
-
-msgid "Create Task…"
+msgid "More"
 msgstr ""
 
 msgid "Copy To…"
@@ -541,6 +550,9 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr ""
 
+msgid "No Thunderbird address books were found in this folder"
+msgstr ""
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr ""
 
@@ -554,6 +566,15 @@ msgid "The file is not a text file"
 msgstr ""
 
 msgid "The file is larger than {size} MB"
+msgstr ""
+
+msgid "Personal Address Book"
+msgstr ""
+
+msgid "Collected Addresses"
+msgstr ""
+
+msgid "This is not a Thunderbird address book"
 msgstr ""
 
 msgid "{n} person, in Bcc"
@@ -620,6 +641,37 @@ msgstr ""
 
 msgid "No Templates folder available for this account"
 msgstr ""
+
+msgid "Empty “{name}”?"
+msgstr ""
+
+msgid "Empty"
+msgstr ""
+
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+
+msgid "Empty Trash in Every Account?"
+msgstr ""
+
+msgid "Empty Junk in Every Account?"
+msgstr ""
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -733,9 +785,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Create"
-msgstr ""
-
 msgid "Folder name"
 msgstr ""
 
@@ -754,26 +803,6 @@ msgstr ""
 msgid ""
 "Its messages are moved to Trash and the folder is removed from the server. "
 "This cannot be undone."
-msgstr ""
-
-msgid "Empty “{name}”?"
-msgstr ""
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-
-msgid "Empty"
-msgstr ""
-
-msgid "Empty Trash in Every Account?"
-msgstr ""
-
-msgid "Empty Junk in Every Account?"
-msgstr ""
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
 msgstr ""
 
 msgid "This account can't have folders at the top level."
@@ -1337,9 +1366,6 @@ msgid "Turn Focus Mode On"
 msgstr ""
 
 msgid "Turn Focus Mode Off"
-msgstr ""
-
-msgid "View"
 msgstr ""
 
 msgid "All accounts"
@@ -3890,9 +3916,6 @@ msgstr ""
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr ""
 
-msgid "More"
-msgstr ""
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
@@ -4121,16 +4144,56 @@ msgstr ""
 msgid "Reply-To"
 msgstr ""
 
-msgid "Match a column to a name, an email address or a phone number."
+msgid "Look in"
 msgstr ""
 
-msgid "Import Contacts"
+msgid "All Mail"
+msgstr ""
+
+msgid "Import from Mail"
 msgstr ""
 
 msgid "Import"
 msgstr ""
 
 msgid "Import into"
+msgstr ""
+
+msgid "Search names and addresses"
+msgstr ""
+
+msgid "Select All"
+msgstr ""
+
+msgid "Select None"
+msgstr ""
+
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Reading your mail…"
+msgstr ""
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+msgid "No Results Found"
+msgstr ""
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr ""
+
+msgid "Import Contacts"
 msgstr ""
 
 msgid "Keeps no groups: their names stay on each contact."
@@ -4614,7 +4677,16 @@ msgstr ""
 msgid "Sort and filter contacts"
 msgstr ""
 
-msgid "vCard and CSV files"
+msgid "From Files…"
+msgstr ""
+
+msgid "From Thunderbird…"
+msgstr ""
+
+msgid "From Mail…"
+msgstr ""
+
+msgid "Contact files"
 msgstr ""
 
 msgid "All files"
@@ -4727,9 +4799,6 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr ""
-
 msgid "New contact or group"
 msgstr ""
 
@@ -4821,11 +4890,6 @@ msgstr ""
 
 msgid "Whole conversation"
 msgstr ""
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] ""
-msgstr[1] ""
 
 msgid "Later today ({time})"
 msgstr ""
@@ -5040,9 +5104,6 @@ msgid "Only the folder or view the list is showing."
 msgstr ""
 
 msgid "Every folder of this account, Trash and Junk included."
-msgstr ""
-
-msgid "What this searches"
 msgstr ""
 
 msgid "me"
@@ -6452,6 +6513,9 @@ msgstr ""
 msgid "Search field position"
 msgstr ""
 
+msgid "Search starts in"
+msgstr ""
+
 msgid "Selection bar position"
 msgstr ""
 
@@ -7515,10 +7579,16 @@ msgstr[1] ""
 msgid "Could not update contact: {e}"
 msgstr ""
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr ""
 
 msgid "Could not read: {files}"
+msgstr ""
+
+msgid "{folder} in {account}"
 msgstr ""
 
 msgid "Search filters"
@@ -8301,9 +8371,6 @@ msgid "Paste as Plain Text"
 msgstr ""
 
 msgid "Cut"
-msgstr ""
-
-msgid "Select All"
 msgstr ""
 
 msgid "Insert Emoji"

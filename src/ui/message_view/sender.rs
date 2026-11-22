@@ -18,7 +18,7 @@ pub(super) fn confirm_trust(
     account_id: u32,
     id: u32,
 ) {
-    let dialog = adw::MessageDialog::new(
+    let dialog = crate::ui::dialog::message_dialog(
         parent,
         Some(&i18n("Trust this key?")),
         Some(&i18n_f(

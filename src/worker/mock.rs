@@ -164,6 +164,14 @@ pub(super) async fn run_mock(
                     summaries: backend.thread_summaries(account_id, &groups),
                 });
             }
+            MailRequest::CountFolder { path } => {
+                let count = backend
+                    .folders(account_id)
+                    .into_iter()
+                    .find(|f| f.path == path)
+                    .map(|f| backend.messages(f.id).len() as u32);
+                emit(WorkerEvent::FolderCounted { path, count });
+            }
             MailRequest::LoadMessages { folder_id, .. }
             | MailRequest::SyncFolder { folder_id, .. } => {
                 let messages = backend.messages(folder_id);

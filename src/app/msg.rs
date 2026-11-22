@@ -272,6 +272,16 @@ pub(crate) enum AppMsg {
     /// Delete a custom folder (its contents are moved to Trash first).
     DeleteFolder { account_id: u32, path: String },
 
+    // ---- on_empty_count (empty_count.rs) ----
+    /// A server's count for a folder about to be emptied (#676).
+    FolderCounted {
+        account_id: u32,
+        path: String,
+        count: Option<u32>,
+    },
+    /// The empty numbered by this generation asks with what it has.
+    EmptyCountWait(u32),
+
     // ---- on_search (search.rs) ----
     /// The indexes of the folders not opened this run, read from disk for
     /// the search `gen` started (#472).
@@ -753,6 +763,12 @@ pub(crate) enum AppMsg {
         paths: Vec<std::path::PathBuf>,
         book: Option<String>,
     },
+    /// Import from Thunderbird's profiles, or a folder chosen when none is
+    /// found (#681).
+    ImportThunderbird { book: Option<String> },
+    ChooseThunderbirdFolder { book: Option<String> },
+    /// Pick people from the mail to import (#677).
+    ImportFromMail { book: Option<String> },
     /// The files are read: ask where they go and what their columns are.
     ContactImportReady(Box<crate::contacts::import::ImportStart>),
     RunContactImport(crate::contacts::import::ImportRequest),

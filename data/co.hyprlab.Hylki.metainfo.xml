@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.1" date="2026-11-22">
+      <description>
+        <p>A message stays in the Outbox until the server takes it, the window opens when GNOME Online Accounts or the desktop portal does not answer, m toggles a whole conversation and Fetch the sender's key asks WKD and keys.openpgp.org.</p>
+      </description>
+    </release>
     <release version="1.49.0" date="2026-11-19">
       <description>
         <p>Autocrypt, the message source in the reader with find, contacts imported from CSV files, events and tasks made from selected text, smart folders with negative and Gmail label conditions, a send log with Undo after Discard, a Light / Dark Mode switch in the composer and plain text sent wrapped as format=flowed.</p>

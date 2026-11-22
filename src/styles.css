@@ -2627,20 +2627,17 @@ textview.console-view text selection {
 .sort-filter-column > checkbutton:hover {
   background-color: alpha(currentColor, 0.07);
 }
-/* The search scope's popover (#374): each scope's name, with an info
-   button whose own popover says what it searches. */
+/* The search scope's popover (#374): each scope's name; its tooltip says
+   what it searches (#699). */
 .search-scope-popover {
   padding: 4px;
 }
-.search-scope-popover > box > checkbutton {
+.search-scope-popover > checkbutton {
   padding: 8px;
   border-radius: 6px;
 }
-.search-scope-popover > box > checkbutton:hover {
+.search-scope-popover > checkbutton:hover {
   background-color: alpha(currentColor, 0.07);
-}
-.search-scope-about {
-  margin: 6px 8px;
 }
 .sort-filter-column > button {
   margin-top: 6px;
@@ -2649,6 +2646,77 @@ textview.console-view text selection {
 /* Its date range: From and To, and the calendar that sets them. */
 .sort-filter-dates {
   margin: 4px 8px;
+}
+.sort-filter-dates > calendar {
+  margin-top: 6px;
+}
+
+/* A calendar drawn like the popover or dialog around it rather than as a
+   boxed view (ui/flat_calendar.rs), for the date filter, the Snooze / Send
+   Later picker and the Create Event and Create Task date popovers: no frame
+   or fill, flat rounded arrows, dim day names, and round days that light up
+   under the pointer as popover rows do. */
+calendar.flat-calendar {
+  background: none;
+  border: none;
+}
+calendar.flat-calendar > header {
+  border-bottom: none;
+  margin-bottom: 4px;
+}
+calendar.flat-calendar > header > button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  background: none;
+}
+calendar.flat-calendar > header > button:hover {
+  background-color: alpha(currentColor, 0.07);
+}
+calendar.flat-calendar > header > button:active {
+  background-color: alpha(currentColor, 0.16);
+}
+calendar.flat-calendar > header > .month,
+calendar.flat-calendar > header > .year {
+  font-weight: bold;
+}
+calendar.flat-calendar > grid {
+  padding: 0;
+}
+calendar.flat-calendar > grid > label {
+  margin: 1px;
+}
+calendar.flat-calendar > grid > label.day-name {
+  margin-bottom: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+  opacity: 0.55;
+}
+/* Each day is a fixed box centered in its column (ui/flat_calendar.rs), with its
+   circle drawn as a gradient rather than a rounded background. GtkLabel
+   rounds its text's position down to a whole pixel, so in a 32 by 31 box
+   the digits of Adwaita Sans 11 sit 0.2 to 0.4 px left of centre and on it
+   vertically; the circle's centre follows them. */
+calendar.flat-calendar > grid > label.day-number {
+  min-width: 32px;
+  min-height: 31px;
+  padding: 0;
+  border-radius: 999px;
+}
+calendar.flat-calendar > grid > label.day-number:hover:not(:selected) {
+  background-image: radial-gradient(circle 15px at calc(50% - 0.3px) 50%,
+      alpha(currentColor, 0.07) 14.5px, transparent 15px);
+}
+calendar.flat-calendar > grid > label.day-number:selected {
+  background-color: transparent;
+  background-image: radial-gradient(circle 15px at calc(50% - 0.3px) 50%,
+      @accent_bg_color 14.5px, alpha(@accent_bg_color, 0) 15px);
+}
+calendar.flat-calendar > grid > label.today:not(:selected) {
+  box-shadow: none;
+  color: @accent_color;
+  font-weight: bold;
 }
 
 /* The month and year beside the list's scrollbar thumb while it is

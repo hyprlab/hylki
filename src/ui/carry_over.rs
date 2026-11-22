@@ -27,7 +27,7 @@ pub(crate) fn show(parent: &impl IsA<gtk::Window>, from: &'static Predecessor) {
     // The wordmark sits above the title, so the whole content is one child
     // rather than the dialog's own heading and body (which nothing can go
     // above).
-    let dialog = adw::MessageDialog::new(Some(parent.as_ref()), None, None);
+    let dialog = crate::ui::dialog::message_dialog(Some(parent.as_ref()), None, None);
     dialog.set_size_request(480, -1);
 
     let content = gtk::Box::new(gtk::Orientation::Vertical, 10);

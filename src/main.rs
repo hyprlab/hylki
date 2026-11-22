@@ -28,7 +28,7 @@ use relm4::RelmApp;
 
 use crate::app::AppModel;
 pub(crate) use crate::desktop::single_instance::primary_instance_running;
-use crate::desktop::single_instance::{relay_to_primary, StartView, UriKind};
+use crate::desktop::single_instance::{relay_to_primary, HandOff, StartView, UriKind};
 
 const APP_ID: &str = if cfg!(feature = "beta") {
     "co.hyprlab.Hylki.Beta"
@@ -148,7 +148,7 @@ fn main() {
     // must NOT be registered early either — relm4 builds the whole UI in a
     // `startup` handler it connects inside run(), and registration is what
     // emits `startup`. So remoteness is checked bus-side, touching nothing.
-    if primary_instance_running() && relay_to_primary(&args, view) {
+    if primary_instance_running() && relay_to_primary(&args, view) != HandOff::NoPrimary {
         return;
     }
     if let Some(view) = view {

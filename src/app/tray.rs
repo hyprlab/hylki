@@ -168,7 +168,7 @@ impl AppModel {
     /// stuck app. It has no way to close — the app quits from under it.
     #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
     fn show_restarting_dialog(&self) {
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.icon_dialog_parent()),
             Some(i18n("Restarting Hylki").as_str()),
             Some(
@@ -195,7 +195,7 @@ impl AppModel {
     /// came from.
     #[allow(deprecated)] // adw::MessageDialog: AlertDialog would change how it looks
     pub(super) fn offer_restart_for_icon(&self, sender: &ComponentSender<Self>) {
-        let dialog = adw::MessageDialog::new(
+        let dialog = crate::ui::dialog::message_dialog(
             Some(&self.icon_dialog_parent()),
             Some(i18n("Restart to finish switching icons?").as_str()),
             Some(

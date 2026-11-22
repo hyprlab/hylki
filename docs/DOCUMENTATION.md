@@ -331,8 +331,8 @@ as a draft, and POP3 has only an inbox.
 
 ### Copying mail to another folder
 
-**Copy To…**, in a message's right-click menu in the list and in the
-reader, opens the same picker as Move To. The message is stored again in
+**Copy To…**, under **More** in a message's right-click menu in the list
+and in the reader, opens the same picker as Move To. The message is stored again in
 the folder picked, with its read and starred state, and the original stays
 where it is. It works within an account and across accounts, into any
 folder of an account that can receive mail (see above), and a copy is not
@@ -773,9 +773,9 @@ contacts made in Hylki, from the Contacts view or with **Add Sender to
 Contacts**. Until it is set, a new contact goes to the first writable EDS
 book, or to the Hylki book when there is none.
 
-Importing reads `.vcf` and `.csv` files, from Settings or from the import
-button in the Contacts view's header. Once the files are chosen, **Import
-Contacts** asks which address book they go to: the Hylki book or any EDS
+Importing reads `.vcf` and `.csv` files, from Settings or from **From
+Files…** in the menu of the import button in the Contacts view's header.
+Once the files are chosen, **Import Contacts** asks which address book they go to: the Hylki book or any EDS
 book that can be written to. It starts on the book the Contacts view is
 showing, and from Settings on the Hylki book. A `.vcf` file can hold many
 contacts, in vCard 2.1, 3.0 or 4.0. A contact with the same ID as one
@@ -805,6 +805,33 @@ the file makes; it imports nothing until a column is matched to a name, an
 email address or a phone number. Commas, semicolons and tabs all work as
 the separator, and the file can be UTF-8, UTF-16 or Windows-1252. A row
 with no name, address, phone number or company is skipped.
+
+**From Thunderbird…**, in the same menu, reads Thunderbird's address books
+where they are, with no export first: from `~/.thunderbird`, the
+Thunderbird Flatpak's folder or the Snap's. **Import Contacts** lists each
+book of each profile with its number of contacts and groups, each with a
+switch; Collected Addresses, everyone Thunderbird has seen you write to,
+starts switched off. When no profile is found, a folder chooser asks for
+the profile folder, and an `abook.sqlite` file can be chosen with **From
+Files…**. Thunderbird can stay open while it reads. Contacts keep
+Thunderbird's IDs, so a second import updates them, and mailing lists
+become groups. Thunderbird 78 or later is needed; photos on cards made
+before Thunderbird 102 are not imported.
+
+**From Mail…**, in the same menu, lists the people in the mail Hylki keeps
+who are not in Contacts yet, each with the number of messages they are on,
+sent or received, most first. Your own addresses are left out, and so are
+no-reply senders, bounce addresses, the mail system's own, and senders
+whose mail is only in Trash or Junk. Address books that fill themselves
+from mail, such as Evolution's Collected Addresses, do not count as
+Contacts here. **Look in** narrows the list to one account's mail, or to
+one folder: its list has each account with its folders under it, and
+typing finds one by name. The
+search box filters by name and address, **Select All** and **Select None**
+act on the people the search shows, and **Import** adds the ones ticked
+to the book chosen in **Import into**, each with the name the mail gives
+them, or the address when it gives none. Importing the same people again
+adds nothing new.
 
 Google's labels, Outlook's categories, or a column matched to **Groups**,
 put each person in the group of that name, which is made when the book has
@@ -1813,14 +1840,17 @@ signature. There are four ways to get one, none of which need a terminal:
 - A signed message from someone whose key you don't have shows an amber shield
   beside their name. Click it and choose **Fetch the sender's key**. Hylki
   looks in the message itself first (many clients attach the key in an
-  Autocrypt header), then asks the sender's provider (WKD), then the keyservers.
+  Autocrypt header), then asks the sender's provider (WKD), then the keyserver
+  gpg is set up with. When none of them has the key, Hylki asks the provider
+  again itself and then keys.openpgp.org, whichever keyserver gpg uses.
   A key from the message's Autocrypt header is taken only when the header
   names the sender's own address, and it goes into Hylki's own keyring of
   found keys, never yours (see below).
 - A message with a key file attached shows an **Import OpenPGP key** button on
   that attachment.
 - Under *Settings → OpenPGP → Other people's keys*, **Fetch by address…**
-  looks a key up by email address, and **Import…** reads a key file.
+  looks a key up by email address the same way, and **Import…** reads a key
+  file.
 - A key someone sends you by any other route can be imported the same way.
 
 Other people's keys are listed by name. The search field above the list finds
@@ -2076,7 +2106,8 @@ conversation opens: **Never** shows every message, **Messages already read**
 folds what you have read, and **All but the newest** folds every message
 except the newest, read or not. The newest always opens, and so does a
 message you move to with `w` or `b`. Right-clicking anywhere in a
-conversation offers **Expand All Messages** and **Collapse All Messages**.
+conversation offers **Expand All Messages** and **Collapse All Messages**
+under **View**.
 What you fold or open stays that way while the conversation is on screen,
 and so does a message read while it is open.
 Printing shows every message in full.
@@ -2107,7 +2138,10 @@ Mode.
 
 The ⋯ at the end of a message's header opens the same menu as a right click on
 the message. It acts on that message, and has **Show Sender's Fonts and Colors**
-while **Settings → Reading → Use my own font** or **Use my own colors** is on.
+under **View** while **Settings → Reading → Use my own font** or **Use my own
+colors** is on. The menu's first page holds replying, where the message
+goes, then starring, read state and tags; **Create**, **View** and **More**
+hold the rest.
 
 The buttons above the message are in two groups. The left group, up to seven
 buttons, stays on the bar at every width: Reply, Reply All, Forward, Star,
@@ -2145,8 +2179,8 @@ to star, move or delete. **Copy To…** in its right-click menu stores it in
 a folder of any account that takes mail, On This Computer included, marked
 read; the window stays open.
 
-**Save as File…**, in a message's right-click menu in the list or on its card,
-saves the message whole, as the server keeps it, under its subject with
+**Save as File…**, under **More** in a message's right-click menu in the list
+or on its card, saves the message whole, as the server keeps it, under its subject with
 `.eml` on the end. In a message window, the same menu also has **Copy To…**.
 
 A `.msg` keeps the headers the mail server sent when Outlook has them, and
@@ -2189,7 +2223,7 @@ where it is. A message in its own window follows the same setting.
 
 **Ctrl+P** prints the message or conversation in the reader, and
 **Ctrl+Shift+P**, the printer button in the reader's toolbar or **Print
-Preview** in the message's right-click menu shows it first, page by page,
+Preview** under **More** in the message's right-click menu shows it first, page by page,
 as it will come out. The preview prints from its **Print…** button and
 saves a PDF from **Save as PDF…**. A message opened in a window of its own
 has the same printer button, menu entries and keys.
@@ -2208,8 +2242,8 @@ your language's default paper size before that.
 
 ### Events and tasks from mail
 
-**Create Event…** and **Create Task…** in a message's right-click menu, in
-the list or the reader, open a dialog filled in from the message: its
+**Create Event…** and **Create Task…** under **Create** in a message's
+right-click menu, in the list or the reader, open a dialog filled in from the message: its
 subject as the title, and its sender, date and text as the notes. An event
 starts at the next whole hour and lasts an hour, or takes whole days with
 **All day**. **Alarm** and **Second alarm** each go off at the start or from
@@ -2228,8 +2262,8 @@ next time. Each is listed under its account's name in **Settings →
 Contacts**, else the nickname of the mail account with the same address,
 else the address.
 
-With text selected in the reader, the right-click menu has **Create Event
-from Selection…** and **Create Task from Selection…** in their place. The
+With text selected in the reader, the right-click menu's **Create** has
+**Create Event from Selection…** and **Create Task from Selection…** in their place. The
 dialog then starts from the date and times written in the selection:
 "Friday at 3pm", "Nov 20-22", "20/11/2026, 14:00-15:30", "tomorrow, 10-11am".
 A short one-line selection becomes the title, without its date and times;
@@ -2378,15 +2412,20 @@ messages down when it opens; at the bottom, the list gets shorter from its
 foot and the messages stay where they are. When both are on the same side,
 the search field is the outer one, so selecting messages never moves it.
 
-The button beside the search field sets where a search looks, and the info
-button beside each choice in its popover says what that choice searches.
+The button beside the search field sets where a search looks, and holding
+the pointer over a choice in its popover says what that choice searches.
 **All folders (except trash & junk)** searches every folder of every account
 except Trash and Junk, unless the list is showing one of them. **Everywhere**
 takes in Trash and Junk too, and **This folder** only the folder on screen.
-A search started in an Inbox, or in All Inboxes, looks in all folders; one
-started anywhere else looks in that folder, and the button changes it for as
-long as the folder is open. In all folders and everywhere, each result wears
-a pill with the name of the folder it is in, and a Gmail message filed under
+From a single account's folder, **This Account** and **This Account (Except
+Trash & Junk)** keep to that account.
+
+**Settings → Message List → Search starts in** sets the choice a folder
+opens with: **Everywhere** unless changed. **This Account** becomes
+**Everywhere** in a view of several accounts. The button changes it for as
+long as the folder is open.
+
+In all folders and everywhere, each result wears a pill with the name of the folder it is in, and a Gmail message filed under
 several labels is one result: its Inbox copy, else a label's, else All
 Mail's. Folders not opened since Hylki started are searched from the index
 Hylki keeps of them, which covers mail archived to Gmail's All Mail.
@@ -2719,6 +2758,15 @@ and **Forward** open the message with the composer started. Settings →
 General → Notification Buttons picks any three of the six (Mark as Read,
 Archive and Delete to begin with); a notification that sums up several new
 messages carries none. Stored as `notification_buttons` in `privacy.toml`.
+
+A notification about a single message shows the sender's face: their contact
+photo, else their Gravatar or their domain's icon when those Privacy switches
+are on, cut to a circle as in the list. A face not looked up yet is looked for
+for up to a second and a half before the notification goes up; without one the
+notification shows the app's icon. A summary of several messages, and a
+notification with **Show sender and subject** off, shows no face. Outside the Flatpak the
+picture is kept in `~/.cache/hylki/notifications/` for the desktop to read,
+the newest 32 at most.
 
 **Settings → General → Sound for new mail** plays a sound with each new-mail
 notification. It is off until switched on. **Sound** picks one of GNOME's four

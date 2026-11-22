@@ -65,6 +65,11 @@ finish-args:
   - --filesystem=~/.var/app/co.hyprlab.Vireo:ro
   # Read the old Veem app's data so first-run migration matches stable's.
   - --filesystem=~/.var/app/com.getveem.Veem:ro
+  # Contacts → Import → From Thunderbird (#681) reads the Thunderbird
+  # Flatpak's address books; home:ro below leaves out other apps' folders.
+  # ~/.thunderbird and the Snap's profile come with home:ro.
+  - --filesystem=~/.var/app/org.mozilla.thunderbird:ro
+  - --filesystem=~/.var/app/org.mozilla.Thunderbird:ro
   # The GNOME Files right-click extension (#188) is a Python file Nautilus
   # loads on the host; Settings → System installs the bundled copy there.
   - --filesystem=xdg-data/nautilus-python/extensions:create

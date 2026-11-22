@@ -113,7 +113,7 @@ pub(super) fn ask_unvouched(
 ) {
     let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
     let addresses: Vec<&str> = check.unvouched.iter().map(|k| k.addr.as_str()).collect();
-    let dialog = adw::MessageDialog::new(
+    let dialog = crate::ui::dialog::message_dialog(
         parent.as_ref(),
         Some(&i18n("Encrypt to keys you have not checked?")),
         Some(&i18n_f(

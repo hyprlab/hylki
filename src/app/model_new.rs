@@ -101,6 +101,8 @@ impl AppModel {
             mid_searches: HashMap::new(),
             tag_scan: None,
             tag_scan_gen: 0,
+            empty_ask: None,
+            empty_ask_gen: 0,
             demo_config: if demo_mode() && config.is_empty() {
                 demo_account_configs_saved()
             } else {
@@ -393,6 +395,7 @@ impl AppModel {
             reply_to_sender: prefs.reply_to_sender,
             list_search_bottom: prefs.list_search_bottom,
             list_bulk_bar_bottom: prefs.list_bulk_bar_bottom,
+            list_search_start: prefs.list_search_start,
             toolbar_fold_right: prefs.toolbar_fold_right,
             list_column_widths: config::load_list_column_widths(),
             list_wide: config::load_list_pane_width() >= LIST_WIDE_ON,

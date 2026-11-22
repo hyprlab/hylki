@@ -283,6 +283,8 @@ fn contacts_page_output_msg(out: ContactsPageOutput) -> AppMsg {
         ContactsPageOutput::ImportContacts { paths, book } => {
             AppMsg::ImportContacts { paths, book }
         }
+        ContactsPageOutput::ImportThunderbird { book } => AppMsg::ImportThunderbird { book },
+        ContactsPageOutput::ImportFromMail { book } => AppMsg::ImportFromMail { book },
         ContactsPageOutput::WantSuggestions => AppMsg::ContactSuggestions,
         ContactsPageOutput::ShowPhoto { name, data } => {
             // The lightbox routes by extension — a bare contact

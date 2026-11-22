@@ -234,6 +234,11 @@ impl SavedAddresses {
     }
 }
 
+/// The saved contacts, read now, whatever books could be read (#677).
+pub(crate) fn saved_contacts_now() -> Vec<Contact> {
+    read_contacts_from(true).0
+}
+
 fn read_saved_addresses() -> Option<std::sync::Arc<HashSet<String>>> {
     let set: HashSet<String> = read_saved_contacts()?
         .into_iter()

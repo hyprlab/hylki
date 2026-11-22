@@ -13,7 +13,7 @@ use super::prefs::{
     default_files_limit_mb, default_reader_zoom, default_swipe_sensitivity, default_undo_send_secs,
     ComposeFormat, FilesAction, FilesLarge, FoldMessages, LauncherBadge, NotificationButtons,
     PrintOptions, ReadMark, ReaderDefault, ReceiptPolicy, ReplyPosition, ReturnedReceipts,
-    SignaturePosition,
+    SearchStart, SignaturePosition,
 };
 use super::sections::{
     FolderSort, RailFold, SectionPlacement, SectionStyle, StartView, UnifiedChips, UnifiedKinds,
@@ -476,6 +476,9 @@ pub(crate) struct PrivacyFile {
     pub(crate) list_search_bottom: bool,
     #[serde(default)]
     pub(crate) list_bulk_bar_bottom: bool,
+    /// Where a search starts when a folder or view opens (#699).
+    #[serde(default)]
+    pub(crate) list_search_start: SearchStart,
     /// The reader toolbar's right group stays in the ⋯ menu at every
     /// width. On for a new install; a file from before the key keeps the
     /// group on the bar while it fits.
@@ -819,6 +822,7 @@ impl Default for PrivacyFile {
             reply_to_sender: false,
             list_search_bottom: false,
             list_bulk_bar_bottom: false,
+            list_search_start: SearchStart::Everywhere,
             toolbar_fold_right: true,
             list_column_widths: Default::default(),
             single_key_shortcuts: true,

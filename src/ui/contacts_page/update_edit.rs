@@ -130,10 +130,7 @@ impl ContactsPage {
     pub(super) fn on_import_contacts(&mut self, sender: ComponentSender<Self>) -> Flow {
         let parent = relm4::main_application().active_window();
         let s = sender.clone();
-        let book = match &self.scope {
-            ContactScope::Book(uid) | ContactScope::Group { book: uid, .. } => Some(uid.clone()),
-            ContactScope::All | ContactScope::Account(_) => None,
-        };
+        let book = self.import_book();
         choose_contact_files(parent.as_ref(), move |paths| {
             let _ = s.output(ContactsPageOutput::ImportContacts {
                 paths,
@@ -141,6 +138,14 @@ impl ContactsPage {
             });
         });
         Flow::Continue(())
+    }
+
+    /// The book being looked at, for an import to offer first.
+    pub(super) fn import_book(&self) -> Option<String> {
+        match &self.scope {
+            ContactScope::Book(uid) | ContactScope::Group { book: uid, .. } => Some(uid.clone()),
+            ContactScope::All | ContactScope::Account(_) => None,
+        }
     }
 
     pub(super) fn on_cancel_edit(

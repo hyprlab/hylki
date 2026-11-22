@@ -273,9 +273,6 @@ msgstr "Απάντηση σε όλους"
 msgid "Forward"
 msgstr "Προώθηση"
 
-msgid "Edit as New Message"
-msgstr "Επεξεργασία ως νέο μήνυμα"
-
 msgid "Remove Star"
 msgstr "Αφαίρεση αστεριού"
 
@@ -310,23 +307,35 @@ msgstr "Δημιουργία συμβάντος…"
 msgid "Create Task from Selection…"
 msgstr "Δημιουργία εργασίας…"
 
+msgid "Create Event…"
+msgstr "Δημιουργία συμβάντος…"
+
+msgid "Create Task…"
+msgstr "Δημιουργία εργασίας…"
+
+msgid "Create Filter from Message…"
+msgstr "Δημιουργία φίλτρου από μήνυμα…"
+
+msgid "Add Sender to Contacts"
+msgstr "Προσθήκη αποστολέα στις επαφές"
+
+msgid "Create"
+msgstr "Δημιουργία"
+
+msgid "View"
+msgstr "Προβολή"
+
+msgid "Edit as New Message"
+msgstr "Επεξεργασία ως νέο μήνυμα"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
 msgid "Save as File…"
 msgstr "Αποθήκευση ως αρχείο…"
 
-msgid "Add Sender to Contacts"
-msgstr "Προσθήκη αποστολέα στις επαφές"
-
-msgid "Create Filter from Message…"
-msgstr "Δημιουργία φίλτρου από μήνυμα…"
-
-msgid "Create Event…"
-msgstr "Δημιουργία συμβάντος…"
-
-msgid "Create Task…"
-msgstr "Δημιουργία εργασίας…"
+msgid "More"
+msgstr "Περισσότερα"
 
 msgid "Copy To…"
 msgstr "Αντιγραφή σε…"
@@ -610,6 +619,10 @@ msgstr ""
 msgid "{name} did not answer: {error}"
 msgstr "Το {name} δεν αποκρίθηκε: {error}"
 
+#, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Δεν βρέθηκαν ακόμη κατάλογοι διευθύνσεων στο {name}."
+
 msgid "A contact needs a name, an email address or a phone number"
 msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
 
@@ -624,6 +637,18 @@ msgstr "Το αρχείο δεν είναι αρχείο κειμένου"
 
 msgid "The file is larger than {size} MB"
 msgstr "Το αρχείο είναι μεγαλύτερο από {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Μετονομασία καταλόγου διευθύνσεων"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Ελέγξτε τη διεύθυνση"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Μετακίνηση σε άλλον κατάλογο διευθύνσεων"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -697,6 +722,47 @@ msgstr "Δεν υπάρχει φάκελος Προχείρων για αυτό�
 
 msgid "No Templates folder available for this account"
 msgstr "Δεν υπάρχει διαθέσιμος φάκελος Προτύπων για αυτόν τον λογαριασμό"
+
+msgid "Empty “{name}”?"
+msgstr "Άδειασμα του «{name}»;"
+
+msgid "Empty"
+msgstr "Άδειασμα"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
+"αναιρείται."
+msgstr[1] ""
+"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
+"αναιρείται."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
+"αναιρείται."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Άδειασμα κάδου σε όλους τους λογαριασμούς;"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Άδειασμα ανεπιθύμητων σε όλους τους λογαριασμούς;"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Κάθε μήνυμα σε αυτούς θα διαγραφεί από τον διακομιστή. Αυτό δεν μπορεί να "
+"αναιρεθεί."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "{n} μη αναγνωσμένο μήνυμα"
+msgstr[1] "{n} μη αναγνωσμένα μηνύματα"
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -818,9 +884,6 @@ msgstr "Νέος φάκελος"
 msgid "Cancel"
 msgstr "Ακύρωση"
 
-msgid "Create"
-msgstr "Δημιουργία"
-
 msgid "Folder name"
 msgstr "Όνομα φακέλου"
 
@@ -842,30 +905,6 @@ msgid ""
 msgstr ""
 "Τα μηνύματά του μετακινούνται στον Κάδο και ο φάκελος αφαιρείται από τον "
 "διακομιστή. Αυτή η ενέργεια δεν αναιρείται."
-
-msgid "Empty “{name}”?"
-msgstr "Άδειασμα του «{name}»;"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Κάθε μήνυμα σε αυτόν θα διαγραφεί από τον διακομιστή. Αυτή η ενέργεια δεν "
-"αναιρείται."
-
-msgid "Empty"
-msgstr "Άδειασμα"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Άδειασμα κάδου σε όλους τους λογαριασμούς;"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Άδειασμα ανεπιθύμητων σε όλους τους λογαριασμούς;"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Κάθε μήνυμα σε αυτούς θα διαγραφεί από τον διακομιστή. Αυτό δεν μπορεί να "
-"αναιρεθεί."
 
 msgid "This account can't have folders at the top level."
 msgstr "Αυτός ο λογαριασμός δεν επιτρέπει φακέλους στο ανώτατο επίπεδο."
@@ -1450,9 +1489,6 @@ msgstr "Ενεργοποίηση λειτουργίας συγκέντρωσης
 
 msgid "Turn Focus Mode Off"
 msgstr "Απενεργοποίηση λειτουργίας συγκέντρωσης"
-
-msgid "View"
-msgstr "Προβολή"
 
 msgid "All accounts"
 msgstr "Όλοι οι λογαριασμοί"
@@ -4275,9 +4311,6 @@ msgstr "Υπογραφή με το κλειδί OpenPGP σας"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Κρυπτογράφηση με OpenPGP για το κλειδί κάθε παραλήπτη"
 
-msgid "More"
-msgstr "Περισσότερα"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Εμφάνιση Κοιν., Κρυφής κοιν. και Απάντησης προς"
 
@@ -4523,12 +4556,16 @@ msgstr "Κωδικός λήψης για {name}: {password}"
 msgid "Reply-To"
 msgstr "Απάντηση προς"
 
-#, fuzzy
-msgid "Match a column to a name, an email address or a phone number."
-msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+msgid "Look in"
+msgstr ""
 
-msgid "Import Contacts"
-msgstr "Εισαγωγή επαφών"
+#, fuzzy
+msgid "All Mail"
+msgstr "Όλη η αλληλογραφία"
+
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Εισαγωγή αρχείων Mbox"
 
 msgid "Import"
 msgstr "Εισαγωγή"
@@ -4536,6 +4573,50 @@ msgstr "Εισαγωγή"
 #, fuzzy
 msgid "Import into"
 msgstr "Εισαγωγή υπογραφής"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Αναζήτηση κατά όνομα, διεύθυνση ή αναγνωριστικό κλειδιού"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Διαγραφή όλων"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Επιλεγμένα"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Επιλέχθη {n} μήνυμα"
+msgstr[1] "Επιλέχθησαν {n} μηνύματα"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} μήνυμα"
+msgstr[1] "{n} μηνύματα"
+
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Ανάγνωση {n} μηνυμάτων…"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Δεν βρέθηκαν αποτελέσματα"
+
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Μια επαφή χρειάζεται όνομα, διεύθυνση email ή αριθμό τηλεφώνου"
+
+msgid "Import Contacts"
+msgstr "Εισαγωγή επαφών"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5080,8 +5161,19 @@ msgid "Sort and filter contacts"
 msgstr "Ταξινόμηση και φιλτράρισμα επαφών"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "Αρχεία vCard"
+msgid "From Files…"
+msgstr "Εισαγωγή αρχείου…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "From Mail…"
+msgstr "Εισαγωγή αρχείου…"
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Επαφές"
 
 msgid "All files"
 msgstr "Όλα τα αρχεία"
@@ -5222,10 +5314,6 @@ msgid_plural "This will remove {n} contacts from your address books."
 msgstr[0] "Αυτό θα αφαιρέσει {n} επαφή από τον κατάλογο διευθύνσεών σας."
 msgstr[1] "Αυτό θα αφαιρέσει {n} επαφές από τους καταλόγους διευθύνσεών σας."
 
-#, fuzzy
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
-
 msgid "New contact or group"
 msgstr "Νέα επαφή ή ομάδα"
 
@@ -5324,11 +5412,6 @@ msgstr "Αναζήτηση φακέλων"
 
 msgid "Whole conversation"
 msgstr "Ολόκληρη συζήτηση"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} μήνυμα"
-msgstr[1] "{n} μηνύματα"
 
 msgid "Later today ({time})"
 msgstr "Αργότερα σήμερα ({time})"
@@ -5564,9 +5647,6 @@ msgid "Every folder of this account, Trash and Junk included."
 msgstr ""
 "Όλοι οι φάκελοι όλων των λογαριασμών, συμπεριλαμβανομένων του Κάδου και των "
 "Ανεπιθύμητων."
-
-msgid "What this searches"
-msgstr "Τι αναζητά αυτή η επιλογή"
 
 msgid "me"
 msgstr "εγώ"
@@ -7062,6 +7142,10 @@ msgstr "Δίνει στο θέμα όλο το διαθέσιμο πλάτος."
 msgid "Search field position"
 msgstr "Θέση πεδίου αναζήτησης"
 
+#, fuzzy
+msgid "Search starts in"
+msgstr "Αναζήτηση ρυθμίσεων"
+
 msgid "Selection bar position"
 msgstr "Θέση γραμμής επιλογής"
 
@@ -8225,11 +8309,18 @@ msgstr[1] "{n} επαφές δεν μετακινήθηκαν: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Αδυναμία ενημέρωσης επαφής: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Δεν ήταν δυνατή η εισαγωγή επαφών: {e}"
 
 msgid "Could not read: {files}"
 msgstr "Δεν ήταν δυνατή η ανάγνωση: {files}"
+
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Δημιουργήστε έναν νέο φάκελο για αυτόν τον λογαριασμό."
 
 msgid "Search filters"
 msgstr "Αναζήτηση φίλτρων"
@@ -9107,10 +9198,6 @@ msgid "Cut"
 msgstr "Χώρα"
 
 #, fuzzy
-msgid "Select All"
-msgstr "Διαγραφή όλων"
-
-#, fuzzy
 msgid "Insert Emoji"
 msgstr "Εισαγωγή emoji"
 
@@ -9250,6 +9337,21 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Τι αναζητά αυτή η επιλογή"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Όλοι οι λογαριασμοί"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "Αρχεία vCard"
+
+#, fuzzy
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Εισαγωγή αρχείων vCard στο βιβλίο διευθύνσεων του Hylki"
 
 #~ msgid "Waiting to send"
 #~ msgstr "Αναμονή για αποστολή"

@@ -54,6 +54,7 @@ mod demo;
 mod diagnostics;
 mod draft_copies;
 mod drafts;
+mod empty_count;
 mod events_bodies;
 mod events_folders;
 mod events_messages;

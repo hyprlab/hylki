@@ -15,6 +15,31 @@ use crate::worker::render::body_cacheable;
 use crate::worker::{blocking, render_raw, WorkerEvent};
 
 impl<E: Fn(WorkerEvent)> GraphWorker<E> {
+    /// How many messages a folder holds (#676): its `totalItemCount`.
+    pub(super) async fn on_count_folder(&mut self, path: String) {
+        let account_id = self.account_id;
+        let emit = &|ev| name_labels(&self.account, &self.emit, ev);
+        let mut count = None;
+        if let (Some(token), Some((_, gid))) = (
+            graph_token(&self.account, emit).await,
+            self.state.folders.get(&path).cloned(),
+        ) {
+            let url = format!(
+                "{}/me/mailFolders/{gid}?$select=totalItemCount",
+                self.state.base
+            );
+            match blocking(move || graph_get_json(&token, &url)).await {
+                Ok(v) => {
+                    count = v["totalItemCount"]
+                        .as_u64()
+                        .map(|n| n.min(u64::from(u32::MAX)) as u32);
+                }
+                Err(e) => tracing::warn!("[account {account_id}] count {path}: {e}"),
+            }
+        }
+        emit(WorkerEvent::FolderCounted { path, count });
+    }
+
     /// The categories defined for the mailbox, with the cached counts.
     pub(super) async fn on_find_keywords(&mut self) {
         let account_id = self.account_id;

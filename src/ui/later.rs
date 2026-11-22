@@ -165,7 +165,7 @@ pub(crate) fn pick_later_time(
             n.with_minute(0).and_then(|n| n.with_second(0)).unwrap_or(n)
         }
     };
-    let dialog = adw::MessageDialog::new(parent, Some(title), None);
+    let dialog = crate::ui::dialog::message_dialog(parent, Some(title), None);
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("ok", confirm);
     dialog.set_default_response(Some("ok"));
@@ -173,20 +173,28 @@ pub(crate) fn pick_later_time(
     dialog.set_response_appearance("ok", adw::ResponseAppearance::Suggested);
     let bx = gtk::Box::new(gtk::Orientation::Vertical, 8);
     let calendar = gtk::Calendar::new();
+    crate::ui::flat_calendar::style(&calendar);
     calendar.set_year(start.year());
     calendar.set_month(start.month0() as i32);
     calendar.set_day(start.day() as i32);
     bx.append(&calendar);
     let row = gtk::Box::new(gtk::Orientation::Horizontal, 6);
     row.set_halign(gtk::Align::Center);
-    let hour = gtk::SpinButton::with_range(0.0, 23.0, 1.0);
-    hour.set_value(start.hour() as f64);
-    hour.set_orientation(gtk::Orientation::Vertical);
-    hour.set_wrap(true);
-    let minute = gtk::SpinButton::with_range(0.0, 55.0, 5.0);
-    minute.set_value((start.minute() / 5 * 5) as f64);
-    minute.set_orientation(gtk::Orientation::Vertical);
-    minute.set_wrap(true);
+    // Two digits each, 13:00 rather than 13:0, as the event dialog's time.
+    let spin = |max: f64, step: f64, value: u32| {
+        let s = gtk::SpinButton::with_range(0.0, max, step);
+        s.set_value(value as f64);
+        s.set_orientation(gtk::Orientation::Vertical);
+        s.set_wrap(true);
+        s.set_numeric(true);
+        s.connect_output(|s| {
+            s.set_text(&format!("{:02}", s.value_as_int()));
+            gtk::glib::Propagation::Stop
+        });
+        s
+    };
+    let hour = spin(23.0, 1.0, start.hour());
+    let minute = spin(55.0, 5.0, start.minute() / 5 * 5);
     row.append(&hour);
     row.append(&gtk::Label::new(Some(":")));
     row.append(&minute);

@@ -7,8 +7,8 @@ use adw::prelude::*;
 use relm4::prelude::*;
 
 use crate::config::{
-    AppTheme, ClockStyle, DateStyle, LauncherBadge, MessageTheme, ReaderToolbar, ToolbarItem,
-    ToolbarSide, TrayIcon,
+    AppTheme, ClockStyle, DateStyle, LauncherBadge, MessageTheme, ReaderToolbar, SearchStart,
+    ToolbarItem, ToolbarSide, TrayIcon,
 };
 use crate::i18n::{i18n, i18n_f, i18n_noop, ni18n_f};
 use crate::ui::chip_flow::ChipFlow;

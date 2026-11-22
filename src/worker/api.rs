@@ -251,6 +251,10 @@ pub(crate) enum MailRequest {
     /// Settings page. Always answered with [`WorkerEvent::Quota`], `None` when
     /// the server gives no figure.
     Quota,
+    /// How many messages the folder `path` holds on the server, for the
+    /// Empty Trash / Empty Junk question (#676). Always answered with
+    /// [`WorkerEvent::FolderCounted`], `None` when the server gives no number.
+    CountFolder { path: String },
     /// Bring every folder's cached keywords in line with the server (#166):
     /// a tag set or cleared on another device reaches the tag views here
     /// without the folder it sits in being opened. `keywords` are the
@@ -524,6 +528,8 @@ pub(crate) enum WorkerEvent {
     KeywordsFound(Vec<KeywordFinding>),
     /// The answer to [`MailRequest::Quota`].
     Quota(Option<MailboxQuota>),
+    /// The answer to [`MailRequest::CountFolder`].
+    FolderCounted { path: String, count: Option<u32> },
     /// The answer to [`MailRequest::RefreshKeywords`]: the folders whose
     /// cached keywords changed (empty when nothing did).
     KeywordsSynced {

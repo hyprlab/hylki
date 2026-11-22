@@ -271,9 +271,6 @@ msgstr "Rispondi a tutti"
 msgid "Forward"
 msgstr "Inoltra"
 
-msgid "Edit as New Message"
-msgstr "Modifica come nuovo messaggio"
-
 msgid "Remove Star"
 msgstr "Rimuovi contrassegno"
 
@@ -307,24 +304,36 @@ msgstr ""
 msgid "Create Task from Selection…"
 msgstr "Crea"
 
-msgid "View Source"
-msgstr "Visualizza sorgente"
-
-msgid "Save as File…"
-msgstr "Salva come file…"
-
-msgid "Add Sender to Contacts"
-msgstr "Aggiungi mittente ai contatti"
-
-msgid "Create Filter from Message…"
-msgstr ""
-
 msgid "Create Event…"
 msgstr ""
 
 #, fuzzy
 msgid "Create Task…"
 msgstr "Crea"
+
+msgid "Create Filter from Message…"
+msgstr ""
+
+msgid "Add Sender to Contacts"
+msgstr "Aggiungi mittente ai contatti"
+
+msgid "Create"
+msgstr "Crea"
+
+msgid "View"
+msgstr "Vista"
+
+msgid "Edit as New Message"
+msgstr "Modifica come nuovo messaggio"
+
+msgid "View Source"
+msgstr "Visualizza sorgente"
+
+msgid "Save as File…"
+msgstr "Salva come file…"
+
+msgid "More"
+msgstr "Altro"
 
 #, fuzzy
 msgid "Copy To…"
@@ -619,6 +628,10 @@ msgid "{name} did not answer: {error}"
 msgstr "{name} non ha risposto: {error}"
 
 #, fuzzy
+msgid "No Thunderbird address books were found in this folder"
+msgstr "Nessuna rubrica disponibile per aggiungere contatti"
+
+#, fuzzy
 msgid "A contact needs a name, an email address or a phone number"
 msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
 
@@ -633,6 +646,18 @@ msgstr "Il file non è un file di testo"
 
 msgid "The file is larger than {size} MB"
 msgstr "Il file è più grande di {size} MB"
+
+#, fuzzy
+msgid "Personal Address Book"
+msgstr "Rubrica"
+
+#, fuzzy
+msgid "Collected Addresses"
+msgstr "Controlla l'indirizzo"
+
+#, fuzzy
+msgid "This is not a Thunderbird address book"
+msgstr "Salvare la directory?"
 
 msgid "{n} person, in Bcc"
 msgid_plural "{n} people, in Bcc"
@@ -706,6 +731,47 @@ msgstr "Nessuna cartella Bozze disponibile per questo account"
 
 msgid "No Templates folder available for this account"
 msgstr "Nessuna cartella Modelli disponibile per questo account"
+
+msgid "Empty “{name}”?"
+msgstr "Svuotare \"{name}\"?"
+
+msgid "Empty"
+msgstr "Svuota"
+
+#, fuzzy
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] ""
+"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+msgstr[1] ""
+"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr ""
+"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+
+msgid "Empty Trash in Every Account?"
+msgstr "Svuotare il Cestino in tutti gli account?"
+
+msgid "Empty Junk in Every Account?"
+msgstr "Svuotare la Posta indesiderata in tutti gli account?"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr ""
+"Ogni messaggio in essi verrà cancellato dal server. Questa azione non può "
+"essere annullata."
+
+#, fuzzy
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "Trova nel messaggio"
+msgstr[1] "Trova nel messaggio"
 
 msgid ""
 "The forward of filter {rule} was refused. The message was left where it is "
@@ -831,9 +897,6 @@ msgstr "Nuova cartella"
 msgid "Cancel"
 msgstr "Annulla"
 
-msgid "Create"
-msgstr "Crea"
-
 msgid "Folder name"
 msgstr "Nome cartella"
 
@@ -855,30 +918,6 @@ msgid ""
 msgstr ""
 "I messaggi vengono spostati nel Cestino e la cartella viene rimossa dal "
 "server. Questa operazione non può essere annullata."
-
-msgid "Empty “{name}”?"
-msgstr "Svuotare \"{name}\"?"
-
-msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
-msgstr ""
-"Ogni messaggio in essa verrà cancellato dal server. Questa azione non può "
-"essere annullata."
-
-msgid "Empty"
-msgstr "Svuota"
-
-msgid "Empty Trash in Every Account?"
-msgstr "Svuotare il Cestino in tutti gli account?"
-
-msgid "Empty Junk in Every Account?"
-msgstr "Svuotare la Posta indesiderata in tutti gli account?"
-
-msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
-msgstr ""
-"Ogni messaggio in essi verrà cancellato dal server. Questa azione non può "
-"essere annullata."
 
 msgid "This account can't have folders at the top level."
 msgstr ""
@@ -1500,9 +1539,6 @@ msgstr "Attiva modalità focus"
 
 msgid "Turn Focus Mode Off"
 msgstr "Disattiva modalità focus"
-
-msgid "View"
-msgstr "Vista"
 
 msgid "All accounts"
 msgstr "Tutti gli account"
@@ -4379,9 +4415,6 @@ msgstr "Firma con la tua chiave OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Crittografa con OpenPGP usando la chiave di ogni destinatario"
 
-msgid "More"
-msgstr "Altro"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Ccn e Rispondi a"
 
@@ -4628,12 +4661,16 @@ msgstr "Password di download per {name}: {password}"
 msgid "Reply-To"
 msgstr "Rispondi a"
 
-#, fuzzy
-msgid "Match a column to a name, an email address or a phone number."
-msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
+msgid "Look in"
+msgstr ""
 
-msgid "Import Contacts"
-msgstr "Importa contatti"
+#, fuzzy
+msgid "All Mail"
+msgstr "Aggiungi e-mail"
+
+#, fuzzy
+msgid "Import from Mail"
+msgstr "Importa file…"
 
 #, fuzzy
 msgid "Import"
@@ -4642,6 +4679,50 @@ msgstr "Importa…"
 #, fuzzy
 msgid "Import into"
 msgstr "Importa firma"
+
+#, fuzzy
+msgid "Search names and addresses"
+msgstr "Cerca, filtri e ordinamento"
+
+#, fuzzy
+msgid "Select All"
+msgstr "Elimina tutto"
+
+#, fuzzy
+msgid "Select None"
+msgstr "Importa selezionati"
+
+#, fuzzy
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "Nessun messaggio selezionato"
+msgstr[1] "Nessun messaggio selezionato"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} messaggio"
+msgstr[1] "{n} messaggi"
+
+#, fuzzy
+msgid "Reading your mail…"
+msgstr "Indicizzazione di {n} messaggi…"
+
+msgid "No One New"
+msgstr ""
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr ""
+
+#, fuzzy
+msgid "No Results Found"
+msgstr "Nessun risultato"
+
+#, fuzzy
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "Un contatto necessita di un nome o di un indirizzo e-mail"
+
+msgid "Import Contacts"
+msgstr "Importa contatti"
 
 msgid "Keeps no groups: their names stay on each contact."
 msgstr ""
@@ -5213,8 +5294,19 @@ msgid "Sort and filter contacts"
 msgstr "Messaggi e-mail"
 
 #, fuzzy
-msgid "vCard and CSV files"
-msgstr "File vCard"
+msgid "From Files…"
+msgstr "Importa file…"
+
+msgid "From Thunderbird…"
+msgstr ""
+
+#, fuzzy
+msgid "From Mail…"
+msgstr "Importa file…"
+
+#, fuzzy
+msgid "Contact files"
+msgstr "Contatti"
 
 msgid "All files"
 msgstr "Tutti i file"
@@ -5374,10 +5466,6 @@ msgstr[1] ""
 "dal server."
 
 #, fuzzy
-msgid "Import vCard or CSV files into the Hylki address book"
-msgstr "Importa file vCard nella rubrica Hylki"
-
-#, fuzzy
 msgid "New contact or group"
 msgstr "Nuovo contatto"
 
@@ -5477,11 +5565,6 @@ msgstr "Cerca cartelle"
 
 msgid "Whole conversation"
 msgstr "Intera conversazione"
-
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} messaggio"
-msgstr[1] "{n} messaggi"
 
 #, fuzzy
 msgid "Later today ({time})"
@@ -5731,9 +5814,6 @@ msgstr ""
 #, fuzzy
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Tutto tranne Cestino e Posta indesiderata"
-
-msgid "What this searches"
-msgstr ""
 
 msgid "me"
 msgstr "io"
@@ -7278,6 +7358,10 @@ msgid "Search field position"
 msgstr "Filtri di ricerca"
 
 #, fuzzy
+msgid "Search starts in"
+msgstr "Cerca nelle impostazioni"
+
+#, fuzzy
 msgid "Selection bar position"
 msgstr "Azioni"
 
@@ -8424,11 +8508,18 @@ msgstr[1] "{n} contatti esportati in {path}"
 msgid "Could not update contact: {e}"
 msgstr "Impossibile aggiornare il contatto: {e}"
 
+msgid "Choose Thunderbird's Profile Folder"
+msgstr ""
+
 msgid "Could not import contacts: {e}"
 msgstr "Impossibile importare i contatti: {e}"
 
 msgid "Could not read: {files}"
 msgstr "Impossibile leggere: {files}"
+
+#, fuzzy
+msgid "{folder} in {account}"
+msgstr "Crea una nuova cartella per questo account."
 
 msgid "Search filters"
 msgstr "Filtri di ricerca"
@@ -9325,10 +9416,6 @@ msgid "Cut"
 msgstr ""
 
 #, fuzzy
-msgid "Select All"
-msgstr "Elimina tutto"
-
-#, fuzzy
 msgid "Insert Emoji"
 msgstr "Inserisci emoji"
 
@@ -9466,6 +9553,18 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "All Accounts"
+#~ msgstr "Tutti gli account"
+
+#, fuzzy
+#~ msgid "vCard and CSV files"
+#~ msgstr "File vCard"
+
+#, fuzzy
+#~ msgid "Import vCard or CSV files into the Hylki address book"
+#~ msgstr "Importa file vCard nella rubrica Hylki"
 
 #, fuzzy
 #~ msgid "Displays in the message header for each message."

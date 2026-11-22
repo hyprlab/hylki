@@ -64,6 +64,11 @@ impl AppModel {
                     self.push_list_bars();
                 }
             }
+            PrefOutput::SetListSearchStart(start) => {
+                if pref!(self.list_search_start = start) {
+                    self.apply_search_start();
+                }
+            }
             PrefOutput::SetGroupByDate(on) => {
                 if pref!(self.list_group_by_date = on) {
                     self.message_list.emit(MessageListInput::SetGroupByDate(on));
