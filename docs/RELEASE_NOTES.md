@@ -2,6 +2,19 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.49.1
+
+### Fixes:
+
+- messages lost when Hylki was closed before they went - (#678)
+- messages slow to send behind background downloads - (#678)
+- no window when GNOME Online Accounts or the desktop portal does not answer - (#691)
+- m marking an unread conversation unread - (#679)
+- "entity not found" opening a conversation in On This Computer - (#689)
+- Fetch the sender's key finding nothing for many addresses, by @hanthor - (#690)
+- message dialogs drawn wider than GNOME's
+- a new account showing the last account's storage row
+
 ## What's new in 1.49.0
 
 ### New features:

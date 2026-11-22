@@ -2,16 +2,6 @@
 
 ## Unreleased
 
-- **Fixed: Fetch the sender's key found nothing for many addresses** (#690,
-  by James Reilly). gpg asks only the keyserver it is set up with,
-  keyserver.ubuntu.com by default, which lacks many keys, and its WKD lookup
-  refuses a redirect to another host. edward-en@fsf.org fails both ways.
-  When gpg finds nothing, **Fetch the sender's key** and **Fetch by
-  address…** now ask the provider's WKD again through Hylki's own HTTPS
-  client, then keys.openpgp.org by address and by key id. A key found by
-  address keeps only the user ids for that address and has to name it. One
-  found by key id has to carry that id.
-
 - **New: a shorter right-click menu on messages** (#692). The menu of a
   message in the list and of a card in the reader keeps replying, filing
   (Spam, Move To…, Archive, Snooze, Delete), then starring, read state and
@@ -23,26 +13,6 @@
   first page when a service is set up. In the Inbox the card menu went from
   26 entries to 15, and the list's from 19 to 13.
 
-- **Fixed: no window when GNOME Online Accounts or the desktop portal does
-  not answer** (#691, reported by thopanX). Startup asked GNOME Online
-  Accounts for its accounts, and the date column asked the settings portal
-  for the clock format, on the main thread with no time limit. One that never
-  answered held the window from ever appearing, and every later launch timed
-  out handing off to that instance. GOA now has 5 seconds at startup, and its
-  accounts are left as they are without an answer. Portal calls give up
-  after 2 seconds and are not tried again for 5 minutes. A launch that finds
-  an instance that does not answer says so, with the command that ends it,
-  instead of waiting a second time. The Background portal's calls, moved
-  to the same path, sent their arguments with the wrong types, so Start at
-  login wrote no autostart entry and Background Apps showed no status
-  (#694, fixed by José Miguel Sarasola).
-
-- **Fixed: "entity not found" opening a conversation in On This Computer**
-  (#689, reported by samuel-edlmeier). With the empty Inbox left out of
-  the folder list, the cache numbered the folders one off from the ids
-  the app knew, so a conversation's messages in other folders were looked
-  for in the wrong one. The cache now keeps each folder's own id.
-
 - **New: contacts picked from the mail** (#677, requested by
   DarkStarCrashes123). **From Mail…** in the Contacts view's import menu
   lists everyone in the cached mail who is not a contact yet, with how many
@@ -50,13 +20,6 @@
   one account or one folder, and ticked person by person or all at once; **Import** adds
   the ones ticked to the book chosen. Your own addresses, no-reply and
   bounce senders, and senders found only in Trash or Junk are left out.
-
-- **Fixed: m marked an unread conversation unread** (#679, reported by
-  mbetrifork). Opening a conversation reads its newest message, and **m**
-  toggled that message alone, so the first press made it unread while the
-  others stayed unread. On a conversation's row **m** now toggles the whole
-  conversation: any unread message makes it all read. A card picked in the
-  reader still toggles that card.
 
 - **New: contacts imported straight from Thunderbird** (#681, requested by
   DarkStarCrashes123). The Contacts view's import button is a menu, and
@@ -67,6 +30,21 @@
   Without a profile in those places a folder chooser asks for it, and
   **From Files…** takes an `abook.sqlite`. The Flatpak reads the
   Thunderbird Flatpak's folder, read-only.
+
+- **New: Empty Trash and Empty Junk say how many messages they erase**
+  (#676, requested by DarkStarCrashes123). The question asks the server for
+  the folder's count first: "47 messages will be erased from the server".
+  Emptying every account's Trash or Junk from the unified row gives the
+  total and each account's own count. A server that does not answer within
+  a second and a half leaves the question as it was, without a number.
+
+## 1.49.1 — 2026-11-22
+
+A patch release with eight fixes: a message is kept in the Outbox until the
+server takes it and goes ahead of background downloads, the window opens
+when GNOME Online Accounts or the desktop portal does not answer, m toggles
+a whole conversation, conversations open in On This Computer, and Fetch the
+sender's key asks WKD and keys.openpgp.org.
 
 - **Fixed: a message could be lost when Hylki was closed before it went**
   (#678, reported by DarkStarCrashes123). A message waited in memory between
@@ -83,12 +61,50 @@
   which on Yahoo with large drafts was two minutes. A message being sent now
   goes ahead of them.
 
-- **New: Empty Trash and Empty Junk say how many messages they erase**
-  (#676, requested by DarkStarCrashes123). The question asks the server for
-  the folder's count first: "47 messages will be erased from the server".
-  Emptying every account's Trash or Junk from the unified row gives the
-  total and each account's own count. A server that does not answer within
-  a second and a half leaves the question as it was, without a number.
+- **Fixed: m marked an unread conversation unread** (#679, reported by
+  mbetrifork). Opening a conversation reads its newest message, and **m**
+  toggled that message alone, so the first press made it unread while the
+  others stayed unread. On a conversation's row **m** now toggles the whole
+  conversation: any unread message makes it all read. A card picked in the
+  reader still toggles that card.
+
+- **Fixed: "entity not found" opening a conversation in On This Computer**
+  (#689, reported by samuel-edlmeier). With the empty Inbox left out of
+  the folder list, the cache numbered the folders one off from the ids
+  the app knew, so a conversation's messages in other folders were looked
+  for in the wrong one. The cache now keeps each folder's own id.
+
+- **Fixed: no window when GNOME Online Accounts or the desktop portal does
+  not answer** (#691, reported by thopanX). Startup asked GNOME Online
+  Accounts for its accounts, and the date column asked the settings portal
+  for the clock format, on the main thread with no time limit. One that never
+  answered held the window from ever appearing, and every later launch timed
+  out handing off to that instance. GOA now has 5 seconds at startup, and its
+  accounts are left as they are without an answer. Portal calls give up
+  after 2 seconds and are not tried again for 5 minutes. A launch that finds
+  an instance that does not answer says so, with the command that ends it,
+  instead of waiting a second time. The Background portal's calls take
+  the same path, with their argument types fixed by José Miguel Sarasola
+  (#694).
+
+- **Fixed: Fetch the sender's key found nothing for many addresses** (#690,
+  by James Reilly). gpg asks only the keyserver it is set up with,
+  keyserver.ubuntu.com by default, which lacks many keys, and its WKD lookup
+  refuses a redirect to another host. edward-en@fsf.org fails both ways.
+  When gpg finds nothing, **Fetch the sender's key** and **Fetch by
+  address…** now ask the provider's WKD again through Hylki's own HTTPS
+  client, then keys.openpgp.org by address and by key id. A key found by
+  address keeps only the user ids for that address and has to name it. One
+  found by key id has to carry that id.
+
+- **Fixed: message dialogs drawn near twice GNOME's width.** A large
+  heading wider than the dialog never wraps, and libadwaita then sized the
+  dialog to the body's single line. Every message dialog now lets its
+  heading wrap and keeps GNOME's narrow width.
+
+- **Fixed: a new account showed the storage row of the last account
+  opened** in Settings → Accounts. The row is hidden until the account is
+  saved and its server can be asked.
 
 ## 1.49.0 — 2026-11-19
 
