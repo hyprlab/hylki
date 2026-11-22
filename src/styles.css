@@ -2655,9 +2655,10 @@ textview.console-view text selection {
 }
 
 /* A calendar drawn like the popover or dialog around it rather than as a
-   boxed view (ui/flat_calendar.rs), for the date filter and the Snooze /
-   Send Later picker: no frame or fill, flat rounded arrows, dim day names,
-   and round days that light up under the pointer as popover rows do. */
+   boxed view (ui/flat_calendar.rs), for the date filter, the Snooze / Send
+   Later picker and the Create Event and Create Task date popovers: no frame
+   or fill, flat rounded arrows, dim day names, and round days that light up
+   under the pointer as popover rows do. */
 calendar.flat-calendar {
   background: none;
   border: none;

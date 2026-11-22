@@ -1,6 +1,7 @@
 //! A calendar drawn like the popover or dialog around it rather than as a
-//! boxed view (#696): the date filter's and the Snooze / Send Later
-//! picker's. Its look is the `flat-calendar` class in `styles.css`.
+//! boxed view (#696): the date filter's, the Snooze / Send Later picker's,
+//! and the Create Event and Create Task dialogs' date popovers. Its look is
+//! the `flat-calendar` class in `styles.css`.
 
 use adw::prelude::*;
 

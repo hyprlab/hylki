@@ -377,6 +377,7 @@ struct Moment {
 impl Moment {
     fn new(at: DateTime<Local>) -> Self {
         let calendar = gtk::Calendar::new();
+        crate::ui::flat_calendar::style(&calendar);
         let popover = gtk::Popover::new();
         popover.set_child(Some(&calendar));
         let button = gtk::MenuButton::new();

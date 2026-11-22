@@ -16,8 +16,9 @@
   filled arrows and an underlined today. It is now drawn like the rows beside
   it, with no frame or fill, flat rounded arrows, dimmed day names, round days
   that tint under the pointer, and today in the accent color. The Snooze and
-  Send Later date and time picker has the same calendar, and its hour and
-  minute show two digits (13:00, not 13:0).
+  Send Later date and time picker and the date popovers of Create Event and
+  Create Task have the same calendar, and the picker's hour and minute show
+  two digits (13:00, not 13:0).
 
 - **New: a shorter right-click menu on messages** (#692). The menu of a
   message in the list and of a card in the reader keeps replying, filing
