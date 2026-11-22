@@ -27,6 +27,7 @@ pub(crate) mod drag_card;
 pub(crate) mod drop_zones;
 pub(crate) mod emoji;
 mod fade_label;
+pub(crate) mod flat_calendar;
 pub(crate) mod folder_picker;
 pub(crate) mod grab_pill;
 mod icon_picker;
