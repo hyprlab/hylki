@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: the date filter's calendar looked out of place** (#696, fixed by
+  José Miguel Sarasola). The calendar in the Dates column of the sort and
+  filter popover kept GtkCalendar's boxed look: a dark fill, a frame, square
+  filled arrows and an underlined today. It is now drawn like the rows beside
+  it, with no frame or fill, flat rounded arrows, dimmed day names, round days
+  that tint under the pointer, and today in the accent color.
+
 - **New: a shorter right-click menu on messages** (#692). The menu of a
   message in the list and of a card in the reader keeps replying, filing
   (Spam, Move To…, Archive, Snooze, Delete), then starring, read state and

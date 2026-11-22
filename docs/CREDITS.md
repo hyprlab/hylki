@@ -184,9 +184,11 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   under their Shared and user rows in the Folders tree, and address book names
   shown whole in their dropdowns.
 - [**José Miguel Sarasola**](https://github.com/alosarjos) ([#694](https://github.com/hyprlab/hylki/issues/694),
-  [#695](https://github.com/hyprlab/hylki/pull/695)): Start at login and the
+  [#695](https://github.com/hyprlab/hylki/pull/695), [#696](https://github.com/hyprlab/hylki/issues/696),
+  [#697](https://github.com/hyprlab/hylki/pull/697)): Start at login and the
   Background Apps status, after the portal calls behind them went out with
-  the wrong argument types.
+  the wrong argument types, and the date filter's calendar drawn like the
+  rest of its popover.
 
 ## Reports, design and ideas
 
