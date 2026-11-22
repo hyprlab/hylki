@@ -2650,6 +2650,61 @@ textview.console-view text selection {
 .sort-filter-dates {
   margin: 4px 8px;
 }
+/* The calendar drawn like the rest of the popover rather than as a boxed
+   view: no frame or fill, flat rounded arrows, dim day names, and round
+   days that light up under the pointer as the rows beside them do. */
+calendar.sort-filter-calendar {
+  margin-top: 6px;
+  background: none;
+  border: none;
+}
+calendar.sort-filter-calendar > header {
+  border-bottom: none;
+  margin-bottom: 4px;
+}
+calendar.sort-filter-calendar > header > button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  background: none;
+}
+calendar.sort-filter-calendar > header > button:hover {
+  background-color: alpha(currentColor, 0.07);
+}
+calendar.sort-filter-calendar > header > button:active {
+  background-color: alpha(currentColor, 0.16);
+}
+calendar.sort-filter-calendar > header > .month,
+calendar.sort-filter-calendar > header > .year {
+  font-weight: bold;
+}
+calendar.sort-filter-calendar > grid {
+  padding: 0;
+}
+calendar.sort-filter-calendar > grid > label {
+  margin: 1px;
+}
+calendar.sort-filter-calendar > grid > label.day-name {
+  margin-bottom: 4px;
+  font-size: 0.8em;
+  font-weight: bold;
+  opacity: 0.55;
+}
+calendar.sort-filter-calendar > grid > label.day-number {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+  border-radius: 999px;
+}
+calendar.sort-filter-calendar > grid > label.day-number:hover:not(:selected) {
+  background-color: alpha(currentColor, 0.07);
+}
+calendar.sort-filter-calendar > grid > label.today:not(:selected) {
+  box-shadow: none;
+  color: @accent_color;
+  font-weight: bold;
+}
 
 /* The month and year beside the list's scrollbar thumb while it is
    dragged. */
