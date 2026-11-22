@@ -39,18 +39,25 @@ fn key(email: &str) -> String {
     email.trim().to_lowercase()
 }
 
-/// The face already known for `email`, as a `data:` PNG for a card. `None`
-/// when there is none, and when it has not been looked up yet.
-pub(super) fn known_face(email: &str) -> Option<String> {
+/// The face already known for `email`, by the switches on now: its contact
+/// photo, else its Gravatar, else its domain's icon. `None` when there is
+/// none, and when it has not been looked up yet. No I/O.
+pub(crate) fn known_texture(email: &str) -> Option<gtk::gdk::Texture> {
     if email.trim().is_empty() {
         return None;
     }
     let (gravatar, logos) = tiers();
-    let texture = match avatar::lookup(email, gravatar) {
-        CacheLookup::Texture(texture) => texture,
-        CacheLookup::Missing if logos => logo::cached(email)?,
-        CacheLookup::Missing | CacheLookup::Fetch { .. } => return None,
-    };
+    match avatar::lookup(email, gravatar) {
+        CacheLookup::Texture(texture) => Some(texture),
+        CacheLookup::Missing if logos => logo::cached(email),
+        CacheLookup::Missing | CacheLookup::Fetch { .. } => None,
+    }
+}
+
+/// The face already known for `email`, as a `data:` PNG for a card. `None`
+/// when there is none, and when it has not been looked up yet.
+pub(super) fn known_face(email: &str) -> Option<String> {
+    let texture = known_texture(email)?;
     let key = key(email);
     let hit = URIS.with(|u| {
         u.borrow()
@@ -64,6 +71,86 @@ pub(super) fn known_face(email: &str) -> Option<String> {
     let uri = crate::ui::initials::texture_data_uri(&texture, SIZE)?;
     URIS.with(|u| u.borrow_mut().insert(key, (texture, uri.clone())));
     Some(uri)
+}
+
+/// The tiers still to ask about one address's face.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct FaceAsk {
+    /// The contact and Gravatar tiers, with the EDS generation and mode.
+    avatar: Option<(u64, FetchMode)>,
+    /// The domain icon.
+    logo: bool,
+}
+
+impl FaceAsk {
+    /// What was asked about `email`, so the same question is not put twice.
+    fn tag(&self, email: &str) -> String {
+        match self.avatar {
+            Some((generation, mode)) => format!("{email}\u{1}{generation}\u{1}{mode:?}"),
+            None => format!("{email}\u{1}logo"),
+        }
+    }
+}
+
+/// What is left to ask about `email`'s face, or `None` when its face is
+/// known or nothing more can be learned.
+pub(crate) fn still_to_ask(email: &str) -> Option<FaceAsk> {
+    let (gravatar, logos) = tiers();
+    match avatar::lookup(email, gravatar) {
+        CacheLookup::Texture(_) => None,
+        CacheLookup::Fetch { generation, mode } => Some(FaceAsk {
+            avatar: Some((generation, mode)),
+            logo: logos && !logo::known_missing(email),
+        }),
+        CacheLookup::Missing => {
+            let wanted = logos
+                && match logo::cached(email) {
+                    // A week-old icon still shows; this is the cue to look
+                    // for a fresh one, as the list does.
+                    Some(_) => logo::wants_refresh(email),
+                    None => !logo::known_missing(email),
+                };
+            wanted.then_some(FaceAsk {
+                avatar: None,
+                logo: true,
+            })
+        }
+    }
+}
+
+/// Ask the tiers in `what` about `email`. Blocking: call off the main thread.
+pub(crate) fn ask(email: String, what: FaceAsk) -> FaceAnswer {
+    let avatar = what
+        .avatar
+        .map(|(generation, mode)| (generation, mode, avatar::fetch(&email, mode)));
+    let personal = matches!(avatar, Some((_, _, FetchOutcome::Found(_))));
+    let logo = (what.logo && !personal).then(|| logo::fetch(&email));
+    FaceAnswer {
+        email,
+        avatar,
+        logo,
+    }
+}
+
+/// Put an answer in the caches the list and the readers share, and give back
+/// the address it was for. Main thread only.
+pub(crate) fn keep(answer: FaceAnswer) -> String {
+    let FaceAnswer {
+        email,
+        avatar,
+        logo,
+    } = answer;
+    if let Some((generation, mode, outcome)) = avatar {
+        avatar::cache_result(&email, generation, mode, outcome);
+    }
+    match logo {
+        Some(Some(bytes)) => {
+            logo::decode_and_cache(&email, &bytes);
+        }
+        Some(None) => logo::remember_missing(&email),
+        None => {}
+    }
+    email
 }
 
 /// What a face lookup off the main thread brought back.
@@ -98,7 +185,6 @@ impl MessageView {
         let Some(input) = self.faces.input.clone() else {
             return;
         };
-        let (gravatar, logos) = tiers();
         let mut seen = HashSet::new();
         for m in &self.thread {
             let email = key(m.shown_from_addr());
@@ -109,72 +195,25 @@ impl MessageView {
             if avatar::own_face(&email).is_some() {
                 continue;
             }
-            let (ask_avatar, ask_logo) = match avatar::lookup(&email, gravatar) {
-                CacheLookup::Texture(_) => continue,
-                CacheLookup::Fetch { generation, mode } => (
-                    Some((generation, mode)),
-                    logos && !logo::known_missing(&email),
-                ),
-                CacheLookup::Missing => {
-                    let wanted = logos
-                        && match logo::cached(&email) {
-                            // A week-old icon still shows; this is the cue
-                            // to look for a fresh one, as the list does.
-                            Some(_) => logo::wants_refresh(&email),
-                            None => !logo::known_missing(&email),
-                        };
-                    if !wanted {
-                        continue;
-                    }
-                    (None, true)
-                }
+            let Some(what) = still_to_ask(&email) else {
+                continue;
             };
-            let asked = match ask_avatar {
-                Some((generation, mode)) => format!("{email}\u{1}{generation}\u{1}{mode:?}"),
-                None => format!("{email}\u{1}logo"),
-            };
-            if !self.faces.asked.insert(asked) {
+            if !self.faces.asked.insert(what.tag(&email)) {
                 continue;
             }
             let input = input.clone();
             relm4::spawn(async move {
-                let lookup = email.clone();
-                let found = tokio::task::spawn_blocking(move || {
-                    let avatar = ask_avatar
-                        .map(|(generation, mode)| (generation, mode, avatar::fetch(&lookup, mode)));
-                    let personal = matches!(avatar, Some((_, _, FetchOutcome::Found(_))));
-                    let logo = (ask_logo && !personal).then(|| logo::fetch(&lookup));
-                    (avatar, logo)
-                })
-                .await;
-                if let Ok((avatar, logo)) = found {
-                    let _ = input.send(MessageViewInput::FaceFound(Box::new(FaceAnswer {
-                        email,
-                        avatar,
-                        logo,
-                    })));
+                let found = tokio::task::spawn_blocking(move || ask(email, what)).await;
+                if let Ok(answer) = found {
+                    let _ = input.send(MessageViewInput::FaceFound(Box::new(answer)));
                 }
             });
         }
     }
 
     pub(super) fn on_face_found(&mut self, answer: FaceAnswer) {
-        let FaceAnswer {
-            email,
-            avatar,
-            logo,
-        } = answer;
         // Kept whatever is on screen now: the caches are the list's too.
-        if let Some((generation, mode, outcome)) = avatar {
-            avatar::cache_result(&email, generation, mode, outcome);
-        }
-        match logo {
-            Some(Some(bytes)) => {
-                logo::decode_and_cache(&email, &bytes);
-            }
-            Some(None) => logo::remember_missing(&email),
-            None => {}
-        }
+        let email = keep(answer);
         // A tier left to ask (Gravatar once the contacts are read), or an
         // answer the address books changed under.
         self.look_up_faces();

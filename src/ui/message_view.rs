@@ -13,7 +13,7 @@ mod chrome;
 mod component;
 mod dark;
 mod document;
-mod faces;
+pub(crate) mod faces;
 mod folds;
 mod frame;
 mod html;

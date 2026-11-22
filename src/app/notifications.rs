@@ -69,6 +69,7 @@ impl AppModel {
         folder_id: u32,
         message_id: u32,
         from: &str,
+        from_addr: &str,
         subject: &str,
         others: usize,
         in_place: bool,
@@ -79,7 +80,7 @@ impl AppModel {
             || (demo_mode() && std::env::var_os("HYLKI_SHOWCASE_IN_FRONT").is_some());
         if !in_front {
             crate::desktop::notify::new_mail(
-                account_id, folder_id, message_id, from, subject, others, in_place,
+                account_id, folder_id, message_id, from, from_addr, subject, others, in_place,
             );
         } else if crate::config::sound_when_focused() {
             tracing::info!("new mail with the window in front: the sound alone");

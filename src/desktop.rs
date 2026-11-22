@@ -13,6 +13,7 @@ pub(crate) mod legacy;
 pub(crate) mod memory_report;
 pub(crate) mod nautilus_ext;
 pub(crate) mod notify;
+mod notify_face;
 pub(crate) mod platform;
 pub(crate) mod portal;
 pub(crate) mod power;

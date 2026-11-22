@@ -2754,6 +2754,15 @@ General → Notification Buttons picks any three of the six (Mark as Read,
 Archive and Delete to begin with); a notification that sums up several new
 messages carries none. Stored as `notification_buttons` in `privacy.toml`.
 
+A notification about a single message shows the sender's face: their contact
+photo, else their Gravatar or their domain's icon when those Privacy switches
+are on, cut to a circle as in the list. A face not looked up yet is looked for
+for up to a second and a half before the notification goes up; without one the
+notification shows the app's icon. A summary of several messages, and a
+notification with **Show sender and subject** off, shows no face. Outside the Flatpak the
+picture is kept in `~/.cache/hylki/notifications/` for the desktop to read,
+the newest 32 at most.
+
 **Settings → General → Sound for new mail** plays a sound with each new-mail
 notification. It is off until switched on. **Sound** picks one of GNOME's four
 alert sounds (Click, Hum, String and Swing, built into Hylki) or **Custom

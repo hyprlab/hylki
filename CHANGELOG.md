@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **New: the sender's face on new-mail notifications** (#693, requested by
+  wokawoka). A notification about one message shows the sender's contact
+  photo, Gravatar or domain icon, round as in the list, in place of the app's
+  icon. It follows the Gravatar and sender-logo switches, waits up to a second
+  and a half for a face not looked up yet, and is left off a summary of
+  several messages and when Show sender and subject is off. Works on GNOME and Plasma,
+  in the Flatpak and outside it.
+
 - **Fixed: the date filter's calendar looked out of place** (#696, fixed by
   José Miguel Sarasola). The calendar in the Dates column of the sort and
   filter popover kept GtkCalendar's boxed look: a dark fill, a frame, square
