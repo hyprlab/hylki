@@ -2691,14 +2691,25 @@ calendar.sort-filter-calendar > grid > label.day-name {
   font-weight: bold;
   opacity: 0.55;
 }
+/* Each day is a fixed box centered in its column (list_header.rs), with its
+   circle drawn as a gradient rather than a rounded background. GtkLabel
+   rounds its text's position down to a whole pixel, so in a 32 by 31 box
+   the digits of Adwaita Sans 11 sit 0.2 to 0.4 px left of centre and on it
+   vertically; the circle's centre follows them. */
 calendar.sort-filter-calendar > grid > label.day-number {
-  min-width: 30px;
-  min-height: 30px;
+  min-width: 32px;
+  min-height: 31px;
   padding: 0;
   border-radius: 999px;
 }
 calendar.sort-filter-calendar > grid > label.day-number:hover:not(:selected) {
-  background-color: alpha(currentColor, 0.07);
+  background-image: radial-gradient(circle 15px at calc(50% - 0.3px) 50%,
+      alpha(currentColor, 0.07) 14.5px, transparent 15px);
+}
+calendar.sort-filter-calendar > grid > label.day-number:selected {
+  background-color: transparent;
+  background-image: radial-gradient(circle 15px at calc(50% - 0.3px) 50%,
+      @accent_bg_color 14.5px, alpha(@accent_bg_color, 0) 15px);
 }
 calendar.sort-filter-calendar > grid > label.today:not(:selected) {
   box-shadow: none;
