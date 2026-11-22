@@ -4,11 +4,14 @@
 
 - **New: choose where a search starts** (#699, requested by bjesus).
   Settings → Message List → Search starts in sets the choice the scope
-  picker opens on in each folder: This folder, This Account (Except Trash &
-  Junk), This Account or Everywhere, the default. A search used to start in
-  all folders from an Inbox and in the folder itself elsewhere. This Account
+  picker opens on in each folder: This folder, This account (except Trash and
+  Junk), This account or Everywhere, the default. A search used to start in
+  all folders from an Inbox and in the folder itself elsewhere. This account
   becomes Everywhere in a view of several accounts. The info button beside each choice in the
   picker is gone: holding the pointer over a choice shows what it searches.
+  The picker lists its choices from the fewest folders to the most, and with
+  only one account it leaves out Everywhere, which searched what This account
+  does; Settings leaves it out too. The choices' names are in sentence case.
 
 - **New: the sender's face on new-mail notifications** (#693, requested by
   wokawoka). A notification about one message shows the sender's contact

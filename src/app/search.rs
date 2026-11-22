@@ -77,6 +77,14 @@ pub(super) fn default_scope(start: config::SearchStart, one_account: bool) -> Se
 }
 
 impl AppModel {
+    /// The account the list's search keeps to, `None` across accounts.
+    pub(super) fn set_search_account(&self, account: Option<u32>) {
+        self.message_list.emit(MessageListInput::SetSearchAccount {
+            account,
+            lone: self.accounts.len() == 1,
+        });
+    }
+
     /// The open folder or view's search starts where the setting now says
     /// (#699). The Outbox, a smart view and a tag view keep their own.
     pub(super) fn apply_search_start(&self) {

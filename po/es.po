@@ -5554,11 +5554,11 @@ msgid "Mark All as Unread"
 msgstr "Marcar todo como no leído"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr ""
 "Conceder acceso a toda la cuenta (excepto Papelera y Correo no deseado)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Todas las carpetas (excepto Papelera y Correo no deseado)"
 
 msgid "Everywhere"
@@ -5568,7 +5568,7 @@ msgid "This folder"
 msgstr "Esta carpeta"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Cuenta de correo"
 
 msgid "All folders"

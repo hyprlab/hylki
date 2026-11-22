@@ -5549,10 +5549,10 @@ msgstr "Отметить все как прочитанные"
 msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Эта учётная запись (кроме «Корзины» и «Спама»)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Все папки (кроме корзины и нежелательной почты)"
 
 msgid "Everywhere"
@@ -5561,7 +5561,7 @@ msgstr "Везде"
 msgid "This folder"
 msgstr "Эта папка"
 
-msgid "This Account"
+msgid "This account"
 msgstr "Эта учётная запись"
 
 msgid "All folders"

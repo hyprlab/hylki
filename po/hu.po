@@ -5781,11 +5781,11 @@ msgid "Mark All as Unread"
 msgstr "Összes megjelölése olvasatlanként"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Keresés a mappákban"
 
 #, fuzzy
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Keresés a mappákban"
 
 #, fuzzy
@@ -5796,7 +5796,7 @@ msgid "This folder"
 msgstr "Ez a mappa"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Levelezési fiók"
 
 msgid "All folders"

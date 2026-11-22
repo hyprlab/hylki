@@ -3,7 +3,6 @@
 
 use adw::prelude::*;
 
-use super::super::choices::SEARCH_STARTS;
 use super::super::{PrefInput, PrefOutput, Preferences, ViewSender};
 use crate::i18n::i18n;
 
@@ -126,11 +125,7 @@ impl ListPage {
                     adw::ComboRow {
                         set_title: &i18n("Search starts in"),
                         connect_selected_notify[sender] => move |row| {
-                            let start = SEARCH_STARTS
-                                .get(row.selected() as usize)
-                                .map(|(_, s)| *s)
-                                .unwrap_or_default();
-                            let _ = sender.output(PrefOutput::SetListSearchStart(start));
+                            sender.input(PrefInput::ChangeSearchStart(row.selected()));
                         },
                     },
 

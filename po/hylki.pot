@@ -5069,10 +5069,10 @@ msgstr ""
 msgid "Mark All as Unread"
 msgstr ""
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr ""
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr ""
 
 msgid "Everywhere"
@@ -5081,7 +5081,7 @@ msgstr ""
 msgid "This folder"
 msgstr ""
 
-msgid "This Account"
+msgid "This account"
 msgstr ""
 
 msgid "All folders"

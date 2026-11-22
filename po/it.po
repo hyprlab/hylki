@@ -5774,11 +5774,11 @@ msgid "Mark All as Unread"
 msgstr "Segna tutto come non letto"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Tutto tranne Cestino e Posta indesiderata"
 
 #, fuzzy
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Tutto tranne Cestino e Posta indesiderata"
 
 #, fuzzy
@@ -5789,7 +5789,7 @@ msgid "This folder"
 msgstr "Questa cartella"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Account e-mail"
 
 msgid "All folders"

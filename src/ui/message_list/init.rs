@@ -45,6 +45,7 @@ impl MessageList {
             server_searching: false,
             scope: SearchScope::AllFolders,
             search_account: None,
+            lone_account: false,
             search_entry: None,
             scope_picker: None,
             search_open: false,

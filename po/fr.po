@@ -5563,10 +5563,10 @@ msgstr "Tout marquer comme lu"
 msgid "Mark All as Unread"
 msgstr "Tout marquer comme non lu"
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Ce compte (sauf Corbeille et Indésirables)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Tous les dossiers (sauf corbeille et indésirables)"
 
 msgid "Everywhere"
@@ -5575,7 +5575,7 @@ msgstr "Partout"
 msgid "This folder"
 msgstr "Ce dossier"
 
-msgid "This Account"
+msgid "This account"
 msgstr "Ce compte"
 
 msgid "All folders"

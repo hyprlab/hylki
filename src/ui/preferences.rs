@@ -103,6 +103,11 @@ pub(crate) struct Preferences {
     /// Whether the list can be on one line at all, which the columns are
     /// for.
     list_single_possible: bool,
+    /// Where a search starts, the row that sets it, and whether Hylki has
+    /// one account only, which leaves "Everywhere" off the row (#699).
+    search_start: crate::config::SearchStart,
+    search_start_row: Option<adw::ComboRow>,
+    lone_account: bool,
     /// Whether swipe actions are on (the reverse switch follows it).
     swipe_enabled: bool,
     /// Mirrors the threading switch, so the "threaded message list" row below
@@ -403,6 +408,9 @@ impl Component for Preferences {
             nautilus_cmd: crate::desktop::platform::nautilus_python_install_command(),
             files: init.files,
             files_rows: None,
+            search_start: init.list_search_start,
+            search_start_row: None,
+            lone_account: init.lone_account,
             spell_langs: None,
             assistant_policy: init.assistant_policy.clone(),
             assistant_status: init.assistant_status.clone(),
@@ -746,6 +754,13 @@ impl Component for Preferences {
             PrefInput::ChangeListLayout(index) => self.on_change_list_layout(index, sender),
             PrefInput::ChangePreviewLines(index) => self.on_change_preview_lines(index, sender),
             PrefInput::ChangeAppTheme(index) => self.on_change_app_theme(index, sender),
+            PrefInput::ChangeSearchStart(index) => self.on_change_search_start(index, sender),
+            PrefInput::SetLoneAccount(lone) => {
+                if self.lone_account != lone {
+                    self.lone_account = lone;
+                    self.fill_search_start_row();
+                }
+            }
             PrefInput::ChangeTextScale(index) => self.on_change_text_scale(index, sender),
             PrefInput::ChangeSettingsOpen(index) => {
                 let _ = sender.output(PrefOutput::SetSettingsOpenAccounts(index == 1));

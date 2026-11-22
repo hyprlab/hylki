@@ -120,9 +120,7 @@ impl AppModel {
             .emit(MessageListInput::SetScope(SearchScope::ThisFolder));
         self.message_list.emit(MessageListInput::SetColorize(true));
         // A tag view narrowed to one account searches that account.
-        self.message_list.emit(MessageListInput::SetSearchAccount(
-            self.tag_view.as_ref().and_then(|(account, _)| *account),
-        ));
+        self.set_search_account(self.tag_view.as_ref().and_then(|(account, _)| *account));
         self.message_list
             .emit(MessageListInput::SetRestorable(false));
         self.message_list.emit(MessageListInput::SetInJunk(false));

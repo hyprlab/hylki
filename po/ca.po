@@ -5619,10 +5619,10 @@ msgid "Mark All as Unread"
 msgstr "Marca-ho tot com a no llegit"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Totes les carpetes (menys la paperera i la brossa)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Totes les carpetes (menys la paperera i la brossa)"
 
 msgid "Everywhere"
@@ -5632,7 +5632,7 @@ msgid "This folder"
 msgstr "Aquesta carpeta"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Compte de correu"
 
 msgid "All folders"

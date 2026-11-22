@@ -5569,10 +5569,10 @@ msgstr "Alle als gelesen markieren"
 msgid "Mark All as Unread"
 msgstr "Alle als ungelesen markieren"
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Dieses Konto (außer Papierkorb und Spam)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Alle Ordner (außer Papierkorb und Spam)"
 
 msgid "Everywhere"
@@ -5581,7 +5581,7 @@ msgstr "Alle Ordner"
 msgid "This folder"
 msgstr "Dieser Ordner"
 
-msgid "This Account"
+msgid "This account"
 msgstr "Dieses Konto"
 
 msgid "All folders"

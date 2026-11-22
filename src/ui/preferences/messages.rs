@@ -184,6 +184,8 @@ pub(crate) struct PrefInit {
     pub(crate) list_search_bottom: bool,
     pub(crate) list_bulk_bar_bottom: bool,
     pub(crate) list_search_start: crate::config::SearchStart,
+    /// Hylki has one account only (#699).
+    pub(crate) lone_account: bool,
     pub(crate) single_key_shortcuts: bool,
     pub(crate) gmail_keys: bool,
     pub(crate) keep_downloads_days: u32,
@@ -370,6 +372,10 @@ pub(crate) enum PrefInput {
     ChangeSignaturePosition(u32),
     ChangeUndoSend(u32),
     ChangeAppTheme(u32),
+    ChangeSearchStart(u32),
+    /// Whether Hylki has one account only, sent as the window opens: the
+    /// "Search starts in" row then leaves "Everywhere" out (#699).
+    SetLoneAccount(bool),
     ChangeTextScale(u32),
     ChangeSettingsOpen(u32),
     /// Switch the window to the Accounts panel (true) or Preferences (false).

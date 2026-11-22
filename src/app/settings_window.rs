@@ -183,6 +183,7 @@ impl AppModel {
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
             list_search_start: self.list_search_start,
+            lone_account: self.accounts.len() == 1,
             toolbar_fold_right: self.toolbar_fold_right,
             single_key_shortcuts: self.single_key.get(),
             gmail_keys: self.gmail_keys.get(),
@@ -478,6 +479,7 @@ impl AppModel {
             }
         }
         if let Some(p) = &self.prefs {
+            p.emit(PrefInput::SetLoneAccount(self.accounts.len() == 1));
             p.widget().present();
         }
         if add_new {

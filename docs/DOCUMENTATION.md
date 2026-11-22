@@ -2414,16 +2414,19 @@ the search field is the outer one, so selecting messages never moves it.
 
 The button beside the search field sets where a search looks, and holding
 the pointer over a choice in its popover says what that choice searches.
-**All folders (except trash & junk)** searches every folder of every account
-except Trash and Junk, unless the list is showing one of them. **Everywhere**
-takes in Trash and Junk too, and **This folder** only the folder on screen.
-From a single account's folder, **This Account** and **This Account (Except
-Trash & Junk)** keep to that account.
+The choices run from the fewest folders to the most. **This folder** searches
+only the folder on screen. **All folders (except Trash and Junk)** searches
+every folder of every account except Trash and Junk, unless the list is
+showing one of them, and **Everywhere** takes in Trash and Junk too. From a
+single account's folder, **This account (except Trash and Junk)** and **This
+account** keep to that account. With only one account, **Everywhere** would
+search what **This account** does, and is not offered in its folders.
 
 **Settings → Message List → Search starts in** sets the choice a folder
-opens with: **Everywhere** unless changed. **This Account** becomes
-**Everywhere** in a view of several accounts. The button changes it for as
-long as the folder is open.
+opens with: **Everywhere** unless changed. **This account** becomes
+**Everywhere** in a view of several accounts, and **Everywhere** becomes
+**This account** when there is only one account. The button changes it for
+as long as the folder is open.
 
 In all folders and everywhere, each result wears a pill with the name of the folder it is in, and a Gmail message filed under
 several labels is one result: its Inbox copy, else a label's, else All

@@ -180,9 +180,27 @@ impl MessageList {
         }
     }
 
-    pub(super) fn on_set_scope(&mut self, scope: SearchScope, sender: &ComponentSender<Self>) {
+    /// `scope` as the view on show can have it: with one account only,
+    /// "Everywhere" in its folders is "This account", which the picker
+    /// offers in its place (#699).
+    fn offered(&self, scope: SearchScope) -> SearchScope {
+        if scope == SearchScope::Everywhere && self.lone_account && self.search_account.is_some() {
+            SearchScope::Account
+        } else {
+            scope
+        }
+    }
+
+    fn sync_picker(&self) {
         if let Some(picker) = &self.scope_picker {
-            picker.sync(scope, self.search_account.is_some());
+            picker.sync(self.scope, self.search_account.is_some(), self.lone_account);
+        }
+    }
+
+    pub(super) fn on_set_scope(&mut self, scope: SearchScope, sender: &ComponentSender<Self>) {
+        let scope = self.offered(scope);
+        if let Some(picker) = &self.scope_picker {
+            picker.sync(scope, self.search_account.is_some(), self.lone_account);
         }
         if self.scope != scope {
             let was_active = self.wants_pool();
@@ -207,21 +225,18 @@ impl MessageList {
         }
     }
 
-    pub(super) fn on_set_search_account(&mut self, account: Option<u32>) {
-        if self.search_account == account {
+    pub(super) fn on_set_search_account(&mut self, account: Option<u32>, lone: bool) {
+        if self.search_account == account && self.lone_account == lone {
             return;
         }
         self.search_account = account;
-        if let Some(picker) = &self.scope_picker {
-            picker.sync(self.scope, account.is_some());
-        }
-        // "This Account" has no meaning across accounts.
+        self.lone_account = lone;
+        // "This account" has no meaning across accounts.
         if account.is_none() && self.scope == SearchScope::Account {
             self.scope = SearchScope::AllFolders;
-            if let Some(picker) = &self.scope_picker {
-                picker.sync(self.scope, false);
-            }
         }
+        self.scope = self.offered(self.scope);
+        self.sync_picker();
         if self.searching_pool() && self.scope.per_account() {
             self.sync_look();
             self.rebuild();

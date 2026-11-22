@@ -5600,10 +5600,10 @@ msgid "Mark All as Unread"
 msgstr "Σήμανση όλων ως μη αναγνωσμένων"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
 
 msgid "Everywhere"
@@ -5613,7 +5613,7 @@ msgid "This folder"
 msgstr "Αυτός ο φάκελος"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Λογαριασμός αλληλογραφίας"
 
 msgid "All folders"
