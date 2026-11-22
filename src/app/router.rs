@@ -542,6 +542,7 @@ impl AppModel {
             | PrefOutput::SetReplyToSender(..)
             | PrefOutput::SetListSearchBottom(..)
             | PrefOutput::SetListBulkBarBottom(..)
+            | PrefOutput::SetListSearchStart(..)
             | PrefOutput::SetGroupByDate(..)
             | PrefOutput::SetPillsBelow(..)
             | PrefOutput::SetListFollowsWindow(..)

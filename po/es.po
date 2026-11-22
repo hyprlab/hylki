@@ -244,9 +244,6 @@ msgstr "Responder a todos"
 msgid "Forward"
 msgstr "Reenviar"
 
-msgid "Edit as New Message"
-msgstr "Editar como mensaje nuevo"
-
 msgid "Remove Star"
 msgstr "Quitar destacado"
 
@@ -279,23 +276,35 @@ msgstr "Crear evento…"
 msgid "Create Task from Selection…"
 msgstr "Crear tarea…"
 
+msgid "Create Event…"
+msgstr "Crear evento…"
+
+msgid "Create Task…"
+msgstr "Crear tarea…"
+
+msgid "Create Filter from Message…"
+msgstr "Crear filtro a partir del mensaje…"
+
+msgid "Add Sender to Contacts"
+msgstr "Añadir remitente a Contactos"
+
+msgid "Create"
+msgstr "Crear"
+
+msgid "View"
+msgstr "Ver"
+
+msgid "Edit as New Message"
+msgstr "Editar como mensaje nuevo"
+
 msgid "View Source"
 msgstr "Ver código fuente"
 
 msgid "Save as File…"
 msgstr "Guardar como archivo…"
 
-msgid "Add Sender to Contacts"
-msgstr "Añadir remitente a Contactos"
-
-msgid "Create Filter from Message…"
-msgstr "Crear filtro a partir del mensaje…"
-
-msgid "Create Event…"
-msgstr "Crear evento…"
-
-msgid "Create Task…"
-msgstr "Crear tarea…"
+msgid "More"
+msgstr "Más"
 
 msgid "Copy To…"
 msgstr "Copiar a…"
@@ -836,9 +845,6 @@ msgstr "Carpeta nueva"
 
 msgid "Cancel"
 msgstr "Cancelar"
-
-msgid "Create"
-msgstr "Crear"
 
 msgid "Folder name"
 msgstr "Nombre de la carpeta"
@@ -1448,9 +1454,6 @@ msgstr "Activar el modo de concentración"
 
 msgid "Turn Focus Mode Off"
 msgstr "Desactivar el modo de concentración"
-
-msgid "View"
-msgstr "Ver"
 
 msgid "All accounts"
 msgstr "Todas las cuentas"
@@ -4262,9 +4265,6 @@ msgstr "Firmar con tu clave OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Cifrar con OpenPGP usando la clave de cada destinatario"
 
-msgid "More"
-msgstr "Más"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostrar Cc, Cco y Responder a"
 
@@ -5604,9 +5604,6 @@ msgid "Every folder of this account, Trash and Junk included."
 msgstr ""
 "Busca en todas las carpetas de todas las cuentas, incluidas Papelera y "
 "Correo no deseado."
-
-msgid "What this searches"
-msgstr "Ámbito de búsqueda"
 
 msgid "me"
 msgstr "yo"
@@ -7092,6 +7089,10 @@ msgstr "Deja todo el ancho disponible para el asunto."
 
 msgid "Search field position"
 msgstr "Posición del campo de búsqueda"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Buscar ajustes"
 
 msgid "Selection bar position"
 msgstr "Posición de la barra de selección"
@@ -9256,6 +9257,9 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Ámbito de búsqueda"
 
 #, fuzzy
 #~ msgid "All Accounts"

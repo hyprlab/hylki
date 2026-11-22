@@ -2412,15 +2412,20 @@ messages down when it opens; at the bottom, the list gets shorter from its
 foot and the messages stay where they are. When both are on the same side,
 the search field is the outer one, so selecting messages never moves it.
 
-The button beside the search field sets where a search looks, and the info
-button beside each choice in its popover says what that choice searches.
+The button beside the search field sets where a search looks, and holding
+the pointer over a choice in its popover says what that choice searches.
 **All folders (except trash & junk)** searches every folder of every account
 except Trash and Junk, unless the list is showing one of them. **Everywhere**
 takes in Trash and Junk too, and **This folder** only the folder on screen.
-A search started in an Inbox, or in All Inboxes, looks in all folders; one
-started anywhere else looks in that folder, and the button changes it for as
-long as the folder is open. In all folders and everywhere, each result wears
-a pill with the name of the folder it is in, and a Gmail message filed under
+From a single account's folder, **This Account** and **This Account (Except
+Trash & Junk)** keep to that account.
+
+**Settings → Message List → Search starts in** sets the choice a folder
+opens with: **Everywhere** unless changed. **This Account** becomes
+**Everywhere** in a view of several accounts. The button changes it for as
+long as the folder is open.
+
+In all folders and everywhere, each result wears a pill with the name of the folder it is in, and a Gmail message filed under
 several labels is one result: its Inbox copy, else a label's, else All
 Mail's. Folders not opened since Hylki started are searched from the index
 Hylki keeps of them, which covers mail archived to Gmail's All Mail.

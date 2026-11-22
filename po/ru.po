@@ -244,9 +244,6 @@ msgstr "Ответить всем"
 msgid "Forward"
 msgstr "Переслать"
 
-msgid "Edit as New Message"
-msgstr "Изменить как новое сообщение"
-
 msgid "Remove Star"
 msgstr "Снять отметку"
 
@@ -277,23 +274,35 @@ msgstr "Создать событие из выделенного текста�
 msgid "Create Task from Selection…"
 msgstr "Создать задачу из выделенного текста…"
 
+msgid "Create Event…"
+msgstr "Создать событие…"
+
+msgid "Create Task…"
+msgstr "Создать задачу…"
+
+msgid "Create Filter from Message…"
+msgstr "Создать фильтр из сообщения…"
+
+msgid "Add Sender to Contacts"
+msgstr "Добавить отправителя в контакты"
+
+msgid "Create"
+msgstr "Создать"
+
+msgid "View"
+msgstr "Вид"
+
+msgid "Edit as New Message"
+msgstr "Изменить как новое сообщение"
+
 msgid "View Source"
 msgstr "Просмотр исходного кода"
 
 msgid "Save as File…"
 msgstr "Сохранить как файл…"
 
-msgid "Add Sender to Contacts"
-msgstr "Добавить отправителя в контакты"
-
-msgid "Create Filter from Message…"
-msgstr "Создать фильтр из сообщения…"
-
-msgid "Create Event…"
-msgstr "Создать событие…"
-
-msgid "Create Task…"
-msgstr "Создать задачу…"
+msgid "More"
+msgstr "Ещё"
 
 msgid "Copy To…"
 msgstr "Копировать в…"
@@ -837,9 +846,6 @@ msgstr "Новая папка"
 
 msgid "Cancel"
 msgstr "Отмена"
-
-msgid "Create"
-msgstr "Создать"
 
 msgid "Folder name"
 msgstr "Название папки"
@@ -1455,9 +1461,6 @@ msgstr "Включить режим фокусировки"
 
 msgid "Turn Focus Mode Off"
 msgstr "Выключить режим фокусировки"
-
-msgid "View"
-msgstr "Вид"
 
 msgid "All accounts"
 msgstr "Все учётные записи"
@@ -4259,9 +4262,6 @@ msgstr "Подписать вашим ключом OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Зашифровать с помощью OpenPGP для каждого получателя"
 
-msgid "More"
-msgstr "Ещё"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Показать «Копия», «Скрытая копия» и «Адрес для ответа»"
 
@@ -5591,9 +5591,6 @@ msgstr "Отображается только папка или просмотр
 
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Все папки этой учётной записи, включая «Корзину» и «Спам»."
-
-msgid "What this searches"
-msgstr "Что это ищет"
 
 msgid "me"
 msgstr "я"
@@ -7076,6 +7073,10 @@ msgstr "Придает объекту полную ширину."
 
 msgid "Search field position"
 msgstr "Положение поля поиска"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Поиск по параметрам"
 
 msgid "Selection bar position"
 msgstr "Положение панели выбора"
@@ -9220,6 +9221,9 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Что это ищет"
 
 #, fuzzy
 #~ msgid "All Accounts"

@@ -248,9 +248,6 @@ msgstr "Allen antworten"
 msgid "Forward"
 msgstr "Weiterleiten"
 
-msgid "Edit as New Message"
-msgstr "Als neue Nachricht bearbeiten"
-
 msgid "Remove Star"
 msgstr "Stern entfernen"
 
@@ -281,23 +278,35 @@ msgstr "Termin aus Auswahl erstellen…"
 msgid "Create Task from Selection…"
 msgstr "Aufgabe aus Auswahl erstellen…"
 
+msgid "Create Event…"
+msgstr "Erstelle Termin…"
+
+msgid "Create Task…"
+msgstr "Erstelle Aufgabe…"
+
+msgid "Create Filter from Message…"
+msgstr "Filterregel aus Nachricht erstellen…"
+
+msgid "Add Sender to Contacts"
+msgstr "Absender zu Kontakten hinzufügen"
+
+msgid "Create"
+msgstr "Erstellen"
+
+msgid "View"
+msgstr "Anzeigen"
+
+msgid "Edit as New Message"
+msgstr "Als neue Nachricht bearbeiten"
+
 msgid "View Source"
 msgstr "Quelltext anzeigen"
 
 msgid "Save as File…"
 msgstr "Speichern unter…"
 
-msgid "Add Sender to Contacts"
-msgstr "Absender zu Kontakten hinzufügen"
-
-msgid "Create Filter from Message…"
-msgstr "Filterregel aus Nachricht erstellen…"
-
-msgid "Create Event…"
-msgstr "Erstelle Termin…"
-
-msgid "Create Task…"
-msgstr "Erstelle Aufgabe…"
+msgid "More"
+msgstr "Mehr"
 
 msgid "Copy To…"
 msgstr "Kopieren nach…"
@@ -823,9 +832,6 @@ msgstr "Neuer Ordner"
 
 msgid "Cancel"
 msgstr "Abbrechen"
-
-msgid "Create"
-msgstr "Erstellen"
 
 msgid "Folder name"
 msgstr "Name des Ordners"
@@ -1437,9 +1443,6 @@ msgstr "Fokusmodus ein"
 
 msgid "Turn Focus Mode Off"
 msgstr "Fokusmodus aus"
-
-msgid "View"
-msgstr "Anzeigen"
 
 msgid "All accounts"
 msgstr "Alle Konten"
@@ -4274,9 +4277,6 @@ msgstr "Mit eigenem OpenPGP-Schlüssel signieren"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Mit OpenPGP für jeden Empfängerschlüssel verschlüsseln"
 
-msgid "More"
-msgstr "Mehr"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Cc, Bcc und Reply-To anzeigen"
 
@@ -5609,9 +5609,6 @@ msgstr "Nur der aktuell angezeigte Ordner oder die aktuelle Ansicht"
 
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Alle Ordner dieses Kontos inklusive Papierkorb und Spam."
-
-msgid "What this searches"
-msgstr "Durchsuchte Ordner"
 
 msgid "me"
 msgstr "ich"
@@ -7108,6 +7105,10 @@ msgstr "Zeigt den Betreff in voller Breite an."
 
 msgid "Search field position"
 msgstr "Position des Suchfelds"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Einstellungen durchsuchen"
 
 msgid "Selection bar position"
 msgstr "Position der Auswahlleiste"
@@ -9305,6 +9306,9 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Durchsuchte Ordner"
 
 #, fuzzy
 #~ msgid "All Accounts"

@@ -274,9 +274,6 @@ msgstr "Odpowiedz wszystkim"
 msgid "Forward"
 msgstr "Przekaż dalej"
 
-msgid "Edit as New Message"
-msgstr "Modyfikuj jako nową wiadomość"
-
 msgid "Remove Star"
 msgstr "Usuń gwiazdkę"
 
@@ -313,6 +310,29 @@ msgstr "Drukuj wiadomość…"
 msgid "Create Task from Selection…"
 msgstr "Utwórz"
 
+msgid "Create Event…"
+msgstr ""
+
+#, fuzzy
+msgid "Create Task…"
+msgstr "Utwórz"
+
+#, fuzzy
+msgid "Create Filter from Message…"
+msgstr "Drukuj wiadomość…"
+
+msgid "Add Sender to Contacts"
+msgstr "Dodaj nadawcę do kontaktów"
+
+msgid "Create"
+msgstr "Utwórz"
+
+msgid "View"
+msgstr ""
+
+msgid "Edit as New Message"
+msgstr "Modyfikuj jako nową wiadomość"
+
 msgid "View Source"
 msgstr "Wyświetl źródło"
 
@@ -320,19 +340,8 @@ msgstr "Wyświetl źródło"
 msgid "Save as File…"
 msgstr "Zapisz jako PDF…"
 
-msgid "Add Sender to Contacts"
-msgstr "Dodaj nadawcę do kontaktów"
-
-#, fuzzy
-msgid "Create Filter from Message…"
-msgstr "Drukuj wiadomość…"
-
-msgid "Create Event…"
-msgstr ""
-
-#, fuzzy
-msgid "Create Task…"
-msgstr "Utwórz"
+msgid "More"
+msgstr "Więcej"
 
 #, fuzzy
 msgid "Copy To…"
@@ -907,9 +916,6 @@ msgstr "Nowy katalog"
 
 msgid "Cancel"
 msgstr "Anuluj"
-
-msgid "Create"
-msgstr "Utwórz"
 
 msgid "Folder name"
 msgstr "Nazwa katalogu"
@@ -1588,9 +1594,6 @@ msgstr "Tryb skupienia"
 #, fuzzy
 msgid "Turn Focus Mode Off"
 msgstr "Tryb skupienia"
-
-msgid "View"
-msgstr ""
 
 msgid "All accounts"
 msgstr "Wszystkie konta"
@@ -4514,9 +4517,6 @@ msgstr "Podpisz własnym kluczem OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Zaszyfruj za pomocą OpenPGP kluczami wszystkich odbiorców"
 
-msgid "More"
-msgstr "Więcej"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Wyświetl pola „DW”, „UDW” i „Odpowiedź do”"
 
@@ -5894,9 +5894,6 @@ msgstr ""
 #, fuzzy
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Wyszukaj katalogi"
-
-msgid "What this searches"
-msgstr ""
 
 #, fuzzy
 msgid "me"
@@ -7472,6 +7469,10 @@ msgstr ""
 #, fuzzy
 msgid "Search field position"
 msgstr "Wyszukaj filtry"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Wyszukaj ustawienia"
 
 #, fuzzy
 msgid "Selection bar position"

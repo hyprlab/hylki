@@ -3,6 +3,7 @@
 
 use adw::prelude::*;
 
+use super::super::choices::SEARCH_STARTS;
 use super::super::{PrefInput, PrefOutput, Preferences, ViewSender};
 use crate::i18n::i18n;
 
@@ -19,6 +20,7 @@ pub(in crate::ui::preferences) struct ListPage {
     pub(in crate::ui::preferences) pills_below_row: adw::SwitchRow,
     pub(in crate::ui::preferences) list_search_open_row: adw::SwitchRow,
     pub(in crate::ui::preferences) list_search_place_row: adw::ComboRow,
+    pub(in crate::ui::preferences) list_search_start_row: adw::ComboRow,
     pub(in crate::ui::preferences) list_bulk_place_row: adw::ComboRow,
     pub(in crate::ui::preferences) tag_row_tint_row: adw::SwitchRow,
     pub(in crate::ui::preferences) swipe_enabled_row: adw::SwitchRow,
@@ -117,6 +119,18 @@ impl ListPage {
                         set_title: &i18n("Search field position"),
                         connect_selected_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetListSearchBottom(row.selected() == 1));
+                        },
+                    },
+
+                    #[name = "list_search_start_row"]
+                    adw::ComboRow {
+                        set_title: &i18n("Search starts in"),
+                        connect_selected_notify[sender] => move |row| {
+                            let start = SEARCH_STARTS
+                                .get(row.selected() as usize)
+                                .map(|(_, s)| *s)
+                                .unwrap_or_default();
+                            let _ = sender.output(PrefOutput::SetListSearchStart(start));
                         },
                     },
 
@@ -225,6 +239,7 @@ impl ListPage {
             pills_below_row,
             list_search_open_row,
             list_search_place_row,
+            list_search_start_row,
             list_bulk_place_row,
             tag_row_tint_row,
             swipe_enabled_row,

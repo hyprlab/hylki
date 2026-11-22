@@ -520,6 +520,8 @@ pub(crate) struct AppModel {
     /// The list's search field and bulk bar open under the rows (#496).
     pub(super) list_search_bottom: bool,
     pub(super) list_bulk_bar_bottom: bool,
+    /// Where a search starts when a folder or view opens (#699).
+    pub(super) list_search_start: config::SearchStart,
     /// The widths columns were dragged to by their headings (#334).
     pub(super) list_column_widths: std::collections::HashMap<config::ListColumn, i32>,
     /// The list pane is wide enough for one line per message, which

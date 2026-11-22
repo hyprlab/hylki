@@ -296,8 +296,8 @@ impl SearchScope {
         }
     }
 
-    /// What the scope searches, behind the info button beside its name in
-    /// the picker.
+    /// What the scope searches: the tooltip of its name in the picker
+    /// (#699).
     fn description(self, one_account: bool) -> String {
         match self {
             SearchScope::AllFolders if one_account => i18n(
@@ -313,20 +313,18 @@ impl SearchScope {
     }
 }
 
-/// The search scope's button and popover (#374): each scope by name, with
-/// an info button that tells what it searches.
+/// The search scope's button and popover (#374): each scope by name, and
+/// what it searches in the name's tooltip (#699).
 pub(super) struct ScopePicker {
     pub(super) button: gtk::MenuButton,
     label: gtk::Label,
     /// Follows the way the popover opens (#496).
     pub(super) arrow: gtk::Image,
     radios: Vec<(SearchScope, gtk::CheckButton)>,
-    /// Each scope's info button, in the same order.
-    pub(super) infos: Vec<gtk::MenuButton>,
-    /// What each info button tells, in the same order.
-    abouts: Vec<gtk::Label>,
-    /// Each scope's row in the popover, in the same order.
-    rows: Vec<gtk::Box>,
+    /// Set while [`ScopePicker::sync`] moves the choice. A radio it turns
+    /// on must not send the scope back: two scopes sent in a row then
+    /// echoed each other forever and froze the app (#699).
+    syncing: Rc<std::cell::Cell<bool>>,
 }
 
 impl ScopePicker {
@@ -345,53 +343,30 @@ impl ScopePicker {
         let list = gtk::Box::new(gtk::Orientation::Vertical, 0);
         list.add_css_class("search-scope-popover");
         let mut radios: Vec<(SearchScope, gtk::CheckButton)> = Vec::new();
-        let mut infos = Vec::new();
-        let mut abouts = Vec::new();
-        let mut rows = Vec::new();
+        let syncing = Rc::new(std::cell::Cell::new(false));
         for scope in SearchScope::ALL {
             let radio = gtk::CheckButton::with_label(&scope.label(false));
-            radio.set_hexpand(true);
-            // Beside the radio, not in it: a click on it must not pick the
-            // scope.
-            let about = gtk::Label::new(Some(&scope.description(false)));
-            about.set_xalign(0.0);
-            about.set_wrap(true);
-            about.set_max_width_chars(34);
-            about.add_css_class("search-scope-about");
-            let about_popover = gtk::Popover::new();
-            about_popover.set_child(Some(&about));
-            let info = gtk::MenuButton::new();
-            info.set_icon_name("info-outline-symbolic");
-            info.set_valign(gtk::Align::Center);
-            info.add_css_class("flat");
-            info.add_css_class("circular");
-            info.set_tooltip_text(Some(&i18n("What this searches")));
-            info.set_popover(Some(&about_popover));
-            let row = gtk::Box::new(gtk::Orientation::Horizontal, 4);
-            row.append(&radio);
-            row.append(&info);
-            infos.push(info);
-            abouts.push(about);
+            radio.set_tooltip_text(Some(&scope.description(false)));
             if let Some((_, first)) = radios.first() {
                 radio.set_group(Some(first));
             }
             radio.set_active(scope == SearchScope::AllFolders);
             let input = input.clone();
             let popover = popover.clone();
+            let syncing = syncing.clone();
             radio.connect_toggled(move |r| {
-                if r.is_active() {
+                if r.is_active() && !syncing.get() {
                     input.emit(MessageListInput::SetScope(scope));
                     popover.popdown();
                 }
             });
             // The whole account heads the list, shown only for one account.
             if scope == SearchScope::Account {
-                row.set_visible(false);
-                list.prepend(&row);
+                radio.set_visible(false);
+                list.prepend(&radio);
             } else {
-                list.append(&row);
+                list.append(&radio);
             }
-            rows.push(row);
             radios.push((scope, radio));
         }
         popover.set_child(Some(&list));
@@ -401,26 +376,26 @@ impl ScopePicker {
             label,
             arrow,
             radios,
-            infos,
-            abouts,
-            rows,
+            syncing,
         }
     }
 
-    /// Show `scope` as chosen, the names and rows as the list showing a
+    /// Show `scope` as chosen, the names and tooltips as the list showing a
     /// single account's folder, or not, has them (#649).
     pub(super) fn sync(&self, scope: SearchScope, one_account: bool) {
         self.label.set_label(&scope.button_label(one_account));
-        for (((s, radio), about), row) in self.radios.iter().zip(&self.abouts).zip(&self.rows) {
+        for (s, radio) in &self.radios {
             radio.set_label(Some(&s.label(one_account)));
-            about.set_label(&s.description(one_account));
+            radio.set_tooltip_text(Some(&s.description(one_account)));
             if *s == SearchScope::Account {
-                row.set_visible(one_account);
+                radio.set_visible(one_account);
             }
         }
         if let Some((_, radio)) = self.radios.iter().find(|(s, _)| *s == scope) {
             if !radio.is_active() {
+                self.syncing.set(true);
                 radio.set_active(true);
+                self.syncing.set(false);
             }
         }
     }

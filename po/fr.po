@@ -247,9 +247,6 @@ msgstr "Répondre à tous"
 msgid "Forward"
 msgstr "Transférer"
 
-msgid "Edit as New Message"
-msgstr "Modifier en tant que nouveau message"
-
 msgid "Remove Star"
 msgstr "Retirer l’étoile"
 
@@ -280,23 +277,35 @@ msgstr "Créer un événement à partir de la sélection…"
 msgid "Create Task from Selection…"
 msgstr "Créer une tâche à partir de la sélection…"
 
+msgid "Create Event…"
+msgstr "Créer un événement…"
+
+msgid "Create Task…"
+msgstr "Créer une tâche…"
+
+msgid "Create Filter from Message…"
+msgstr "Créer un filtre à partir du message…"
+
+msgid "Add Sender to Contacts"
+msgstr "Ajouter l’expéditeur aux contacts"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "View"
+msgstr "Affichage"
+
+msgid "Edit as New Message"
+msgstr "Modifier en tant que nouveau message"
+
 msgid "View Source"
 msgstr "Afficher le code source"
 
 msgid "Save as File…"
 msgstr "Enregistrer dans un fichier…"
 
-msgid "Add Sender to Contacts"
-msgstr "Ajouter l’expéditeur aux contacts"
-
-msgid "Create Filter from Message…"
-msgstr "Créer un filtre à partir du message…"
-
-msgid "Create Event…"
-msgstr "Créer un événement…"
-
-msgid "Create Task…"
-msgstr "Créer une tâche…"
+msgid "More"
+msgstr "Plus"
 
 msgid "Copy To…"
 msgstr "Copier vers…"
@@ -823,9 +832,6 @@ msgstr "Nouveau dossier"
 
 msgid "Cancel"
 msgstr "Annuler"
-
-msgid "Create"
-msgstr "Créer"
 
 msgid "Folder name"
 msgstr "Nom du dossier"
@@ -1439,9 +1445,6 @@ msgstr "Activer le mode Focus"
 
 msgid "Turn Focus Mode Off"
 msgstr "Désactiver le mode Focus"
-
-msgid "View"
-msgstr "Affichage"
 
 msgid "All accounts"
 msgstr "Tous les comptes"
@@ -4276,9 +4279,6 @@ msgstr "Signer avec votre clé OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Chiffrer avec OpenPGP en utilisant la clé de chaque destinataire"
 
-msgid "More"
-msgstr "Plus"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Afficher Cc, Cci et Répondre à"
 
@@ -5605,9 +5605,6 @@ msgstr "Uniquement le dossier ou la vue affichés dans la liste."
 
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Tous les dossiers de ce compte, Corbeille et Indésirables compris."
-
-msgid "What this searches"
-msgstr "Ce qui est recherché"
 
 msgid "me"
 msgstr "moi"
@@ -7093,6 +7090,10 @@ msgstr "Donne à l’objet toute sa largeur."
 
 msgid "Search field position"
 msgstr "Position du champ de recherche"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Rechercher des paramètres"
 
 msgid "Selection bar position"
 msgstr "Position de la barre de sélection"
@@ -9259,6 +9260,9 @@ msgstr "La boîte de réception unifiée en mode clair"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Ce qui est recherché"
 
 #, fuzzy
 #~ msgid "All Accounts"

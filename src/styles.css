@@ -2627,20 +2627,17 @@ textview.console-view text selection {
 .sort-filter-column > checkbutton:hover {
   background-color: alpha(currentColor, 0.07);
 }
-/* The search scope's popover (#374): each scope's name, with an info
-   button whose own popover says what it searches. */
+/* The search scope's popover (#374): each scope's name; its tooltip says
+   what it searches (#699). */
 .search-scope-popover {
   padding: 4px;
 }
-.search-scope-popover > box > checkbutton {
+.search-scope-popover > checkbutton {
   padding: 8px;
   border-radius: 6px;
 }
-.search-scope-popover > box > checkbutton:hover {
+.search-scope-popover > checkbutton:hover {
   background-color: alpha(currentColor, 0.07);
-}
-.search-scope-about {
-  margin: 6px 8px;
 }
 .sort-filter-column > button {
   margin-top: 6px;

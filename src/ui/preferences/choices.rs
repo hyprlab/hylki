@@ -9,6 +9,18 @@ pub(super) const TRAY_ICONS: &[(&str, TrayIcon)] = &[
     (i18n_noop("Symbolic"), TrayIcon::Symbolic),
 ];
 
+/// Where a search starts (#699), in the order the row lists them. The names
+/// are the scope picker's own.
+pub(super) const SEARCH_STARTS: &[(&str, SearchStart)] = &[
+    (i18n_noop("This folder"), SearchStart::ThisFolder),
+    (
+        i18n_noop("This Account (Except Trash & Junk)"),
+        SearchStart::AllFolders,
+    ),
+    (i18n_noop("This Account"), SearchStart::Account),
+    (i18n_noop("Everywhere"), SearchStart::Everywhere),
+];
+
 /// The launcher badge's choices (#431), in the order the row lists them.
 pub(super) const LAUNCHER_BADGES: &[(&str, LauncherBadge)] = &[
     (i18n_noop("Off"), LauncherBadge::Off),

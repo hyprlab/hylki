@@ -273,9 +273,6 @@ msgstr "Απάντηση σε όλους"
 msgid "Forward"
 msgstr "Προώθηση"
 
-msgid "Edit as New Message"
-msgstr "Επεξεργασία ως νέο μήνυμα"
-
 msgid "Remove Star"
 msgstr "Αφαίρεση αστεριού"
 
@@ -310,23 +307,35 @@ msgstr "Δημιουργία συμβάντος…"
 msgid "Create Task from Selection…"
 msgstr "Δημιουργία εργασίας…"
 
+msgid "Create Event…"
+msgstr "Δημιουργία συμβάντος…"
+
+msgid "Create Task…"
+msgstr "Δημιουργία εργασίας…"
+
+msgid "Create Filter from Message…"
+msgstr "Δημιουργία φίλτρου από μήνυμα…"
+
+msgid "Add Sender to Contacts"
+msgstr "Προσθήκη αποστολέα στις επαφές"
+
+msgid "Create"
+msgstr "Δημιουργία"
+
+msgid "View"
+msgstr "Προβολή"
+
+msgid "Edit as New Message"
+msgstr "Επεξεργασία ως νέο μήνυμα"
+
 msgid "View Source"
 msgstr "Προβολή πηγαίου κώδικα"
 
 msgid "Save as File…"
 msgstr "Αποθήκευση ως αρχείο…"
 
-msgid "Add Sender to Contacts"
-msgstr "Προσθήκη αποστολέα στις επαφές"
-
-msgid "Create Filter from Message…"
-msgstr "Δημιουργία φίλτρου από μήνυμα…"
-
-msgid "Create Event…"
-msgstr "Δημιουργία συμβάντος…"
-
-msgid "Create Task…"
-msgstr "Δημιουργία εργασίας…"
+msgid "More"
+msgstr "Περισσότερα"
 
 msgid "Copy To…"
 msgstr "Αντιγραφή σε…"
@@ -874,9 +883,6 @@ msgstr "Νέος φάκελος"
 
 msgid "Cancel"
 msgstr "Ακύρωση"
-
-msgid "Create"
-msgstr "Δημιουργία"
 
 msgid "Folder name"
 msgstr "Όνομα φακέλου"
@@ -1483,9 +1489,6 @@ msgstr "Ενεργοποίηση λειτουργίας συγκέντρωσης
 
 msgid "Turn Focus Mode Off"
 msgstr "Απενεργοποίηση λειτουργίας συγκέντρωσης"
-
-msgid "View"
-msgstr "Προβολή"
 
 msgid "All accounts"
 msgstr "Όλοι οι λογαριασμοί"
@@ -4308,9 +4311,6 @@ msgstr "Υπογραφή με το κλειδί OpenPGP σας"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Κρυπτογράφηση με OpenPGP για το κλειδί κάθε παραλήπτη"
 
-msgid "More"
-msgstr "Περισσότερα"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Εμφάνιση Κοιν., Κρυφής κοιν. και Απάντησης προς"
 
@@ -5647,9 +5647,6 @@ msgid "Every folder of this account, Trash and Junk included."
 msgstr ""
 "Όλοι οι φάκελοι όλων των λογαριασμών, συμπεριλαμβανομένων του Κάδου και των "
 "Ανεπιθύμητων."
-
-msgid "What this searches"
-msgstr "Τι αναζητά αυτή η επιλογή"
 
 msgid "me"
 msgstr "εγώ"
@@ -7144,6 +7141,10 @@ msgstr "Δίνει στο θέμα όλο το διαθέσιμο πλάτος."
 
 msgid "Search field position"
 msgstr "Θέση πεδίου αναζήτησης"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Αναζήτηση ρυθμίσεων"
 
 msgid "Selection bar position"
 msgstr "Θέση γραμμής επιλογής"
@@ -9336,6 +9337,9 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Τι αναζητά αυτή η επιλογή"
 
 #, fuzzy
 #~ msgid "All Accounts"

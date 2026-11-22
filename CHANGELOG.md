@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **New: choose where a search starts** (#699, requested by bjesus).
+  Settings → Message List → Search starts in sets the choice the scope
+  picker opens on in each folder: This folder, This Account (Except Trash &
+  Junk), This Account or Everywhere, the default. A search used to start in
+  all folders from an Inbox and in the folder itself elsewhere. This Account
+  becomes Everywhere in a view of several accounts. The info button beside each choice in the
+  picker is gone: holding the pointer over a choice shows what it searches.
+
 - **New: the sender's face on new-mail notifications** (#693, requested by
   wokawoka). A notification about one message shows the sender's contact
   photo, Gravatar or domain icon, round as in the list, in place of the app's

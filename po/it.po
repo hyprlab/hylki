@@ -271,9 +271,6 @@ msgstr "Rispondi a tutti"
 msgid "Forward"
 msgstr "Inoltra"
 
-msgid "Edit as New Message"
-msgstr "Modifica come nuovo messaggio"
-
 msgid "Remove Star"
 msgstr "Rimuovi contrassegno"
 
@@ -307,24 +304,36 @@ msgstr ""
 msgid "Create Task from Selection…"
 msgstr "Crea"
 
-msgid "View Source"
-msgstr "Visualizza sorgente"
-
-msgid "Save as File…"
-msgstr "Salva come file…"
-
-msgid "Add Sender to Contacts"
-msgstr "Aggiungi mittente ai contatti"
-
-msgid "Create Filter from Message…"
-msgstr ""
-
 msgid "Create Event…"
 msgstr ""
 
 #, fuzzy
 msgid "Create Task…"
 msgstr "Crea"
+
+msgid "Create Filter from Message…"
+msgstr ""
+
+msgid "Add Sender to Contacts"
+msgstr "Aggiungi mittente ai contatti"
+
+msgid "Create"
+msgstr "Crea"
+
+msgid "View"
+msgstr "Vista"
+
+msgid "Edit as New Message"
+msgstr "Modifica come nuovo messaggio"
+
+msgid "View Source"
+msgstr "Visualizza sorgente"
+
+msgid "Save as File…"
+msgstr "Salva come file…"
+
+msgid "More"
+msgstr "Altro"
 
 #, fuzzy
 msgid "Copy To…"
@@ -887,9 +896,6 @@ msgstr "Nuova cartella"
 
 msgid "Cancel"
 msgstr "Annulla"
-
-msgid "Create"
-msgstr "Crea"
 
 msgid "Folder name"
 msgstr "Nome cartella"
@@ -1533,9 +1539,6 @@ msgstr "Attiva modalità focus"
 
 msgid "Turn Focus Mode Off"
 msgstr "Disattiva modalità focus"
-
-msgid "View"
-msgstr "Vista"
 
 msgid "All accounts"
 msgstr "Tutti gli account"
@@ -4412,9 +4415,6 @@ msgstr "Firma con la tua chiave OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Crittografa con OpenPGP usando la chiave di ogni destinatario"
 
-msgid "More"
-msgstr "Altro"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Ccn e Rispondi a"
 
@@ -5814,9 +5814,6 @@ msgstr ""
 #, fuzzy
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Tutto tranne Cestino e Posta indesiderata"
-
-msgid "What this searches"
-msgstr ""
 
 msgid "me"
 msgstr "io"
@@ -7359,6 +7356,10 @@ msgstr ""
 #, fuzzy
 msgid "Search field position"
 msgstr "Filtri di ricerca"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Cerca nelle impostazioni"
 
 #, fuzzy
 msgid "Selection bar position"

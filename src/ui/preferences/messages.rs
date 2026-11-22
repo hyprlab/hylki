@@ -183,6 +183,7 @@ pub(crate) struct PrefInit {
     pub(crate) reply_to_sender: bool,
     pub(crate) list_search_bottom: bool,
     pub(crate) list_bulk_bar_bottom: bool,
+    pub(crate) list_search_start: crate::config::SearchStart,
     pub(crate) single_key_shortcuts: bool,
     pub(crate) gmail_keys: bool,
     pub(crate) keep_downloads_days: u32,
@@ -551,6 +552,8 @@ pub(crate) enum PrefOutput {
     SetListSearchBottom(bool),
     /// The list's bulk bar under the rows, not above them (#496).
     SetListBulkBarBottom(bool),
+    /// Where a search starts when a folder or view opens (#699).
+    SetListSearchStart(crate::config::SearchStart),
     /// Every column back to its own width (#334).
     ResetColumnWidths,
     SetSingleKey(bool),

@@ -272,9 +272,6 @@ msgstr "Respon a tots"
 msgid "Forward"
 msgstr "Reenvia"
 
-msgid "Edit as New Message"
-msgstr "Edita com a missatge nou"
-
 msgid "Remove Star"
 msgstr "Treu la destacat"
 
@@ -309,24 +306,36 @@ msgstr "Crea un filtre a partir del missatge…"
 msgid "Create Task from Selection…"
 msgstr "Crea"
 
-msgid "View Source"
-msgstr "Mostra el codi font"
-
-msgid "Save as File…"
-msgstr "Desa com a fitxer…"
-
-msgid "Add Sender to Contacts"
-msgstr "Afegeix el remitent a contactes"
-
-msgid "Create Filter from Message…"
-msgstr "Crea un filtre a partir del missatge…"
-
 msgid "Create Event…"
 msgstr ""
 
 #, fuzzy
 msgid "Create Task…"
 msgstr "Crea"
+
+msgid "Create Filter from Message…"
+msgstr "Crea un filtre a partir del missatge…"
+
+msgid "Add Sender to Contacts"
+msgstr "Afegeix el remitent a contactes"
+
+msgid "Create"
+msgstr "Crea"
+
+msgid "View"
+msgstr "Visualitza"
+
+msgid "Edit as New Message"
+msgstr "Edita com a missatge nou"
+
+msgid "View Source"
+msgstr "Mostra el codi font"
+
+msgid "Save as File…"
+msgstr "Desa com a fitxer…"
+
+msgid "More"
+msgstr "Més"
 
 #, fuzzy
 msgid "Copy To…"
@@ -874,9 +883,6 @@ msgstr "Carpeta nova"
 
 msgid "Cancel"
 msgstr "Cancel·la"
-
-msgid "Create"
-msgstr "Crea"
 
 msgid "Folder name"
 msgstr "Nom de la carpeta"
@@ -1495,9 +1501,6 @@ msgstr "Activa el mode d'enfocament"
 
 msgid "Turn Focus Mode Off"
 msgstr "Desactiva el mode d'enfocament"
-
-msgid "View"
-msgstr "Visualitza"
 
 msgid "All accounts"
 msgstr "Tots els comptes"
@@ -4319,9 +4322,6 @@ msgstr "Signa amb la teva clau OpenPGP"
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr "Xifra amb OpenPGP amb la clau de cada destinatari"
 
-msgid "More"
-msgstr "Més"
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr "Mostra Cc, Cco i Respon a"
 
@@ -5662,9 +5662,6 @@ msgstr "Només la carpeta o vista que mostra la llista."
 #, fuzzy
 msgid "Every folder of this account, Trash and Junk included."
 msgstr "Totes les carpetes de tots els comptes, paperera i brossa incloses."
-
-msgid "What this searches"
-msgstr "Què cerca això"
 
 msgid "me"
 msgstr "jo"
@@ -7170,6 +7167,10 @@ msgstr "Dona a l'assumpte tota l'amplada."
 
 msgid "Search field position"
 msgstr "Posició del camp de cerca"
+
+#, fuzzy
+msgid "Search starts in"
+msgstr "Cerca als paràmetres"
 
 msgid "Selection bar position"
 msgstr "Posició de la barra de selecció"
@@ -9325,6 +9326,9 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "What this searches"
+#~ msgstr "Què cerca això"
 
 #, fuzzy
 #~ msgid "All Accounts"

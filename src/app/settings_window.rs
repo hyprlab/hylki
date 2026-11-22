@@ -182,6 +182,7 @@ impl AppModel {
             reply_to_sender: self.reply_to_sender,
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
+            list_search_start: self.list_search_start,
             toolbar_fold_right: self.toolbar_fold_right,
             single_key_shortcuts: self.single_key.get(),
             gmail_keys: self.gmail_keys.get(),

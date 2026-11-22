@@ -235,9 +235,6 @@ msgstr ""
 msgid "Forward"
 msgstr ""
 
-msgid "Edit as New Message"
-msgstr ""
-
 msgid "Remove Star"
 msgstr ""
 
@@ -268,22 +265,34 @@ msgstr ""
 msgid "Create Task from Selection…"
 msgstr ""
 
+msgid "Create Event…"
+msgstr ""
+
+msgid "Create Task…"
+msgstr ""
+
+msgid "Create Filter from Message…"
+msgstr ""
+
+msgid "Add Sender to Contacts"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "Edit as New Message"
+msgstr ""
+
 msgid "View Source"
 msgstr ""
 
 msgid "Save as File…"
 msgstr ""
 
-msgid "Add Sender to Contacts"
-msgstr ""
-
-msgid "Create Filter from Message…"
-msgstr ""
-
-msgid "Create Event…"
-msgstr ""
-
-msgid "Create Task…"
+msgid "More"
 msgstr ""
 
 msgid "Copy To…"
@@ -774,9 +783,6 @@ msgid "New Folder"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
-
-msgid "Create"
 msgstr ""
 
 msgid "Folder name"
@@ -1360,9 +1366,6 @@ msgid "Turn Focus Mode On"
 msgstr ""
 
 msgid "Turn Focus Mode Off"
-msgstr ""
-
-msgid "View"
 msgstr ""
 
 msgid "All accounts"
@@ -3913,9 +3916,6 @@ msgstr ""
 msgid "Encrypt with OpenPGP to every recipient's key"
 msgstr ""
 
-msgid "More"
-msgstr ""
-
 msgid "Show Cc, Bcc and Reply-To"
 msgstr ""
 
@@ -5104,9 +5104,6 @@ msgid "Only the folder or view the list is showing."
 msgstr ""
 
 msgid "Every folder of this account, Trash and Junk included."
-msgstr ""
-
-msgid "What this searches"
 msgstr ""
 
 msgid "me"
@@ -6514,6 +6511,9 @@ msgid "Gives the subject its full width."
 msgstr ""
 
 msgid "Search field position"
+msgstr ""
+
+msgid "Search starts in"
 msgstr ""
 
 msgid "Selection bar position"
