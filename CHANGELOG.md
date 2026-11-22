@@ -32,7 +32,10 @@
   accounts are left as they are without an answer. Portal calls give up
   after 2 seconds and are not tried again for 5 minutes. A launch that finds
   an instance that does not answer says so, with the command that ends it,
-  instead of waiting a second time.
+  instead of waiting a second time. The Background portal's calls, moved
+  to the same path, sent their arguments with the wrong types, so Start at
+  login wrote no autostart entry and Background Apps showed no status
+  (#694, fixed by José Miguel Sarasola).
 
 - **Fixed: "entity not found" opening a conversation in On This Computer**
   (#689, reported by samuel-edlmeier). With the empty Inbox left out of
