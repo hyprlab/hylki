@@ -252,19 +252,6 @@ impl DateRange {
 }
 
 /// The day selected on `cal`.
-/// Keeps each day label at its CSS size in the middle of its column. Left to
-/// fill the column, a day is as wide as the popover makes it, 34 or 35 px
-/// depending on the column, so its circle came out an oval off its digits.
-fn center_calendar_days(cal: &gtk::Calendar) {
-    let grid = std::iter::successors(cal.first_child(), |w| w.next_sibling())
-        .find(|w| w.css_name() == "grid");
-    let days = std::iter::successors(grid.and_then(|g| g.first_child()), |w| w.next_sibling());
-    for day in days.filter(|w| w.has_css_class("day-number")) {
-        day.set_halign(gtk::Align::Center);
-        day.set_valign(gtk::Align::Center);
-    }
-}
-
 fn calendar_day(cal: &gtk::Calendar) -> Option<chrono::NaiveDate> {
     let d = cal.date();
     chrono::NaiveDate::from_ymd_opt(d.year(), d.month() as u32, d.day_of_month() as u32)
@@ -414,8 +401,7 @@ impl SortFilterPopover {
             dates.attach(&label, 0, row as i32, 1, 1);
             dates.attach(button, 1, row as i32, 1, 1);
         }
-        range.calendar.add_css_class("sort-filter-calendar");
-        center_calendar_days(&range.calendar);
+        crate::ui::flat_calendar::style(&range.calendar);
         dates.attach(&range.calendar, 0, 2, 2, 1);
         dates_col.append(&dates);
         dates_col.append(&range.clear);

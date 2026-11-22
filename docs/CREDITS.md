@@ -185,10 +185,11 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   shown whole in their dropdowns.
 - [**José Miguel Sarasola**](https://github.com/alosarjos) ([#694](https://github.com/hyprlab/hylki/issues/694),
   [#695](https://github.com/hyprlab/hylki/pull/695), [#696](https://github.com/hyprlab/hylki/issues/696),
-  [#697](https://github.com/hyprlab/hylki/pull/697)): Start at login and the
-  Background Apps status, after the portal calls behind them went out with
-  the wrong argument types, and the date filter's calendar drawn like the
-  rest of its popover.
+  [#697](https://github.com/hyprlab/hylki/pull/697), [#698](https://github.com/hyprlab/hylki/pull/698)):
+  Start at login and the Background Apps status, after the portal calls behind
+  them went out with the wrong argument types, and the calendars of the date
+  filter and the Snooze and Send Later picker drawn like the rest of their
+  popover or dialog.
 
 ## Reports, design and ideas
 
