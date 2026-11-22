@@ -183,6 +183,10 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   [#663](https://github.com/hyprlab/hylki/pull/663)): shared mailboxes nested
   under their Shared and user rows in the Folders tree, and address book names
   shown whole in their dropdowns.
+- [**José Miguel Sarasola**](https://github.com/alosarjos) ([#694](https://github.com/hyprlab/hylki/issues/694),
+  [#695](https://github.com/hyprlab/hylki/pull/695)): Start at login and the
+  Background Apps status, after the portal calls behind them went out with
+  the wrong argument types.
 
 ## Reports, design and ideas
 
