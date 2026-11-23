@@ -2257,6 +2257,10 @@ msgstr ""
 "Организация отправителя пометила это сообщение как «{label}». Хилки "
 "показывает метку, но не применяет ее правила."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Программе gpg не удалось подписать сообщение."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Нет данных, подтверждающих или опровергающих отправку с адреса {from}."
 
@@ -8627,6 +8631,21 @@ msgstr "Шифровать по умолчанию"
 
 msgid "Mail to people who ask for the same is encrypted."
 msgstr "Письма получателям с аналогичной настройкой будут шифроваться."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "Найти в сообщении"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

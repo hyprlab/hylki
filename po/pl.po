@@ -2421,6 +2421,10 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Nie udało się podpisać wiadomości za pomocą programu gpg."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Nic tu nie dowodzi, że ta wiadomość pochodzi z domeny {from} – ani że nie "
@@ -9062,6 +9066,21 @@ msgid "Encrypt by default"
 msgstr "Domyślne rozwijanie rozmów"
 
 msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "Znajdź w wiadomości"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
 msgstr ""
 
 #, fuzzy

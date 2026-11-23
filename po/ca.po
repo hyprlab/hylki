@@ -2298,6 +2298,10 @@ msgstr ""
 "L'organització del remitent ha etiquetat aquest missatge com a «{label}». "
 "L'Hylki mostra l'etiqueta però no n'aplica les regles."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "El gpg no ha signat el missatge."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Res aquí demostra que això provingui de {from} — ni que no ho faci."
 
@@ -8725,6 +8729,21 @@ msgid "Encrypt by default"
 msgstr "Expandeix les converses per defecte"
 
 msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "Cerca al missatge"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
 msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."

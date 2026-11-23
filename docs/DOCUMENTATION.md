@@ -19,6 +19,7 @@ keyboard.
 - [Grammar checking](#grammar-checking)
 - [Writing in Markdown or HTML](#writing-in-markdown-or-html)
 - [OpenPGP (encrypted and signed mail)](#openpgp-encrypted-and-signed-mail)
+- [S/MIME (signed mail)](#smime-signed-mail)
 - [Send with Hylki from GNOME Files](#send-with-hylki-from-gnome-files)
 - [Privacy](#privacy)
 
@@ -2005,6 +2006,47 @@ signature** or **Signed, unknown key**.
   have. Ask the sender to use the public key you exported in step 2.
 - *Nothing to encrypt with for an address*: that person's key is missing;
   see step 3.
+
+### S/MIME (signed mail)
+
+Hylki can sign everything an account sends with an S/MIME certificate, the
+kind a certificate authority issues for an email address. It signs through
+**gpgsm**, GnuPG's S/MIME program, so the certificate lives beside your
+OpenPGP keys and gpg-agent asks for its passphrase. Reading S/MIME mail and
+encrypting with it are not supported yet.
+
+**1. Put your certificate in gpgsm**
+
+Export the certificate with its private key as a `.p12` file (from
+Thunderbird: *Settings → Privacy & Security → Manage Certificates → Your
+Certificates → Backup*), then import it:
+
+```sh
+gpgsm --import certificate.p12
+```
+
+If gpgsm answers *error parsing or decrypting the PKCS#12 file*, as gpgsm 2.4
+does with a file Thunderbird or Firefox wrote, repack it with OpenSSL first and
+import `repacked.p12`:
+
+```sh
+openssl pkcs12 -in certificate.p12 -nodes |
+  openssl pkcs12 -export -keypbe AES-256-CBC -certpbe AES-256-CBC -macalg sha256 -out repacked.p12
+```
+
+gpgsm signs only with a certificate whose chain ends at a root it trusts. If
+signing fails with *Not trusted*, `gpgsm --list-chain your@address` names the
+root; check its fingerprint against your system's certificate store and add it
+to `~/.gnupg/trustlist.txt` as `FINGERPRINT S`.
+
+**2. Turn it on for the account**
+
+In *Settings → Accounts*, open the account and turn on *S/MIME → Sign every
+message*, or set `smime_sign = true` on the account in `accounts.toml`. Every
+message it sends is then signed with the certificate for the From address, or
+for the account's address when an alias has none of its own. A message you
+sign or encrypt with OpenPGP goes out with OpenPGP only. Drafts are not
+signed.
 
 ### Dragging files into a message
 

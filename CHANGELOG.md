@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **New: S/MIME signing** (#478, requested by keithvassallomt). An account
+  can sign every message it sends with an S/MIME certificate: Settings →
+  Accounts → S/MIME → Sign every message, or `smime_sign = true` in
+  `accounts.toml`. Signing goes through gpgsm, so the certificate is imported
+  into GnuPG and gpg-agent asks for its passphrase. The message goes out as
+  `multipart/signed` with an `application/pkcs7-signature` part, in the same
+  layout as OpenPGP's. A message signed or encrypted with OpenPGP is not
+  signed twice, and drafts are not signed. Reading S/MIME mail and encrypting
+  with it are not supported yet.
+
 - **New: Microsoft 365 shared mailboxes** (#701, requested by valderys).
   Settings → Accounts → Shared Mailboxes adds a shared mailbox by its address,
   opened with the sign-in of a Microsoft 365 account from GNOME Online

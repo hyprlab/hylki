@@ -65,6 +65,7 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) signatures_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) syncing_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) openpgp_group: adw::PreferencesGroup,
+    pub(in crate::ui::accounts) smime_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) sig_choice_row: adw::ComboRow,
     pub(in crate::ui::accounts) sig_name_row: adw::EntryRow,
     pub(in crate::ui::accounts) sig_sender_row: adw::EntryRow,
@@ -101,6 +102,7 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) hide_subject_row: adw::SwitchRow,
     pub(in crate::ui::accounts) autocrypt_row: adw::SwitchRow,
     pub(in crate::ui::accounts) autocrypt_mutual_row: adw::SwitchRow,
+    pub(in crate::ui::accounts) smime_sign_row: adw::SwitchRow,
     pub(in crate::ui::accounts) keyring_note: gtk::Label,
 }
 
@@ -889,6 +891,21 @@ impl EditorForm {
                     },
                 },
 
+                // S/MIME (#478): signing only, through gpgsm, for an
+                // account whose mail goes out signed every time.
+                #[name = "smime_group"]
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("S/MIME"),
+                    set_description: Some(
+                        i18n("Certificates are managed with gpgsm.").as_str()
+                    ),
+                    #[name = "smime_sign_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Sign every message"),
+                        set_subtitle: &i18n("With the certificate for the sender's address. Mail sent with OpenPGP is not signed twice."),
+                    },
+                },
+
                 // For a GOA-imported account this removes it from
                 // Hylki only — it stays in GNOME Online Accounts and
                 // returns to the import list.
@@ -966,6 +983,7 @@ impl EditorForm {
             signatures_group,
             syncing_group,
             openpgp_group,
+            smime_group,
             sig_choice_row,
             sig_name_row,
             sig_sender_row,
@@ -1002,6 +1020,7 @@ impl EditorForm {
             hide_subject_row,
             autocrypt_row,
             autocrypt_mutual_row,
+            smime_sign_row,
             keyring_note,
         }
     }

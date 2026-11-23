@@ -43,7 +43,12 @@ impl AccountsWindow {
 /// the provider and protocol decide on are left to them.
 pub(super) fn show_local_state(widgets: &AccountsWindowWidgets, local: bool) {
     let f = &widgets.form;
-    for group in [&f.aliases_group, &f.signatures_group, &f.openpgp_group] {
+    for group in [
+        &f.aliases_group,
+        &f.signatures_group,
+        &f.openpgp_group,
+        &f.smime_group,
+    ] {
         group.set_visible(!local);
     }
     f.import_group.set_visible(local);

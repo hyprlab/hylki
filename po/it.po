@@ -2344,6 +2344,10 @@ msgstr ""
 "L'organizzazione del mittente ha etichettato questo messaggio come \"{label}"
 "\". Hylki mostra l'etichetta ma non ne applica le regole."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg non ha firmato il messaggio."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Niente qui prova che è arrivato da {from} — né che non lo sia."
 
@@ -8931,6 +8935,21 @@ msgid "Encrypt by default"
 msgstr "Espandi le conversazioni per impostazione predefinita"
 
 msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "Trova nel messaggio"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
 msgstr ""
 
 #, fuzzy

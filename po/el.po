@@ -2276,6 +2276,10 @@ msgstr ""
 "Ο οργανισμός του αποστολέα επισήμανε αυτό το μήνυμα ως «{label}». Το Hylki "
 "εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει τους κανόνες της."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Το gpg δεν υπέγραψε το μήνυμα."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Τίποτα εδώ δεν αποδεικνύει ότι αυτό προήλθε από το {from} — ούτε ότι δεν "
@@ -8717,6 +8721,21 @@ msgid "Encrypt by default"
 msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
 
 msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "Εύρεση στο μήνυμα"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
 msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."

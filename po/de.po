@@ -2237,6 +2237,10 @@ msgstr ""
 "Vertraulichkeitsbezeichnung »{label}« versehen. Hylki zeigt die Bezeichnung "
 "an, wendet deren Regeln jedoch nicht an."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg hat die Nachricht nicht unterschrieben."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Keine Informationen vorhanden, die die Herkunft von {from} bestätigen oder "
@@ -8682,6 +8686,21 @@ msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 "E-Mails werden verschlüsselt, sofern die empfangende Person dies ebenfalls "
 "wünscht."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "In Nachricht suchen"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
+msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

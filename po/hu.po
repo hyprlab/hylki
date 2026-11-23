@@ -2373,6 +2373,10 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "A gpg nem írta alá az üzenetet."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Itt semmi nem bizonyítja, hogy ez innen származik: {from} — de azt sem, hogy "
@@ -8980,6 +8984,21 @@ msgid "Encrypt by default"
 msgstr "Beszélgetések kibontása alapértelmezés szerint"
 
 msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "Sign every message"
+msgstr "Keresés az üzenetben"
+
+msgid ""
+"With the certificate for the sender's address. Mail sent with OpenPGP is not "
+"signed twice."
 msgstr ""
 
 #, fuzzy
