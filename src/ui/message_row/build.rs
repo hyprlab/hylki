@@ -71,6 +71,19 @@ pub(super) fn build_widgets() -> RowWidgets {
     avatar_revealer.set_transition_duration(crate::ui::FOCUS_ANIM_MS);
     avatar_revealer.add_css_class("focus-fade");
     avatar_revealer.set_reveal_child(true);
+    // Before GTK 4.22 a revealer always clips its child to its own width,
+    // which cut the sides off the account ring All Inboxes draws outside
+    // the circle (#706). It only needs the clip while it slides.
+    let clip_while_sliding = |r: &gtk::Revealer| {
+        r.set_overflow(if r.reveals_child() && r.is_child_revealed() {
+            gtk::Overflow::Visible
+        } else {
+            gtk::Overflow::Hidden
+        });
+    };
+    clip_while_sliding(&avatar_revealer);
+    avatar_revealer.connect_reveal_child_notify(clip_while_sliding);
+    avatar_revealer.connect_child_revealed_notify(clip_while_sliding);
     let avatar = adw::Avatar::new(38, None, true);
     avatar.set_valign(gtk::Align::Center);
     avatar_revealer.set_child(Some(&avatar));
