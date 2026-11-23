@@ -283,6 +283,8 @@ pub(super) fn read_account(
         graph_directory_only: protocol == Protocol::Graph
             && widgets.form.directory_only_row.is_active(),
         graph_label_names: protocol == Protocol::Graph && widgets.form.graph_labels_row.is_active(),
+        // Kept from the account as it was (`keep_from_original`).
+        shared_mailbox: false,
     }
 }
 

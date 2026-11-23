@@ -8,7 +8,7 @@ use crate::worker::folders::restore_folders;
 use crate::worker::graph::folders::{
     graph_ensure_folder, graph_move_folder, refresh_graph_folders,
 };
-use crate::worker::graph::http::{graph_delete_req, graph_send_json, graph_token, GRAPH_BASE};
+use crate::worker::graph::http::{graph_delete_req, graph_send_json, graph_token};
 use crate::worker::graph::index::graph_load_folder;
 use crate::worker::graph::messages::graph_list_ids;
 use crate::worker::graph::ops::{
@@ -305,7 +305,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         // cache has indexed so far (#429).
         let listed = match state.folders.get(&path).cloned() {
             Some((_, gid)) => {
-                let (t, base) = (token.clone(), state.base.clone());
+                let (t, base) = (token.clone(), state.mailbox.clone());
                 blocking(move || graph_list_ids(&t, &base, &gid)).await
             }
             None => Err(format!("unknown folder {path}")),
@@ -429,13 +429,13 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             restore_folders(cache.as_ref(), account_id, emit);
             return;
         };
-        let base = &state.base;
+        let base = &state.mailbox;
         let (url, leaf) = match path.rsplit_once('/') {
             Some((parent, leaf)) => match state.folders.get(parent) {
-                Some((_, pgid)) => (format!("{base}/me/mailFolders/{pgid}/childFolders"), leaf),
+                Some((_, pgid)) => (format!("{base}/mailFolders/{pgid}/childFolders"), leaf),
                 None => return refused(&i18n("the folder it goes in is gone")),
             },
-            None => (format!("{base}/me/mailFolders"), path.as_str()),
+            None => (format!("{base}/mailFolders"), path.as_str()),
         };
         let t = token.clone();
         let body = serde_json::json!({ "displayName": slashed_name(leaf) });
@@ -489,7 +489,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             }
         };
         let name = (new_leaf != old_leaf).then(|| slashed_name(&new_leaf));
-        let (t, base) = (token.clone(), state.base.clone());
+        let (t, base) = (token.clone(), state.mailbox.clone());
         let r = blocking(move || {
             graph_move_folder(&t, &base, &gid, destination.as_deref(), name.as_deref())
         })
@@ -540,7 +540,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             return;
         };
         let t = token.clone();
-        let url = format!("{GRAPH_BASE}/me/mailFolders/{gid}");
+        let url = format!("{}/mailFolders/{gid}", state.mailbox);
         let r = blocking(move || graph_delete_req(&t, &url)).await;
         match r {
             Ok(()) => {

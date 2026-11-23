@@ -165,7 +165,7 @@ pub(super) fn graph_list_messages(
     folder_id: u32,
 ) -> Result<(Vec<(Message, String)>, bool), String> {
     let url = format!(
-        "{base}/me/mailFolders/{folder_graph_id}/messages\
+        "{base}/mailFolders/{folder_graph_id}/messages\
          ?$top=100&$orderby=receivedDateTime%20desc&{GRAPH_MSG_SELECT}"
     );
     let (items, more) = graph_paged_more(token, &url, GRAPH_FIRST_PAGE)?;
@@ -182,7 +182,7 @@ pub(super) fn graph_list_messages(
 /// and arrival time, newest first, a thousand to a page.
 pub(super) fn graph_ids_url(base: &str, folder_graph_id: &str) -> String {
     format!(
-        "{base}/me/mailFolders/{folder_graph_id}/messages\
+        "{base}/mailFolders/{folder_graph_id}/messages\
          ?$top={GRAPH_ID_PAGE}&$orderby=receivedDateTime%20desc&$select=id,receivedDateTime"
     )
 }
@@ -235,7 +235,7 @@ pub(super) fn graph_find_by_msgid(
 ) -> Result<Vec<(Message, String)>, String> {
     let literal = format!("'<{}>'", exact.replace('\'', "''"));
     let url = format!(
-        "{base}/me/mailFolders/{folder_graph_id}/messages\
+        "{base}/mailFolders/{folder_graph_id}/messages\
          ?$filter=internetMessageId%20eq%20{}&$top=10&{GRAPH_MSG_SELECT}",
         crate::encoding::percent::encode(&literal)
     );

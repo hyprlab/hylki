@@ -72,6 +72,7 @@ pub(super) fn demo_account_configs() -> Vec<AccountConfig> {
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
+        shared_mailbox: false,
     };
     vec![
         mk("Jason M.", "jason@hylki.hyprlab.co", "#3584e4", Some("🚀")),

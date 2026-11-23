@@ -35,6 +35,7 @@ mod providers;
 mod save;
 mod senders;
 mod setup;
+mod shared;
 mod signatures;
 mod smart_folders;
 mod tags;
@@ -76,6 +77,9 @@ pub(crate) struct AccountsWindow {
     /// The On This Computer group (#552), shown while there is no such
     /// account to add it as.
     local_group: Option<adw::PreferencesGroup>,
+    /// The Shared Mailboxes group (#701), shown while there is a Microsoft
+    /// 365 account from GNOME Online Accounts to open one with.
+    shared_group: Option<adw::PreferencesGroup>,
     /// The filters page's search text, read by the list's filter function.
     filters_query: std::rc::Rc<std::cell::RefCell<String>>,
     /// The open filter or tag page's Save: reads the form and hands the
@@ -363,6 +367,10 @@ impl Component for AccountsWindow {
             AccountsInput::SearchSenders(text) => self.on_search_senders(text),
             AccountsInput::AddAccount => self.on_add_account(widgets, sender),
             AccountsInput::AddLocal => self.on_add_local(widgets, sender),
+            AccountsInput::AddSharedMailbox => self.on_add_shared_prompt(sender, root),
+            AccountsInput::CheckSharedMailbox { owner, address } => {
+                self.on_check_shared(owner, address, sender, root)
+            }
             AccountsInput::ImportLocal(mbox) => {
                 super::accounts::local::pick_import(mbox, &sender, root)
             }
@@ -473,7 +481,7 @@ impl Component for AccountsWindow {
         widgets: &mut Self::Widgets,
         result: AccountsCmd,
         sender: ComponentSender<Self>,
-        _root: &Self::Root,
+        root: &Self::Root,
     ) {
         match result {
             AccountsCmd::OwnGravatar { email, outcome } => {
@@ -488,6 +496,9 @@ impl Component for AccountsWindow {
             AccountsCmd::DirectoryConsent(result) => self.on_directory_consent(result, widgets),
             AccountsCmd::LabelsConsent(result) => self.on_labels_consent(result, widgets),
             AccountsCmd::AliasTested(result) => self.on_alias_tested(result),
+            AccountsCmd::SharedMailbox(checked) => {
+                self.on_shared_checked(checked, widgets, sender, root)
+            }
         }
     }
 }

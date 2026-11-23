@@ -5,7 +5,7 @@ use crate::cache::Cache;
 use crate::config::AccountConfig;
 use crate::i18n::i18n;
 use crate::worker::graph::http::{
-    graph_delete_req, graph_get_bytes, graph_get_json, graph_send_json, graph_token, GRAPH_BASE,
+    graph_delete_req, graph_get_bytes, graph_get_json, graph_send_json, graph_token,
 };
 use crate::worker::graph::index::{graph_load_folder, GraphState, GRAPH_RELIST_AFTER};
 use crate::worker::graph::messages::{graph_find_by_msgid, graph_list_ids, graph_list_messages};
@@ -26,7 +26,7 @@ pub(super) async fn graph_purge_uids(
     for uid in uids {
         let deleted = match graph_resolve(account, state, path, uid, emit).await {
             Some((token, gid)) => {
-                let url = format!("{GRAPH_BASE}/me/messages/{gid}");
+                let url = format!("{}/messages/{gid}", state.mailbox);
                 blocking(move || graph_delete_req(&token, &url))
                     .await
                     .is_ok()
@@ -56,7 +56,7 @@ pub(super) async fn graph_drop_draft_origin(
         return;
     }
     if let Some((tok, gid)) = graph_resolve(account, state, &origin.path, origin.uid, emit).await {
-        let url = format!("{GRAPH_BASE}/me/messages/{gid}");
+        let url = format!("{}/messages/{gid}", state.mailbox);
         let _ = blocking(move || graph_delete_req(&tok, &url)).await;
     }
     if let Some(c) = cache {
@@ -89,7 +89,7 @@ async fn graph_resolve(
         |at: Option<&std::time::Instant>| at.is_some_and(|at| at.elapsed() < GRAPH_RELIST_AFTER);
     if !recent(state.listed.get(path)) && !recent(state.looked_up.get(path)) {
         if let Some((_, folder_gid)) = state.folders.get(path).cloned() {
-            let (t, base) = (token.clone(), state.base.clone());
+            let (t, base) = (token.clone(), state.mailbox.clone());
             if let Ok(ids) = blocking(move || graph_list_ids(&t, &base, &folder_gid)).await {
                 for (id, _) in ids {
                     state.uids.insert(hash_uid(&id), id);
@@ -117,9 +117,9 @@ pub(super) async fn graph_delete_attachment(
     let (token, gid) = graph_resolve(account, state, path, uid, emit)
         .await
         .ok_or_else(|| "message not found".to_string())?;
-    let name = name.to_string();
+    let (name, mailbox) = (name.to_string(), state.mailbox.clone());
     blocking(move || {
-        let url = format!("{GRAPH_BASE}/me/messages/{gid}/attachments?$select=id,name,size");
+        let url = format!("{mailbox}/messages/{gid}/attachments?$select=id,name,size");
         let listed = graph_get_json(&token, &url)?;
         let aid = listed["value"]
             .as_array()
@@ -131,7 +131,7 @@ pub(super) async fn graph_delete_attachment(
             .ok_or_else(|| i18n("The attachment is no longer in the message on the server"))?;
         graph_delete_req(
             &token,
-            &format!("{GRAPH_BASE}/me/messages/{gid}/attachments/{aid}"),
+            &format!("{mailbox}/messages/{gid}/attachments/{aid}"),
         )
     })
     .await
@@ -148,7 +148,7 @@ pub(super) async fn graph_fetch_raw(
     let (token, gid) = graph_resolve(account, state, path, uid, emit)
         .await
         .ok_or_else(|| "message not found".to_string())?;
-    let url = format!("{GRAPH_BASE}/me/messages/{gid}/$value");
+    let url = format!("{}/messages/{gid}/$value", state.mailbox);
     blocking(move || graph_get_bytes(&token, &url)).await
 }
 
@@ -165,7 +165,7 @@ pub(super) async fn graph_patch_message(
     let Some((token, gid)) = graph_resolve(account, state, path, uid, emit).await else {
         return;
     };
-    let url = format!("{GRAPH_BASE}/me/messages/{gid}");
+    let url = format!("{}/messages/{gid}", state.mailbox);
     let r = blocking(move || graph_send_json(&token, "PATCH", &url, &body)).await;
     if let Err(e) = r {
         tracing::warn!("graph: could not update message flags: {e}");
@@ -196,7 +196,7 @@ pub(super) async fn graph_move_uids(
             continue;
         };
         let t = token.clone();
-        let url = format!("{GRAPH_BASE}/me/messages/{gid}/move");
+        let url = format!("{}/messages/{gid}/move", state.mailbox);
         let body = serde_json::json!({ "destinationId": dest_gid });
         blocking(move || graph_send_json(&t, "POST", &url, &body)).await?;
         state.uids.remove(&uid);
@@ -232,7 +232,7 @@ pub(super) async fn graph_undo_move(
         .ok_or_else(|| format!("unknown folder {path}"))?;
     let wanted: std::collections::HashSet<&str> = message_ids.iter().map(|s| s.as_str()).collect();
 
-    let (t, base, folder_gid) = (token.clone(), state.base.clone(), gid.clone());
+    let (t, base, folder_gid) = (token.clone(), state.mailbox.clone(), gid.clone());
     let (listed, _) =
         blocking(move || graph_list_messages(&t, &base, &folder_gid, account_id, folder_id))
             .await?;
@@ -252,7 +252,7 @@ pub(super) async fn graph_undo_move(
         let exact = cache
             .map(|c| c.exact_msgids(mid))
             .unwrap_or_else(|| mid.to_string());
-        let (t, base, folder_gid) = (token.clone(), state.base.clone(), gid.clone());
+        let (t, base, folder_gid) = (token.clone(), state.mailbox.clone(), gid.clone());
         match blocking(move || graph_find_by_msgid(&t, &base, &folder_gid, &exact)).await {
             Ok(hits) => {
                 for (m, mgid) in hits {

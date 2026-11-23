@@ -2578,6 +2578,27 @@ msgid "Enter the server's address first."
 msgstr "Introduce primero la dirección del servidor."
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+"Cuentas en línea de GNOME no ha podido proporcionar un token de inicio de "
+"sesión para {email}. Abre Ajustes → Cuentas en línea e inicia sesión de "
+"nuevo."
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr ""
+"Las cuentas de Microsoft 365 se comprueban con el intervalo indicado arriba."
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2629,6 +2650,10 @@ msgstr "GOA"
 
 msgid "Hylki"
 msgstr "Hylki"
+
+#, fuzzy
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr "Configurada en Cuentas en línea de GNOME"
 
 msgid "Imported GNOME Online Account"
 msgstr "Cuenta importada de Cuentas en línea de GNOME"
@@ -3041,6 +3066,18 @@ msgstr ""
 msgid "Add"
 msgstr "Añadir"
 
+#, fuzzy
+msgid "Shared Mailboxes"
+msgstr "Correo almacenado"
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr "Cuentas en línea de GNOME"
 
@@ -3192,6 +3229,11 @@ msgstr ""
 "¿Quitar {name} de Hylki? Sus carpetas y mensajes permanecerán en este "
 "equipo, en {dir}, y volverán a aparecer si se añade de nuevo."
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr "Editar HTML"
 
@@ -3203,6 +3245,24 @@ msgstr "Seguir Ajustes"
 
 msgid "On"
 msgstr "Activado"
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Add Shared Mailbox"
+msgstr "Correo almacenado"
+
+#, fuzzy
+msgid "Open with"
+msgstr "termina en"
+
+#, fuzzy
+msgid "Could Not Add Mailbox"
+msgstr "No se pudo leer el archivo"
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
 
 msgid "Signature {n}"
 msgstr "Firma {n}"
@@ -7969,14 +8029,6 @@ msgid "Could not remove the attachment: {e}"
 msgstr "No se pudo eliminar el archivo adjunto: {e}"
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-"Cuentas en línea de GNOME no ha podido proporcionar un token de inicio de "
-"sesión para {email}. Abre Ajustes → Cuentas en línea e inicia sesión de "
-"nuevo."
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
@@ -7985,6 +8037,11 @@ msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "El archivo adjunto ya no está en el mensaje del servidor"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Todavía no se pudo enviar «{subject}»: {e}"

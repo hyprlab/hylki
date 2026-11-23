@@ -7,8 +7,9 @@ use std::time::{Duration, Instant};
 use crate::cache::Cache;
 use crate::config::AccountConfig;
 use crate::models::{FolderKind, Message};
+use crate::services::graph_api::mailbox_root;
 use crate::worker::graph::folders::{graph_list_folders, GraphFolder};
-use crate::worker::graph::http::{graph_get_json_opt, graph_paged, graph_token, GRAPH_BASE};
+use crate::worker::graph::http::{graph_get_json_opt, graph_paged, graph_token};
 use crate::worker::graph::messages::{
     graph_id_page, graph_ids_url, graph_list_messages, graph_message, GRAPH_MSG_SELECT,
 };
@@ -90,7 +91,7 @@ fn graph_fetch_run(
         run.ids.len() >= GRAPH_RANGE_MIN && !run.newest.is_empty() && !run.oldest.is_empty();
     let items = if dated {
         let url = format!(
-            "{base}/me/mailFolders/{folder_graph_id}/messages\
+            "{base}/mailFolders/{folder_graph_id}/messages\
              ?$filter=receivedDateTime%20ge%20{}%20and%20receivedDateTime%20le%20{}\
              &$orderby=receivedDateTime%20desc&$top={GRAPH_BACKFILL_CHUNK}&{GRAPH_MSG_SELECT}",
             crate::encoding::percent::encode(&run.oldest),
@@ -101,7 +102,7 @@ fn graph_fetch_run(
     } else {
         let mut items = Vec::new();
         for id in &run.ids {
-            let url = format!("{base}/me/messages/{id}?{GRAPH_MSG_SELECT}");
+            let url = format!("{base}/messages/{id}?{GRAPH_MSG_SELECT}");
             items.extend(graph_get_json_opt(token, &url)?);
         }
         items
@@ -205,8 +206,9 @@ pub(super) struct GraphState {
     pub(super) roles: std::collections::BTreeMap<String, String>,
     /// The account's hidden folders (#239), left out of every listing.
     pub(super) hidden: Vec<String>,
-    /// Where Graph is: [`GRAPH_BASE`], or a test's own server.
-    pub(super) base: String,
+    /// Where the account's mail is in Graph, every mail request's prefix:
+    /// [`mailbox_root`], or a test's own server.
+    pub(super) mailbox: String,
     /// The folders whose background index (#429) is still to run, the one
     /// at the front in progress.
     pub(super) backfill: std::collections::VecDeque<GraphBackfill>,
@@ -231,7 +233,7 @@ impl GraphState {
             inbox: None,
             roles: account.folder_roles.clone(),
             hidden: account.hidden_folders.clone(),
-            base: GRAPH_BASE.to_string(),
+            mailbox: mailbox_root(account),
             backfill: Default::default(),
             listed: Default::default(),
             looked_up: Default::default(),
@@ -288,9 +290,11 @@ pub(super) async fn graph_sync_folder(
     // An unknown path usually means the folder list hasn't been fetched yet
     // (or the folder is new) — refresh it once before giving up.
     if !state.folders.contains_key(path) {
-        let t = token.to_string();
+        let (t, mailbox) = (token.to_string(), state.mailbox.clone());
         let roles = state.roles.clone();
-        if let Ok(list) = blocking(move || graph_list_folders(&t, account_id, &roles)).await {
+        if let Ok(list) =
+            blocking(move || graph_list_folders(&t, &mailbox, account_id, &roles)).await
+        {
             state.adopt_folders(&list);
         }
     }
@@ -300,7 +304,7 @@ pub(super) async fn graph_sync_folder(
         .cloned()
         .ok_or_else(|| format!("unknown folder {path}"))?;
 
-    let (t, base) = (token.to_string(), state.base.clone());
+    let (t, base) = (token.to_string(), state.mailbox.clone());
     let (listed, more) =
         blocking(move || graph_list_messages(&t, &base, &gid, account_id, folder_id)).await?;
 
@@ -381,7 +385,7 @@ pub(super) async fn graph_backfill_with(
     let Some((folder_id, gid)) = state.folders.get(&job.path).cloned() else {
         return true;
     };
-    let base = state.base.clone();
+    let base = state.mailbox.clone();
     match &mut job.phase {
         GraphBackfillPhase::Listing { next, ids, since } => {
             let url = next.clone().unwrap_or_else(|| graph_ids_url(&base, &gid));

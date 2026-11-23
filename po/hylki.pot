@@ -2394,6 +2394,22 @@ msgid "Enter the server's address first."
 msgstr ""
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr ""
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2441,6 +2457,9 @@ msgid "GOA"
 msgstr ""
 
 msgid "Hylki"
+msgstr ""
+
+msgid "Shared mailbox, opened with a GNOME Online Account"
 msgstr ""
 
 msgid "Imported GNOME Online Account"
@@ -2823,6 +2842,17 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+msgid "Shared Mailboxes"
+msgstr ""
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr ""
 
@@ -2960,6 +2990,11 @@ msgid ""
 "computer, in {dir}, and come back if it is added again."
 msgstr ""
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr ""
 
@@ -2970,6 +3005,21 @@ msgid "Follow Settings"
 msgstr ""
 
 msgid "On"
+msgstr ""
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+msgid "Add Shared Mailbox"
+msgstr ""
+
+msgid "Open with"
+msgstr ""
+
+msgid "Could Not Add Mailbox"
+msgstr ""
+
+msgid "{address} is already in Mail Accounts."
 msgstr ""
 
 msgid "Signature {n}"
@@ -7332,16 +7382,16 @@ msgid "Could not remove the attachment: {e}"
 msgstr ""
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
+msgstr ""
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
 msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"

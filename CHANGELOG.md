@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **New: Microsoft 365 shared mailboxes** (#701, requested by valderys).
+  Settings → Accounts → Shared Mailboxes adds a shared mailbox by its address,
+  opened with the sign-in of a Microsoft 365 account from GNOME Online
+  Accounts. It is checked once before it is added and then listed as an
+  account of its own, read and sent from over Microsoft Graph under
+  `/users/{address}`. A send refused for want of the Send As right says so.
+  Accounts signed in within Hylki do not ask for the shared-mailbox
+  permissions and cannot add one.
+
 - **New: choose where a search starts** (#699, requested by bjesus).
   Settings → Message List → Search starts in sets the choice the scope
   picker opens on in each folder: This folder, This account (except Trash and

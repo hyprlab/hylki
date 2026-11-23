@@ -743,6 +743,7 @@ fn settings_bundle_roundtrip_parses() {
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
+        shared_mailbox: false,
     };
     acc.aliases = Vec::new();
     let bundle = SettingsBundle {

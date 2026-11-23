@@ -8,7 +8,7 @@ use crate::models::FolderKind;
 use crate::worker::compose::build::{build_draft, draft_message_id, restore_msgid_case};
 use crate::worker::drafts::{draft_not_saved, saving_text};
 use crate::worker::graph::folders::graph_ensure_folder;
-use crate::worker::graph::http::{graph_post_mime, graph_send_json, graph_token, GRAPH_BASE};
+use crate::worker::graph::http::{graph_post_mime, graph_send_json, graph_token};
 use crate::worker::graph::index::{graph_load_folder, GraphState};
 use crate::worker::graph::ops::graph_drop_draft_origin;
 use crate::worker::graph::send::{graph_mark_answered, graph_send_message};
@@ -60,7 +60,14 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                 let raw = email.formatted();
                 match graph_token(account, emit).await {
                     Some(token) => {
-                        let r = post_draft(&token, raw, template_gid.as_deref(), template).await;
+                        let r = post_draft(
+                            &token,
+                            &state.mailbox,
+                            raw,
+                            template_gid.as_deref(),
+                            template,
+                        )
+                        .await;
                         match r {
                             Ok(_) => {
                                 // Replace the previous version of this draft.
@@ -267,20 +274,18 @@ async fn template_folder(
 /// `dest` for a template; the message Graph answers with.
 async fn post_draft(
     token: &str,
+    mailbox: &str,
     raw: Vec<u8>,
     dest: Option<&str>,
     template: bool,
 ) -> Result<serde_json::Value, String> {
     let t = token.to_string();
-    let url = format!("{GRAPH_BASE}/me/messages");
+    let url = format!("{mailbox}/messages");
     let r = blocking(move || graph_post_mime(&t, &url, &raw)).await;
     match (r, dest) {
         (Ok(created), Some(dest)) => match created["id"].as_str() {
             Some(gid) => {
-                let (t, url) = (
-                    token.to_string(),
-                    format!("{GRAPH_BASE}/me/messages/{gid}/move"),
-                );
+                let (t, url) = (token.to_string(), format!("{mailbox}/messages/{gid}/move"));
                 let body = serde_json::json!({ "destinationId": dest });
                 blocking(move || graph_send_json(&t, "POST", &url, &body)).await
             }

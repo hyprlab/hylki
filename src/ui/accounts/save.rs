@@ -12,7 +12,7 @@ impl AccountsWindow {
         if let Some(i) = self.editing {
             // Same un-import semantics as the list toggle; the editor
             // page closes since its account is no longer in Hylki.
-            if !enabled && self.accounts.get(i).is_some_and(|a| a.goa_id.is_some()) {
+            if !enabled && self.accounts.get(i).is_some_and(AccountConfig::from_goa_list) {
                 self.unimport_goa(i, widgets, &sender);
                 widgets.nav.pop();
                 return;
@@ -199,6 +199,11 @@ impl AccountsWindow {
                 "Remove {name} from Hylki? Its folders and the mail in them stay on this computer, in {dir}, and come back if it is added again.",
                 &[("name", &name), ("dir", &super::local::shown_dir())],
             )
+        } else if account.shared_mailbox {
+            i18n_f(
+                "Remove {name}? It can be added again under Shared Mailboxes. Mail on the server is not affected.",
+                &[("name", &name)],
+            )
         } else if account.goa_id.is_some() {
             format!(
                 "Remove {name} from Hylki? It stays in GNOME Online Accounts \
@@ -257,6 +262,7 @@ fn keep_from_original(account: &mut AccountConfig, orig: &AccountConfig) {
     // would be hidden again at the next listing.
     account.folders_seeded = orig.folders_seeded;
     account.goa_id = orig.goa_id.clone();
+    account.shared_mailbox = orig.shared_mailbox;
     account.goa_mail_disabled = orig.goa_mail_disabled;
     account.goa_enabled_before_mail_disabled = orig.goa_enabled_before_mail_disabled;
     if orig.goa_id.is_some() {

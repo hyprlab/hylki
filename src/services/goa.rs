@@ -83,6 +83,7 @@ impl GoaMailAccount {
             graph_directory: false,
             graph_directory_only: false,
             graph_label_names: false,
+            shared_mailbox: false,
             name: if self.name.trim().is_empty() {
                 self.email.clone()
             } else {

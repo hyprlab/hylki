@@ -4,9 +4,10 @@
 use crate::cache::Cache;
 use crate::config::AccountConfig;
 use crate::i18n::{i18n, i18n_f};
+use crate::services::graph_api::mailbox_root;
 use crate::worker::compose::build::build_email;
 use crate::worker::compose::editable::{queued_with_bcc, with_bcc};
-use crate::worker::graph::http::{graph_post_mime, graph_token, GRAPH_BASE};
+use crate::worker::graph::http::{graph_post_mime, graph_token};
 use crate::worker::graph::index::GraphState;
 use crate::worker::graph::messages::{ICON_INDEX, LAST_VERB};
 use crate::worker::graph::ops::graph_patch_message;
@@ -31,9 +32,24 @@ pub(super) async fn graph_send_message(
     let token = graph_token(account, emit)
         .await
         .ok_or_else(|| "no sign-in token from GNOME Online Accounts".to_string())?;
-    let url = format!("{GRAPH_BASE}/me/sendMail");
-    blocking(move || graph_post_mime(&token, &url, &raw)).await?;
+    let url = format!("{}/sendMail", mailbox_root(account));
+    blocking(move || graph_post_mime(&token, &url, &raw))
+        .await
+        .map_err(|e| refused_send(account, e))?;
     Ok(())
+}
+
+/// A refused `sendMail` from a shared mailbox (#701) is a missing Send As
+/// right: being able to read the mailbox does not carry it.
+fn refused_send(account: &AccountConfig, e: String) -> String {
+    if account.shared_mailbox && e.starts_with("Microsoft Graph returned 403") {
+        i18n_f(
+            "This account may not send from {address}. Your organization gives that right in Exchange.",
+            &[("address", &account.email)],
+        )
+    } else {
+        e
+    }
 }
 
 /// [`super::mark_answered`] for Microsoft 365 (#454): the last verb, and
@@ -86,8 +102,10 @@ pub(super) async fn graph_flush_outbox(
     for item in items {
         let t = token.clone();
         let raw = queued_with_bcc(&item.raw, &item.rcpts);
-        let url = format!("{GRAPH_BASE}/me/sendMail");
-        let r = blocking(move || graph_post_mime(&t, &url, &raw)).await;
+        let url = format!("{}/sendMail", state.mailbox);
+        let r = blocking(move || graph_post_mime(&t, &url, &raw))
+            .await
+            .map_err(|e| refused_send(account, e));
         match r {
             Ok(_) => {
                 sent_any = true;
@@ -121,4 +139,25 @@ pub(super) async fn graph_flush_outbox(
         emit(WorkerEvent::Sent);
     }
     emit_outbox(Some(cache), account_id, emit);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// #701: a shared mailbox refused at sending says which right is
+    /// missing; anything else, and any other account, keeps Graph's words.
+    #[test]
+    fn a_shared_mailbox_refused_at_sending_names_the_right() {
+        let refused = "Microsoft Graph returned 403: Access is denied.".to_string();
+        let mut account = AccountConfig {
+            email: "team@example.com".into(),
+            ..crate::config::blank_account()
+        };
+        assert_eq!(refused_send(&account, refused.clone()), refused);
+        account.shared_mailbox = true;
+        assert!(refused_send(&account, refused).contains("team@example.com"));
+        let other = "Microsoft Graph returned 500: busy".to_string();
+        assert_eq!(refused_send(&account, other.clone()), other);
+    }
 }

@@ -21,8 +21,8 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         // The select has to end with its expand, so the folder goes first.
         let select = GRAPH_MSG_SELECT.replacen("$select=", "$select=parentFolderId,", 1);
         let url = format!(
-            "{}/me/messages?$search={}&$top=250&{select}",
-            self.state.base,
+            "{}/messages?$search={}&$top=250&{select}",
+            self.state.mailbox,
             search_param(&ask.terms)
         );
         let found = blocking(move || graph_paged(&token, &url, TEXT_SEARCH_LIMIT)).await;

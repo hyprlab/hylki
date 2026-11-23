@@ -62,6 +62,27 @@ a STARTTLS upgrade, whatever the port, and a certificate accepted in GNOME
 Settings although it does not verify, as a home server's self-signed one
 does not. Stored on the account as the `security` table in `accounts.toml`.
 
+#### Microsoft 365 shared mailboxes
+
+A shared mailbox is opened with the sign-in of a Microsoft 365 account from
+GNOME Online Accounts, with no sign-in of its own. Once such an account is
+in Hylki, **Settings → Accounts → Shared Mailboxes** has **Add…**: type the
+mailbox's address, and with more than one Microsoft 365 account pick the one
+that opens it. The mailbox is opened once before it is added, so one the
+account has no access to, or an address with no mailbox, is refused there.
+It is then listed as an account of its own, with its own folders, and
+appears in All Inboxes.
+
+Graph cannot list the mailboxes an organization shares with someone, so the
+address has to be typed. Reading needs Full Access to the mailbox in
+Exchange, and sending from it needs Send As or Send on Behalf as well.
+Accounts signed in within Hylki
+cannot open a shared mailbox. Switching one off pauses it; **Remove** takes
+it out of Hylki, and it can be added again. It is stored in `accounts.toml`
+with `shared_mailbox = true` and the GNOME Online Accounts id of the account
+it borrows the sign-in of, and goes when that account is removed from GNOME
+Settings.
+
 ### JMAP (Stalwart, Fastmail)
 
 A JMAP account (RFC 8620 and 8621) reads and sends mail over HTTPS, so it

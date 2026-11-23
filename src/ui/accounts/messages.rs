@@ -53,6 +53,14 @@ pub(crate) enum AccountsInput {
     AddAccount,
     /// Add the On This Computer account (#552).
     AddLocal,
+    /// Ask for a Microsoft 365 shared mailbox's address (#701).
+    AddSharedMailbox,
+    /// Open the shared mailbox at `address` with the account `owner` (an
+    /// address) before adding it.
+    CheckSharedMailbox {
+        owner: String,
+        address: String,
+    },
     /// Pick a Maildir tree, or with `true` mbox files, to import into it.
     ImportLocal(bool),
     EditAccount(usize),
@@ -304,6 +312,8 @@ pub(crate) enum AccountsCmd {
     GoaListed(Vec<crate::services::goa::GoaMailAccount>),
     /// An account's secrets, read from the keyring for its editor.
     Secrets(u64, AccountSecrets),
+    /// A shared mailbox opened (#701): the account it becomes, or why not.
+    SharedMailbox(Result<AccountConfig, String>),
     /// The Gravatar looked up for the address in the editor (#189).
     OwnGravatar {
         email: String,

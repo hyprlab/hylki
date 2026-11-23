@@ -2644,6 +2644,23 @@ msgid "Enter the server's address first."
 msgstr "Introdueix l'adreça del servidor."
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr "Els comptes de Microsoft 365 comproven a l'interval de dalt."
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2696,6 +2713,10 @@ msgstr "GOA"
 
 msgid "Hylki"
 msgstr "Hylki"
+
+#, fuzzy
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr "Configurada als comptes en línia del GNOME"
 
 msgid "Imported GNOME Online Account"
 msgstr "Compte en línia del GNOME importat"
@@ -3106,6 +3127,18 @@ msgstr ""
 msgid "Add"
 msgstr "Afegeix"
 
+#, fuzzy
+msgid "Shared Mailboxes"
+msgstr "Proton Mail"
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr "Comptes en línia del GNOME"
 
@@ -3258,6 +3291,11 @@ msgid ""
 "computer, in {dir}, and come back if it is added again."
 msgstr ""
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr "Edita l'HTML"
 
@@ -3269,6 +3307,24 @@ msgstr "Segueix els paràmetres"
 
 msgid "On"
 msgstr "Activat"
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Add Shared Mailbox"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Open with"
+msgstr "acaba amb"
+
+#, fuzzy
+msgid "Could Not Add Mailbox"
+msgstr "No s'ha pogut llegir el fitxer"
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
 
 msgid "Signature {n}"
 msgstr "Signatura {n}"
@@ -8049,17 +8105,17 @@ msgid "Could not remove the attachment: {e}"
 msgstr "No s'ha pogut eliminar l'adjunt: {e}"
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "L'adjunt ja no és al missatge del servidor"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Encara no s'ha pogut enviar «{subject}»: {e}"
