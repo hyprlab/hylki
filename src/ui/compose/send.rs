@@ -214,6 +214,7 @@ impl Compose {
             outbox_origin: self.outbox_origin,
             sign: self.sign,
             encrypt: self.encrypt,
+            smime_sign: self.smime,
             calendar: None,
             request_receipt: self.request_receipt,
             importance: self.importance,
@@ -270,6 +271,7 @@ impl Compose {
     /// Handles [`ComposeInput::AccountChanged`].
     pub(super) fn on_account_changed(&mut self, widgets: &ComposeWidgets) {
         self.follow_account_signing(widgets);
+        self.follow_account_smime(widgets);
         let idx = widgets.from_row.selected() as usize;
         // Another account may suggest from elsewhere: what a
         // directory answered for the last one is not kept.
@@ -325,16 +327,18 @@ impl Compose {
             widgets.sign_btn.set_active(true);
         }
         self.show_key_badges(widgets);
+        self.show_smime(widgets);
     }
 
     /// Handles [`ComposeInput::ToggleSign`].
-    pub(super) fn on_toggle_sign(&mut self, on: bool) {
+    pub(super) fn on_toggle_sign(&mut self, on: bool, widgets: &ComposeWidgets) {
         self.sign = on;
         // Anything but the composer's own setting is a choice for
         // this message, which a later From change must not undo.
         if self.sign_expected.take() != Some(on) {
             self.sign_touched = true;
         }
+        self.show_smime(widgets);
     }
 
     /// Handles [`ComposeInput::PgpChecked`].

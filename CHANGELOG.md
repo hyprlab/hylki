@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **New: S/MIME signing** (#478, requested by keithvassallomt; PR #705 by
+  Adrià). An account can sign the mail it sends with an S/MIME certificate: Settings → Accounts → S/MIME → Sign messages by default, or
+  `smime_sign = true` in `accounts.toml`. The menu beside Send then has Sign
+  with S/MIME, ticked, to untick for one message. Signing goes through gpgsm,
+  so the certificate is imported into GnuPG and gpg-agent asks for its
+  passphrase. The message goes out as `multipart/signed` with an
+  `application/pkcs7-signature` part, in the same layout as OpenPGP's. It is
+  signed with the certificate for the From address; an alias without one
+  stops the send with a message saying so. When the certificate authority's
+  revocation list cannot be fetched, the message is signed without that
+  check; a revoked certificate is refused. Mail signed or encrypted with
+  OpenPGP, drafts and mail the app sends by itself are not signed with
+  S/MIME. Reading S/MIME mail and encrypting with it are not supported yet.
+
 - **New: actions under a message row on hover** (#702, started by
   BastianC). Pointing at a row opens a line of buttons under its text, Star,
   Archive and Delete unless changed, and the row grows to hold them rather

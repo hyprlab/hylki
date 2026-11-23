@@ -76,6 +76,7 @@ pub(super) fn forward_outgoing(
         outbox_origin: None,
         sign: false,
         encrypt: false,
+        smime_sign: false,
         send_at: None,
         calendar: None,
         request_receipt: false,

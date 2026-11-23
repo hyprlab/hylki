@@ -2228,6 +2228,10 @@ msgstr ""
 "De organisatie van de afzender heeft dit bericht '{label}' genoemd. Hylki "
 "toont het label, maar past de regels niet toe."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg heeft het bericht niet ondertekend."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Niets hier bewijst dat dit afkomstig was van {from} – of dat dit niet het "
@@ -4448,6 +4452,9 @@ msgstr "Normaal"
 msgid "Low"
 msgstr "Laag"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Toon het bericht zoals het wordt verzonden"
 
@@ -4465,6 +4472,9 @@ msgstr "Invoegen vóór de tekst"
 
 msgid "Insert After the Text"
 msgstr "Invoegen na de tekst"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Origineel tonen"
@@ -7892,6 +7902,22 @@ msgstr ""
 "geen eigen OpenPGP-sleutel voor {addr}; genereer er een onder Instellingen, "
 "OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Kan sjabloon niet opslaan: {e}"
 
@@ -8270,6 +8296,44 @@ msgstr "Filter toevoegen…"
 msgid "Run every rule over the mail already in your inboxes"
 msgstr "Voer elke regel uit over de e-mail die al in je inbox staat"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Sleutels worden beheerd onder OpenPGP in de zijbalk."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "Automatisch gebruikt de sleutel waarvan het adres overeenkomt."
+
+msgid "Sign messages by default"
+msgstr "Standaard berichten ondertekenen"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Verberg het onderwerp van gecodeerde e-mail"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Alleen de ontvangers zien het onderwerp. Anderen zien \"...\"."
+
+msgid "Send your key with your mail"
+msgstr "Stuur je sleutel mee met je e-mail"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+"Autocrypt. Sleutels die anderen op deze manier versturen, worden ook bewaard."
+
+msgid "Encrypt by default"
+msgstr "Standaard versleutelen"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr "Mail naar mensen die erom vragen, wordt gecodeerd."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "De sleutel van de afzender is uit het bericht gehaald."
+
 msgid "GNOME Online Account"
 msgstr "GNOME Online-account"
 
@@ -8554,34 +8618,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Geen verborgen mappen."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Sleutels worden beheerd onder OpenPGP in de zijbalk."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "Automatisch gebruikt de sleutel waarvan het adres overeenkomt."
-
-msgid "Sign messages by default"
-msgstr "Standaard berichten ondertekenen"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Verberg het onderwerp van gecodeerde e-mail"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Alleen de ontvangers zien het onderwerp. Anderen zien \"...\"."
-
-msgid "Send your key with your mail"
-msgstr "Stuur je sleutel mee met je e-mail"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-"Autocrypt. Sleutels die anderen op deze manier versturen, worden ook bewaard."
-
-msgid "Encrypt by default"
-msgstr "Standaard versleutelen"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr "Mail naar mensen die erom vragen, wordt gecodeerd."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

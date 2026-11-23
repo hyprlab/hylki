@@ -2276,6 +2276,10 @@ msgstr ""
 "Ο οργανισμός του αποστολέα επισήμανε αυτό το μήνυμα ως «{label}». Το Hylki "
 "εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει τους κανόνες της."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Το gpg δεν υπέγραψε το μήνυμα."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Τίποτα εδώ δεν αποδεικνύει ότι αυτό προήλθε από το {from} — ούτε ότι δεν "
@@ -4521,6 +4525,9 @@ msgstr "Κανονική"
 msgid "Low"
 msgstr "Χαμηλή"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Εμφάνιση του μηνύματος όπως θα σταλεί"
 
@@ -4538,6 +4545,9 @@ msgstr "Εισαγωγή πριν από το κείμενο"
 
 msgid "Insert After the Text"
 msgstr "Εισαγωγή μετά το κείμενο"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Εμφάνιση πρωτοτύπου"
@@ -8037,6 +8047,22 @@ msgstr ""
 "δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}· δημιουργήστε "
 "ένα στις Ρυθμίσεις, OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
 
@@ -8422,6 +8448,47 @@ msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 "Εφαρμογή κάθε κανόνα στην αλληλογραφία που βρίσκεται ήδη στα εισερχόμενά σας"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+"Η διαχείριση των κλειδιών γίνεται στην ενότητα OpenPGP της πλευρικής στήλης."
+
+msgid "Automatic uses the key whose address matches."
+msgstr ""
+"Η Αυτόματη επιλογή χρησιμοποιεί το κλειδί του οποίου η διεύθυνση ταιριάζει."
+
+msgid "Sign messages by default"
+msgstr "Υπογραφή μηνυμάτων από προεπιλογή"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Ήχος για νέα αλληλογραφία"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "Το κλειδί του αποστολέα εισήχθη από το μήνυμα."
+
 msgid "GNOME Online Account"
 msgstr "Διαδικτυακός λογαριασμός GNOME"
 
@@ -8713,37 +8780,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Δεν υπάρχουν κρυφοί φάκελοι."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr ""
-"Η διαχείριση των κλειδιών γίνεται στην ενότητα OpenPGP της πλευρικής στήλης."
-
-msgid "Automatic uses the key whose address matches."
-msgstr ""
-"Η Αυτόματη επιλογή χρησιμοποιεί το κλειδί του οποίου η διεύθυνση ταιριάζει."
-
-msgid "Sign messages by default"
-msgstr "Υπογραφή μηνυμάτων από προεπιλογή"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
-
-#, fuzzy
-msgid "Send your key with your mail"
-msgstr "Ήχος για νέα αλληλογραφία"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-#, fuzzy
-msgid "Encrypt by default"
-msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

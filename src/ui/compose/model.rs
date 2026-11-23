@@ -103,6 +103,11 @@ pub(crate) struct Compose {
     pub(super) from_encrypted: bool,
     /// Ask for a read receipt (#520).
     pub(super) request_receipt: bool,
+    /// S/MIME (#478): sign this message, as its account says until the
+    /// user unticks it; the Send menu's check for it.
+    pub(super) smime: bool,
+    pub(super) smime_touched: bool,
+    pub(super) smime_check: gtk::CheckButton,
     /// How important the message is marked (#563).
     pub(super) importance: crate::models::Importance,
     /// The OpenPGP send check is running on a worker thread.

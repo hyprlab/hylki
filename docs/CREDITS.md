@@ -193,6 +193,8 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**BastianC**](https://github.com/bastiancolpaert) ([#702](https://github.com/hyprlab/hylki/pull/702),
   [#704](https://github.com/hyprlab/hylki/pull/704)): the buttons a message
   row shows on hover, and the Dutch translation.
+- [**Adrià**](https://github.com/adriadam10) ([#705](https://github.com/hyprlab/hylki/pull/705)):
+  signing outgoing mail with S/MIME through gpgsm.
 
 ## Reports, design and ideas
 

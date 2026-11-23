@@ -55,6 +55,9 @@ pub(crate) struct ComposeAccount {
     pub(crate) pgp_key: Option<String>,
     /// The account signs its mail by default (#267): Sign starts on.
     pub(crate) sign_default: bool,
+    /// The account signs its mail with S/MIME (#478): the Send menu offers
+    /// it, ticked.
+    pub(crate) smime_sign: bool,
     /// The account's Autocrypt preference is `mutual` (and Autocrypt is
     /// on): encryption turns on by itself when every recipient agrees.
     pub(crate) autocrypt_mutual: bool,

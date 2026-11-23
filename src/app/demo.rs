@@ -66,6 +66,7 @@ pub(super) fn demo_account_configs() -> Vec<AccountConfig> {
         in_unified: true,
         folder_sort: None,
         sign_by_default: false,
+        smime_sign: false,
         plain_subject: false,
         autocrypt: false,
         autocrypt_mutual: false,

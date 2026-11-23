@@ -2373,6 +2373,10 @@ msgid ""
 "label but does not apply its rules."
 msgstr ""
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "A gpg nem írta alá az üzenetet."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Itt semmi nem bizonyítja, hogy ez innen származik: {from} — de azt sem, hogy "
@@ -4669,6 +4673,9 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Az üzenet megjelenítése úgy, ahogyan elküldésre kerül"
 
@@ -4691,6 +4698,9 @@ msgstr "Beillesztés a szövegbe"
 #, fuzzy
 msgid "Insert After the Text"
 msgstr "Beillesztés a szövegbe"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 #, fuzzy
 msgid "Show Original"
@@ -8285,6 +8295,22 @@ msgstr ""
 "nincs saját OpenPGP-kulcs ehhez: {addr}; hozzon létre egyet a Beállítások → "
 "OpenPGP alatt"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 #, fuzzy
 msgid "Could not save template: {e}"
 msgstr "A piszkozat nem menthető: {e}"
@@ -8674,6 +8700,46 @@ msgstr "Szűrő hozzáadása…"
 msgid "Run every rule over the mail already in your inboxes"
 msgstr "Futtasson minden szabályt a beérkező levelekben már meglévő leveleken"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+
+msgid "Automatic uses the key whose address matches."
+msgstr "Az automatikus beállítás a megfelelő címhez tartozó kulcsot használja."
+
+msgid "Sign messages by default"
+msgstr "Üzenetek aláírása alapértelmezetten"
+
+#, fuzzy
+msgid "Hide the subject of encrypted mail"
+msgstr "A tárgy elrejtése"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Beillesztés formázással"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Beszélgetések kibontása alapértelmezés szerint"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "A feladó kulcsa importálva az üzenetből."
+
 msgid "GNOME Online Account"
 msgstr "GNOME Internetes Fiók"
 
@@ -8977,36 +9043,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Nincsenek rejtett mappák."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr ""
-
-msgid "Automatic uses the key whose address matches."
-msgstr "Az automatikus beállítás a megfelelő címhez tartozó kulcsot használja."
-
-msgid "Sign messages by default"
-msgstr "Üzenetek aláírása alapértelmezetten"
-
-#, fuzzy
-msgid "Hide the subject of encrypted mail"
-msgstr "A tárgy elrejtése"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr ""
-
-#, fuzzy
-msgid "Send your key with your mail"
-msgstr "Beillesztés formázással"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-#, fuzzy
-msgid "Encrypt by default"
-msgstr "Beszélgetések kibontása alapértelmezés szerint"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
 
 #, fuzzy
 msgid "Your password is kept in the system keyring, never in plain text."

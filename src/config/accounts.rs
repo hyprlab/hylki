@@ -374,6 +374,11 @@ pub(crate) struct AccountConfig {
     /// for one message.
     #[serde(default, skip_serializing_if = "is_false")]
     pub(crate) sign_by_default: bool,
+    /// Every message this account sends is signed with S/MIME (#478),
+    /// through gpgsm and the certificate for the From address. A message
+    /// signed or encrypted with OpenPGP goes out that way instead.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) smime_sign: bool,
     /// Encrypted mail from this account keeps its subject outside, where
     /// anyone who handles the message can read it, rather than inside with
     /// "..." outside (#493). Off by default, as in Thunderbird. Kept the
@@ -719,6 +724,7 @@ pub(crate) fn blank_account() -> AccountConfig {
         in_unified: true,
         folder_sort: None,
         sign_by_default: false,
+        smime_sign: false,
         plain_subject: false,
         autocrypt: false,
         autocrypt_mutual: false,

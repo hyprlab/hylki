@@ -19,6 +19,7 @@ keyboard.
 - [Grammar checking](#grammar-checking)
 - [Writing in Markdown or HTML](#writing-in-markdown-or-html)
 - [OpenPGP (encrypted and signed mail)](#openpgp-encrypted-and-signed-mail)
+- [S/MIME (signed mail)](#smime-signed-mail)
 - [Send with Hylki from GNOME Files](#send-with-hylki-from-gnome-files)
 - [Privacy](#privacy)
 
@@ -2005,6 +2006,71 @@ signature** or **Signed, unknown key**.
   have. Ask the sender to use the public key you exported in step 2.
 - *Nothing to encrypt with for an address*: that person's key is missing;
   see step 3.
+
+### S/MIME (signed mail)
+
+Hylki can sign the mail an account sends with an S/MIME certificate, the
+kind a certificate authority issues for an email address. It signs through
+**gpgsm**, GnuPG's S/MIME program, so the certificate lives beside your
+OpenPGP keys and gpg-agent asks for its passphrase. Reading S/MIME mail and
+encrypting with it are not supported yet.
+
+**1. Put your certificate in gpgsm**
+
+Export the certificate with its private key as a `.p12` file (from
+Thunderbird: *Settings → Privacy & Security → Manage Certificates → Your
+Certificates → Backup*), then import it:
+
+```sh
+gpgsm --import certificate.p12
+```
+
+If gpgsm answers *error parsing or decrypting the PKCS#12 file*, as gpgsm 2.4
+does with a file Thunderbird or Firefox wrote, repack it with OpenSSL first and
+import `repacked.p12`:
+
+```sh
+openssl pkcs12 -in certificate.p12 -nodes |
+  openssl pkcs12 -export -keypbe AES-256-CBC -certpbe AES-256-CBC -macalg sha256 -out repacked.p12
+```
+
+gpgsm signs only with a certificate whose chain ends at a root it trusts. If
+sending says the certificate *is not trusted*, `gpgsm --list-chain
+your@address` names the root; check its fingerprint against your system's
+certificate store and add it to `~/.gnupg/trustlist.txt` as `FINGERPRINT S`.
+
+**2. Turn it on for the account**
+
+In *Settings → Accounts*, open the account and turn on *S/MIME → Sign messages
+by default*, or set `smime_sign = true` on the account in `accounts.toml`.
+
+**3. Sending**
+
+The menu beside *Send* then has *Sign with S/MIME*, ticked. Untick it to send
+one message unsigned. The message is signed with the certificate for its From
+address:
+
+- An alias needs a certificate that names it. Without one, sending stops and
+  says so, rather than signing with the account's certificate, which
+  Outlook and Thunderbird flag as signed by someone other than the sender.
+  Untick *Sign with S/MIME* to send it unsigned.
+- With OpenPGP *Sign* or *Encrypt* on, the message goes out with OpenPGP
+  only, and *Sign with S/MIME* is greyed out.
+- Drafts are not signed, and neither is mail Hylki sends by itself: a
+  filter's forward, a read receipt, an answer to an invitation.
+
+Before it signs, gpgsm checks the certificate authority's revocation list.
+When the list cannot be fetched (offline, or the authority's server is down),
+the message is signed without that check, as Thunderbird does. A certificate
+the list says is revoked is refused.
+
+**Troubleshooting**
+
+- *No S/MIME certificate for an address*: gpgsm has no certificate with a
+  private key for it. `gpgsm --list-secret-keys` shows the ones it has; see
+  step 1.
+- *Has expired* or *has been revoked*: the certificate authority issues a
+  new certificate, which you import as in step 1.
 
 ### Dragging files into a message
 

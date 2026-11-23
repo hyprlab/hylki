@@ -25,7 +25,7 @@ impl PgpEntity {
     /// and what encryption hides. lettre formats a part the same way every
     /// time (its boundary is fixed at creation), so the signed bytes are
     /// the bytes that go on the wire.
-    fn formatted(&self) -> Vec<u8> {
+    pub(super) fn formatted(&self) -> Vec<u8> {
         match self {
             PgpEntity::Multi(m) => m.formatted(),
             PgpEntity::Single(s) => s.formatted(),
@@ -314,6 +314,7 @@ pub(super) fn pgp_wrap(
     Ok(PgpEntity::Single(signed_multipart(
         &inner,
         &sig_part.formatted(),
+        "application/pgp-signature",
         &micalg,
     )?))
 }
@@ -326,10 +327,12 @@ pub(super) fn pgp_wrap(
 /// on the way out and leaves a blank line there, which hands the CRLF back
 /// to the part and breaks the signature. Evolution writes that blank line
 /// itself and signs the part with its CRLF; so does this, and a server that
-/// tidies the layout the same way finds nothing to change.
-fn signed_multipart(
+/// tidies the layout the same way finds nothing to change. S/MIME (#478)
+/// signs into the same layout, with its own `protocol`.
+pub(super) fn signed_multipart(
     inner: &[u8],
     signature: &[u8],
+    protocol: &str,
     micalg: &str,
 ) -> Result<lettre::message::SinglePart, SmtpError> {
     use lettre::message::header::{ContentTransferEncoding, ContentType};
@@ -340,7 +343,7 @@ fn signed_multipart(
     )
     .map_err(|e| e.to_string())?;
     let content_type = ContentType::parse(&format!(
-        "multipart/signed; boundary=\"{boundary}\"; protocol=\"application/pgp-signature\"; micalg=\"{micalg}\""
+        "multipart/signed; boundary=\"{boundary}\"; protocol=\"{protocol}\"; micalg=\"{micalg}\""
     ))
     .map_err(|e| e.to_string())?;
     let mut body = Vec::with_capacity(inner.len() + signature.len() + 3 * boundary.len() + 16);

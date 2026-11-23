@@ -2344,6 +2344,10 @@ msgstr ""
 "L'organizzazione del mittente ha etichettato questo messaggio come \"{label}"
 "\". Hylki mostra l'etichetta ma non ne applica le regole."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg non ha firmato il messaggio."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Niente qui prova che è arrivato da {from} — né che non lo sia."
 
@@ -4627,6 +4631,9 @@ msgstr "Normale"
 msgid "Low"
 msgstr ""
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Mostra il messaggio come verrà inviato"
 
@@ -4645,6 +4652,9 @@ msgstr "Inserisci prima del testo"
 
 msgid "Insert After the Text"
 msgstr "Inserisci dopo il testo"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Mostra originale"
@@ -8232,6 +8242,22 @@ msgid ""
 msgstr ""
 "nessuna tua chiave OpenPGP per {addr}; generane una in Impostazioni, OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Impossibile salvare il modello: {e}"
 
@@ -8620,6 +8646,46 @@ msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 "Esegui ogni regola sulla posta già nelle tue caselle di posta in arrivo"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+
+msgid "Automatic uses the key whose address matches."
+msgstr "Automatico usa la chiave il cui indirizzo corrisponde."
+
+msgid "Sign messages by default"
+msgstr "Firma i messaggi per impostazione predefinita"
+
+#, fuzzy
+msgid "Hide the subject of encrypted mail"
+msgstr "Nascondi l'oggetto"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Suono per nuova posta"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Espandi le conversazioni per impostazione predefinita"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "La chiave del mittente è stata importata dal messaggio."
+
 msgid "GNOME Online Account"
 msgstr "Account online GNOME"
 
@@ -8928,36 +8994,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Nessuna cartella nascosta."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr ""
-
-msgid "Automatic uses the key whose address matches."
-msgstr "Automatico usa la chiave il cui indirizzo corrisponde."
-
-msgid "Sign messages by default"
-msgstr "Firma i messaggi per impostazione predefinita"
-
-#, fuzzy
-msgid "Hide the subject of encrypted mail"
-msgstr "Nascondi l'oggetto"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr ""
-
-#, fuzzy
-msgid "Send your key with your mail"
-msgstr "Suono per nuova posta"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-#, fuzzy
-msgid "Encrypt by default"
-msgstr "Espandi le conversazioni per impostazione predefinita"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
 
 #, fuzzy
 msgid "Your password is kept in the system keyring, never in plain text."

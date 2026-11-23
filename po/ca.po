@@ -2298,6 +2298,10 @@ msgstr ""
 "L'organització del remitent ha etiquetat aquest missatge com a «{label}». "
 "L'Hylki mostra l'etiqueta però no n'aplica les regles."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "El gpg no ha signat el missatge."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Res aquí demostra que això provingui de {from} — ni que no ho faci."
 
@@ -4531,6 +4535,9 @@ msgstr "Normal"
 msgid "Low"
 msgstr ""
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Mostra el missatge tal com s'enviarà"
 
@@ -4548,6 +4555,9 @@ msgstr "Insereix abans del text"
 
 msgid "Insert After the Text"
 msgstr "Insereix després del text"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Mostra l'original"
@@ -8054,6 +8064,22 @@ msgstr ""
 "no tens cap clau OpenPGP pròpia per a {addr}; genera'n una a Paràmetres, "
 "OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "No s'ha pogut desar la plantilla: {e}"
 
@@ -8439,6 +8465,45 @@ msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 "Executa totes les regles sobre el correu que ja hi ha a les bústies d'entrada"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Les claus es gestionen a OpenPGP, a la barra lateral."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "Automàtic utilitza la clau l'adreça de la qual coincideix."
+
+msgid "Sign messages by default"
+msgstr "Signa els missatges per defecte"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Amaga l'assumpte del correu xifrat"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Només els destinataris veuen l'assumpte. Els altres veuen «...»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "So per a correu nou"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Expandeix les converses per defecte"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "La clau del remitent s'ha importat del missatge."
+
 msgid "GNOME Online Account"
 msgstr "Compte en línia del GNOME"
 
@@ -8723,35 +8788,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "No hi ha carpetes amagades."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Les claus es gestionen a OpenPGP, a la barra lateral."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "Automàtic utilitza la clau l'adreça de la qual coincideix."
-
-msgid "Sign messages by default"
-msgstr "Signa els missatges per defecte"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Amaga l'assumpte del correu xifrat"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Només els destinataris veuen l'assumpte. Els altres veuen «...»."
-
-#, fuzzy
-msgid "Send your key with your mail"
-msgstr "So per a correu nou"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-#, fuzzy
-msgid "Encrypt by default"
-msgstr "Expandeix les converses per defecte"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

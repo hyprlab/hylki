@@ -2257,6 +2257,10 @@ msgstr ""
 "Организация отправителя пометила это сообщение как «{label}». Хилки "
 "показывает метку, но не применяет ее правила."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Программе gpg не удалось подписать сообщение."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Нет данных, подтверждающих или опровергающих отправку с адреса {from}."
 
@@ -4481,6 +4485,9 @@ msgstr "Обычный"
 msgid "Low"
 msgstr "Низкая"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Показать сообщение в том виде, в котором оно будет отправлено"
 
@@ -4498,6 +4505,9 @@ msgstr "Вставить перед текстом"
 
 msgid "Insert After the Text"
 msgstr "Вставить после текста"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Показать оригинал"
@@ -7959,6 +7969,22 @@ msgstr ""
 "отсутствует собственный ключ OpenPGP для {addr}; создайте его в разделе "
 "Параметры → OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Не удалось сохранить шаблон: {e}"
 
@@ -8341,6 +8367,44 @@ msgstr "Добавить фильтр…"
 msgid "Run every rule over the mail already in your inboxes"
 msgstr "Применить все правила к почте, уже находящейся в папках «Входящие»"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Ключи управляются в OpenPGP на боковой панели."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "В автоматическом режиме используется ключ с совпадающим адресом."
+
+msgid "Sign messages by default"
+msgstr "Подписывать сообщения по умолчанию"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Скрыть тему зашифрованного письма"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Тему видят только получатели. Другие видят «...»."
+
+msgid "Send your key with your mail"
+msgstr "Отправлять ваш ключ вместе с письмами"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+"Autocrypt. Ключи, отправленные таким способом другими, также сохраняются."
+
+msgid "Encrypt by default"
+msgstr "Шифровать по умолчанию"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr "Письма получателям с аналогичной настройкой будут шифроваться."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "Ключ отправителя получен из сообщения."
+
 msgid "GNOME Online Account"
 msgstr "Сетевая учётная запись GNOME"
 
@@ -8625,34 +8689,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Скрытых папок нет."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Ключи управляются в OpenPGP на боковой панели."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "В автоматическом режиме используется ключ с совпадающим адресом."
-
-msgid "Sign messages by default"
-msgstr "Подписывать сообщения по умолчанию"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Скрыть тему зашифрованного письма"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Тему видят только получатели. Другие видят «...»."
-
-msgid "Send your key with your mail"
-msgstr "Отправлять ваш ключ вместе с письмами"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-"Autocrypt. Ключи, отправленные таким способом другими, также сохраняются."
-
-msgid "Encrypt by default"
-msgstr "Шифровать по умолчанию"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr "Письма получателям с аналогичной настройкой будут шифроваться."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

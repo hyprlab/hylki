@@ -1,5 +1,6 @@
 //! The menu beside Send: send now or later, Mail Merge (#447), a read
-//! receipt (#520) and the message's importance (#563).
+//! receipt (#520), S/MIME signing (#478) and the message's importance
+//! (#563).
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -11,11 +12,8 @@ use crate::models::Importance;
 use crate::ui::later::{next_monday, preset_time};
 
 /// The Send button's popover, set up as the message being written says.
-pub(super) fn send_menu(
-    sender: &ComponentSender<Compose>,
-    request_receipt: bool,
-    importance: Importance,
-) -> gtk::Popover {
+pub(super) fn send_menu(sender: &ComponentSender<Compose>, model: &Compose) -> gtk::Popover {
+    let (request_receipt, importance) = (model.request_receipt, model.importance);
     let list = gtk::Box::new(gtk::Orientation::Vertical, 2);
     // Menu rows, not buttons: regular weight like every other popover
     // menu (#167).
@@ -81,6 +79,7 @@ pub(super) fn send_menu(
     let input = sender.input_sender().clone();
     receipt.connect_toggled(move |b| input.emit(ComposeInput::ToggleReceipt(b.is_active())));
     list.append(&receipt);
+    list.append(&model.smime_check);
 
     // One of three, as Thunderbird's Priority menu and Outlook's pair of
     // toggles allow: a radio group.
@@ -114,4 +113,29 @@ pub(super) fn send_menu(
     let popover = gtk::Popover::new();
     popover.set_child(Some(&list));
     popover
+}
+
+/// The Send menu's S/MIME check, which the composer shows, ticks and
+/// greys as the From account and the OpenPGP toggles say.
+pub(super) fn smime_check(sender: &ComponentSender<Compose>) -> gtk::CheckButton {
+    let check = gtk::CheckButton::with_label(&i18n("Sign with S/MIME"));
+    check.add_css_class("context-menu-item");
+    check.set_visible(false);
+    let input = sender.input_sender().clone();
+    check.connect_toggled(move |b| input.emit(ComposeInput::ToggleSmime(b.is_active())));
+    check
+}
+
+impl Compose {
+    /// Handles [`ComposeInput::ToggleReceipt`].
+    pub(super) fn on_toggle_receipt(&mut self, on: bool) {
+        self.request_receipt = on;
+        self.fields_dirty = true;
+    }
+
+    /// Handles [`ComposeInput::SetImportance`].
+    pub(super) fn on_set_importance(&mut self, importance: Importance) {
+        self.importance = importance;
+        self.fields_dirty = true;
+    }
 }

@@ -2237,6 +2237,10 @@ msgstr ""
 "Vertraulichkeitsbezeichnung »{label}« versehen. Hylki zeigt die Bezeichnung "
 "an, wendet deren Regeln jedoch nicht an."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg hat die Nachricht nicht unterschrieben."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Keine Informationen vorhanden, die die Herkunft von {from} bestätigen oder "
@@ -4505,6 +4509,9 @@ msgstr "Normal"
 msgid "Low"
 msgstr "Niedrig"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Zeige die Nachricht, wie sie gesendet wird"
 
@@ -4522,6 +4529,9 @@ msgstr "Vor dem Text einfügen"
 
 msgid "Insert After the Text"
 msgstr "Nach dem Text einfügen"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Original anzeigen"
@@ -8001,6 +8011,22 @@ msgstr ""
 "kein eigener OpenPGP-Schlüssel für {addr} vorhanden; unter »Einstellungen → "
 "OpenPGP« einen Schlüssel erzeugen"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Konnte die Vorlage nicht speichern: {e}"
 
@@ -8387,6 +8413,47 @@ msgstr "Filter hinzufügen…"
 msgid "Run every rule over the mail already in your inboxes"
 msgstr "Alle Regeln auf vorhandene Nachrichten in den Posteingängen anwenden"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Schlüssel werden unter »OpenPGP« in der Seitenleiste verwaltet."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "»Automatisch« verwendet den Schlüssel mit der passenden Adresse."
+
+msgid "Sign messages by default"
+msgstr "Nachrichten standardmäßig unterschreiben"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Betreff verschlüsselter Nachrichten ausblenden"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Nur für Empfänger sichtbar. Für alle anderen wird »...« angezeigt."
+
+msgid "Send your key with your mail"
+msgstr "Eigenen Schlüssel mit Nachrichten senden"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+"Autocrypt. Auf diesem Weg gesendete Schlüssel anderer Personen werden "
+"ebenfalls gespeichert."
+
+msgid "Encrypt by default"
+msgstr "Standardmäßig verschlüsseln"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+"E-Mails werden verschlüsselt, sofern die empfangende Person dies ebenfalls "
+"wünscht."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "Der Schlüssel des Absenders wurde aus der Nachricht importiert."
+
 msgid "GNOME Online Account"
 msgstr "GNOME Online-Konto"
 
@@ -8677,37 +8744,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Keine versteckten Ordner."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Schlüssel werden unter »OpenPGP« in der Seitenleiste verwaltet."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "»Automatisch« verwendet den Schlüssel mit der passenden Adresse."
-
-msgid "Sign messages by default"
-msgstr "Nachrichten standardmäßig unterschreiben"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Betreff verschlüsselter Nachrichten ausblenden"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Nur für Empfänger sichtbar. Für alle anderen wird »...« angezeigt."
-
-msgid "Send your key with your mail"
-msgstr "Eigenen Schlüssel mit Nachrichten senden"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-"Autocrypt. Auf diesem Weg gesendete Schlüssel anderer Personen werden "
-"ebenfalls gespeichert."
-
-msgid "Encrypt by default"
-msgstr "Standardmäßig verschlüsseln"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
-"E-Mails werden verschlüsselt, sofern die empfangende Person dies ebenfalls "
-"wünscht."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""

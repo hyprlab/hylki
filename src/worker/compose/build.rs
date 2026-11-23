@@ -47,13 +47,14 @@ pub(in crate::worker) fn build_email(
 
 /// The body the reader will show for `msg` once its copy is read back from
 /// Sent: the bytes a send builds, through the same extraction, so the card a
-/// sent reply gets at once is the card its copy draws later. Attachments
-/// and OpenPGP are left out; neither changes the body shown.
+/// sent reply gets at once is the card its copy draws later. Attachments,
+/// OpenPGP and S/MIME are left out; none of them changes the body shown.
 pub(crate) fn sent_body_preview(account: &AccountConfig, msg: &OutgoingMessage) -> Option<String> {
     let mut msg = msg.clone();
     msg.attachments.clear();
     msg.sign = false;
     msg.encrypt = false;
+    msg.smime_sign = false;
     let email = build_email(account, &msg).ok()?;
     Some(extract_body(&email.formatted()))
 }
@@ -268,7 +269,10 @@ fn build_message(
     // OpenPGP (#133): the body as one MIME entity, signed and/or encrypted
     // into the PGP/MIME shape the reader recognises. A draft is never
     // signed (Level 1: its signature would mean nothing), only encrypted.
-    if (msg.sign && !draft) || msg.encrypt {
+    // S/MIME (#478): signed into the same layout, unless this one goes out
+    // with OpenPGP.
+    let smime = msg.smime_sign && !draft && !msg.sign && !msg.encrypt;
+    if (msg.sign && !draft) || msg.encrypt || smime {
         let entity = if msg.attachments.is_empty() {
             match content {
                 Some(content) => PgpEntity::Multi(content),
@@ -277,6 +281,11 @@ fn build_message(
         } else {
             PgpEntity::Multi(attachments_multipart(content, msg)?)
         };
+        if smime {
+            let gpgsm = crate::mail::smime::Gpgsm::system();
+            let signed = super::smime_mime::smime_sign(&gpgsm, &from_addr, entity)?;
+            return Ok(builder.singlepart(signed)?);
+        }
         let entity = if protect || sealed_draft {
             protect_headers(entity, msg, &from_mailbox, sealed_draft)?
         } else {

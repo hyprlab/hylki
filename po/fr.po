@@ -2245,6 +2245,10 @@ msgstr ""
 "L’organisation de l’expéditeur a étiqueté ce message « {label} ». Hylki "
 "affiche l’étiquette mais n’applique pas ses règles."
 
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg n’a pas signé le message."
+
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
 "Rien ici ne prouve que ce message provient de {from} — ni le contraire."
@@ -4501,6 +4505,9 @@ msgstr "Normal"
 msgid "Low"
 msgstr "Basse"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Afficher le message tel qu’il sera envoyé"
 
@@ -4518,6 +4525,9 @@ msgstr "Insérer avant le texte"
 
 msgid "Insert After the Text"
 msgstr "Insérer après le texte"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Afficher l’original"
@@ -7974,6 +7984,22 @@ msgstr ""
 "vous ne disposez pas encore de clé OpenPGP pour {addr} ; générez-en une dans "
 "« Paramètres », « OpenPGP »"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Impossible d’enregistrer le modèle : {e}"
 
@@ -8358,6 +8384,45 @@ msgstr ""
 "Exécutez toutes les règles sur le courrier déjà présent dans vos boîtes de "
 "réception"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Les clés se gèrent sous OpenPGP dans la barre latérale."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "La fonction « Automatique » utilise la clé dont l’adresse correspond."
+
+msgid "Sign messages by default"
+msgstr "Signer les messages par défaut"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Masquer l’objet des e-mails chiffrés"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Seuls les destinataires voient l’objet. Les autres voient « ... »."
+
+msgid "Send your key with your mail"
+msgstr "Envoyer votre clé avec vos messages"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+"Autocrypt. Les clés envoyées par d’autres de cette façon sont aussi "
+"conservées."
+
+msgid "Encrypt by default"
+msgstr "Chiffrer par défaut"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr "Les messages aux personnes qui demandent la même chose sont chiffrés."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "La clé de l’expéditeur a été importée à partir du message."
+
 msgid "GNOME Online Account"
 msgstr "Compte en ligne de GNOME"
 
@@ -8648,35 +8713,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Aucun dossier masqué."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Les clés se gèrent sous OpenPGP dans la barre latérale."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "La fonction « Automatique » utilise la clé dont l’adresse correspond."
-
-msgid "Sign messages by default"
-msgstr "Signer les messages par défaut"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Masquer l’objet des e-mails chiffrés"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Seuls les destinataires voient l’objet. Les autres voient « ... »."
-
-msgid "Send your key with your mail"
-msgstr "Envoyer votre clé avec vos messages"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-"Autocrypt. Les clés envoyées par d’autres de cette façon sont aussi "
-"conservées."
-
-msgid "Encrypt by default"
-msgstr "Chiffrer par défaut"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr "Les messages aux personnes qui demandent la même chose sont chiffrés."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -9371,9 +9407,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Apparaîtra dans le menu « De » de la fenêtre de rédaction. Les réponses "
 #~ "aux messages envoyés à cette adresse seront expédiées depuis celle-ci."
-
-#~ msgid "The sender's key was imported from the message."
-#~ msgstr "La clé de l’expéditeur a été importée à partir du message."
 
 #~ msgid "Extra names and addresses this account can send as."
 #~ msgstr ""
