@@ -159,6 +159,10 @@ impl Preferences {
             .swipe_reversed_row
             .set_active(init.swipe_reversed);
         widgets
+            .list
+            .hover_actions_row
+            .set_active(init.hover_actions);
+        widgets
             .composing
             .compose_inline_row
             .set_active(init.compose_inline);

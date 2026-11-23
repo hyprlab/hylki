@@ -136,7 +136,7 @@ fn serve(answers: Vec<Answer>) -> (String, std::thread::JoinHandle<Vec<String>>)
 
 fn state_for(origin: &str, path: &str, folder_id: u32, gid: &str) -> GraphState {
     let mut state = GraphState::new(&crate::worker::test_support::sample_account());
-    state.base = origin.to_string();
+    state.mailbox = format!("{origin}/me");
     state
         .folders
         .insert(path.to_string(), (folder_id, gid.to_string()));
@@ -533,7 +533,7 @@ fn a_folder_moves_then_takes_its_new_name() {
         ),
         answer("/me/mailFolders/G9", 200, serde_json::json!({ "id": "G9" })),
     ]);
-    graph_move_folder("t", &origin, "G1", Some("msgfolderroot"), Some("a/b")).unwrap();
+    graph_move_folder("t", &format!("{origin}/me"), "G1", Some("msgfolderroot"), Some("a/b")).unwrap();
     assert_eq!(
         server.join().unwrap(),
         ["/me/mailFolders/G1/move", "/me/mailFolders/G9"]
@@ -544,7 +544,7 @@ fn a_folder_moves_then_takes_its_new_name() {
         200,
         serde_json::json!({ "id": "G1" }),
     )]);
-    graph_move_folder("t", &origin, "G1", None, Some("New")).unwrap();
+    graph_move_folder("t", &format!("{origin}/me"), "G1", None, Some("New")).unwrap();
     assert_eq!(server.join().unwrap(), ["/me/mailFolders/G1"]);
 
     let (origin, server) = serve(vec![answer(
@@ -552,6 +552,24 @@ fn a_folder_moves_then_takes_its_new_name() {
         400,
         serde_json::json!({ "error": { "message": "no" } }),
     )]);
-    assert!(graph_move_folder("t", &origin, "G1", Some("P"), Some("New")).is_err());
+    assert!(graph_move_folder("t", &format!("{origin}/me"), "G1", Some("P"), Some("New")).is_err());
     assert_eq!(server.join().unwrap(), ["/me/mailFolders/G1/move"]);
+}
+
+/// #701: a shared mailbox's folders are asked for under its address, with
+/// the signed-in user's token, never under the user's own mailbox.
+#[test]
+fn a_shared_mailbox_is_reached_under_its_address() {
+    use crate::worker::graph::folders::graph_move_folder;
+    let (origin, server) = serve(vec![answer(
+        "/users/team@example.com/mailFolders/G1",
+        200,
+        serde_json::json!({ "id": "G1" }),
+    )]);
+    let mailbox = format!("{origin}/users/team@example.com");
+    graph_move_folder("t", &mailbox, "G1", None, Some("New")).unwrap();
+    assert_eq!(
+        server.join().unwrap(),
+        ["/users/team@example.com/mailFolders/G1"]
+    );
 }

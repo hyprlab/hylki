@@ -21,6 +21,7 @@ mod choices;
 mod composing;
 mod contacts;
 mod grammar;
+mod hover_editor;
 mod init_layout;
 mod init_message_rows;
 mod init_rows;
@@ -44,6 +45,7 @@ use choices::{
     placement_index, sound_index, sound_labels, APP_THEMES, CLOCK_STYLES, DATE_STYLES,
     FETCH_INTERVALS, KEEP_DOWNLOADS_DAYS, LAUNCHER_BADGES, MESSAGE_THEMES, RENDERERS, TRAY_ICONS,
 };
+use hover_editor::HoverEditor;
 pub(crate) use messages::{PrefInit, PrefInput, PrefOutput};
 use navigation::{side_page, SIDE_PAGES};
 use pages::{
@@ -103,8 +105,17 @@ pub(crate) struct Preferences {
     /// Whether the list can be on one line at all, which the columns are
     /// for.
     list_single_possible: bool,
+    /// Where a search starts, the row that sets it, and whether Hylki has
+    /// one account only, which leaves "Everywhere" off the row (#699).
+    search_start: crate::config::SearchStart,
+    search_start_row: Option<adw::ComboRow>,
+    lone_account: bool,
     /// Whether swipe actions are on (the reverse switch follows it).
     swipe_enabled: bool,
+    /// Whether rows show hover actions (the editor follows it), and which.
+    hover_actions: bool,
+    hover_action_buttons: Vec<crate::config::HoverAction>,
+    hover_editor: Option<HoverEditor>,
     /// Mirrors the threading switch, so the "threaded message list" row below
     /// it can grey out when conversations aren't grouped at all.
     threading: bool,
@@ -403,6 +414,9 @@ impl Component for Preferences {
             nautilus_cmd: crate::desktop::platform::nautilus_python_install_command(),
             files: init.files,
             files_rows: None,
+            search_start: init.list_search_start,
+            search_start_row: None,
+            lone_account: init.lone_account,
             spell_langs: None,
             assistant_policy: init.assistant_policy.clone(),
             assistant_status: init.assistant_status.clone(),
@@ -426,6 +440,9 @@ impl Component for Preferences {
             show_accounts: init.show_accounts,
             rail_fold: init.rail_fold,
             swipe_enabled: init.swipe_enabled,
+            hover_actions: init.hover_actions,
+            hover_action_buttons: init.hover_action_buttons.clone(),
+            hover_editor: None,
             threading: init.threading,
             thread_expansion: init.thread_expansion,
             avatars: init.avatars,
@@ -588,6 +605,14 @@ impl Component for Preferences {
             PrefInput::ChangeReaderDefault(idx) => self.on_change_reader_default(idx, sender),
             PrefInput::ChangeReaderZoom(idx) => self.on_change_reader_zoom(idx, sender),
             PrefInput::ToggleSwipeEnabled(on) => self.on_toggle_swipe_enabled(on, sender),
+            PrefInput::ToggleHoverActions(on) => {
+                self.hover_actions = on;
+                self.send_hover_actions(&sender);
+            }
+            PrefInput::HoverDrop { key, shown, index } => {
+                self.on_hover_drop(key, shown, index, sender)
+            }
+            PrefInput::HoverRestore => self.on_hover_restore(sender),
             PrefInput::ChangeComposeDefaultFrom(index) => {
                 self.on_change_compose_default_from(index, sender)
             }
@@ -746,6 +771,13 @@ impl Component for Preferences {
             PrefInput::ChangeListLayout(index) => self.on_change_list_layout(index, sender),
             PrefInput::ChangePreviewLines(index) => self.on_change_preview_lines(index, sender),
             PrefInput::ChangeAppTheme(index) => self.on_change_app_theme(index, sender),
+            PrefInput::ChangeSearchStart(index) => self.on_change_search_start(index, sender),
+            PrefInput::SetLoneAccount(lone) => {
+                if self.lone_account != lone {
+                    self.lone_account = lone;
+                    self.fill_search_start_row();
+                }
+            }
             PrefInput::ChangeTextScale(index) => self.on_change_text_scale(index, sender),
             PrefInput::ChangeSettingsOpen(index) => {
                 let _ = sender.output(PrefOutput::SetSettingsOpenAccounts(index == 1));

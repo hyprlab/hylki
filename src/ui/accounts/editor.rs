@@ -765,7 +765,8 @@ fn show_goa_state(widgets: &AccountsWindowWidgets, acc: &AccountConfig) {
     // enable/disable toggle and a shortcut to Online Accounts instead.
     let is_goa = acc.goa_id.is_some();
     set_connection_editable(widgets, !is_goa);
-    widgets.form.goa_banner.set_visible(is_goa);
+    // A shared mailbox (#701) is not GNOME's to manage or to list again.
+    widgets.form.goa_banner.set_visible(acc.from_goa_list());
     widgets.form.keyring_note.set_visible(!is_goa);
     // GOA accounts get the same Remove flow — it removes the account
     // from Hylki only (back to the import list); GNOME keeps it.

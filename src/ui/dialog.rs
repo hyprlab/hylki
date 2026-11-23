@@ -58,7 +58,7 @@ pub(crate) fn confirm_destructive(
     response: &'static str,
     label: &str,
     on_confirm: impl FnOnce() + 'static,
-) {
+) -> adw::MessageDialog {
     let dialog = message_dialog(parent, Some(heading), Some(body));
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response(response, label);
@@ -74,6 +74,7 @@ pub(crate) fn confirm_destructive(
         }
     });
     dialog.present();
+    dialog
 }
 
 /// A message with only an OK button, over `parent`.

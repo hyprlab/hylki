@@ -15,6 +15,7 @@ pub(in crate::ui::accounts) struct AccountsPage {
     pub(in crate::ui::accounts) accounts_list: gtk::ListBox,
     pub(in crate::ui::accounts) goa_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) local_group: adw::PreferencesGroup,
+    pub(in crate::ui::accounts) shared_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) goa_list: gtk::ListBox,
 }
 
@@ -79,6 +80,23 @@ impl AccountsPage {
                     },
                 },
 
+                // Microsoft 365 shared mailboxes (#701), offered
+                // while there is an account to open one with.
+                #[name = "shared_group"]
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Shared Mailboxes"),
+                    set_description: Some(
+                        i18n("Microsoft 365 mailboxes your organization shares with an account from GNOME Online Accounts.").as_str()
+                    ),
+                    set_visible: false,
+                    #[wrap(Some)]
+                    set_header_suffix = &gtk::Button {
+                        set_label: &i18n("Add…"),
+                        set_valign: gtk::Align::Start,
+                        connect_clicked => AccountsInput::AddSharedMailbox,
+                    },
+                },
+
                 #[name = "goa_group"]
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("GNOME Online Accounts"),
@@ -101,6 +119,7 @@ impl AccountsPage {
             accounts_list,
             goa_group,
             local_group,
+            shared_group,
             goa_list,
         }
     }

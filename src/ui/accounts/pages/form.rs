@@ -1,5 +1,6 @@
 //! The account editor's form: the account and its servers, appearance,
-//! aliases, signatures, syncing, Microsoft 365, folders and OpenPGP.
+//! aliases, signatures, syncing, Microsoft 365, folders, and OpenPGP and
+//! S/MIME (`encryption`).
 //! Filled and read by `form`, wired by `setup`.
 
 use adw::prelude::*;
@@ -8,6 +9,8 @@ use relm4::prelude::*;
 use super::super::form::{REPLY_COPIES_HINT, SENT_COPY_HINT};
 use super::super::{AccountsInput, AccountsWindow};
 use crate::i18n::i18n;
+
+mod encryption;
 
 /// The page, and the widgets on it that the panel reaches later.
 #[derive(Debug)]
@@ -65,6 +68,7 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) signatures_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) syncing_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) openpgp_group: adw::PreferencesGroup,
+    pub(in crate::ui::accounts) smime_group: adw::PreferencesGroup,
     pub(in crate::ui::accounts) sig_choice_row: adw::ComboRow,
     pub(in crate::ui::accounts) sig_name_row: adw::EntryRow,
     pub(in crate::ui::accounts) sig_sender_row: adw::EntryRow,
@@ -101,11 +105,13 @@ pub(in crate::ui::accounts) struct EditorForm {
     pub(in crate::ui::accounts) hide_subject_row: adw::SwitchRow,
     pub(in crate::ui::accounts) autocrypt_row: adw::SwitchRow,
     pub(in crate::ui::accounts) autocrypt_mutual_row: adw::SwitchRow,
+    pub(in crate::ui::accounts) smime_sign_row: adw::SwitchRow,
     pub(in crate::ui::accounts) keyring_note: gtk::Label,
 }
 
 impl EditorForm {
     pub(in crate::ui::accounts) fn build(sender: &ComponentSender<AccountsWindow>) -> Self {
+        let encryption = encryption::Encryption::build();
         relm4::view! {
             page = adw::PreferencesPage {
                 // GNOME Online Accounts owns this account's servers and
@@ -847,47 +853,9 @@ impl EditorForm {
                     },
                 },
 
-                // OpenPGP (#133): which of the user's keys this
-                // account signs and decrypts with.
-                #[name = "openpgp_group"]
-                add = &adw::PreferencesGroup {
-                    set_title: &i18n("OpenPGP"),
-                    set_description: Some(
-                        i18n("Keys are managed under OpenPGP in the sidebar.").as_str()
-                    ),
-                    #[name = "pgp_key_row"]
-                    adw::ComboRow {
-                        set_title: &i18n("Key"),
-                        set_subtitle: &i18n("Automatic uses the key whose address matches."),
-                    },
-                    // For an account whose mail is always signed
-                    // (#267): the composer's toggle starts on,
-                    // and still turns it off for one message.
-                    #[name = "sign_default_row"]
-                    adw::SwitchRow {
-                        set_title: &i18n("Sign messages by default"),
-                    },
-                    // Protected headers (#493): on, an encrypted
-                    // message says "..." where its subject would be.
-                    #[name = "hide_subject_row"]
-                    adw::SwitchRow {
-                        set_title: &i18n("Hide the subject of encrypted mail"),
-                        set_subtitle: &i18n("Only the recipients see the subject. Others see \"...\"."),
-                    },
-                    // Autocrypt Level 1: the key goes out with the mail,
-                    // and keys that come in that way are kept apart from
-                    // the user's keyring.
-                    #[name = "autocrypt_row"]
-                    adw::SwitchRow {
-                        set_title: &i18n("Send your key with your mail"),
-                        set_subtitle: &i18n("Autocrypt. Keys others send this way are kept too."),
-                    },
-                    #[name = "autocrypt_mutual_row"]
-                    adw::SwitchRow {
-                        set_title: &i18n("Encrypt by default"),
-                        set_subtitle: &i18n("Mail to people who ask for the same is encrypted."),
-                    },
-                },
+                // OpenPGP and S/MIME, built in `encryption`.
+                add: &encryption.openpgp_group,
+                add: &encryption.smime_group,
 
                 // For a GOA-imported account this removes it from
                 // Hylki only — it stays in GNOME Online Accounts and
@@ -906,12 +874,6 @@ impl EditorForm {
                 },
             }
         }
-        // A preference for encryption means nothing without the key going
-        // out with the mail.
-        autocrypt_row
-            .bind_property("active", &autocrypt_mutual_row, "sensitive")
-            .sync_create()
-            .build();
         Self {
             page,
             provider_mark,
@@ -965,7 +927,8 @@ impl EditorForm {
             aliases_list,
             signatures_group,
             syncing_group,
-            openpgp_group,
+            openpgp_group: encryption.openpgp_group,
+            smime_group: encryption.smime_group,
             sig_choice_row,
             sig_name_row,
             sig_sender_row,
@@ -997,11 +960,12 @@ impl EditorForm {
             folder_snoozed_row,
             hidden_list,
             hidden_empty,
-            pgp_key_row,
-            sign_default_row,
-            hide_subject_row,
-            autocrypt_row,
-            autocrypt_mutual_row,
+            pgp_key_row: encryption.pgp_key_row,
+            sign_default_row: encryption.sign_default_row,
+            hide_subject_row: encryption.hide_subject_row,
+            autocrypt_row: encryption.autocrypt_row,
+            autocrypt_mutual_row: encryption.autocrypt_mutual_row,
+            smime_sign_row: encryption.smime_sign_row,
             keyring_note,
         }
     }

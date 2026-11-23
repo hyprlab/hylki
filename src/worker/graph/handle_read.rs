@@ -6,7 +6,7 @@ use crate::i18n::{i18n, i18n_f};
 use crate::models::KeywordFinding;
 use crate::worker::graph::chores::{auto_empty_graph, emit_graph_body_hits, graph_preset_color};
 use crate::worker::graph::folders::graph_refresh_unread;
-use crate::worker::graph::http::{graph_get_json, graph_token, GRAPH_BASE};
+use crate::worker::graph::http::{graph_get_json, graph_token};
 use crate::worker::graph::index::{graph_load_folder, graph_sync_folder};
 use crate::worker::graph::ops::graph_fetch_raw;
 use crate::worker::index_queue::IndexQueue;
@@ -25,8 +25,8 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             self.state.folders.get(&path).cloned(),
         ) {
             let url = format!(
-                "{}/me/mailFolders/{gid}?$select=totalItemCount",
-                self.state.base
+                "{}/mailFolders/{gid}?$select=totalItemCount",
+                self.state.mailbox
             );
             match blocking(move || graph_get_json(&token, &url)).await {
                 Ok(v) => {
@@ -51,9 +51,9 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         // from the cache, the only place Hylki has them.
         let mut found: Vec<KeywordFinding> = Vec::new();
         if let Some(token) = graph_token(account, emit).await {
-            let t = token.clone();
+            let (t, mailbox) = (token.clone(), self.state.mailbox.clone());
             let cats = blocking(move || {
-                graph_get_json(&t, &format!("{GRAPH_BASE}/me/outlook/masterCategories"))
+                graph_get_json(&t, &format!("{mailbox}/outlook/masterCategories"))
             })
             .await;
             match cats {

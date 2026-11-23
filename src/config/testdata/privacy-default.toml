@@ -54,6 +54,12 @@ show_attachments = true
 settings_open_accounts = false
 swipe_enabled = true
 swipe_reversed = false
+hover_actions = true
+hover_action_buttons = [
+    "star",
+    "archive",
+    "delete",
+]
 swipe_sensitivity = 3.5
 compose_inline = true
 reply_inline = true

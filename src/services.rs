@@ -9,6 +9,7 @@ pub(crate) mod goa;
 pub(crate) mod grammar;
 pub(crate) mod graph_api;
 pub(crate) mod graph_labels;
+pub(crate) mod graph_shared;
 pub(crate) mod inline_images;
 pub(crate) mod logo;
 pub(crate) mod ms_broker;

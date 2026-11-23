@@ -129,6 +129,20 @@ impl AppModel {
                 }
             }
 
+            PrefOutput::SetHoverActions(on, actions) => {
+                if self.hover_actions != on || self.hover_action_buttons != actions {
+                    self.hover_actions = on;
+                    self.hover_action_buttons = actions.clone();
+                    self.save_settings();
+                    self.message_list
+                        .emit(MessageListInput::SetHoverActions(if on {
+                            actions
+                        } else {
+                            Vec::new()
+                        }));
+                }
+            }
+
             PrefOutput::SetSwipeReversed(on) => {
                 if pref!(self.swipe_reversed = on) {
                     self.message_list

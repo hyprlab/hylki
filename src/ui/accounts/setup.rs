@@ -77,6 +77,7 @@ impl AccountsWindow {
             filter_rules: init.filters,
             filters_list: None,
             local_group: None,
+            shared_group: None,
             filters_query: Default::default(),
             form_save: Default::default(),
             senders_query: Default::default(),
@@ -140,6 +141,7 @@ impl AccountsWindow {
         self.smart_list = Some(widgets.smart.smart_list.clone());
         self.rebuild_smart_rows(sender);
         self.local_group = Some(widgets.accounts.local_group.clone());
+        self.shared_group = Some(widgets.accounts.shared_group.clone());
         let t_list = std::time::Instant::now();
         self.rebuild_account_list(&widgets.accounts.accounts_list, sender);
         tracing::debug!(

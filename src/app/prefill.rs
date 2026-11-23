@@ -483,6 +483,7 @@ mod tests {
             outbox_origin: Some(7),
             sign: false,
             encrypt: true,
+            smime_sign: false,
             send_at: Some(5),
             calendar: None,
             request_receipt: true,

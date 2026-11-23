@@ -2000,6 +2000,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Υπογραφή"
 
+msgid "Read/Unread"
+msgstr "Αναγνωσμένο/Μη αναγνωσμένο"
+
+msgid "Spam"
+msgstr "Ανεπιθύμητα"
+
 msgid "Replied"
 msgstr "Απαντήθηκε"
 
@@ -2059,12 +2065,6 @@ msgstr "Όνομα (Ω έως Α)"
 
 msgid "Full Path"
 msgstr "Πλήρης διαδρομή"
-
-msgid "Spam"
-msgstr "Ανεπιθύμητα"
-
-msgid "Read/Unread"
-msgstr "Αναγνωσμένο/Μη αναγνωσμένο"
 
 msgid "Move To"
 msgstr "Μετακίνηση σε"
@@ -2275,6 +2275,10 @@ msgid ""
 msgstr ""
 "Ο οργανισμός του αποστολέα επισήμανε αυτό το μήνυμα ως «{label}». Το Hylki "
 "εμφανίζει την ετικέτα, αλλά δεν εφαρμόζει τους κανόνες της."
+
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Το gpg δεν υπέγραψε το μήνυμα."
 
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
@@ -2610,6 +2614,23 @@ msgid "Enter the server's address first."
 msgstr "Εισαγάγετε πρώτα τη διεύθυνση του διακομιστή."
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr "Οι λογαριασμοί Microsoft 365 ελέγχονται στο παραπάνω διάστημα."
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2664,6 +2685,10 @@ msgstr "GOA"
 
 msgid "Hylki"
 msgstr "Hylki"
+
+#, fuzzy
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr "Ρύθμιση στους Διαδικτυακούς λογαριασμούς GNOME"
 
 msgid "Imported GNOME Online Account"
 msgstr "Εισηγμένος διαδικτυακός λογαριασμός GNOME"
@@ -3077,6 +3102,18 @@ msgstr ""
 msgid "Add"
 msgstr "Προσθήκη"
 
+#, fuzzy
+msgid "Shared Mailboxes"
+msgstr "Proton Mail"
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr "Διαδικτυακοί λογαριασμοί GNOME"
 
@@ -3233,6 +3270,11 @@ msgstr ""
 "παραμείνουν σε αυτόν τον υπολογιστή, στο {dir}, και θα επανεμφανιστούν αν "
 "προστεθεί ξανά."
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr "Επεξεργασία HTML"
 
@@ -3244,6 +3286,24 @@ msgstr "Ακολούθηση ρυθμίσεων"
 
 msgid "On"
 msgstr "Ενεργό"
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Add Shared Mailbox"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Open with"
+msgstr "τελειώνει με"
+
+#, fuzzy
+msgid "Could Not Add Mailbox"
+msgstr "Δεν ήταν δυνατή η ανάγνωση του αρχείου"
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
 
 msgid "Signature {n}"
 msgstr "Υπογραφή {n}"
@@ -4465,6 +4525,9 @@ msgstr "Κανονική"
 msgid "Low"
 msgstr "Χαμηλή"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Εμφάνιση του μηνύματος όπως θα σταλεί"
 
@@ -4482,6 +4545,9 @@ msgstr "Εισαγωγή πριν από το κείμενο"
 
 msgid "Insert After the Text"
 msgstr "Εισαγωγή μετά το κείμενο"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Εμφάνιση πρωτοτύπου"
@@ -5600,10 +5666,10 @@ msgid "Mark All as Unread"
 msgstr "Σήμανση όλων ως μη αναγνωσμένων"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Όλοι οι φάκελοι (εκτός από Κάδο και Ανεπιθύμητα)"
 
 msgid "Everywhere"
@@ -5613,7 +5679,7 @@ msgid "This folder"
 msgstr "Αυτός ο φάκελος"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Λογαριασμός αλληλογραφίας"
 
 msgid "All folders"
@@ -6540,6 +6606,24 @@ msgstr "Ο έλεγχος διακόπηκε απροσδόκητα."
 msgid "It works: {server} answered."
 msgstr "Λειτουργεί: ο διακομιστής {server} αποκρίθηκε."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Πάντα ορατή · έως {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Αποθέστε ένα κουμπί εδώ για να το αποκρύψετε"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Αποθέστε ένα κουμπί εδώ για να το αποκρύψετε"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Μηνύματα που έχουν ήδη αναγνωστεί"
 
@@ -7175,6 +7259,17 @@ msgstr ""
 "Αυξήστε την τιμή αν οι κινήσεις σάρωσης δεν φτάνουν μέχρι το τέλος. Οι "
 "κινήσεις με το ποντίκι δεν επηρεάζονται."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Ενέργειες"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
+
+msgid "Restore Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
 msgid "Columns"
 msgstr "Στήλες"
 
@@ -7191,9 +7286,6 @@ msgstr "Προσαρμογή στηλών στο πλάτος της λίστα�
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Ανενεργό: μια στενή λίστα μετακινείται οριζόντια."
-
-msgid "Restore Defaults"
-msgstr "Επαναφορά προεπιλογών"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "Το Hylki δεν συλλέγει τηλεμετρία ούτε στέλνει αναλυτικά δεδομένα."
@@ -7955,6 +8047,22 @@ msgstr ""
 "δεν υπάρχει δικό σας κλειδί OpenPGP για τη διεύθυνση {addr}· δημιουργήστε "
 "ένα στις Ρυθμίσεις, OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Δεν ήταν δυνατή η αποθήκευση του προτύπου: {e}"
 
@@ -8031,17 +8139,17 @@ msgid "Could not remove the attachment: {e}"
 msgstr "Δεν ήταν δυνατή η αφαίρεση του συνημμένου: {e}"
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "Το συνημμένο δεν υπάρχει πλέον στο μήνυμα στον διακομιστή"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Εξακολουθεί να μην είναι δυνατή η αποστολή του «{subject}»: {e}"
@@ -8340,6 +8448,47 @@ msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 "Εφαρμογή κάθε κανόνα στην αλληλογραφία που βρίσκεται ήδη στα εισερχόμενά σας"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+"Η διαχείριση των κλειδιών γίνεται στην ενότητα OpenPGP της πλευρικής στήλης."
+
+msgid "Automatic uses the key whose address matches."
+msgstr ""
+"Η Αυτόματη επιλογή χρησιμοποιεί το κλειδί του οποίου η διεύθυνση ταιριάζει."
+
+msgid "Sign messages by default"
+msgstr "Υπογραφή μηνυμάτων από προεπιλογή"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "Ήχος για νέα αλληλογραφία"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "Το κλειδί του αποστολέα εισήχθη από το μήνυμα."
+
 msgid "GNOME Online Account"
 msgstr "Διαδικτυακός λογαριασμός GNOME"
 
@@ -8631,37 +8780,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Δεν υπάρχουν κρυφοί φάκελοι."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr ""
-"Η διαχείριση των κλειδιών γίνεται στην ενότητα OpenPGP της πλευρικής στήλης."
-
-msgid "Automatic uses the key whose address matches."
-msgstr ""
-"Η Αυτόματη επιλογή χρησιμοποιεί το κλειδί του οποίου η διεύθυνση ταιριάζει."
-
-msgid "Sign messages by default"
-msgstr "Υπογραφή μηνυμάτων από προεπιλογή"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Απόκρυψη του θέματος κρυπτογραφημένων μηνυμάτων"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Το θέμα εμφανίζεται μόνο στους παραλήπτες. Οι υπόλοιποι βλέπουν «…»."
-
-#, fuzzy
-msgid "Send your key with your mail"
-msgstr "Ήχος για νέα αλληλογραφία"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-#, fuzzy
-msgid "Encrypt by default"
-msgstr "Ανάπτυξη συζητήσεων από προεπιλογή"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -9480,9 +9598,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Χρόνος λήξης παλέτας ενεργειών"

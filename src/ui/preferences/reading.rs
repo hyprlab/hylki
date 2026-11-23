@@ -1,6 +1,9 @@
 //! Settings → Message List, Conversations and Reading, and Printing.
 
-use super::choices::{fold_messages_at, list_layout_at, read_mark_at, reader_default_at};
+use super::choices::{
+    fold_messages_at, list_layout_at, read_mark_at, reader_default_at, search_start_index,
+    search_starts,
+};
 use super::*;
 
 impl Preferences {
@@ -44,6 +47,40 @@ impl Preferences {
         let layout = list_layout_at(index);
         self.list_single_possible = layout != crate::config::ListLayout::Cards;
         let _ = sender.output(PrefOutput::SetListLayout(layout));
+    }
+
+    /// The "Search starts in" row's choices and selection, as the number of
+    /// accounts has them (#699).
+    pub(super) fn fill_search_start_row(&self) {
+        let Some(row) = &self.search_start_row else {
+            return;
+        };
+        let labels: Vec<String> = search_starts(self.lone_account)
+            .iter()
+            .map(|(l, _)| i18n(l))
+            .collect();
+        let labels: Vec<&str> = labels.iter().map(String::as_str).collect();
+        row.set_model(Some(&gtk::StringList::new(&labels)));
+        row.set_selected(search_start_index(self.search_start, self.lone_account));
+    }
+
+    /// A choice made on the row. Filling the row moves its selection too,
+    /// which is not a choice: an index no longer selected is stale, and one
+    /// that shows the setting as it is changes nothing. So "Everywhere"
+    /// stays stored while it shows as "This account".
+    pub(super) fn on_change_search_start(&mut self, index: u32, sender: ComponentSender<Self>) {
+        let Some(row) = &self.search_start_row else {
+            return;
+        };
+        if row.selected() != index
+            || index == search_start_index(self.search_start, self.lone_account)
+        {
+            return;
+        }
+        if let Some((_, start)) = search_starts(self.lone_account).get(index as usize) {
+            self.search_start = *start;
+            let _ = sender.output(PrefOutput::SetListSearchStart(*start));
+        }
     }
 
     pub(super) fn on_change_preview_lines(&mut self, index: u32, sender: ComponentSender<Self>) {

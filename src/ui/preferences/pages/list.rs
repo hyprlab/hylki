@@ -3,7 +3,6 @@
 
 use adw::prelude::*;
 
-use super::super::choices::SEARCH_STARTS;
 use super::super::{PrefInput, PrefOutput, Preferences, ViewSender};
 use crate::i18n::i18n;
 
@@ -26,6 +25,8 @@ pub(in crate::ui::preferences) struct ListPage {
     pub(in crate::ui::preferences) swipe_enabled_row: adw::SwitchRow,
     pub(in crate::ui::preferences) swipe_reversed_row: adw::SwitchRow,
     pub(in crate::ui::preferences) swipe_sensitivity_row: adw::SpinRow,
+    pub(in crate::ui::preferences) hover_actions_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) hover_editor_box: gtk::Box,
     pub(in crate::ui::preferences) columns_group: adw::PreferencesGroup,
     pub(in crate::ui::preferences) list_headings_row: adw::SwitchRow,
     pub(in crate::ui::preferences) list_fit_row: adw::SwitchRow,
@@ -126,11 +127,7 @@ impl ListPage {
                     adw::ComboRow {
                         set_title: &i18n("Search starts in"),
                         connect_selected_notify[sender] => move |row| {
-                            let start = SEARCH_STARTS
-                                .get(row.selected() as usize)
-                                .map(|(_, s)| *s)
-                                .unwrap_or_default();
-                            let _ = sender.output(PrefOutput::SetListSearchStart(start));
+                            sender.input(PrefInput::ChangeSearchStart(row.selected()));
                         },
                     },
 
@@ -181,6 +178,37 @@ impl ListPage {
                         },
                     },
 
+                },
+
+                // The buttons a row shows on hover: a preview row to
+                // drop chips on and a pool, filled in init.
+                add = &adw::PreferencesGroup {
+                    set_title: &i18n("Hover Actions"),
+
+                    #[name = "hover_actions_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Show actions on hover"),
+                        connect_active_notify[sender] => move |row| {
+                            sender.input(PrefInput::ToggleHoverActions(row.is_active()));
+                        },
+                    },
+
+                    #[name = "hover_editor_box"]
+                    gtk::Box {
+                        set_orientation: gtk::Orientation::Vertical,
+                        set_spacing: 12,
+                        // Clear of the switch's card above.
+                        set_margin_top: 12,
+                        // Kept current by update_view.
+                        set_sensitive: model.hover_actions,
+
+                        gtk::Button {
+                            set_label: &i18n("Restore Defaults"),
+                            set_halign: gtk::Align::End,
+                            set_valign: gtk::Align::Center,
+                            connect_clicked => PrefInput::HoverRestore,
+                        },
+                    },
                 },
 
                 // The single-line list's columns (#334): two
@@ -245,6 +273,8 @@ impl ListPage {
             swipe_enabled_row,
             swipe_reversed_row,
             swipe_sensitivity_row,
+            hover_actions_row,
+            hover_editor_box,
             columns_group,
             list_headings_row,
             list_fit_row,
@@ -259,6 +289,7 @@ impl ListPage {
         self.swipe_reversed_row.set_sensitive(model.swipe_enabled);
         self.swipe_sensitivity_row
             .set_sensitive(model.swipe_enabled);
+        self.hover_editor_box.set_sensitive(model.hover_actions);
         self.columns_group.set_sensitive(model.list_single_possible);
     }
 }

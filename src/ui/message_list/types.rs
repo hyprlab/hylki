@@ -242,8 +242,12 @@ pub(crate) enum MessageListInput {
     /// Change the search scope (all folders vs. the current folder).
     SetScope(SearchScope),
     /// The account an "All folders" search keeps to, `None` for every
-    /// account: the view's own, sent with each view (#649).
-    SetSearchAccount(Option<u32>),
+    /// account: the view's own, sent with each view (#649). `lone`: it is
+    /// the only account Hylki has (#699).
+    SetSearchAccount {
+        account: Option<u32>,
+        lone: bool,
+    },
     /// Replace the cross-folder search pool (all folders, all accounts). Sent by
     /// the app when a search begins; cleared to empty when it ends. The
     /// pool's [`search_text_of`], worked out where the pool was put together,
@@ -426,6 +430,8 @@ pub(crate) enum MessageListInput {
     SetSwipeReversed(bool),
     /// Turn the swipe gesture on or off (#92).
     SetSwipeEnabled(bool),
+    /// The buttons rows show on hover, none to show none.
+    SetHoverActions(Vec<crate::config::HoverAction>),
     /// How far a trackpad two-finger swipe has to travel to fire the action.
     SetSwipeSensitivity(f64),
     /// The list shows Trash or Junk: menus offer "Move to Inbox" (#138).

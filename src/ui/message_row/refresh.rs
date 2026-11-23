@@ -28,6 +28,7 @@ impl Row {
         self.sync_host_classes();
         self.refresh_frame(&data, &look);
         self.refresh_avatar(&data, &look);
+        self.refresh_hover(&data, &look);
         let unread = msg.unread || meta.unread;
         self.refresh_marks(&data, &look, unread);
         if look.single_line {
@@ -475,6 +476,7 @@ impl Row {
         }
         drop(st);
         self.w.host.set_css_classes(&v);
+        self.sync_hover_actions();
     }
 
     /// Rebuild the row's chips when the keywords, the labels or the tags

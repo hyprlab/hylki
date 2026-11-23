@@ -127,6 +127,8 @@ pub(crate) enum ComposeInput {
     },
     /// The Send menu's read receipt check (#520).
     ToggleReceipt(bool),
+    /// The Send menu's S/MIME check (#478).
+    ToggleSmime(bool),
     /// The Send menu's importance, picked (#563).
     SetImportance(crate::models::Importance),
     /// The editor's HTML + plain text came back asynchronously — finish sending.

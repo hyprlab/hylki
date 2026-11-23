@@ -7,9 +7,7 @@ use crate::i18n::i18n_f;
 use crate::models::{Folder, FolderKind};
 use crate::worker::folders::number_folders;
 use crate::worker::graph::chores::emit_graph_body_hits;
-use crate::worker::graph::http::{
-    graph_get_json, graph_paged, graph_send_json, graph_token, GRAPH_BASE,
-};
+use crate::worker::graph::http::{graph_get_json, graph_paged, graph_send_json, graph_token};
 use crate::worker::graph::index::{graph_load_folder, GraphState};
 use crate::worker::{blocking, chip_counts_all, moved_sent, snoozed_counts, WorkerEvent};
 
@@ -33,7 +31,7 @@ pub(super) fn graph_move_folder(
 ) -> Result<(), String> {
     let mut id = gid.to_string();
     if let Some(dest) = destination {
-        let url = format!("{base}/me/mailFolders/{id}/move");
+        let url = format!("{base}/mailFolders/{id}/move");
         let moved = graph_send_json(
             token,
             "POST",
@@ -46,7 +44,7 @@ pub(super) fn graph_move_folder(
         }
     }
     if let Some(name) = name {
-        let url = format!("{base}/me/mailFolders/{id}");
+        let url = format!("{base}/mailFolders/{id}");
         graph_send_json(
             token,
             "PATCH",
@@ -65,6 +63,7 @@ const DEPTH_MAX: u8 = 64;
 /// sorted and id-numbered exactly like the IMAP path's folder list.
 pub(super) fn graph_list_folders(
     token: &str,
+    mailbox: &str,
     account_id: u32,
     assignments: &std::collections::BTreeMap<String, String>,
 ) -> Result<Vec<GraphFolder>, String> {
@@ -79,10 +78,7 @@ pub(super) fn graph_list_folders(
         ("junkemail", FolderKind::Junk),
         ("archive", FolderKind::Archive),
     ] {
-        if let Ok(v) = graph_get_json(
-            token,
-            &format!("{GRAPH_BASE}/me/mailFolders/{wk}?$select=id"),
-        ) {
+        if let Ok(v) = graph_get_json(token, &format!("{mailbox}/mailFolders/{wk}?$select=id")) {
             if let Some(id) = v["id"].as_str() {
                 roles.insert(id.to_string(), kind);
             }
@@ -92,7 +88,7 @@ pub(super) fn graph_list_folders(
     const SELECT: &str = "$select=id,displayName,childFolderCount,unreadItemCount,totalItemCount";
     let roots = graph_paged(
         token,
-        &format!("{GRAPH_BASE}/me/mailFolders?$top=100&{SELECT}"),
+        &format!("{mailbox}/mailFolders?$top=100&{SELECT}"),
         FOLDERS_MAX,
     )?;
 
@@ -134,7 +130,7 @@ pub(super) fn graph_list_folders(
         {
             if let Ok(children) = graph_paged(
                 token,
-                &format!("{GRAPH_BASE}/me/mailFolders/{gid}/childFolders?$top=100&{SELECT}"),
+                &format!("{mailbox}/mailFolders/{gid}/childFolders?$top=100&{SELECT}"),
                 FOLDERS_MAX,
             ) {
                 queue.extend(children.into_iter().map(|c| (c, path.clone(), depth + 1)));
@@ -231,9 +227,10 @@ pub(super) async fn graph_refresh_unread(
     state: &mut GraphState,
     emit: &impl Fn(WorkerEvent),
 ) {
-    let t = token.to_string();
+    let (t, mailbox) = (token.to_string(), state.mailbox.clone());
     let roles = state.roles.clone();
-    let Ok(list) = blocking(move || graph_list_folders(&t, account_id, &roles)).await else {
+    let Ok(list) = blocking(move || graph_list_folders(&t, &mailbox, account_id, &roles)).await
+    else {
         return;
     };
     if list.is_empty() {
@@ -268,9 +265,9 @@ pub(super) async fn refresh_graph_folders(
     state: &mut GraphState,
     emit: &impl Fn(WorkerEvent),
 ) {
-    let t = token.to_string();
+    let (t, mailbox) = (token.to_string(), state.mailbox.clone());
     let roles = state.roles.clone();
-    let r = blocking(move || graph_list_folders(&t, account_id, &roles)).await;
+    let r = blocking(move || graph_list_folders(&t, &mailbox, account_id, &roles)).await;
     match r {
         Ok(mut list) => {
             // Hidden folders (#239) leave here, before the ids settle.
@@ -309,7 +306,7 @@ pub(super) async fn graph_ensure_folder(
     let Some(token) = graph_token(account, emit).await else {
         return;
     };
-    let (t, url) = (token.clone(), format!("{GRAPH_BASE}/me/mailFolders"));
+    let (t, url) = (token.clone(), format!("{}/mailFolders", state.mailbox));
     let body = serde_json::json!({ "displayName": path });
     match blocking(move || graph_send_json(&t, "POST", &url, &body)).await {
         Ok(_) => refresh_graph_folders(&token, account_id, cache, state, emit).await,

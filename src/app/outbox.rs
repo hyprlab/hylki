@@ -173,8 +173,7 @@ impl AppModel {
                     .emit(MessageListInput::SetScope(SearchScope::ThisFolder));
                 self.message_list
                     .emit(MessageListInput::SetColorize(self.accounts.len() > 1));
-                self.message_list
-                    .emit(MessageListInput::SetSearchAccount(None));
+                self.set_search_account(None);
                 self.show_message(None, false);
                 self.push_outbox();
             }

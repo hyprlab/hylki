@@ -7,3 +7,4 @@ mod importance;
 mod pgp_mime;
 pub(super) mod recipients;
 mod report;
+mod smime_mime;

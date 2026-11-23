@@ -8,7 +8,7 @@ use crate::worker::chores::{
     auto_empty_due, auto_empty_roles, graph_before_date, role_folder_path,
 };
 use crate::worker::graph::folders::graph_refresh_unread;
-use crate::worker::graph::http::{graph_delete_req, graph_paged, GRAPH_BASE};
+use crate::worker::graph::http::{graph_delete_req, graph_paged};
 use crate::worker::graph::index::GraphState;
 use crate::worker::graph::messages::GRAPH_FIRST_PAGE;
 use crate::worker::ids::hash_uid;
@@ -72,8 +72,9 @@ pub(super) async fn auto_empty_graph(
             _ => "deleteditems",
         };
         let path = role_folder_path(account, &folders, kind, role);
+        let mailbox = &state.mailbox;
         let url = format!(
-            "{GRAPH_BASE}/me/mailFolders/{well_known}/messages\
+            "{mailbox}/mailFolders/{well_known}/messages\
              ?$filter=receivedDateTime%20le%20{}&$select=id&$top=100",
             graph_before_date(days)
         );
@@ -97,7 +98,7 @@ pub(super) async fn auto_empty_graph(
         let mut deleted = 0usize;
         for gid in ids {
             let t = token.to_string();
-            let url = format!("{GRAPH_BASE}/me/messages/{gid}");
+            let url = format!("{}/messages/{gid}", state.mailbox);
             let ok = blocking(move || graph_delete_req(&t, &url)).await.is_ok();
             if ok {
                 deleted += 1;
@@ -145,8 +146,9 @@ pub(super) async fn emit_graph_body_hits(
     for needle in needles {
         // KQL: the term in quotes; a quote inside it would end the term.
         let term = format!("\"body:{}\"", needle.replace('"', " "));
+        let mailbox = &state.mailbox;
         let url = format!(
-            "{GRAPH_BASE}/me/mailFolders/{gid}/messages?$search={}&$select=id&$top=250",
+            "{mailbox}/mailFolders/{gid}/messages?$search={}&$select=id&$top=250",
             crate::encoding::percent::encode(&term)
         );
         let t = token.to_string();

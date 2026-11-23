@@ -478,7 +478,9 @@ impl SimpleComponent for MessageList {
                 self.on_server_hits(terms, hits, done)
             }
             MessageListInput::SetScope(scope) => self.on_set_scope(scope, &sender),
-            MessageListInput::SetSearchAccount(account) => self.on_set_search_account(account),
+            MessageListInput::SetSearchAccount { account, lone } => {
+                self.on_set_search_account(account, lone)
+            }
             MessageListInput::SetSearchPool(pool, folders, text) => {
                 self.on_set_search_pool(pool, folders, text)
             }
@@ -589,6 +591,12 @@ impl SimpleComponent for MessageList {
             }
             MessageListInput::SetSwipeReversed(on) => self.shared.swipe_reversed.set(on),
             MessageListInput::SetSwipeEnabled(on) => self.on_set_swipe_enabled(on),
+            MessageListInput::SetHoverActions(actions) => {
+                if self.hover_actions != actions {
+                    self.hover_actions = actions;
+                    self.sync_look();
+                }
+            }
             MessageListInput::SetSwipeSensitivity(factor) => {
                 self.shared.swipe_sensitivity.set(factor);
                 self.shared.refresh_all();

@@ -9,6 +9,18 @@
 /// (`graph_labels`), which no other client uses.
 pub(crate) const GRAPH_BASE: &str = "https://graph.microsoft.com/v1.0";
 
+/// Where an account's mail is in Graph, the prefix of every mail request:
+/// the signed-in user's own (`/me`), or a shared mailbox opened with that
+/// user's sign-in (#701), by its address. The address was checked for
+/// characters a path cannot hold when the mailbox was added.
+pub(crate) fn mailbox_root(account: &crate::config::AccountConfig) -> String {
+    if account.shared_mailbox {
+        format!("{GRAPH_BASE}/users/{}", account.email.trim())
+    } else {
+        format!("{GRAPH_BASE}/me")
+    }
+}
+
 /// The `Authorization` header's value for an access token.
 pub(crate) fn bearer(token: &str) -> String {
     format!("Bearer {token}")
@@ -26,6 +38,25 @@ mod tests {
         assert_eq!(
             format!("{GRAPH_BASE}/me?$select=displayName,mail,userPrincipalName"),
             "https://graph.microsoft.com/v1.0/me?$select=displayName,mail,userPrincipalName"
+        );
+    }
+
+    /// A shared mailbox (#701) is reached under its own address, with the
+    /// owner's token; every other account's mail is its own.
+    #[test]
+    fn a_shared_mailbox_is_asked_for_by_its_address() {
+        let mut account = crate::config::AccountConfig {
+            email: "team@example.com".into(),
+            ..crate::config::blank_account()
+        };
+        assert_eq!(
+            mailbox_root(&account),
+            "https://graph.microsoft.com/v1.0/me"
+        );
+        account.shared_mailbox = true;
+        assert_eq!(
+            mailbox_root(&account),
+            "https://graph.microsoft.com/v1.0/users/team@example.com"
         );
     }
 }

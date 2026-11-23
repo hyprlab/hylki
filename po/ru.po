@@ -1983,6 +1983,12 @@ msgstr "завтра"
 msgid "Signature"
 msgstr "Подпись"
 
+msgid "Read/Unread"
+msgstr "Прочитано/Непрочитано"
+
+msgid "Spam"
+msgstr "Спам"
+
 msgid "Replied"
 msgstr "Ответил"
 
@@ -2042,12 +2048,6 @@ msgstr "По имени (Я–А)"
 
 msgid "Full Path"
 msgstr "Полный путь"
-
-msgid "Spam"
-msgstr "Спам"
-
-msgid "Read/Unread"
-msgstr "Прочитано/Непрочитано"
 
 msgid "Move To"
 msgstr "Переместить в"
@@ -2256,6 +2256,10 @@ msgid ""
 msgstr ""
 "Организация отправителя пометила это сообщение как «{label}». Хилки "
 "показывает метку, но не применяет ее правила."
+
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "Программе gpg не удалось подписать сообщение."
 
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Нет данных, подтверждающих или опровергающих отправку с адреса {from}."
@@ -2579,6 +2583,26 @@ msgid "Enter the server's address first."
 msgstr "Сначала введите адрес сервера."
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+"Служба сетевых учётных записей GNOME не смогла предоставить токен входа для "
+"{email}. Откройте «Настройки → Сетевые учётные записи» и выполните вход "
+"повторно."
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr "Учётные записи Microsoft 365 проверяются с интервалом, указанным выше."
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2630,6 +2654,10 @@ msgstr "GOA"
 
 msgid "Hylki"
 msgstr "Hylki"
+
+#, fuzzy
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr "Настроено в «Сетевых учётных записях GNOME»"
 
 msgid "Imported GNOME Online Account"
 msgstr "Импортировано из «Сетевых учётных записей GNOME»"
@@ -3043,6 +3071,18 @@ msgstr ""
 msgid "Add"
 msgstr "Добавить"
 
+#, fuzzy
+msgid "Shared Mailboxes"
+msgstr "Хранимая почта"
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr "Сетевые учётные записи GNOME"
 
@@ -3192,6 +3232,11 @@ msgstr ""
 "Удалить пользователя {name} из Хюльки? Его папки и почта в них остаются на "
 "этом компьютере в {dir} и возвращаются, если его добавляют снова."
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr "Редактировать HTML"
 
@@ -3203,6 +3248,24 @@ msgstr "Из системных настроек"
 
 msgid "On"
 msgstr "Вкл."
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Add Shared Mailbox"
+msgstr "Хранимая почта"
+
+#, fuzzy
+msgid "Open with"
+msgstr "заканчивается на"
+
+#, fuzzy
+msgid "Could Not Add Mailbox"
+msgstr "Не удалось прочитать файл"
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
 
 msgid "Signature {n}"
 msgstr "Подпись {n}"
@@ -4422,6 +4485,9 @@ msgstr "Обычный"
 msgid "Low"
 msgstr "Низкая"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Показать сообщение в том виде, в котором оно будет отправлено"
 
@@ -4439,6 +4505,9 @@ msgstr "Вставить перед текстом"
 
 msgid "Insert After the Text"
 msgstr "Вставить после текста"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Показать оригинал"
@@ -5549,10 +5618,10 @@ msgstr "Отметить все как прочитанные"
 msgid "Mark All as Unread"
 msgstr "Отметить все как непрочитанные"
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Эта учётная запись (кроме «Корзины» и «Спама»)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Все папки (кроме корзины и нежелательной почты)"
 
 msgid "Everywhere"
@@ -5561,7 +5630,7 @@ msgstr "Везде"
 msgid "This folder"
 msgstr "Эта папка"
 
-msgid "This Account"
+msgid "This account"
 msgstr "Эта учётная запись"
 
 msgid "All folders"
@@ -6482,6 +6551,24 @@ msgstr "Проверка неожиданно остановилась."
 msgid "It works: {server} answered."
 msgstr "Это работает: {server} ответил."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Отображаются всегда · до {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Перетащите кнопку сюда, чтобы скрыть её"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Перетащите кнопку сюда, чтобы скрыть её"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Уже прочитанные сообщения"
 
@@ -7107,6 +7194,17 @@ msgstr ""
 "Поднимите его, если смахивание прекращается. Перетаскивание мышью не "
 "затрагивается."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Действия"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Открывать палитру действий при наведении"
+
+msgid "Restore Defaults"
+msgstr "Восстановить по умолчанию"
+
 msgid "Columns"
 msgstr "Столбцы"
 
@@ -7123,9 +7221,6 @@ msgstr "Подогнать столбцы к списку"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Выкл., узкий список прокручивается вбок."
-
-msgid "Restore Defaults"
-msgstr "Восстановить по умолчанию"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "Hylki не собирает телеметрию и не отправляет аналитику."
@@ -7874,6 +7969,22 @@ msgstr ""
 "отсутствует собственный ключ OpenPGP для {addr}; создайте его в разделе "
 "Параметры → OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Не удалось сохранить шаблон: {e}"
 
@@ -7950,14 +8061,6 @@ msgid "Could not remove the attachment: {e}"
 msgstr "Не удалось удалить вложение: {e}"
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-"Служба сетевых учётных записей GNOME не смогла предоставить токен входа для "
-"{email}. Откройте «Настройки → Сетевые учётные записи» и выполните вход "
-"повторно."
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
@@ -7966,6 +8069,11 @@ msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "Вложение больше не содержится в сообщении на сервере"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Всё ещё не удаётся отправить «{subject}»: {e}"
@@ -8259,6 +8367,44 @@ msgstr "Добавить фильтр…"
 msgid "Run every rule over the mail already in your inboxes"
 msgstr "Применить все правила к почте, уже находящейся в папках «Входящие»"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Ключи управляются в OpenPGP на боковой панели."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "В автоматическом режиме используется ключ с совпадающим адресом."
+
+msgid "Sign messages by default"
+msgstr "Подписывать сообщения по умолчанию"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Скрыть тему зашифрованного письма"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Тему видят только получатели. Другие видят «...»."
+
+msgid "Send your key with your mail"
+msgstr "Отправлять ваш ключ вместе с письмами"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+"Autocrypt. Ключи, отправленные таким способом другими, также сохраняются."
+
+msgid "Encrypt by default"
+msgstr "Шифровать по умолчанию"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr "Письма получателям с аналогичной настройкой будут шифроваться."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "Ключ отправителя получен из сообщения."
+
 msgid "GNOME Online Account"
 msgstr "Сетевая учётная запись GNOME"
 
@@ -8543,34 +8689,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Скрытых папок нет."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Ключи управляются в OpenPGP на боковой панели."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "В автоматическом режиме используется ключ с совпадающим адресом."
-
-msgid "Sign messages by default"
-msgstr "Подписывать сообщения по умолчанию"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Скрыть тему зашифрованного письма"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Тему видят только получатели. Другие видят «...»."
-
-msgid "Send your key with your mail"
-msgstr "Отправлять ваш ключ вместе с письмами"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-"Autocrypt. Ключи, отправленные таким способом другими, также сохраняются."
-
-msgid "Encrypt by default"
-msgstr "Шифровать по умолчанию"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr "Письма получателям с аналогичной настройкой будут шифроваться."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -9359,9 +9477,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Вложения в каждом сообщении"
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Открывать палитру действий при наведении"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Задержка палитры действий"

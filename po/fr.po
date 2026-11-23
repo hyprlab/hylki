@@ -1966,6 +1966,12 @@ msgstr "demain"
 msgid "Signature"
 msgstr "Signature"
 
+msgid "Read/Unread"
+msgstr "Lu/Non lu"
+
+msgid "Spam"
+msgstr "Spam"
+
 msgid "Replied"
 msgstr "Répondu"
 
@@ -2025,12 +2031,6 @@ msgstr "Nom (Z à A)"
 
 msgid "Full Path"
 msgstr "Chemin complet"
-
-msgid "Spam"
-msgstr "Spam"
-
-msgid "Read/Unread"
-msgstr "Lu/Non lu"
 
 msgid "Move To"
 msgstr "Déplacer vers"
@@ -2244,6 +2244,10 @@ msgid ""
 msgstr ""
 "L’organisation de l’expéditeur a étiqueté ce message « {label} ». Hylki "
 "affiche l’étiquette mais n’applique pas ses règles."
+
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "gpg n’a pas signé le message."
 
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr ""
@@ -2578,6 +2582,25 @@ msgid "Enter the server's address first."
 msgstr "Indiquez d’abord l’adresse du serveur."
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+"Les Comptes en ligne de GNOME n’ont pas pu fournir de jeton de connexion "
+"pour {email}. Ouvrez Paramètres → Comptes en ligne et reconnectez-vous."
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr "Les comptes Microsoft 365 vérifient à l’intervalle indiqué ci-dessus."
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2631,6 +2654,10 @@ msgstr "GOA"
 
 msgid "Hylki"
 msgstr "Hylki"
+
+#, fuzzy
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr "Configuré dans Comptes en ligne de GNOME"
 
 msgid "Imported GNOME Online Account"
 msgstr "Compte en ligne de GNOME importé"
@@ -3049,6 +3076,18 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
+#, fuzzy
+msgid "Shared Mailboxes"
+msgstr "Messages stockés"
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr "Comptes en ligne de GNOME"
 
@@ -3204,6 +3243,11 @@ msgstr ""
 "restent sur cet ordinateur, dans {dir}, et reviennent si vous l’ajoutez de "
 "nouveau."
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr "Modifier le HTML"
 
@@ -3215,6 +3259,24 @@ msgstr "Suivre les paramètres"
 
 msgid "On"
 msgstr "Activé"
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Add Shared Mailbox"
+msgstr "Messages stockés"
+
+#, fuzzy
+msgid "Open with"
+msgstr "se termine par"
+
+#, fuzzy
+msgid "Could Not Add Mailbox"
+msgstr "Impossible de lire le fichier"
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
 
 msgid "Signature {n}"
 msgstr "Signature {n}"
@@ -4443,6 +4505,9 @@ msgstr "Normal"
 msgid "Low"
 msgstr "Basse"
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Afficher le message tel qu’il sera envoyé"
 
@@ -4460,6 +4525,9 @@ msgstr "Insérer avant le texte"
 
 msgid "Insert After the Text"
 msgstr "Insérer après le texte"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Afficher l’original"
@@ -5563,10 +5631,10 @@ msgstr "Tout marquer comme lu"
 msgid "Mark All as Unread"
 msgstr "Tout marquer comme non lu"
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Ce compte (sauf Corbeille et Indésirables)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Tous les dossiers (sauf corbeille et indésirables)"
 
 msgid "Everywhere"
@@ -5575,7 +5643,7 @@ msgstr "Partout"
 msgid "This folder"
 msgstr "Ce dossier"
 
-msgid "This Account"
+msgid "This account"
 msgstr "Ce compte"
 
 msgid "All folders"
@@ -6495,6 +6563,24 @@ msgstr "La vérification s’est arrêtée de manière inattendue."
 msgid "It works: {server} answered."
 msgstr "Ça fonctionne : {server} a répondu."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Toujours affiché · jusqu’à {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Déposez un bouton ici pour le masquer"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Déposez un bouton ici pour le masquer"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Messages déjà lus"
 
@@ -7124,6 +7210,17 @@ msgstr ""
 "Augmentez-la si les balayages s’arrêtent trop tôt. Les glissements à la "
 "souris ne sont pas affectés."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Actions"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Ouvrir la palette d’actions au survol"
+
+msgid "Restore Defaults"
+msgstr "Restaurer les paramètres par défaut"
+
 msgid "Columns"
 msgstr "Colonnes"
 
@@ -7140,9 +7237,6 @@ msgstr "Adapter les colonnes à la liste"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Désactivé, une liste étroite défile horizontalement."
-
-msgid "Restore Defaults"
-msgstr "Restaurer les paramètres par défaut"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr ""
@@ -7890,6 +7984,22 @@ msgstr ""
 "vous ne disposez pas encore de clé OpenPGP pour {addr} ; générez-en une dans "
 "« Paramètres », « OpenPGP »"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "Impossible d’enregistrer le modèle : {e}"
 
@@ -7966,13 +8076,6 @@ msgid "Could not remove the attachment: {e}"
 msgstr "Impossible de supprimer la pièce jointe : {e}"
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-"Les Comptes en ligne de GNOME n’ont pas pu fournir de jeton de connexion "
-"pour {email}. Ouvrez Paramètres → Comptes en ligne et reconnectez-vous."
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
@@ -7981,6 +8084,11 @@ msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "La pièce jointe ne se trouve plus dans le message sur le serveur"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Impossible d’envoyer « {subject} » : {e}"
@@ -8276,6 +8384,45 @@ msgstr ""
 "Exécutez toutes les règles sur le courrier déjà présent dans vos boîtes de "
 "réception"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Les clés se gèrent sous OpenPGP dans la barre latérale."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "La fonction « Automatique » utilise la clé dont l’adresse correspond."
+
+msgid "Sign messages by default"
+msgstr "Signer les messages par défaut"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Masquer l’objet des e-mails chiffrés"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Seuls les destinataires voient l’objet. Les autres voient « ... »."
+
+msgid "Send your key with your mail"
+msgstr "Envoyer votre clé avec vos messages"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+"Autocrypt. Les clés envoyées par d’autres de cette façon sont aussi "
+"conservées."
+
+msgid "Encrypt by default"
+msgstr "Chiffrer par défaut"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr "Les messages aux personnes qui demandent la même chose sont chiffrés."
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "La clé de l’expéditeur a été importée à partir du message."
+
 msgid "GNOME Online Account"
 msgstr "Compte en ligne de GNOME"
 
@@ -8566,35 +8713,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "Aucun dossier masqué."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Les clés se gèrent sous OpenPGP dans la barre latérale."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "La fonction « Automatique » utilise la clé dont l’adresse correspond."
-
-msgid "Sign messages by default"
-msgstr "Signer les messages par défaut"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Masquer l’objet des e-mails chiffrés"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Seuls les destinataires voient l’objet. Les autres voient « ... »."
-
-msgid "Send your key with your mail"
-msgstr "Envoyer votre clé avec vos messages"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-"Autocrypt. Les clés envoyées par d’autres de cette façon sont aussi "
-"conservées."
-
-msgid "Encrypt by default"
-msgstr "Chiffrer par défaut"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr "Les messages aux personnes qui demandent la même chose sont chiffrés."
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -9290,9 +9408,6 @@ msgstr "Hyprlab"
 #~ "Apparaîtra dans le menu « De » de la fenêtre de rédaction. Les réponses "
 #~ "aux messages envoyés à cette adresse seront expédiées depuis celle-ci."
 
-#~ msgid "The sender's key was imported from the message."
-#~ msgstr "La clé de l’expéditeur a été importée à partir du message."
-
 #~ msgid "Extra names and addresses this account can send as."
 #~ msgstr ""
 #~ "Noms et adresses supplémentaires sous lesquels ce compte peut envoyer des "
@@ -9380,9 +9495,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "La ligne ⋯ sous chaque message."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Ouvrir la palette d’actions au survol"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Délai d’expiration de la palette d’actions"

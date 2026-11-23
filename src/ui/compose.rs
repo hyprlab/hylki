@@ -28,6 +28,7 @@ mod send_menu;
 mod setup;
 mod showcase;
 mod signature;
+mod smime;
 mod subject;
 mod suggest;
 mod template;
@@ -607,6 +608,9 @@ impl Component for Compose {
             preview_content,
             encrypt: false,
             request_receipt,
+            smime: false,
+            smime_touched: false,
+            smime_check: send_menu::smime_check(&sender),
             importance,
             pgp_checking: false,
             pgp_cleared: None,
@@ -632,7 +636,7 @@ impl Component for Compose {
             .get(selected)
             .map(|a| a.id)
             .unwrap_or_default();
-        let send_menu = send_menu::send_menu(&sender, model.request_receipt, model.importance);
+        let send_menu = send_menu::send_menu(&sender, &model);
         let widgets = view_output!();
         if prefill_encrypt && crate::mail::pgp::available() {
             // Through the buttons, so the toggles and the model agree.
@@ -644,6 +648,7 @@ impl Component for Compose {
             model.sign_expected = Some(true);
             widgets.sign_btn.set_active(true);
         }
+        model.follow_account_smime(&widgets);
         widgets.editor_holder.append(&model.editor.widget);
         if prefill.assistant {
             let banner = assistant::banner(&prefill, &model.own_domains);
@@ -907,7 +912,7 @@ impl Component for Compose {
                     self.completion.popdown();
                 }
 
-                ComposeInput::ToggleSign(on) => self.on_toggle_sign(on),
+                ComposeInput::ToggleSign(on) => self.on_toggle_sign(on, widgets),
 
                 ComposeInput::FormatMenu => self.on_format_menu(&sender),
 
@@ -963,14 +968,9 @@ impl Component for Compose {
                     badges,
                     statuses,
                 } => self.on_keys_found(generation, badges, statuses, widgets),
-                ComposeInput::ToggleReceipt(on) => {
-                    self.request_receipt = on;
-                    self.fields_dirty = true;
-                }
-                ComposeInput::SetImportance(importance) => {
-                    self.importance = importance;
-                    self.fields_dirty = true;
-                }
+                ComposeInput::ToggleReceipt(on) => self.on_toggle_receipt(on),
+                ComposeInput::ToggleSmime(on) => self.on_toggle_smime(on, widgets),
+                ComposeInput::SetImportance(importance) => self.on_set_importance(importance),
                 ComposeInput::PgpChecked { checked, result } => {
                     self.on_pgp_checked(checked, result, widgets, &sender)
                 }

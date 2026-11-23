@@ -213,8 +213,7 @@ impl AppModel {
         self.message_list
             .emit(MessageListInput::SetColorize(account.is_none()));
         // An "All folders" search keeps to the account a view is narrowed to.
-        self.message_list
-            .emit(MessageListInput::SetSearchAccount(account));
+        self.set_search_account(account);
         // Unified Trash and Junk offer the way back as each account's own
         // folder does (#369); the move and Not Spam go per message.
         let restorable = matches!(
@@ -388,8 +387,7 @@ impl AppModel {
                 true,
             )));
         self.message_list.emit(MessageListInput::SetColorize(false));
-        self.message_list
-            .emit(MessageListInput::SetSearchAccount(Some(account_id)));
+        self.set_search_account(Some(account_id));
         // Trash and Junk offer the way back to the Inbox (#138); Junk's is
         // "Not Spam" (#168).
         let kind = self.folder_kind(account_id, folder_id);

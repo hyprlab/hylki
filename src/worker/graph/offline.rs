@@ -57,7 +57,7 @@ pub(super) async fn keep_next(
     };
     let (token, url) = (
         token.to_string(),
-        format!("{}/me/messages/{gid}/$value", state.base),
+        format!("{}/messages/{gid}/$value", state.mailbox),
     );
     match blocking(move || graph_get_bytes(&token, &url)).await {
         Ok(raw) => {

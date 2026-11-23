@@ -11,15 +11,39 @@ pub(super) const TRAY_ICONS: &[(&str, TrayIcon)] = &[
 
 /// Where a search starts (#699), in the order the row lists them. The names
 /// are the scope picker's own.
-pub(super) const SEARCH_STARTS: &[(&str, SearchStart)] = &[
+const SEARCH_STARTS: &[(&str, SearchStart)] = &[
     (i18n_noop("This folder"), SearchStart::ThisFolder),
     (
-        i18n_noop("This Account (Except Trash & Junk)"),
+        i18n_noop("This account (except Trash and Junk)"),
         SearchStart::AllFolders,
     ),
-    (i18n_noop("This Account"), SearchStart::Account),
+    (i18n_noop("This account"), SearchStart::Account),
     (i18n_noop("Everywhere"), SearchStart::Everywhere),
 ];
+
+/// The "Search starts in" choices. `lone`: Hylki has one account only,
+/// where "Everywhere" searches what "This account" does and is left out.
+pub(super) fn search_starts(lone: bool) -> Vec<(&'static str, SearchStart)> {
+    SEARCH_STARTS
+        .iter()
+        .copied()
+        .filter(|(_, s)| !(lone && *s == SearchStart::Everywhere))
+        .collect()
+}
+
+/// The row's index for `start`, "Everywhere" showing as "This account" when
+/// it is not offered.
+pub(super) fn search_start_index(start: SearchStart, lone: bool) -> u32 {
+    let shown = if lone && start == SearchStart::Everywhere {
+        SearchStart::Account
+    } else {
+        start
+    };
+    search_starts(lone)
+        .iter()
+        .position(|(_, s)| *s == shown)
+        .unwrap_or(0) as u32
+}
 
 /// The launcher badge's choices (#431), in the order the row lists them.
 pub(super) const LAUNCHER_BADGES: &[(&str, LauncherBadge)] = &[
@@ -449,6 +473,20 @@ mod tests {
     use super::super::system::link_group_description;
     use super::*;
     use crate::config::SectionPlacement;
+
+    #[test]
+    fn one_account_leaves_everywhere_off_the_search_start_row() {
+        use SearchStart::*;
+        let kinds =
+            |lone| -> Vec<SearchStart> { search_starts(lone).iter().map(|(_, s)| *s).collect() };
+        assert_eq!(kinds(false), [ThisFolder, AllFolders, Account, Everywhere]);
+        assert_eq!(kinds(true), [ThisFolder, AllFolders, Account]);
+        assert_eq!(search_start_index(Everywhere, false), 3);
+        // Stored "Everywhere" shows as "This account".
+        assert_eq!(search_start_index(Everywhere, true), 2);
+        assert_eq!(search_start_index(Account, true), 2);
+        assert_eq!(search_start_index(ThisFolder, true), 0);
+    }
 
     #[test]
     fn language_choices_start_with_system_and_english_then_linguas() {

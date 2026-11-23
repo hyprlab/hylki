@@ -130,6 +130,13 @@ impl AccountConfig {
     pub(crate) fn is_local(&self) -> bool {
         self.protocol == Protocol::Local
     }
+
+    /// Whether this account is one of GNOME Online Accounts' own, which
+    /// switching off returns to the import list: a shared mailbox (#701)
+    /// borrows one's sign-in but is not in that list.
+    pub(crate) fn from_goa_list(&self) -> bool {
+        self.goa_id.is_some() && !self.shared_mailbox
+    }
 }
 
 /// How an account's servers are secured, as GNOME Online Accounts records
@@ -367,6 +374,11 @@ pub(crate) struct AccountConfig {
     /// for one message.
     #[serde(default, skip_serializing_if = "is_false")]
     pub(crate) sign_by_default: bool,
+    /// Every message this account sends is signed with S/MIME (#478),
+    /// through gpgsm and the certificate for the From address. A message
+    /// signed or encrypted with OpenPGP goes out that way instead.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) smime_sign: bool,
     /// Encrypted mail from this account keeps its subject outside, where
     /// anyone who handles the message can read it, rather than inside with
     /// "..." outside (#493). Off by default, as in Thunderbird. Kept the
@@ -400,6 +412,12 @@ pub(crate) struct AccountConfig {
     /// signed in within Hylki, with its scope asked for when turned on.
     #[serde(default, skip_serializing_if = "is_false")]
     pub(crate) graph_label_names: bool,
+    /// A Microsoft 365 shared mailbox (#701), `email` its address, opened
+    /// with the sign-in of the GNOME Online Account in `goa_id`: its token
+    /// may read and send from mailboxes the organization shared with that
+    /// user. It is not in GNOME's own list, so turning it off pauses it.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub(crate) shared_mailbox: bool,
 }
 
 /// One of an account's signatures (#445), named so the composer can offer
@@ -706,12 +724,14 @@ pub(crate) fn blank_account() -> AccountConfig {
         in_unified: true,
         folder_sort: None,
         sign_by_default: false,
+        smime_sign: false,
         plain_subject: false,
         autocrypt: false,
         autocrypt_mutual: false,
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
+        shared_mailbox: false,
     }
 }
 

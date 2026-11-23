@@ -96,6 +96,9 @@ impl AccountsWindow {
         if let Some(group) = &self.local_group {
             group.set_visible(!self.accounts.iter().any(AccountConfig::is_local));
         }
+        if let Some(group) = &self.shared_group {
+            group.set_visible(!super::shared::owners(&self.accounts).is_empty());
+        }
     }
 
     /// Un-import a GNOME Online Account: drop it from Hylki (the app removes
@@ -208,8 +211,9 @@ impl AccountsWindow {
         // un-imported: it drops out of Hylki (the config entry and its
         // stored copies go) and returns to the "GNOME Online Accounts"
         // list below, ready to import again. The account itself stays
-        // in GNOME untouched.
-        if !enabled && self.accounts.get(index).is_some_and(|a| a.goa_id.is_some()) {
+        // in GNOME untouched. A shared mailbox (#701) is not in GNOME's
+        // list to come back to, so it only pauses.
+        if !enabled && self.accounts.get(index).is_some_and(AccountConfig::from_goa_list) {
             self.unimport_goa(index, widgets, &sender);
             return;
         }
@@ -383,7 +387,10 @@ fn source_badge(acc: &AccountConfig) -> gtk::Label {
     ));
     badge.set_valign(gtk::Align::Center);
     badge.add_css_class("account-source-badge");
-    if from_goa {
+    if acc.shared_mailbox {
+        badge.add_css_class("goa");
+        badge.set_tooltip_text(Some(i18n("Shared mailbox, opened with a GNOME Online Account").as_str()));
+    } else if from_goa {
         badge.add_css_class("goa");
         badge.set_tooltip_text(Some(i18n("Imported GNOME Online Account").as_str()));
     } else {

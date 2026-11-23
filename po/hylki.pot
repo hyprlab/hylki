@@ -1828,6 +1828,12 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
+msgid "Read/Unread"
+msgstr ""
+
+msgid "Spam"
+msgstr ""
+
 msgid "Replied"
 msgstr ""
 
@@ -1886,12 +1892,6 @@ msgid "Name (Z to A)"
 msgstr ""
 
 msgid "Full Path"
-msgstr ""
-
-msgid "Spam"
-msgstr ""
-
-msgid "Read/Unread"
 msgstr ""
 
 msgid "Move To"
@@ -2083,6 +2083,9 @@ msgstr ""
 msgid ""
 "The sender's organization labeled this message “{label}”. Hylki shows the "
 "label but does not apply its rules."
+msgstr ""
+
+msgid "gpgsm did not sign the message."
 msgstr ""
 
 msgid "Nothing here proves this came from {from} — or that it didn't."
@@ -2394,6 +2397,22 @@ msgid "Enter the server's address first."
 msgstr ""
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr ""
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2441,6 +2460,9 @@ msgid "GOA"
 msgstr ""
 
 msgid "Hylki"
+msgstr ""
+
+msgid "Shared mailbox, opened with a GNOME Online Account"
 msgstr ""
 
 msgid "Imported GNOME Online Account"
@@ -2823,6 +2845,17 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+msgid "Shared Mailboxes"
+msgstr ""
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr ""
 
@@ -2960,6 +2993,11 @@ msgid ""
 "computer, in {dir}, and come back if it is added again."
 msgstr ""
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr ""
 
@@ -2970,6 +3008,21 @@ msgid "Follow Settings"
 msgstr ""
 
 msgid "On"
+msgstr ""
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+msgid "Add Shared Mailbox"
+msgstr ""
+
+msgid "Open with"
+msgstr ""
+
+msgid "Could Not Add Mailbox"
+msgstr ""
+
+msgid "{address} is already in Mail Accounts."
 msgstr ""
 
 msgid "Signature {n}"
@@ -4056,6 +4109,9 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr ""
 
@@ -4072,6 +4128,9 @@ msgid "Insert Before the Text"
 msgstr ""
 
 msgid "Insert After the Text"
+msgstr ""
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
 
 msgid "Show Original"
@@ -5069,10 +5128,10 @@ msgstr ""
 msgid "Mark All as Unread"
 msgstr ""
 
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr ""
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr ""
 
 msgid "Everywhere"
@@ -5081,7 +5140,7 @@ msgstr ""
 msgid "This folder"
 msgstr ""
 
-msgid "This Account"
+msgid "This account"
 msgstr ""
 
 msgid "All folders"
@@ -5946,6 +6005,21 @@ msgstr ""
 msgid "It works: {server} answered."
 msgstr ""
 
+msgid "Drop actions on the row · up to {n}"
+msgstr ""
+
+msgid "Drop actions here"
+msgstr ""
+
+msgid "Drop an action here to hide it"
+msgstr ""
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr ""
 
@@ -6541,6 +6615,15 @@ msgstr ""
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 
+msgid "Hover Actions"
+msgstr ""
+
+msgid "Show actions on hover"
+msgstr ""
+
+msgid "Restore Defaults"
+msgstr ""
+
 msgid "Columns"
 msgstr ""
 
@@ -6553,9 +6636,6 @@ msgid "Fit columns to the list"
 msgstr ""
 
 msgid "Off, a narrow list scrolls sideways."
-msgstr ""
-
-msgid "Restore Defaults"
 msgstr ""
 
 msgid "Hylki collects no telemetry and sends no analytics."
@@ -7256,6 +7336,22 @@ msgid ""
 "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
 msgstr ""
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr ""
 
@@ -7332,16 +7428,16 @@ msgid "Could not remove the attachment: {e}"
 msgstr ""
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
+msgstr ""
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
 msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
@@ -7605,6 +7701,42 @@ msgstr ""
 msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr ""
+
+msgid "Automatic uses the key whose address matches."
+msgstr ""
+
+msgid "Sign messages by default"
+msgstr ""
+
+msgid "Hide the subject of encrypted mail"
+msgstr ""
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr ""
+
+msgid "Send your key with your mail"
+msgstr ""
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+msgid "Encrypt by default"
+msgstr ""
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+msgid "The Send menu turns it off for one message."
+msgstr ""
+
 msgid "GNOME Online Account"
 msgstr ""
 
@@ -7864,33 +7996,6 @@ msgid ""
 msgstr ""
 
 msgid "No hidden folders."
-msgstr ""
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr ""
-
-msgid "Automatic uses the key whose address matches."
-msgstr ""
-
-msgid "Sign messages by default"
-msgstr ""
-
-msgid "Hide the subject of encrypted mail"
-msgstr ""
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr ""
-
-msgid "Send your key with your mail"
-msgstr ""
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-msgid "Encrypt by default"
-msgstr ""
-
-msgid "Mail to people who ask for the same is encrypted."
 msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."

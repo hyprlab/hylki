@@ -19,6 +19,7 @@ mod build;
 mod faces;
 mod fold;
 mod headings;
+mod hover;
 mod model;
 mod refresh;
 mod row;

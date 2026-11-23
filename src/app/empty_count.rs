@@ -1,6 +1,7 @@
 //! Empty Trash / Empty Junk ask first, and say how much will go (#676): the
-//! servers are asked for each folder's count before the question opens, and
-//! a server that is slow to answer only costs the number, not the question.
+//! servers are asked for each folder's count before the question opens. A
+//! busy account answers late (the request queues behind its sync), so the
+//! question opens without the number and takes it in when it arrives.
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -13,9 +14,11 @@ use crate::worker::MailRequest;
 use super::model::AppModel;
 use super::msg::AppMsg;
 
-/// How long the question waits for the counts. Long enough for a server
-/// round trip, short enough that the menu still feels like it answered.
-const COUNT_WAIT_MS: u64 = 1500;
+/// How long the question waits for the counts before it opens without
+/// them. Long enough for an idle server's round trip, so the number is
+/// usually there from the start, short enough that the menu still feels like
+/// it answered.
+const COUNT_WAIT_MS: u64 = 800;
 
 /// One folder an empty would erase.
 pub(super) struct EmptyTarget {
@@ -36,11 +39,28 @@ pub(super) struct EmptyAsk {
     /// The unified row's kind, when the question covers every account.
     every: Option<FolderKind>,
     targets: Vec<EmptyTarget>,
+    /// The question once it is open, so a late count can still reach it.
+    #[allow(deprecated)] // adw::MessageDialog, see ui::dialog
+    open: Option<gtk::glib::WeakRef<adw::MessageDialog>>,
 }
 
 impl EmptyAsk {
     fn answered(&self) -> bool {
         self.targets.iter().all(|t| t.count.is_some())
+    }
+
+    /// The question's heading and body with the counts known so far.
+    fn text(&self) -> (String, String) {
+        match self.every {
+            None => {
+                let t = &self.targets[0];
+                (
+                    i18n_f("Empty “{name}”?", &[("name", &t.name)]),
+                    one_folder_body(t.count.flatten()),
+                )
+            }
+            Some(kind) => every_account_text(kind, &self.targets),
+        }
     }
 }
 
@@ -119,6 +139,7 @@ impl AppModel {
             gen,
             every,
             targets,
+            open: None,
         });
         if self.empty_ask.as_ref().is_some_and(EmptyAsk::answered) {
             self.show_empty_ask(sender);
@@ -132,6 +153,7 @@ impl AppModel {
     }
 
     /// The messages the router sends here (see `AppModel::route`).
+    #[allow(deprecated)] // adw::MessageDialog, see ui::dialog
     pub(super) fn on_empty_count(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
         match msg {
             AppMsg::FolderCounted {
@@ -142,19 +164,35 @@ impl AppModel {
                 let Some(ask) = self.empty_ask.as_mut() else {
                     return;
                 };
-                if let Some(t) = ask
+                let Some(t) = ask
                     .targets
                     .iter_mut()
                     .find(|t| t.account_id == account_id && t.path == path && t.count.is_none())
-                {
-                    t.count = Some(count);
-                }
-                if ask.answered() {
-                    self.show_empty_ask(&sender);
+                else {
+                    return;
+                };
+                t.count = Some(count);
+                match &ask.open {
+                    // Already asking: give the question the number.
+                    Some(open) => match open.upgrade().filter(|d| d.is_visible()) {
+                        Some(dialog) => {
+                            dialog.set_body(&ask.text().1);
+                            if ask.answered() {
+                                self.empty_ask = None;
+                            }
+                        }
+                        None => self.empty_ask = None,
+                    },
+                    None if ask.answered() => self.show_empty_ask(&sender),
+                    None => {}
                 }
             }
             AppMsg::EmptyCountWait(gen) => {
-                if self.empty_ask.as_ref().is_some_and(|a| a.gen == gen) {
+                if self
+                    .empty_ask
+                    .as_ref()
+                    .is_some_and(|a| a.gen == gen && a.open.is_none())
+                {
                     self.show_empty_ask(&sender);
                 }
             }
@@ -162,28 +200,20 @@ impl AppModel {
         }
     }
 
-    /// Ask, with whatever counts came back. There is no undo, so always ask.
+    /// Ask, with whatever counts came back; the ones still out fill in
+    /// while the question is open. There is no undo, so always ask.
     fn show_empty_ask(&mut self, sender: &ComponentSender<Self>) {
-        let Some(ask) = self.empty_ask.take() else {
+        let Some(ask) = self.empty_ask.as_mut() else {
             return;
         };
-        let (heading, body) = match ask.every {
-            None => {
-                let t = &ask.targets[0];
-                (
-                    i18n_f("Empty “{name}”?", &[("name", &t.name)]),
-                    one_folder_body(t.count.flatten()),
-                )
-            }
-            Some(kind) => every_account_text(kind, &ask.targets),
-        };
+        let (heading, body) = ask.text();
         let erase: Vec<(u32, u32, String)> = ask
             .targets
-            .into_iter()
-            .map(|t| (t.account_id, t.folder_id, t.path))
+            .iter()
+            .map(|t| (t.account_id, t.folder_id, t.path.clone()))
             .collect();
         let s = sender.clone();
-        confirm_destructive(
+        let dialog = confirm_destructive(
             Some(self.window.upcast_ref()),
             &heading,
             &body,
@@ -199,6 +229,11 @@ impl AppModel {
                 }
             },
         );
+        if ask.answered() {
+            self.empty_ask = None;
+        } else {
+            ask.open = Some(dialog.downgrade());
+        }
     }
 }
 
@@ -302,9 +337,24 @@ mod tests {
             gen: 1,
             every: None,
             targets: vec![target("a@x", None), target("b@x", Some(None))],
+            open: None,
         };
         assert!(!ask.answered());
         ask.targets[0].count = Some(Some(3));
         assert!(ask.answered());
+    }
+
+    #[test]
+    fn late_count_reaches_the_text() {
+        let mut ask = EmptyAsk {
+            gen: 1,
+            every: None,
+            targets: vec![target("a@x", None)],
+            open: None,
+        };
+        assert!(ask.text().1.starts_with("Every message in it"));
+        ask.targets[0].count = Some(Some(47));
+        assert_eq!(ask.text().0, "Empty “Trash”?");
+        assert!(ask.text().1.starts_with("47 messages will be erased"));
     }
 }

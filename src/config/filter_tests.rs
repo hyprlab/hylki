@@ -737,12 +737,14 @@ fn settings_bundle_roundtrip_parses() {
         in_unified: true,
         folder_sort: None,
         sign_by_default: false,
+        smime_sign: false,
         plain_subject: false,
         autocrypt: false,
         autocrypt_mutual: false,
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
+        shared_mailbox: false,
     };
     acc.aliases = Vec::new();
     let bundle = SettingsBundle {

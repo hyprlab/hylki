@@ -148,6 +148,8 @@ impl AppModel {
             reader_toolbar: self.reader_toolbar.clone(),
             focus: self.focus,
             swipe_enabled: self.swipe_enabled,
+            hover_actions: self.hover_actions,
+            hover_action_buttons: self.hover_action_buttons.clone(),
             swipe_reversed: self.swipe_reversed,
             swipe_sensitivity: self.swipe_sensitivity,
             compose_inline: self.compose_inline,
@@ -183,6 +185,7 @@ impl AppModel {
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
             list_search_start: self.list_search_start,
+            lone_account: self.accounts.len() == 1,
             toolbar_fold_right: self.toolbar_fold_right,
             single_key_shortcuts: self.single_key.get(),
             gmail_keys: self.gmail_keys.get(),
@@ -478,6 +481,7 @@ impl AppModel {
             }
         }
         if let Some(p) = &self.prefs {
+            p.emit(PrefInput::SetLoneAccount(self.accounts.len() == 1));
             p.widget().present();
         }
         if add_new {

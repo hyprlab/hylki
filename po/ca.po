@@ -2011,6 +2011,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Signatura"
 
+msgid "Read/Unread"
+msgstr "Llegit/No llegit"
+
+msgid "Spam"
+msgstr "Brossa"
+
 msgid "Replied"
 msgstr "Respost"
 
@@ -2075,12 +2081,6 @@ msgstr "Nom (Z a A)"
 
 msgid "Full Path"
 msgstr "Camí complet"
-
-msgid "Spam"
-msgstr "Brossa"
-
-msgid "Read/Unread"
-msgstr "Llegit/No llegit"
 
 msgid "Move To"
 msgstr "Mou a"
@@ -2297,6 +2297,10 @@ msgid ""
 msgstr ""
 "L'organització del remitent ha etiquetat aquest missatge com a «{label}». "
 "L'Hylki mostra l'etiqueta però no n'aplica les regles."
+
+#, fuzzy
+msgid "gpgsm did not sign the message."
+msgstr "El gpg no ha signat el missatge."
 
 msgid "Nothing here proves this came from {from} — or that it didn't."
 msgstr "Res aquí demostra que això provingui de {from} — ni que no ho faci."
@@ -2644,6 +2648,23 @@ msgid "Enter the server's address first."
 msgstr "Introdueix l'adreça del servidor."
 
 msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr "Els comptes de Microsoft 365 comproven a l'interval de dalt."
+
+msgid ""
 "{reason} If your organization manages your account, an administrator can "
 "approve Hylki for everyone at {link}"
 msgstr ""
@@ -2696,6 +2717,10 @@ msgstr "GOA"
 
 msgid "Hylki"
 msgstr "Hylki"
+
+#, fuzzy
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr "Configurada als comptes en línia del GNOME"
 
 msgid "Imported GNOME Online Account"
 msgstr "Compte en línia del GNOME importat"
@@ -3106,6 +3131,18 @@ msgstr ""
 msgid "Add"
 msgstr "Afegeix"
 
+#, fuzzy
+msgid "Shared Mailboxes"
+msgstr "Proton Mail"
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
 msgid "GNOME Online Accounts"
 msgstr "Comptes en línia del GNOME"
 
@@ -3258,6 +3295,11 @@ msgid ""
 "computer, in {dir}, and come back if it is added again."
 msgstr ""
 
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
 msgid "Edit HTML"
 msgstr "Edita l'HTML"
 
@@ -3269,6 +3311,24 @@ msgstr "Segueix els paràmetres"
 
 msgid "On"
 msgstr "Activat"
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+#, fuzzy
+msgid "Add Shared Mailbox"
+msgstr "Proton Mail"
+
+#, fuzzy
+msgid "Open with"
+msgstr "acaba amb"
+
+#, fuzzy
+msgid "Could Not Add Mailbox"
+msgstr "No s'ha pogut llegir el fitxer"
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
 
 msgid "Signature {n}"
 msgstr "Signatura {n}"
@@ -4475,6 +4535,9 @@ msgstr "Normal"
 msgid "Low"
 msgstr ""
 
+msgid "Sign with S/MIME"
+msgstr ""
+
 msgid "Show the message as it will be sent"
 msgstr "Mostra el missatge tal com s'enviarà"
 
@@ -4492,6 +4555,9 @@ msgstr "Insereix abans del text"
 
 msgid "Insert After the Text"
 msgstr "Insereix després del text"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
 
 msgid "Show Original"
 msgstr "Mostra l'original"
@@ -5619,10 +5685,10 @@ msgid "Mark All as Unread"
 msgstr "Marca-ho tot com a no llegit"
 
 #, fuzzy
-msgid "This Account (Except Trash & Junk)"
+msgid "This account (except Trash and Junk)"
 msgstr "Totes les carpetes (menys la paperera i la brossa)"
 
-msgid "All folders (except trash & junk)"
+msgid "All folders (except Trash and Junk)"
 msgstr "Totes les carpetes (menys la paperera i la brossa)"
 
 msgid "Everywhere"
@@ -5632,7 +5698,7 @@ msgid "This folder"
 msgstr "Aquesta carpeta"
 
 #, fuzzy
-msgid "This Account"
+msgid "This account"
 msgstr "Compte de correu"
 
 msgid "All folders"
@@ -6568,6 +6634,24 @@ msgstr ""
 msgid "It works: {server} answered."
 msgstr ""
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Sempre visible · fins a {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Deixa anar un botó aquí per amagar-lo"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Deixa anar un botó aquí per amagar-lo"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Missatges ja llegits"
 
@@ -7201,6 +7285,17 @@ msgstr ""
 "Augmenta-la si els lliscaments queden curts. Els arrossegaments del ratolí "
 "no es veuen afectats."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Accions"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Obre la paleta d'accions en passar-hi per sobre"
+
+msgid "Restore Defaults"
+msgstr "Restaura els valors per defecte"
+
 msgid "Columns"
 msgstr "Columnes"
 
@@ -7217,9 +7312,6 @@ msgstr "Ajusta les columnes a la llista"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Desactivat, una llista estreta es desplaça lateralment."
-
-msgid "Restore Defaults"
-msgstr "Restaura els valors per defecte"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "L'Hylki no recull cap telemetria ni envia analítiques."
@@ -7972,6 +8064,22 @@ msgstr ""
 "no tens cap clau OpenPGP pròpia per a {addr}; genera'n una a Paràmetres, "
 "OpenPGP"
 
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
 msgid "Could not save template: {e}"
 msgstr "No s'ha pogut desar la plantilla: {e}"
 
@@ -8049,17 +8157,17 @@ msgid "Could not remove the attachment: {e}"
 msgstr "No s'ha pogut eliminar l'adjunt: {e}"
 
 msgid ""
-"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
-"Settings → Online Accounts and sign in again."
-msgstr ""
-
-msgid ""
 "Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 
 msgid "The attachment is no longer in the message on the server"
 msgstr "L'adjunt ja no és al missatge del servidor"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
 
 msgid "Still could not send “{subject}”: {e}"
 msgstr "Encara no s'ha pogut enviar «{subject}»: {e}"
@@ -8357,6 +8465,45 @@ msgid "Run every rule over the mail already in your inboxes"
 msgstr ""
 "Executa totes les regles sobre el correu que ja hi ha a les bústies d'entrada"
 
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "Les claus es gestionen a OpenPGP, a la barra lateral."
+
+msgid "Automatic uses the key whose address matches."
+msgstr "Automàtic utilitza la clau l'adreça de la qual coincideix."
+
+msgid "Sign messages by default"
+msgstr "Signa els missatges per defecte"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "Amaga l'assumpte del correu xifrat"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "Només els destinataris veuen l'assumpte. Els altres veuen «...»."
+
+#, fuzzy
+msgid "Send your key with your mail"
+msgstr "So per a correu nou"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr ""
+
+#, fuzzy
+msgid "Encrypt by default"
+msgstr "Expandeix les converses per defecte"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr ""
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+#, fuzzy
+msgid "The Send menu turns it off for one message."
+msgstr "La clau del remitent s'ha importat del missatge."
+
 msgid "GNOME Online Account"
 msgstr "Compte en línia del GNOME"
 
@@ -8641,35 +8788,6 @@ msgstr ""
 
 msgid "No hidden folders."
 msgstr "No hi ha carpetes amagades."
-
-msgid "Keys are managed under OpenPGP in the sidebar."
-msgstr "Les claus es gestionen a OpenPGP, a la barra lateral."
-
-msgid "Automatic uses the key whose address matches."
-msgstr "Automàtic utilitza la clau l'adreça de la qual coincideix."
-
-msgid "Sign messages by default"
-msgstr "Signa els missatges per defecte"
-
-msgid "Hide the subject of encrypted mail"
-msgstr "Amaga l'assumpte del correu xifrat"
-
-msgid "Only the recipients see the subject. Others see \"...\"."
-msgstr "Només els destinataris veuen l'assumpte. Els altres veuen «...»."
-
-#, fuzzy
-msgid "Send your key with your mail"
-msgstr "So per a correu nou"
-
-msgid "Autocrypt. Keys others send this way are kept too."
-msgstr ""
-
-#, fuzzy
-msgid "Encrypt by default"
-msgstr "Expandeix les converses per defecte"
-
-msgid "Mail to people who ask for the same is encrypted."
-msgstr ""
 
 msgid "Your password is kept in the system keyring, never in plain text."
 msgstr ""
@@ -9459,9 +9577,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "La fila ⋯ sota cada missatge."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Obre la paleta d'accions en passar-hi per sobre"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Temps d'espera de la paleta d'accions"

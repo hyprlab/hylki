@@ -275,6 +275,7 @@ pub(super) fn read_account(
             .checked_sub(1)
             .and_then(|i| crate::config::FolderSort::ALL.get(i as usize).copied()),
         sign_by_default: widgets.form.sign_default_row.is_active(),
+        smime_sign: widgets.form.smime_sign_row.is_active(),
         plain_subject: !widgets.form.hide_subject_row.is_active(),
         autocrypt: widgets.form.autocrypt_row.is_active(),
         autocrypt_mutual: widgets.form.autocrypt_mutual_row.is_active(),
@@ -283,6 +284,8 @@ pub(super) fn read_account(
         graph_directory_only: protocol == Protocol::Graph
             && widgets.form.directory_only_row.is_active(),
         graph_label_names: protocol == Protocol::Graph && widgets.form.graph_labels_row.is_active(),
+        // Kept from the account as it was (`keep_from_original`).
+        shared_mailbox: false,
     }
 }
 
@@ -541,6 +544,7 @@ pub(super) fn fill_editor(widgets: &AccountsWindowWidgets, acc: &AccountConfig) 
         .form
         .autocrypt_mutual_row
         .set_active(acc.autocrypt_mutual);
+    widgets.form.smime_sign_row.set_active(acc.smime_sign);
     widgets
         .form
         .reply_copies_row
@@ -669,6 +673,7 @@ pub(super) fn clear_editor(widgets: &AccountsWindowWidgets) {
     widgets.form.hide_subject_row.set_active(true);
     widgets.form.autocrypt_row.set_active(false);
     widgets.form.autocrypt_mutual_row.set_active(false);
+    widgets.form.smime_sign_row.set_active(false);
     widgets.form.reply_copies_row.set_selected(0);
     widgets.form.graph_directory_row.set_active(false);
     widgets.form.directory_only_row.set_active(false);

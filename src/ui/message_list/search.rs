@@ -261,13 +261,20 @@ pub(crate) enum SearchScope {
 }
 
 impl SearchScope {
-    /// By place, as the showcase names them; the dropdown puts `Account`
-    /// first.
+    /// By place, as the showcase names them.
     pub(super) const ALL: [SearchScope; 4] = [
         SearchScope::AllFolders,
         SearchScope::Everywhere,
         SearchScope::ThisFolder,
         SearchScope::Account,
+    ];
+
+    /// The picker's order, from the fewest folders to the most (#699).
+    const MENU: [SearchScope; 4] = [
+        SearchScope::ThisFolder,
+        SearchScope::AllFolders,
+        SearchScope::Account,
+        SearchScope::Everywhere,
     ];
 
     /// Whether the scope keeps to the account on show, when there is one.
@@ -279,11 +286,11 @@ impl SearchScope {
     /// "All folders" keeps to (#649).
     pub(super) fn label(self, one_account: bool) -> String {
         match self {
-            SearchScope::AllFolders if one_account => i18n("This Account (Except Trash & Junk)"),
-            SearchScope::AllFolders => i18n("All folders (except trash & junk)"),
+            SearchScope::AllFolders if one_account => i18n("This account (except Trash and Junk)"),
+            SearchScope::AllFolders => i18n("All folders (except Trash and Junk)"),
             SearchScope::Everywhere => i18n("Everywhere"),
             SearchScope::ThisFolder => i18n("This folder"),
-            SearchScope::Account => i18n("This Account"),
+            SearchScope::Account => i18n("This account"),
         }
     }
 
@@ -344,7 +351,7 @@ impl ScopePicker {
         list.add_css_class("search-scope-popover");
         let mut radios: Vec<(SearchScope, gtk::CheckButton)> = Vec::new();
         let syncing = Rc::new(std::cell::Cell::new(false));
-        for scope in SearchScope::ALL {
+        for scope in SearchScope::MENU {
             let radio = gtk::CheckButton::with_label(&scope.label(false));
             radio.set_tooltip_text(Some(&scope.description(false)));
             if let Some((_, first)) = radios.first() {
@@ -360,13 +367,9 @@ impl ScopePicker {
                     popover.popdown();
                 }
             });
-            // The whole account heads the list, shown only for one account.
-            if scope == SearchScope::Account {
-                radio.set_visible(false);
-                list.prepend(&radio);
-            } else {
-                list.append(&radio);
-            }
+            // The whole account is shown only for one account.
+            radio.set_visible(scope != SearchScope::Account);
+            list.append(&radio);
             radios.push((scope, radio));
         }
         popover.set_child(Some(&list));
@@ -381,14 +384,18 @@ impl ScopePicker {
     }
 
     /// Show `scope` as chosen, the names and tooltips as the list showing a
-    /// single account's folder, or not, has them (#649).
-    pub(super) fn sync(&self, scope: SearchScope, one_account: bool) {
+    /// single account's folder, or not, has them (#649). `lone`: Hylki has
+    /// that one account only, where "Everywhere" is "This account" again
+    /// and is not offered (#699).
+    pub(super) fn sync(&self, scope: SearchScope, one_account: bool, lone: bool) {
         self.label.set_label(&scope.button_label(one_account));
         for (s, radio) in &self.radios {
             radio.set_label(Some(&s.label(one_account)));
             radio.set_tooltip_text(Some(&s.description(one_account)));
-            if *s == SearchScope::Account {
-                radio.set_visible(one_account);
+            match s {
+                SearchScope::Account => radio.set_visible(one_account),
+                SearchScope::Everywhere => radio.set_visible(!(one_account && lone)),
+                _ => {}
             }
         }
         if let Some((_, radio)) = self.radios.iter().find(|(s, _)| *s == scope) {

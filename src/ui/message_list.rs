@@ -124,6 +124,9 @@ pub(crate) struct MessageList {
     /// The account of the folder or view on show, which the "This Account"
     /// scopes keep to (#649); `None` from a view across accounts.
     search_account: Option<u32>,
+    /// Hylki has one account only, whose own folders then make up
+    /// "Everywhere" (#699).
+    lone_account: bool,
     /// The search scope's button and popover.
     scope_picker: Option<ScopePicker>,
     /// The search field widget, kept so a folder switch can clear its text.
@@ -259,6 +262,8 @@ pub(crate) struct MessageList {
     snooze_offer: Option<bool>,
     /// The list shows Junk: "Not Spam" stands where "Mark as Spam" would.
     in_junk: bool,
+    /// The buttons rows show on hover, none when the setting is off.
+    hover_actions: Vec<crate::config::HoverAction>,
     /// The list shows Drafts (a folder or the unified row): drafts are
     /// neither read nor unread, so the toggles are not offered.
     in_drafts: bool,

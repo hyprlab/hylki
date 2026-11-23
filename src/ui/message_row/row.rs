@@ -4,6 +4,7 @@
 use super::build::build_widgets;
 use super::shared::RowShared;
 use super::{RowAction, RowData, RowItem, SwipeSurface};
+use crate::config::HoverAction;
 use crate::config::ListColumn;
 use crate::ui::column_bin::ColumnBin;
 use crate::ui::message_list::MessageListInput;
@@ -25,6 +26,11 @@ pub(super) struct RowWidgets {
     pub(super) swipe_icon: gtk::Image,
     pub(super) swipe_label: gtk::Label,
     pub(super) overlay: gtk::Overlay,
+    pub(super) hover_reveal: gtk::Revealer,
+    pub(super) hover_box: gtk::Box,
+    /// The strip's buttons, made again only when the setting changes.
+    pub(super) hover_buttons: RefCell<Vec<(HoverAction, gtk::Button)>>,
+    pub(super) hover_motion: gtk::EventControllerMotion,
     pub(super) rail_stub: gtk::Box,
     pub(super) node: gtk::Box,
     pub(super) content: gtk::Box,
@@ -284,6 +290,7 @@ impl Row {
 
         self.wire_swipe();
         self.wire_fold();
+        self.wire_hover();
     }
 
     // ── Binding ──
@@ -397,6 +404,12 @@ impl Row {
             a.pause();
         }
         self.w.surface.set_progress_px(0.0);
+        // A recycled row starts shut, not sliding shut from its last message.
+        self.w.hover_reveal.set_transition_duration(0);
+        self.w.hover_reveal.set_reveal_child(false);
+        self.w
+            .hover_reveal
+            .set_transition_duration(super::build::HOVER_REVEAL_MS);
         self.w.revealer.set_transition_duration(0);
         self.w.revealer.set_reveal_child(true);
         self.w.revealer.set_transition_duration(200);

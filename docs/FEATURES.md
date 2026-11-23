@@ -173,6 +173,9 @@ The full list. The [README](../README.md) carries a shorter one.
 - **OpenPGP:** read encrypted and signed mail, sign and encrypt what you
   send, and manage keys from Settings, through the GnuPG already on your
   computer. See [OpenPGP](DOCUMENTATION.md#openpgp-encrypted-and-signed-mail).
+- **S/MIME signing:** sign the mail an account sends with its S/MIME
+  certificate, through gpgsm. See
+  [S/MIME](DOCUMENTATION.md#smime-signed-mail).
 - **Sender identity:** DKIM, SPF and DMARC checked on arrival, with BIMI
   logos where a domain publishes one.
 - **Message previews:** the first one to three lines of each message under

@@ -70,6 +70,10 @@ pub(crate) struct PrefInit {
     pub(crate) confirm_thread_delete: bool,
     /// Message rows take a sideways swipe to archive / delete (#92).
     pub(crate) swipe_enabled: bool,
+    /// Message rows show buttons under their text on hover.
+    pub(crate) hover_actions: bool,
+    /// Those buttons, in order.
+    pub(crate) hover_action_buttons: Vec<crate::config::HoverAction>,
     /// The message list's swipe-gesture sides are swapped (#swipe).
     pub(crate) swipe_reversed: bool,
     /// How far a trackpad two-finger swipe has to travel to fire the action.
@@ -184,6 +188,8 @@ pub(crate) struct PrefInit {
     pub(crate) list_search_bottom: bool,
     pub(crate) list_bulk_bar_bottom: bool,
     pub(crate) list_search_start: crate::config::SearchStart,
+    /// Hylki has one account only (#699).
+    pub(crate) lone_account: bool,
     pub(crate) single_key_shortcuts: bool,
     pub(crate) gmail_keys: bool,
     pub(crate) keep_downloads_days: u32,
@@ -270,6 +276,15 @@ pub(crate) enum PrefInput {
     ChangeReaderZoom(u32),
     ToggleThreadExpansion(bool),
     ToggleSwipeEnabled(bool),
+    ToggleHoverActions(bool),
+    /// A hover action's chip dropped on the preview's strip (`shown`) or
+    /// in the pool, at `index`.
+    HoverDrop {
+        key: String,
+        shown: bool,
+        index: usize,
+    },
+    HoverRestore,
     /// The "Send new messages from" combo: 0 = the open folder's account,
     /// then `identities` in order.
     ChangeComposeDefaultFrom(u32),
@@ -370,6 +385,10 @@ pub(crate) enum PrefInput {
     ChangeSignaturePosition(u32),
     ChangeUndoSend(u32),
     ChangeAppTheme(u32),
+    ChangeSearchStart(u32),
+    /// Whether Hylki has one account only, sent as the window opens: the
+    /// "Search starts in" row then leaves "Everywhere" out (#699).
+    SetLoneAccount(bool),
     ChangeTextScale(u32),
     ChangeSettingsOpen(u32),
     /// Switch the window to the Accounts panel (true) or Preferences (false).
@@ -466,6 +485,8 @@ pub(crate) enum PrefOutput {
     SetThreadRowNewest(bool),
     SetConfirmThreadDelete(bool),
     SetSwipeEnabled(bool),
+    /// Whether rows show their hover actions, and which.
+    SetHoverActions(bool, Vec<crate::config::HoverAction>),
     SetSwipeReversed(bool),
     SetSwipeSensitivity(f64),
     SetComposeInline(bool),

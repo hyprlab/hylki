@@ -1,7 +1,7 @@
 //! Filling the settings rows from the saved values when the window is
 //! built, one step per page, in the order `init` runs them.
 
-use super::choices::{list_layout_index, section_style_index, start_view_index, SEARCH_STARTS};
+use super::choices::{list_layout_index, section_style_index, start_view_index};
 use super::rows::no_truncate;
 use super::*;
 
@@ -415,7 +415,7 @@ impl Preferences {
     }
 
     /// Settings → Message List.
-    pub(super) fn init_list_rows(&self, widgets: &PreferencesWidgets, init: &PrefInit) {
+    pub(super) fn init_list_rows(&mut self, widgets: &PreferencesWidgets, init: &PrefInit) {
         let preview_labels_owned = [
             i18n("Off"),
             i18n("1 line"),
@@ -475,17 +475,9 @@ impl Preferences {
             row.set_selected(u32::from(bottom));
             no_truncate(row);
         }
-        let starts: Vec<String> = SEARCH_STARTS.iter().map(|(l, _)| i18n(l)).collect();
-        let starts: Vec<&str> = starts.iter().map(String::as_str).collect();
-        let start_row = &widgets.list.list_search_start_row;
-        start_row.set_model(Some(&gtk::StringList::new(&starts)));
-        start_row.set_selected(
-            SEARCH_STARTS
-                .iter()
-                .position(|(_, s)| *s == init.list_search_start)
-                .unwrap_or(0) as u32,
-        );
-        no_truncate(start_row);
+        self.search_start_row = Some(widgets.list.list_search_start_row.clone());
+        self.fill_search_start_row();
+        no_truncate(&widgets.list.list_search_start_row);
         widgets
             .list
             .list_layout_row

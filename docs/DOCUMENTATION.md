@@ -19,6 +19,7 @@ keyboard.
 - [Grammar checking](#grammar-checking)
 - [Writing in Markdown or HTML](#writing-in-markdown-or-html)
 - [OpenPGP (encrypted and signed mail)](#openpgp-encrypted-and-signed-mail)
+- [S/MIME (signed mail)](#smime-signed-mail)
 - [Send with Hylki from GNOME Files](#send-with-hylki-from-gnome-files)
 - [Privacy](#privacy)
 
@@ -61,6 +62,27 @@ Hylki also uses what GNOME records about each server: TLS from the start or
 a STARTTLS upgrade, whatever the port, and a certificate accepted in GNOME
 Settings although it does not verify, as a home server's self-signed one
 does not. Stored on the account as the `security` table in `accounts.toml`.
+
+#### Microsoft 365 shared mailboxes
+
+A shared mailbox is opened with the sign-in of a Microsoft 365 account from
+GNOME Online Accounts, with no sign-in of its own. Once such an account is
+in Hylki, **Settings → Accounts → Shared Mailboxes** has **Add…**: type the
+mailbox's address, and with more than one Microsoft 365 account pick the one
+that opens it. The mailbox is opened once before it is added, so one the
+account has no access to, or an address with no mailbox, is refused there.
+It is then listed as an account of its own, with its own folders, and
+appears in All Inboxes.
+
+Graph cannot list the mailboxes an organization shares with someone, so the
+address has to be typed. Reading needs Full Access to the mailbox in
+Exchange, and sending from it needs Send As or Send on Behalf as well.
+Accounts signed in within Hylki
+cannot open a shared mailbox. Switching one off pauses it; **Remove** takes
+it out of Hylki, and it can be added again. It is stored in `accounts.toml`
+with `shared_mailbox = true` and the GNOME Online Accounts id of the account
+it borrows the sign-in of, and goes when that account is removed from GNOME
+Settings.
 
 ### JMAP (Stalwart, Fastmail)
 
@@ -1985,6 +2007,71 @@ signature** or **Signed, unknown key**.
 - *Nothing to encrypt with for an address*: that person's key is missing;
   see step 3.
 
+### S/MIME (signed mail)
+
+Hylki can sign the mail an account sends with an S/MIME certificate, the
+kind a certificate authority issues for an email address. It signs through
+**gpgsm**, GnuPG's S/MIME program, so the certificate lives beside your
+OpenPGP keys and gpg-agent asks for its passphrase. Reading S/MIME mail and
+encrypting with it are not supported yet.
+
+**1. Put your certificate in gpgsm**
+
+Export the certificate with its private key as a `.p12` file (from
+Thunderbird: *Settings → Privacy & Security → Manage Certificates → Your
+Certificates → Backup*), then import it:
+
+```sh
+gpgsm --import certificate.p12
+```
+
+If gpgsm answers *error parsing or decrypting the PKCS#12 file*, as gpgsm 2.4
+does with a file Thunderbird or Firefox wrote, repack it with OpenSSL first and
+import `repacked.p12`:
+
+```sh
+openssl pkcs12 -in certificate.p12 -nodes |
+  openssl pkcs12 -export -keypbe AES-256-CBC -certpbe AES-256-CBC -macalg sha256 -out repacked.p12
+```
+
+gpgsm signs only with a certificate whose chain ends at a root it trusts. If
+sending says the certificate *is not trusted*, `gpgsm --list-chain
+your@address` names the root; check its fingerprint against your system's
+certificate store and add it to `~/.gnupg/trustlist.txt` as `FINGERPRINT S`.
+
+**2. Turn it on for the account**
+
+In *Settings → Accounts*, open the account and turn on *S/MIME → Sign messages
+by default*, or set `smime_sign = true` on the account in `accounts.toml`.
+
+**3. Sending**
+
+The menu beside *Send* then has *Sign with S/MIME*, ticked. Untick it to send
+one message unsigned. The message is signed with the certificate for its From
+address:
+
+- An alias needs a certificate that names it. Without one, sending stops and
+  says so, rather than signing with the account's certificate, which
+  Outlook and Thunderbird flag as signed by someone other than the sender.
+  Untick *Sign with S/MIME* to send it unsigned.
+- With OpenPGP *Sign* or *Encrypt* on, the message goes out with OpenPGP
+  only, and *Sign with S/MIME* is greyed out.
+- Drafts are not signed, and neither is mail Hylki sends by itself: a
+  filter's forward, a read receipt, an answer to an invitation.
+
+Before it signs, gpgsm checks the certificate authority's revocation list.
+When the list cannot be fetched (offline, or the authority's server is down),
+the message is signed without that check, as Thunderbird does. A certificate
+the list says is revoked is refused.
+
+**Troubleshooting**
+
+- *No S/MIME certificate for an address*: gpgsm has no certificate with a
+  private key for it. `gpgsm --list-secret-keys` shows the ones it has; see
+  step 1.
+- *Has expired* or *has been revoked*: the certificate authority issues a
+  new certificate, which you import as in step 1.
+
 ### Dragging files into a message
 
 Files dragged from a file manager over a composer bring up a card for each
@@ -2399,6 +2486,19 @@ tags, Gmail labels and folder pill on a line of their own under the
 message's text, so the subject keeps the row's full width. It is off unless
 switched on; a single-line list keeps them in its Tags column.
 
+**Settings → Message List → Hover Actions** puts a line of buttons under a
+row's text while the pointer is on it: Star, Archive and Delete unless
+changed. The row grows to make room, so the buttons never cover the date or
+the text, and shuts again when the pointer leaves. **Show actions on hover**
+turns them on or off: on for a new install, off after an update from a
+version without them. Below it, a sample row shows the buttons as the list will:
+drag an action from **Not shown** onto the row to add it, along the row to
+move it, or back to **Not shown** to take it off. A row shows up to eight,
+from Star, Read/Unread, Archive, Delete, Spam, Reply, Reply All and Forward.
+Star and Read/Unread show the message's state, Spam is Not Spam in Junk, and
+Drafts leave out Read/Unread. A button acts on its row's message, or on the
+whole conversation on a conversation's row, as a swipe does.
+
 **Settings → Message List → Keep the search field open** shows the search
 field with the list all the time, instead of only after the search button,
 <kbd>Ctrl+F</kbd> or <kbd>/</kbd>. One click in it starts a search.
@@ -2414,16 +2514,19 @@ the search field is the outer one, so selecting messages never moves it.
 
 The button beside the search field sets where a search looks, and holding
 the pointer over a choice in its popover says what that choice searches.
-**All folders (except trash & junk)** searches every folder of every account
-except Trash and Junk, unless the list is showing one of them. **Everywhere**
-takes in Trash and Junk too, and **This folder** only the folder on screen.
-From a single account's folder, **This Account** and **This Account (Except
-Trash & Junk)** keep to that account.
+The choices run from the fewest folders to the most. **This folder** searches
+only the folder on screen. **All folders (except Trash and Junk)** searches
+every folder of every account except Trash and Junk, unless the list is
+showing one of them, and **Everywhere** takes in Trash and Junk too. From a
+single account's folder, **This account (except Trash and Junk)** and **This
+account** keep to that account. With only one account, **Everywhere** would
+search what **This account** does, and is not offered in its folders.
 
 **Settings → Message List → Search starts in** sets the choice a folder
-opens with: **Everywhere** unless changed. **This Account** becomes
-**Everywhere** in a view of several accounts. The button changes it for as
-long as the folder is open.
+opens with: **Everywhere** unless changed. **This account** becomes
+**Everywhere** in a view of several accounts, and **Everywhere** becomes
+**This account** when there is only one account. The button changes it for
+as long as the folder is open.
 
 In all folders and everywhere, each result wears a pill with the name of the folder it is in, and a Gmail message filed under
 several labels is one result: its Inbox copy, else a label's, else All

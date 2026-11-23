@@ -381,6 +381,11 @@ pub(crate) struct OutgoingMessage {
     /// Encrypt to every recipient's key (and the sender's): multipart/encrypted,
     /// signed inside when `sign` is set too.
     pub(crate) encrypt: bool,
+    /// Sign with the S/MIME certificate for the From address (#478), when
+    /// neither `sign` nor `encrypt` is set. Only a composer sets it, from
+    /// the account's choice: mail sent with nobody at the keyboard (a
+    /// filter's forward, a receipt) would wait on a passphrase prompt.
+    pub(crate) smime_sign: bool,
     /// Send Later (#145): unix seconds to send at. `None` sends now. A time
     /// already past sends now too.
     pub(crate) send_at: Option<i64>,

@@ -66,12 +66,14 @@ pub(super) fn demo_account_configs() -> Vec<AccountConfig> {
         in_unified: true,
         folder_sort: None,
         sign_by_default: false,
+        smime_sign: false,
         plain_subject: false,
         autocrypt: false,
         autocrypt_mutual: false,
         graph_directory: false,
         graph_directory_only: false,
         graph_label_names: false,
+        shared_mailbox: false,
     };
     vec![
         mk("Jason M.", "jason@hylki.hyprlab.co", "#3584e4", Some("🚀")),

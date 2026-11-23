@@ -245,6 +245,8 @@ impl MessageList {
             look.single_line = self.single_line;
             look.columns = self.columns_shown();
             look.in_drafts = self.in_drafts;
+            look.in_junk = self.in_junk;
+            look.hover_actions = self.hover_actions.clone();
             look.show_recipient = self.show_recipient;
             look.thread_expansion = self.thread_expansion;
             // One account's results need no tint to tell them apart.

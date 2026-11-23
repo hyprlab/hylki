@@ -31,8 +31,8 @@ impl<E: Fn(crate::worker::WorkerEvent)> GraphWorker<E> {
         let found = match graph_token(&self.account, &|_| {}).await {
             Some(token) => {
                 let url = format!(
-                    "{}/me/messages?$search={}&$select=id,parentFolderId&$top=250",
-                    self.state.base,
+                    "{}/messages?$search={}&$select=id,parentFolderId&$top=250",
+                    self.state.mailbox,
                     search_param(&terms)
                 );
                 blocking(move || graph_paged(&token, &url, TEXT_SEARCH_LIMIT)).await

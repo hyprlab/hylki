@@ -45,6 +45,7 @@ impl MessageList {
             server_searching: false,
             scope: SearchScope::AllFolders,
             search_account: None,
+            lone_account: false,
             search_entry: None,
             scope_picker: None,
             search_open: false,
@@ -99,6 +100,14 @@ impl MessageList {
             restorable: false,
             snooze_offer: None,
             in_junk: false,
+            hover_actions: {
+                let (on, actions) = crate::config::load_hover_actions();
+                if on {
+                    actions
+                } else {
+                    Vec::new()
+                }
+            },
             in_drafts: false,
             in_templates: false,
             default_expanded: false,
