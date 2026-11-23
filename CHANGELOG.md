@@ -100,7 +100,7 @@
   total and each account's own count. A server that does not answer within
   a second and a half leaves the question as it was, without a number.
 
-- **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2617 strings
+- **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
   translated.
 
 ## 1.49.2 — 2026-11-23
