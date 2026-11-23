@@ -327,6 +327,10 @@ pub(super) struct ScopePicker {
     abouts: Vec<gtk::Label>,
     /// Each scope's row in the popover, in the same order.
     rows: Vec<gtk::Box>,
+    /// Set while [`ScopePicker::sync`] moves the choice. A radio it turns
+    /// on must not send the scope back: two scopes sent in a row then
+    /// echoed each other forever and froze the app (#700).
+    syncing: std::rc::Rc<std::cell::Cell<bool>>,
 }
 
 impl ScopePicker {
@@ -348,6 +352,7 @@ impl ScopePicker {
         let mut infos = Vec::new();
         let mut abouts = Vec::new();
         let mut rows = Vec::new();
+        let syncing = std::rc::Rc::new(std::cell::Cell::new(false));
         for scope in SearchScope::ALL {
             let radio = gtk::CheckButton::with_label(&scope.label(false));
             radio.set_hexpand(true);
@@ -378,8 +383,9 @@ impl ScopePicker {
             radio.set_active(scope == SearchScope::AllFolders);
             let input = input.clone();
             let popover = popover.clone();
+            let syncing = syncing.clone();
             radio.connect_toggled(move |r| {
-                if r.is_active() {
+                if r.is_active() && !syncing.get() {
                     input.emit(MessageListInput::SetScope(scope));
                     popover.popdown();
                 }
@@ -404,6 +410,7 @@ impl ScopePicker {
             infos,
             abouts,
             rows,
+            syncing,
         }
     }
 
@@ -420,7 +427,9 @@ impl ScopePicker {
         }
         if let Some((_, radio)) = self.radios.iter().find(|(s, _)| *s == scope) {
             if !radio.is_active() {
+                self.syncing.set(true);
                 radio.set_active(true);
+                self.syncing.set(false);
             }
         }
     }
