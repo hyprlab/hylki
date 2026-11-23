@@ -74,6 +74,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.49.2" date="2026-11-23">
+      <description>
+        <p>The window appears when Hylki starts in All Inboxes.</p>
+      </description>
+    </release>
     <release version="1.49.1" date="2026-11-22">
       <description>
         <p>A message stays in the Outbox until the server takes it, the window opens when GNOME Online Accounts or the desktop portal does not answer, m toggles a whole conversation and Fetch the sender's key asks WKD and keys.openpgp.org.</p>
