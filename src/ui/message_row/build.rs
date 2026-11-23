@@ -1,7 +1,9 @@
 //! Building one row's widgets, once, for the factory to bind over and over.
 
 use super::row::RowWidgets;
-use super::{SwipeSurface, ACCOUNT_COLUMN_PX, PEOPLE_COLUMN_PX, SENDER_COLUMN_PX, TAGS_COLUMN_PX};
+use super::{
+    RowAction, SwipeSurface, ACCOUNT_COLUMN_PX, PEOPLE_COLUMN_PX, SENDER_COLUMN_PX, TAGS_COLUMN_PX,
+};
 use crate::i18n::i18n;
 use crate::ui::column_bin::ColumnBin;
 use adw::prelude::*;
@@ -237,6 +239,32 @@ pub(super) fn build_widgets() -> RowWidgets {
     node.set_valign(gtk::Align::Center);
     overlay.add_overlay(&node);
 
+    // Keep the actions above the row content without changing its size.
+    let hover_box = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+    hover_box.add_css_class("row-hover-actions");
+    hover_box.set_halign(gtk::Align::End);
+    hover_box.set_valign(gtk::Align::Center);
+    hover_box.set_margin_end(6);
+    hover_box.set_visible(false);
+    let hover_buttons = [
+        (RowAction::ToggleStar, "starred-symbolic", i18n("Star")),
+        (RowAction::Archive, "mail-archive-symbolic", i18n("Archive")),
+        (RowAction::Delete, "user-trash-symbolic", i18n("Delete")),
+    ]
+    .map(|(action, icon, tooltip)| {
+        let button = gtk::Button::from_icon_name(icon);
+        button.add_css_class("flat");
+        button.add_css_class("circular");
+        button.set_focusable(false);
+        button.set_focus_on_click(false);
+        button.set_tooltip_text(Some(&tooltip));
+        hover_box.append(&button);
+        (action, button)
+    });
+    let [(_, hover_star), ..] = &hover_buttons;
+    let hover_star = hover_star.clone();
+    overlay.add_overlay(&hover_box);
+
     RowWidgets {
         host,
         revealer,
@@ -247,6 +275,10 @@ pub(super) fn build_widgets() -> RowWidgets {
         swipe_icon,
         swipe_label,
         overlay,
+        hover_box,
+        hover_star,
+        hover_buttons,
+        hover_motion: gtk::EventControllerMotion::new(),
         rail_stub,
         node,
         content,

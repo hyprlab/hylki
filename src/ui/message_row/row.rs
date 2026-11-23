@@ -25,6 +25,10 @@ pub(super) struct RowWidgets {
     pub(super) swipe_icon: gtk::Image,
     pub(super) swipe_label: gtk::Label,
     pub(super) overlay: gtk::Overlay,
+    pub(super) hover_box: gtk::Box,
+    pub(super) hover_star: gtk::Button,
+    pub(super) hover_buttons: [(RowAction, gtk::Button); 3],
+    pub(super) hover_motion: gtk::EventControllerMotion,
     pub(super) rail_stub: gtk::Box,
     pub(super) node: gtk::Box,
     pub(super) content: gtk::Box,
@@ -284,6 +288,43 @@ impl Row {
 
         self.wire_swipe();
         self.wire_fold();
+        self.wire_hover();
+    }
+
+    /// Send the same actions as the row's menu.
+    fn wire_hover(&self) {
+        let motion = &self.w.hover_motion;
+        let weak = self.me.clone();
+        motion.connect_contains_pointer_notify(move |_| {
+            if let Some(row) = weak.upgrade() {
+                row.sync_hover_actions();
+            }
+        });
+        self.w.host.add_controller(motion.clone());
+
+        for (action, button) in &self.w.hover_buttons {
+            let action = *action;
+            let weak = self.me.clone();
+            button.connect_clicked(move |_| {
+                if let Some(row) = weak.upgrade() {
+                    row.act(action);
+                }
+            });
+        }
+    }
+
+    pub(super) fn sync_hover_actions(&self) {
+        let visible = {
+            let st = self.st.borrow();
+            self.w.hover_motion.contains_pointer()
+                && !st.dragging
+                && !st.swipe_active
+                && st.item.as_ref().is_some_and(|item| {
+                    let data = item.data();
+                    data.meta.revealed && data.meta.folded.is_none()
+                })
+        };
+        self.w.hover_box.set_visible(visible);
     }
 
     // ── Binding ──
@@ -397,6 +438,7 @@ impl Row {
             a.pause();
         }
         self.w.surface.set_progress_px(0.0);
+        self.w.hover_box.set_visible(false);
         self.w.revealer.set_transition_duration(0);
         self.w.revealer.set_reveal_child(true);
         self.w.revealer.set_transition_duration(200);

@@ -164,6 +164,13 @@ impl Row {
             starred && look.show_stars
         });
         w.star.set_opacity(if starred { 1.0 } else { 0.0 });
+        w.hover_star
+            .set_tooltip_text(Some(&i18n(if starred { "Remove Star" } else { "Star" })));
+        if starred {
+            w.hover_star.add_css_class("star-active");
+        } else {
+            w.hover_star.remove_css_class("star-active");
+        }
         // A card shows it beside its other marks when there is one (#563).
         w.importance.set_visible(if single {
             col(ListColumn::Importance)
@@ -475,6 +482,7 @@ impl Row {
         }
         drop(st);
         self.w.host.set_css_classes(&v);
+        self.sync_hover_actions();
     }
 
     /// Rebuild the row's chips when the keywords, the labels or the tags
