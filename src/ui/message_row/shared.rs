@@ -49,6 +49,10 @@ pub(crate) struct RowLook {
     pub(crate) folder_pills: Rc<HashMap<(u32, u32), String>>,
     /// The list shows Drafts: no read/unread toggle, a draft is neither.
     pub(crate) in_drafts: bool,
+    /// The list shows Junk, where Spam is Not Spam (#168).
+    pub(crate) in_junk: bool,
+    /// The buttons a row shows under its text while the pointer is on it.
+    pub(crate) hover_actions: Vec<crate::config::HoverAction>,
     /// Sent-folder rows name the recipient, not the sender (#27).
     pub(crate) show_recipient: bool,
     /// The accounts whose avatars wear their color as a ring (unified view).
@@ -79,6 +83,8 @@ impl Default for RowLook {
             pills_below: false,
             folder_pills: Default::default(),
             in_drafts: false,
+            in_junk: false,
+            hover_actions: Vec::new(),
             show_recipient: false,
             ringed: Default::default(),
             thread_expansion: true,

@@ -2055,6 +2055,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Firma"
 
+msgid "Read/Unread"
+msgstr "Letto/Non letto"
+
+msgid "Spam"
+msgstr "Spam"
+
 #, fuzzy
 msgid "Replied"
 msgstr "Rispondi"
@@ -2122,12 +2128,6 @@ msgstr "Nome (da Z a A)"
 
 msgid "Full Path"
 msgstr "Percorso completo"
-
-msgid "Spam"
-msgstr "Spam"
-
-msgid "Read/Unread"
-msgstr "Letto/Non letto"
 
 msgid "Move To"
 msgstr "Sposta in"
@@ -6794,6 +6794,24 @@ msgstr ""
 msgid "It works: {server} answered."
 msgstr ""
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Sempre visibile · fino a {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Trascina un pulsante qui per nasconderlo"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Trascina un pulsante qui per nasconderlo"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Messaggi già letti"
 
@@ -7445,6 +7463,17 @@ msgstr "Sensibilità scorrimento trackpad"
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Azioni"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Apri la palette azioni al passaggio del mouse"
+
+msgid "Restore Defaults"
+msgstr "Ripristina predefiniti"
+
 msgid "Columns"
 msgstr "Colonne"
 
@@ -7459,9 +7488,6 @@ msgstr "Trascina una colonna qui per nasconderla"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr ""
-
-msgid "Restore Defaults"
-msgstr "Ripristina predefiniti"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr ""
@@ -9701,9 +9727,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Allegati su ogni messaggio"
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Apri la palette azioni al passaggio del mouse"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Timeout palette azioni"

@@ -2084,6 +2084,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Aláírás"
 
+msgid "Read/Unread"
+msgstr "Olvasott/olvasatlan"
+
+msgid "Spam"
+msgstr "Levélszemét"
+
 #, fuzzy
 msgid "Replied"
 msgstr "Válasz"
@@ -2153,12 +2159,6 @@ msgstr "Név (Z–A)"
 
 msgid "Full Path"
 msgstr "Teljes elérési út"
-
-msgid "Spam"
-msgstr "Levélszemét"
-
-msgid "Read/Unread"
-msgstr "Olvasott/olvasatlan"
 
 msgid "Move To"
 msgstr "Áthelyezés ide"
@@ -6815,6 +6815,24 @@ msgid "It works: {server} answered."
 msgstr ""
 
 #, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Mindig megjelenítve · legfeljebb {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Helyezze a kerülmb here ide hide it"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Helyezze a kerülmb here ide hide it"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
+#, fuzzy
 msgid "Messages already read"
 msgstr "Az üzenet elküldésre kész"
 
@@ -7474,6 +7492,17 @@ msgstr "Az érintőpad csúsztatási érzékenysége"
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Műveletek"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Műveletpaletta megnyitása, amikor a kurzor fölé van helyezve"
+
+msgid "Restore Defaults"
+msgstr "Alapértelmezett beállítások visszaállítása"
+
 msgid "Columns"
 msgstr ""
 
@@ -7488,9 +7517,6 @@ msgstr "Helyezze a kerülmb here ide hide it"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr ""
-
-msgid "Restore Defaults"
-msgstr "Alapértelmezett beállítások visszaállítása"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr ""
@@ -9760,9 +9786,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Mellékletek az egyes üzenetekhez"
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Műveletpaletta megnyitása, amikor a kurzor fölé van helyezve"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "A műveletpaletta időtúllépése"

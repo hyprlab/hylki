@@ -2000,6 +2000,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Υπογραφή"
 
+msgid "Read/Unread"
+msgstr "Αναγνωσμένο/Μη αναγνωσμένο"
+
+msgid "Spam"
+msgstr "Ανεπιθύμητα"
+
 msgid "Replied"
 msgstr "Απαντήθηκε"
 
@@ -2059,12 +2065,6 @@ msgstr "Όνομα (Ω έως Α)"
 
 msgid "Full Path"
 msgstr "Πλήρης διαδρομή"
-
-msgid "Spam"
-msgstr "Ανεπιθύμητα"
-
-msgid "Read/Unread"
-msgstr "Αναγνωσμένο/Μη αναγνωσμένο"
 
 msgid "Move To"
 msgstr "Μετακίνηση σε"
@@ -6596,6 +6596,24 @@ msgstr "Ο έλεγχος διακόπηκε απροσδόκητα."
 msgid "It works: {server} answered."
 msgstr "Λειτουργεί: ο διακομιστής {server} αποκρίθηκε."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Πάντα ορατή · έως {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Αποθέστε ένα κουμπί εδώ για να το αποκρύψετε"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Αποθέστε ένα κουμπί εδώ για να το αποκρύψετε"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Μηνύματα που έχουν ήδη αναγνωστεί"
 
@@ -7231,6 +7249,17 @@ msgstr ""
 "Αυξήστε την τιμή αν οι κινήσεις σάρωσης δεν φτάνουν μέχρι το τέλος. Οι "
 "κινήσεις με το ποντίκι δεν επηρεάζονται."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Ενέργειες"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
+
+msgid "Restore Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
 msgid "Columns"
 msgstr "Στήλες"
 
@@ -7247,9 +7276,6 @@ msgstr "Προσαρμογή στηλών στο πλάτος της λίστα�
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Ανενεργό: μια στενή λίστα μετακινείται οριζόντια."
-
-msgid "Restore Defaults"
-msgstr "Επαναφορά προεπιλογών"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "Το Hylki δεν συλλέγει τηλεμετρία ούτε στέλνει αναλυτικά δεδομένα."
@@ -9536,9 +9562,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Η γραμμή ⋯ κάτω από κάθε μήνυμα."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Άνοιγμα της παλέτας ενεργειών κατά την αιώρηση"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Χρόνος λήξης παλέτας ενεργειών"

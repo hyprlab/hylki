@@ -5,6 +5,7 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
+use super::hover_actions::default_hover_actions;
 use super::look::{
     default_list_columns, default_text_scale, AppTheme, ClockStyle, DateStyle, ListLayout,
     MessageTheme, ReadingPane, TrayIcon,
@@ -240,6 +241,15 @@ pub(crate) struct PrivacyFile {
     /// left to delete and right to archive, on reverses them.
     #[serde(default)]
     pub(crate) swipe_reversed: bool,
+    /// Whether a message row shows buttons under its text while the pointer
+    /// is on it. On for a new install; a file from before the key keeps the
+    /// rows as they were.
+    #[serde(default)]
+    pub(crate) hover_actions: bool,
+    /// Those buttons, in order, by name: names, not the enum, so a button a
+    /// later version adds does not make an older one throw the file away.
+    #[serde(default = "default_hover_actions")]
+    pub(crate) hover_action_buttons: Vec<String>,
     /// How far a trackpad's two-finger swipe has to travel before a row
     /// commits (higher = shorter swipe). Trackpads differ enough that one
     /// fixed figure suits nobody, hence the knob; mouse and touchscreen
@@ -766,6 +776,8 @@ impl Default for PrivacyFile {
             show_attachments: true,
             settings_open_accounts: false,
             swipe_enabled: true,
+            hover_actions: true,
+            hover_action_buttons: default_hover_actions(),
             swipe_reversed: false,
             swipe_sensitivity: default_swipe_sensitivity(),
             compose_inline: true,

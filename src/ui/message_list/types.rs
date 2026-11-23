@@ -430,6 +430,8 @@ pub(crate) enum MessageListInput {
     SetSwipeReversed(bool),
     /// Turn the swipe gesture on or off (#92).
     SetSwipeEnabled(bool),
+    /// The buttons rows show on hover, none to show none.
+    SetHoverActions(Vec<crate::config::HoverAction>),
     /// How far a trackpad two-finger swipe has to travel to fire the action.
     SetSwipeSensitivity(f64),
     /// The list shows Trash or Junk: menus offer "Move to Inbox" (#138).

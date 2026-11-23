@@ -539,6 +539,8 @@ impl AppModel {
             confirm_thread_delete: prefs.confirm_thread_delete,
             selection_from_cards: false,
             swipe_enabled: prefs.swipe_enabled,
+            hover_actions: prefs.hover_actions,
+            hover_action_buttons: config::HoverAction::from_keys(&prefs.hover_action_buttons),
             swipe_reversed: prefs.swipe_reversed,
             swipe_sensitivity: config::load_swipe_sensitivity(),
             compose_inline: prefs.compose_inline,

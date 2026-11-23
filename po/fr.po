@@ -1966,6 +1966,12 @@ msgstr "demain"
 msgid "Signature"
 msgstr "Signature"
 
+msgid "Read/Unread"
+msgstr "Lu/Non lu"
+
+msgid "Spam"
+msgstr "Spam"
+
 msgid "Replied"
 msgstr "Répondu"
 
@@ -2025,12 +2031,6 @@ msgstr "Nom (Z à A)"
 
 msgid "Full Path"
 msgstr "Chemin complet"
-
-msgid "Spam"
-msgstr "Spam"
-
-msgid "Read/Unread"
-msgstr "Lu/Non lu"
 
 msgid "Move To"
 msgstr "Déplacer vers"
@@ -6553,6 +6553,24 @@ msgstr "La vérification s’est arrêtée de manière inattendue."
 msgid "It works: {server} answered."
 msgstr "Ça fonctionne : {server} a répondu."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Toujours affiché · jusqu’à {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Déposez un bouton ici pour le masquer"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Déposez un bouton ici pour le masquer"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Messages déjà lus"
 
@@ -7182,6 +7200,17 @@ msgstr ""
 "Augmentez-la si les balayages s’arrêtent trop tôt. Les glissements à la "
 "souris ne sont pas affectés."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Actions"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Ouvrir la palette d’actions au survol"
+
+msgid "Restore Defaults"
+msgstr "Restaurer les paramètres par défaut"
+
 msgid "Columns"
 msgstr "Colonnes"
 
@@ -7198,9 +7227,6 @@ msgstr "Adapter les colonnes à la liste"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Désactivé, une liste étroite défile horizontalement."
-
-msgid "Restore Defaults"
-msgstr "Restaurer les paramètres par défaut"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr ""
@@ -9436,9 +9462,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "La ligne ⋯ sous chaque message."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Ouvrir la palette d’actions au survol"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Délai d’expiration de la palette d’actions"

@@ -67,6 +67,8 @@ impl AppModel {
             show_attachments: self.show_attachments,
             settings_open_accounts: self.settings_open_accounts,
             swipe_enabled: self.swipe_enabled,
+            hover_actions: self.hover_actions,
+            hover_action_buttons: config::HoverAction::to_keys(&self.hover_action_buttons),
             swipe_reversed: self.swipe_reversed,
             swipe_sensitivity: self.swipe_sensitivity,
             compose_inline: self.compose_inline,

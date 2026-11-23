@@ -2011,6 +2011,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Signatura"
 
+msgid "Read/Unread"
+msgstr "Llegit/No llegit"
+
+msgid "Spam"
+msgstr "Brossa"
+
 msgid "Replied"
 msgstr "Respost"
 
@@ -2075,12 +2081,6 @@ msgstr "Nom (Z a A)"
 
 msgid "Full Path"
 msgstr "Camí complet"
-
-msgid "Spam"
-msgstr "Brossa"
-
-msgid "Read/Unread"
-msgstr "Llegit/No llegit"
 
 msgid "Move To"
 msgstr "Mou a"
@@ -6624,6 +6624,24 @@ msgstr ""
 msgid "It works: {server} answered."
 msgstr ""
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Sempre visible · fins a {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Deixa anar un botó aquí per amagar-lo"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Deixa anar un botó aquí per amagar-lo"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Missatges ja llegits"
 
@@ -7257,6 +7275,17 @@ msgstr ""
 "Augmenta-la si els lliscaments queden curts. Els arrossegaments del ratolí "
 "no es veuen afectats."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Accions"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Obre la paleta d'accions en passar-hi per sobre"
+
+msgid "Restore Defaults"
+msgstr "Restaura els valors per defecte"
+
 msgid "Columns"
 msgstr "Columnes"
 
@@ -7273,9 +7302,6 @@ msgstr "Ajusta les columnes a la llista"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Desactivat, una llista estreta es desplaça lateralment."
-
-msgid "Restore Defaults"
-msgstr "Restaura els valors per defecte"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "L'Hylki no recull cap telemetria ni envia analítiques."
@@ -9515,9 +9541,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "La fila ⋯ sota cada missatge."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Obre la paleta d'accions en passar-hi per sobre"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Temps d'espera de la paleta d'accions"

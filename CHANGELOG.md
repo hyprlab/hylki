@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **New: actions under a message row on hover** (#702, started by
+  BastianC). Pointing at a row opens a line of buttons under its text, Star,
+  Archive and Delete unless changed, and the row grows to hold them rather
+  than covering the date. It is on for a new install and off after an
+  update. Settings → Message List → Hover Actions switches them on or off and
+  chooses up to eight from Star, Read/Unread, Archive, Delete,
+  Spam, Reply, Reply All and Forward, by dragging them onto a sample row
+  that shows the result as it changes. Star and Read/Unread follow the
+  message's state, and Spam is Not Spam in Junk.
+
 - **New: Microsoft 365 shared mailboxes** (#701, requested by valderys).
   Settings → Accounts → Shared Mailboxes adds a shared mailbox by its address,
   opened with the sign-in of a Microsoft 365 account from GNOME Online

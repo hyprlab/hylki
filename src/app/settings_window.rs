@@ -148,6 +148,8 @@ impl AppModel {
             reader_toolbar: self.reader_toolbar.clone(),
             focus: self.focus,
             swipe_enabled: self.swipe_enabled,
+            hover_actions: self.hover_actions,
+            hover_action_buttons: self.hover_action_buttons.clone(),
             swipe_reversed: self.swipe_reversed,
             swipe_sensitivity: self.swipe_sensitivity,
             compose_inline: self.compose_inline,

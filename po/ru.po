@@ -1983,6 +1983,12 @@ msgstr "завтра"
 msgid "Signature"
 msgstr "Подпись"
 
+msgid "Read/Unread"
+msgstr "Прочитано/Непрочитано"
+
+msgid "Spam"
+msgstr "Спам"
+
 msgid "Replied"
 msgstr "Ответил"
 
@@ -2042,12 +2048,6 @@ msgstr "По имени (Я–А)"
 
 msgid "Full Path"
 msgstr "Полный путь"
-
-msgid "Spam"
-msgstr "Спам"
-
-msgid "Read/Unread"
-msgstr "Прочитано/Непрочитано"
 
 msgid "Move To"
 msgstr "Переместить в"
@@ -6541,6 +6541,24 @@ msgstr "Проверка неожиданно остановилась."
 msgid "It works: {server} answered."
 msgstr "Это работает: {server} ответил."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Отображаются всегда · до {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Перетащите кнопку сюда, чтобы скрыть её"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Перетащите кнопку сюда, чтобы скрыть её"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Уже прочитанные сообщения"
 
@@ -7166,6 +7184,17 @@ msgstr ""
 "Поднимите его, если смахивание прекращается. Перетаскивание мышью не "
 "затрагивается."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Действия"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Открывать палитру действий при наведении"
+
+msgid "Restore Defaults"
+msgstr "Восстановить по умолчанию"
+
 msgid "Columns"
 msgstr "Столбцы"
 
@@ -7182,9 +7211,6 @@ msgstr "Подогнать столбцы к списку"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Выкл., узкий список прокручивается вбок."
-
-msgid "Restore Defaults"
-msgstr "Восстановить по умолчанию"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "Hylki не собирает телеметрию и не отправляет аналитику."
@@ -9415,9 +9441,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Вложения в каждом сообщении"
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Открывать палитру действий при наведении"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Задержка палитры действий"

@@ -1952,6 +1952,12 @@ msgstr "morgen"
 msgid "Signature"
 msgstr "Signatur"
 
+msgid "Read/Unread"
+msgstr "Gelesen/Ungelesen"
+
+msgid "Spam"
+msgstr "Spam"
+
 msgid "Replied"
 msgstr "Replied"
 
@@ -2011,12 +2017,6 @@ msgstr "Name (Z–A)"
 
 msgid "Full Path"
 msgstr "Vollständiger Pfad"
-
-msgid "Spam"
-msgstr "Spam"
-
-msgid "Read/Unread"
-msgstr "Gelesen/Ungelesen"
 
 msgid "Move To"
 msgstr "Verschieben nach"
@@ -6560,6 +6560,24 @@ msgstr "Die Überrüfung wurde unerwartet beendet."
 msgid "It works: {server} answered."
 msgstr "Funktioniert: {server} hat geantwortet."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Immer angezeigt · bis zu {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Eine Schaltfläche hier ablegen, um sie auszublenden."
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Eine Schaltfläche hier ablegen, um sie auszublenden."
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Gelesene Nachrichten"
 
@@ -7198,6 +7216,17 @@ msgstr ""
 "Den Wert erhöhen, falls Wischgesten vorzeitig abbrechen. Mauszug-Aktionen "
 "bleiben unbeeinflusst."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Aktionen"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Aktionspalette beim Darüberfahren öffnen"
+
+msgid "Restore Defaults"
+msgstr "Standardeinstellungen wiederherstellen"
+
 msgid "Columns"
 msgstr "Spalten"
 
@@ -7214,9 +7243,6 @@ msgstr "Spaltenbreite an die Liste anpassen"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Bei Deaktivierung lässt sich eine schmale Liste horizontal scrollen."
-
-msgid "Restore Defaults"
-msgstr "Standardeinstellungen wiederherstellen"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "Hylki erfasst keine Telemetriedaten und übermittelt keine Analysen."
@@ -9495,9 +9521,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "Die »⋯« Zeile unter jeder Nachricht"
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Aktionspalette beim Darüberfahren öffnen"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Zeitlimit der Aktionspalette"

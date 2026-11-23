@@ -797,6 +797,10 @@ pub(crate) struct AppModel {
     pub(super) selection_from_cards: bool,
     /// Message rows take a sideways swipe to archive / delete (#92).
     pub(super) swipe_enabled: bool,
+    /// Message rows show buttons under their text on hover.
+    pub(super) hover_actions: bool,
+    /// Those buttons, in order.
+    pub(super) hover_action_buttons: Vec<config::HoverAction>,
     /// The message list's swipe-gesture sides are swapped (#swipe).
     pub(super) swipe_reversed: bool,
     /// How far a trackpad two-finger swipe has to travel to fire the action

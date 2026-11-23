@@ -102,6 +102,8 @@ impl Preferences {
         self.column_editor = Some(ColumnEditor::build(&widgets.list.column_editor_box, sender));
         self.columns_group = Some(widgets.list.columns_group.clone().upcast());
         self.rebuild_column_chips();
+        self.hover_editor = Some(HoverEditor::build(&widgets.list.hover_editor_box, sender));
+        self.rebuild_hover_chips();
     }
 
     /// The search, the close key, the first page shown, and the other pages

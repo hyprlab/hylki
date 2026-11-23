@@ -591,6 +591,12 @@ impl SimpleComponent for MessageList {
             }
             MessageListInput::SetSwipeReversed(on) => self.shared.swipe_reversed.set(on),
             MessageListInput::SetSwipeEnabled(on) => self.on_set_swipe_enabled(on),
+            MessageListInput::SetHoverActions(actions) => {
+                if self.hover_actions != actions {
+                    self.hover_actions = actions;
+                    self.sync_look();
+                }
+            }
             MessageListInput::SetSwipeSensitivity(factor) => {
                 self.shared.swipe_sensitivity.set(factor);
                 self.shared.refresh_all();

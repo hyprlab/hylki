@@ -1971,6 +1971,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Firma"
 
+msgid "Read/Unread"
+msgstr "Leído/No leído"
+
+msgid "Spam"
+msgstr "Correo no deseado"
+
 msgid "Replied"
 msgstr "Respondido"
 
@@ -2030,12 +2036,6 @@ msgstr "Nombre (Z a A)"
 
 msgid "Full Path"
 msgstr "Ruta completa"
-
-msgid "Spam"
-msgstr "Correo no deseado"
-
-msgid "Read/Unread"
-msgstr "Leído/No leído"
 
 msgid "Move To"
 msgstr "Mover a"
@@ -6555,6 +6555,24 @@ msgstr "La comprobación se ha detenido inesperadamente."
 msgid "It works: {server} answered."
 msgstr "Funciona: {server} ha respondido."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Siempre visible · hasta {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Suelta aquí un botón para ocultarlo"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Suelta aquí un botón para ocultarlo"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Mensajes ya leídos"
 
@@ -7183,6 +7201,17 @@ msgstr ""
 "Auméntalo si los deslizamientos se quedan cortos. No afecta a los arrastres "
 "con el ratón."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Acciones"
+
+#, fuzzy
+msgid "Show actions on hover"
+msgstr "Abrir la paleta de acciones al pasar el cursor"
+
+msgid "Restore Defaults"
+msgstr "Restaurar valores predeterminados"
+
 msgid "Columns"
 msgstr "Columnas"
 
@@ -7199,9 +7228,6 @@ msgstr "Ajustar columnas a la lista"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Al desactivarlo, una lista estrecha se desplaza horizontalmente."
-
-msgid "Restore Defaults"
-msgstr "Restaurar valores predeterminados"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "Hylki no recopila telemetría ni envía datos analíticos."
@@ -9463,9 +9489,6 @@ msgstr "Hyprlab"
 
 #~ msgid "The ⋯ row under each message."
 #~ msgstr "La fila ⋯ situada debajo de cada mensaje."
-
-#~ msgid "Open the actions palette on hover"
-#~ msgstr "Abrir la paleta de acciones al pasar el cursor"
 
 #~ msgid "Actions palette timeout"
 #~ msgstr "Tiempo de espera de la paleta de acciones"

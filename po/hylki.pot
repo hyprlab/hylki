@@ -1828,6 +1828,12 @@ msgstr ""
 msgid "Signature"
 msgstr ""
 
+msgid "Read/Unread"
+msgstr ""
+
+msgid "Spam"
+msgstr ""
+
 msgid "Replied"
 msgstr ""
 
@@ -1886,12 +1892,6 @@ msgid "Name (Z to A)"
 msgstr ""
 
 msgid "Full Path"
-msgstr ""
-
-msgid "Spam"
-msgstr ""
-
-msgid "Read/Unread"
 msgstr ""
 
 msgid "Move To"
@@ -5996,6 +5996,21 @@ msgstr ""
 msgid "It works: {server} answered."
 msgstr ""
 
+msgid "Drop actions on the row · up to {n}"
+msgstr ""
+
+msgid "Drop actions here"
+msgstr ""
+
+msgid "Drop an action here to hide it"
+msgstr ""
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr ""
 
@@ -6591,6 +6606,15 @@ msgstr ""
 msgid "Raise it if swipes stop short. Mouse drags are unaffected."
 msgstr ""
 
+msgid "Hover Actions"
+msgstr ""
+
+msgid "Show actions on hover"
+msgstr ""
+
+msgid "Restore Defaults"
+msgstr ""
+
 msgid "Columns"
 msgstr ""
 
@@ -6603,9 +6627,6 @@ msgid "Fit columns to the list"
 msgstr ""
 
 msgid "Off, a narrow list scrolls sideways."
-msgstr ""
-
-msgid "Restore Defaults"
 msgstr ""
 
 msgid "Hylki collects no telemetry and sends no analytics."

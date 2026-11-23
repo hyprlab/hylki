@@ -2767,3 +2767,42 @@ scrolledwindow.merge-dialog-scroll {
 .assistant-edit-bar .assistant-removed {
   color: @error_color;
 }
+
+/* The hover actions' line under a row's text. */
+.row-hover-actions {
+  margin-top: 4px;
+}
+
+.row-hover-actions button {
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+}
+
+.message-list > row:selected .row-hover-actions button:not(.star-active) {
+  color: @accent_fg_color;
+}
+
+/* Settings' preview of a row under the pointer, its strip the drop zone. */
+.hover-preview {
+  border-radius: 12px;
+  padding: 13px 8px 13px 10px;
+  background-color: alpha(currentColor, 0.05);
+}
+/* No outline: the row's highlight already bounds it. A drag over the row
+   tints it to show where the drop lands. */
+.hover-preview-strip {
+  border-radius: 18px;
+  min-height: 28px;
+}
+.hover-preview-strip.drop-active {
+  background: alpha(@accent_bg_color, 0.12);
+}
+.hover-preview-chip {
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 999px;
+}
+.hover-preview-chip:hover {
+  background: alpha(currentColor, 0.1);
+}

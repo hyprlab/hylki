@@ -7,12 +7,14 @@ use super::*;
 /// Settings → Message List → Columns): its zones are rows of one raised
 /// card, each a wrapping row of draggable chips that slide apart under a
 /// drag to show where the drop will land.
-struct ChipZones {
+pub(super) struct ChipZones {
     /// Each zone's chips, and the caption shown while it has none.
-    zones: Vec<(ChipFlow, gtk::Label)>,
+    pub(super) zones: Vec<(ChipFlow, gtk::Label)>,
     /// The size of the chip being dragged (zero when none), written by the
     /// chip's drag source and read by every zone for its gap.
-    drag_size: Rc<std::cell::Cell<(i32, i32)>>,
+    pub(super) drag_size: Rc<std::cell::Cell<(i32, i32)>>,
+    /// Zones whose chips are bare icons, as on the row they preview.
+    pub(super) icon_only: Vec<usize>,
 }
 
 impl ChipZones {
@@ -37,117 +39,43 @@ impl ChipZones {
         list.set_selection_mode(gtk::SelectionMode::None);
         host.append(&list);
         for (zone, (title, hint)) in heads.iter().enumerate() {
-            let column = gtk::Box::new(gtk::Orientation::Vertical, 6);
-            column.set_margin_top(10);
-            column.set_margin_bottom(12);
-            column.set_margin_start(12);
-            column.set_margin_end(12);
-            let heading = gtk::Box::new(gtk::Orientation::Horizontal, 8);
-            let label = gtk::Label::new(Some(title));
-            label.add_css_class("heading");
-            label.set_halign(gtk::Align::Start);
-            heading.append(&label);
-            let hint = gtk::Label::new(Some(hint));
-            hint.add_css_class("dim-label");
-            hint.add_css_class("caption");
-            hint.set_halign(gtk::Align::Start);
-            hint.set_valign(gtk::Align::Baseline);
-            heading.append(&hint);
-            column.append(&heading);
-
+            let column = zone_column(title, hint);
             let flow = ChipFlow::new(chip_size.clone(), drag_size.clone());
-            flow.set_halign(gtk::Align::Fill);
-            flow.set_valign(gtk::Align::Start);
-            // The dashed frame.
-            let frame: gtk::Widget = flow.clone().upcast();
-            frame.add_css_class("toolbar-zone");
-
-            let empty = gtk::Label::new(Some(&i18n("Empty")));
-            empty.add_css_class("dim-label");
-            empty.set_can_target(false);
-            empty.set_halign(gtk::Align::Center);
-            empty.set_valign(gtk::Align::Center);
-            let overlay = gtk::Overlay::new();
-            overlay.set_child(Some(&frame));
-            overlay.add_overlay(&empty);
+            let (overlay, frame, empty) = dashed_zone(&flow);
             column.append(&overlay);
-            let row = gtk::ListBoxRow::new();
-            row.set_activatable(false);
-            row.set_selectable(false);
-            row.set_can_focus(false);
-            row.set_child(Some(&column));
-            list.append(&row);
-
-            // The zone takes a chip from any zone (itself included). While
-            // the drag moves over it, a gap opens at the slot the pointer
-            // is nearest and the other chips slide aside; the drop takes
-            // that slot. The dragged chip is hidden in its own zone for
-            // the duration, so the hole it left closes the same way.
-            let drop = gtk::DropTarget::new(gtk::glib::Type::STRING, gtk::gdk::DragAction::MOVE);
-            let fb = flow.clone();
-            let room = has_room.clone();
-            let take = on_drop.clone();
-            drop.connect_drop(move |_, value, x, y| {
-                let Ok(key) = value.get::<String>() else {
-                    return false;
-                };
-                if !room(zone, &fb) {
-                    fb.set_gap(None);
-                    return false;
-                }
-                let index = fb.insertion_index(x, y);
-                fb.set_gap(None);
-                take(key, zone, index)
-            });
-            let fb = flow.clone();
-            let fr = frame.clone();
-            let room = has_room.clone();
-            drop.connect_enter(move |_, x, y| {
-                // A full zone takes nothing: no gap, no drop.
-                if !room(zone, &fb) {
-                    return gtk::gdk::DragAction::empty();
-                }
-                fr.add_css_class("drop-active");
-                fb.set_gap(Some(fb.insertion_index(x, y)));
-                gtk::gdk::DragAction::MOVE
-            });
-            let fb = flow.clone();
-            let el = empty.clone();
-            let room = has_room.clone();
-            drop.connect_motion(move |_, x, y| {
-                if !room(zone, &fb) {
-                    return gtk::gdk::DragAction::empty();
-                }
-                el.set_visible(false);
-                fb.set_gap(Some(fb.insertion_index(x, y)));
-                gtk::gdk::DragAction::MOVE
-            });
-            let fb = flow.clone();
-            let fr = frame.clone();
-            let el = empty.clone();
-            drop.connect_leave(move |_| {
-                fr.remove_css_class("drop-active");
-                fb.set_gap(None);
-                // The "Empty" caption comes back with the next rebuild if
-                // the zone is still empty.
-                el.set_visible(fb.first_child().is_none());
-            });
-            flow.add_controller(drop);
+            list.append(&zone_row(&column));
+            wire_drop(
+                &frame,
+                &flow,
+                &frame,
+                &empty,
+                zone,
+                has_room.clone(),
+                on_drop.clone(),
+            );
 
             zones.push((flow, empty));
         }
-        ChipZones { zones, drag_size }
+        ChipZones {
+            zones,
+            drag_size,
+            icon_only: Vec::new(),
+        }
     }
 
     /// Refill zone `zone` with chips: (key, icon, untranslated label).
-    fn fill(&self, zone: usize, chips: &[(&'static str, &'static str, &'static str)]) {
+    pub(super) fn fill(&self, zone: usize, chips: &[(&'static str, &'static str, &'static str)]) {
         let Some((flow, empty)) = self.zones.get(zone) else {
             return;
         };
         flow.remove_all();
         empty.set_visible(chips.is_empty());
         for (key, icon, label) in chips {
-            flow.append(&self.chip(key, icon, label));
+            if self.icon_only.contains(&zone) {
+                flow.append(&self.icon_chip(key, icon, label));
+            } else {
+                flow.append(&self.chip(key, icon, label));
+            }
         }
     }
 
@@ -163,7 +91,31 @@ impl ChipZones {
         let text = gtk::Label::new(Some(&i18n(label)));
         text.add_css_class("caption");
         chip.append(&text);
+        self.draggable(&chip, key, true);
+        chip
+    }
 
+    /// A chip that is only its icon, the size of the button it stands for,
+    /// named by its tooltip.
+    fn icon_chip(&self, key: &'static str, icon: &str, label: &str) -> gtk::Box {
+        let chip = gtk::Box::new(gtk::Orientation::Vertical, 0);
+        chip.add_css_class("hover-preview-chip");
+        chip.set_widget_name(key);
+        chip.set_tooltip_text(Some(&i18n(label)));
+        let image = gtk::Image::from_icon_name(icon);
+        image.set_halign(gtk::Align::Center);
+        image.set_valign(gtk::Align::Center);
+        image.set_vexpand(true);
+        chip.append(&image);
+        // Its size is not written for the other zones: their gaps keep the
+        // size of their own, larger chips.
+        self.draggable(&chip, key, false);
+        chip
+    }
+
+    /// Make `chip` draggable to another zone, or within its own. With
+    /// `sized`, the zones open their gaps at its size.
+    fn draggable(&self, chip: &gtk::Box, key: &'static str, sized: bool) {
         let drag = gtk::DragSource::new();
         drag.set_actions(gtk::gdk::DragAction::MOVE);
         // The chip's likeness is taken while it is still on screen: it is
@@ -177,7 +129,9 @@ impl ChipZones {
         drag.connect_prepare(move |_, _, _| {
             *l.borrow_mut() = Some(gtk::WidgetPaintable::new(Some(&c)).current_image());
             // The zones open their gap at this chip's own size.
-            ds.set((c.width(), c.height()));
+            if sized {
+                ds.set((c.width(), c.height()));
+            }
             Some(gtk::gdk::ContentProvider::for_value(&key.to_value()))
         });
         let c = chip.clone();
@@ -198,8 +152,142 @@ impl ChipZones {
             c.set_visible(true);
         });
         chip.add_controller(drag);
-        chip
     }
+}
+
+/// A zone's column: its heading, with a hint beside it.
+pub(super) fn zone_column(title: &str, hint: &str) -> gtk::Box {
+    let column = gtk::Box::new(gtk::Orientation::Vertical, 6);
+    column.set_margin_top(10);
+    column.set_margin_bottom(12);
+    column.set_margin_start(12);
+    column.set_margin_end(12);
+    let heading = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+    let label = gtk::Label::new(Some(title));
+    label.add_css_class("heading");
+    label.set_halign(gtk::Align::Start);
+    heading.append(&label);
+    let hint = gtk::Label::new(Some(hint));
+    hint.add_css_class("dim-label");
+    hint.add_css_class("caption");
+    hint.set_halign(gtk::Align::Start);
+    hint.set_valign(gtk::Align::Baseline);
+    heading.append(&hint);
+    column.append(&heading);
+    column
+}
+
+/// The row of the editor's card that holds a zone's column.
+pub(super) fn zone_row(column: &gtk::Box) -> gtk::ListBoxRow {
+    let row = gtk::ListBoxRow::new();
+    row.set_activatable(false);
+    row.set_selectable(false);
+    row.set_can_focus(false);
+    row.set_child(Some(column));
+    row
+}
+
+/// `flow` in a dashed frame, with the caption it shows while empty: the
+/// widget to place, the frame, and the caption.
+pub(super) fn dashed_zone(flow: &ChipFlow) -> (gtk::Overlay, gtk::Widget, gtk::Label) {
+    flow.set_halign(gtk::Align::Fill);
+    flow.set_valign(gtk::Align::Start);
+    let frame: gtk::Widget = flow.clone().upcast();
+    frame.add_css_class("toolbar-zone");
+    let empty = gtk::Label::new(Some(&i18n("Empty")));
+    empty.add_css_class("dim-label");
+    empty.set_can_target(false);
+    empty.set_halign(gtk::Align::Center);
+    empty.set_valign(gtk::Align::Center);
+    let overlay = gtk::Overlay::new();
+    overlay.set_child(Some(&frame));
+    overlay.add_overlay(&empty);
+    (overlay, frame, empty)
+}
+
+/// Make `target` take chips for `flow`, zone `zone` of its editor: from any
+/// zone, itself included. While a drag moves over it, a gap opens at the
+/// slot the pointer is nearest and the other chips slide aside; the drop
+/// takes that slot. The dragged chip is hidden in its own zone for the
+/// duration, so the hole it left closes the same way. `target` is the flow
+/// itself, or a larger widget around it that is easier to aim at.
+/// `has_room` says whether the zone takes another chip; `on_drop` is handed
+/// the chip's key, the zone and the slot, and says whether it took it.
+pub(super) fn wire_drop(
+    target: &gtk::Widget,
+    flow: &ChipFlow,
+    frame: &gtk::Widget,
+    empty: &gtk::Label,
+    zone: usize,
+    has_room: impl Fn(usize, &ChipFlow) -> bool + Clone + 'static,
+    on_drop: impl Fn(String, usize, usize) -> bool + Clone + 'static,
+) {
+    // The pointer, in the flow's own coordinates.
+    let at = {
+        let t = target.clone();
+        let f = flow.clone();
+        move |x: f64, y: f64| {
+            t.compute_point(&f, &gtk::graphene::Point::new(x as f32, y as f32))
+                .map(|p| (p.x() as f64, p.y() as f64))
+                .unwrap_or((x, y))
+        }
+    };
+    let drop = gtk::DropTarget::new(gtk::glib::Type::STRING, gtk::gdk::DragAction::MOVE);
+    let fb = flow.clone();
+    let room = has_room.clone();
+    let take = on_drop.clone();
+    let pos = at.clone();
+    drop.connect_drop(move |_, value, x, y| {
+        let Ok(key) = value.get::<String>() else {
+            return false;
+        };
+        if !room(zone, &fb) {
+            fb.set_gap(None);
+            return false;
+        }
+        let (x, y) = pos(x, y);
+        let index = fb.insertion_index(x, y);
+        fb.set_gap(None);
+        take(key, zone, index)
+    });
+    let fb = flow.clone();
+    let fr = frame.clone();
+    let room = has_room.clone();
+    let pos = at.clone();
+    drop.connect_enter(move |_, x, y| {
+        // A full zone takes nothing: no gap, no drop.
+        if !room(zone, &fb) {
+            return gtk::gdk::DragAction::empty();
+        }
+        fr.add_css_class("drop-active");
+        let (x, y) = pos(x, y);
+        fb.set_gap(Some(fb.insertion_index(x, y)));
+        gtk::gdk::DragAction::MOVE
+    });
+    let fb = flow.clone();
+    let el = empty.clone();
+    let room = has_room.clone();
+    let pos = at.clone();
+    drop.connect_motion(move |_, x, y| {
+        if !room(zone, &fb) {
+            return gtk::gdk::DragAction::empty();
+        }
+        el.set_visible(false);
+        let (x, y) = pos(x, y);
+        fb.set_gap(Some(fb.insertion_index(x, y)));
+        gtk::gdk::DragAction::MOVE
+    });
+    let fb = flow.clone();
+    let fr = frame.clone();
+    let el = empty.clone();
+    drop.connect_leave(move |_| {
+        fr.remove_css_class("drop-active");
+        fb.set_gap(None);
+        // The "Empty" caption comes back with the next rebuild if
+        // the zone is still empty.
+        el.set_visible(fb.first_child().is_none());
+    });
+    target.add_controller(drop);
 }
 
 /// The reader toolbar editor (Settings → Appearance → Toolbar): one drop

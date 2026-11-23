@@ -7,6 +7,9 @@ use crate::ui::column_bin::ColumnBin;
 use adw::prelude::*;
 use relm4::prelude::*;
 
+/// How long the hover actions take to slide open or shut.
+pub(super) const HOVER_REVEAL_MS: u32 = 120;
+
 /// The row's widget tree. The host is what the view wraps in its item
 /// widget; everything else hangs off it.
 pub(super) fn build_widgets() -> RowWidgets {
@@ -48,13 +51,18 @@ pub(super) fn build_widgets() -> RowWidgets {
     let overlay = gtk::Overlay::new();
     surface.set_foreground(&overlay);
 
-    // The content: avatar, unread dot and the three lines of text.
-    let content = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+    // The pill: the row's content, and under it the actions a hover
+    // reveals. They have a line of their own so they never cover the text,
+    // and the content keeps its own box so the circle stays centred on the
+    // text while the row grows.
+    let content = gtk::Box::new(gtk::Orientation::Vertical, 0);
     content.add_css_class("message-row");
     // Anything wider than the row is clipped here rather than painted
     // across the divider into the reader.
     content.set_overflow(gtk::Overflow::Hidden);
     overlay.set_child(Some(&content));
+    let main = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+    content.append(&main);
 
     // The circle sits in a revealer so Focus Mode can slide it away (and
     // back). SlideRight: folding, the circle moves off past the left edge.
@@ -66,15 +74,15 @@ pub(super) fn build_widgets() -> RowWidgets {
     let avatar = adw::Avatar::new(38, None, true);
     avatar.set_valign(gtk::Align::Center);
     avatar_revealer.set_child(Some(&avatar));
-    content.append(&avatar_revealer);
+    main.append(&avatar_revealer);
 
     let dot = gtk::Box::new(gtk::Orientation::Horizontal, 0);
     dot.add_css_class("unread-dot");
-    content.append(&dot);
+    main.append(&dot);
 
     let text = gtk::Box::new(gtk::Orientation::Vertical, 2);
     text.set_hexpand(true);
-    content.append(&text);
+    main.append(&text);
 
     let top = gtk::Box::new(gtk::Orientation::Horizontal, 6);
     let name = gtk::Label::new(None);
@@ -185,7 +193,7 @@ pub(super) fn build_widgets() -> RowWidgets {
     let line = gtk::Box::new(gtk::Orientation::Horizontal, 8);
     line.set_hexpand(true);
     line.set_visible(false);
-    content.append(&line);
+    main.append(&line);
     // The columns a card has no place for, which live on that line, each in
     // a bin that keeps it the same width on every row.
     let column_label = |px: i32| {
@@ -237,6 +245,15 @@ pub(super) fn build_widgets() -> RowWidgets {
     node.set_valign(gtk::Align::Center);
     overlay.add_overlay(&node);
 
+    let hover_reveal = gtk::Revealer::new();
+    hover_reveal.set_transition_type(gtk::RevealerTransitionType::SlideDown);
+    hover_reveal.set_transition_duration(HOVER_REVEAL_MS);
+    let hover_box = gtk::Box::new(gtk::Orientation::Horizontal, 2);
+    hover_box.add_css_class("row-hover-actions");
+    hover_box.set_halign(gtk::Align::End);
+    hover_reveal.set_child(Some(&hover_box));
+    content.append(&hover_reveal);
+
     RowWidgets {
         host,
         revealer,
@@ -247,6 +264,10 @@ pub(super) fn build_widgets() -> RowWidgets {
         swipe_icon,
         swipe_label,
         overlay,
+        hover_reveal,
+        hover_box,
+        hover_buttons: Default::default(),
+        hover_motion: gtk::EventControllerMotion::new(),
         rail_stub,
         node,
         content,

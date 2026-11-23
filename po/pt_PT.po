@@ -1971,6 +1971,12 @@ msgstr ""
 msgid "Signature"
 msgstr "Assinatura"
 
+msgid "Read/Unread"
+msgstr "Lida/não lida"
+
+msgid "Spam"
+msgstr "Lixo eletrónico"
+
 msgid "Replied"
 msgstr "Respondida"
 
@@ -2030,12 +2036,6 @@ msgstr "Nome (Z a A)"
 
 msgid "Full Path"
 msgstr "Caminho completo"
-
-msgid "Spam"
-msgstr "Lixo eletrónico"
-
-msgid "Read/Unread"
-msgstr "Lida/não lida"
 
 msgid "Move To"
 msgstr "Mover para"
@@ -6555,6 +6555,24 @@ msgstr "A verificação parou inesperadamente."
 msgid "It works: {server} answered."
 msgstr "Tudo a funcionar: {server} respondeu."
 
+#, fuzzy
+msgid "Drop actions on the row · up to {n}"
+msgstr "Sempre mostrado · até {n}"
+
+#, fuzzy
+msgid "Drop actions here"
+msgstr "Largue um botão aqui para o ocultar"
+
+#, fuzzy
+msgid "Drop an action here to hide it"
+msgstr "Largue um botão aqui para o ocultar"
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
 msgid "Messages already read"
 msgstr "Mensagens já lidas"
 
@@ -7177,6 +7195,16 @@ msgstr ""
 "Aumente se os gestos de deslizar ficarem incompletos. Os arrastamentos com o "
 "rato não são afetados."
 
+#, fuzzy
+msgid "Hover Actions"
+msgstr "Ações"
+
+msgid "Show actions on hover"
+msgstr ""
+
+msgid "Restore Defaults"
+msgstr "Restaurar predefinições"
+
 msgid "Columns"
 msgstr "Colunas"
 
@@ -7193,9 +7221,6 @@ msgstr "Ajustar colunas à lista"
 
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Desativado, uma lista estreita desloca-se horizontalmente."
-
-msgid "Restore Defaults"
-msgstr "Restaurar predefinições"
 
 msgid "Hylki collects no telemetry and sends no analytics."
 msgstr "O Hylki não recolhe telemetria nem envia dados de análise."

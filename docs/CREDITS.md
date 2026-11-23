@@ -190,6 +190,8 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   them went out with the wrong argument types, and the calendars of the date
   filter and the Snooze and Send Later picker drawn like the rest of their
   popover or dialog.
+- [**BastianC**](https://github.com/bastiancolpaert) ([#702](https://github.com/hyprlab/hylki/pull/702)):
+  the buttons a message row shows on hover.
 
 ## Reports, design and ideas
 

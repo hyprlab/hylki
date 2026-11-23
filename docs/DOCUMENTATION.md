@@ -2420,6 +2420,19 @@ tags, Gmail labels and folder pill on a line of their own under the
 message's text, so the subject keeps the row's full width. It is off unless
 switched on; a single-line list keeps them in its Tags column.
 
+**Settings → Message List → Hover Actions** puts a line of buttons under a
+row's text while the pointer is on it: Star, Archive and Delete unless
+changed. The row grows to make room, so the buttons never cover the date or
+the text, and shuts again when the pointer leaves. **Show actions on hover**
+turns them on or off: on for a new install, off after an update from a
+version without them. Below it, a sample row shows the buttons as the list will:
+drag an action from **Not shown** onto the row to add it, along the row to
+move it, or back to **Not shown** to take it off. A row shows up to eight,
+from Star, Read/Unread, Archive, Delete, Spam, Reply, Reply All and Forward.
+Star and Read/Unread show the message's state, Spam is Not Spam in Junk, and
+Drafts leave out Read/Unread. A button acts on its row's message, or on the
+whole conversation on a conversation's row, as a swipe does.
+
 **Settings → Message List → Keep the search field open** shows the search
 field with the list all the time, instead of only after the search button,
 <kbd>Ctrl+F</kbd> or <kbd>/</kbd>. One click in it starts a search.
