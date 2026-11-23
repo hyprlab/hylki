@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.49.2 — 2026-11-23
+
+A patch release with one fix: the window appears when Hylki starts in All
+Inboxes.
+
+- **Fixed: no window and a busy processor when starting in All Inboxes**
+  (#700, reported by mbetrifork). Showing the search scope in its menu turned
+  that scope's radio on, and the radio sent the scope back to the list. Two
+  different scopes sent in a row then echoed each other forever, so the
+  window never appeared and later launches timed out handing off to it. The
+  menu no longer sends back a scope it is only showing.
+
 ## 1.49.1 — 2026-11-22
 
 A patch release with eight fixes: a message is kept in the Outbox until the
