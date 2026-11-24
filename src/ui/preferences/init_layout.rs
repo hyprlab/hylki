@@ -37,6 +37,7 @@ impl Preferences {
                 search_open: init.contacts_search_open,
                 contact_names: init.contact_names,
                 reply_to_sender: init.reply_to_sender,
+                duck_addresses: init.duck_addresses,
                 placement: init.contacts_placement,
             })
             .forward(sender.input_sender(), PrefInput::Contacts);

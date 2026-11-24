@@ -120,6 +120,17 @@ impl AppModel {
         }
     }
 
+    /// Show the addresses behind Duck Address relays, or the relays
+    /// (#708), and redraw what names them when that changed.
+    pub(super) fn apply_duck_addresses(&self) {
+        if crate::contacts::set_duck_addresses(self.duck_addresses) {
+            self.message_list
+                .emit(MessageListInput::ContactNamesChanged);
+            self.message_view.emit(MessageViewInput::FacesChanged);
+            self.popouts_emit(|| MessageWindowInput::FacesChanged);
+        }
+    }
+
     /// The window a dialog opened from Settings belongs to: Settings while
     /// it is open, else the main window.
     pub(super) fn dialog_parent(&self) -> Option<gtk::Window> {

@@ -244,6 +244,13 @@ impl Message {
         self.sender().1
     }
 
+    /// The address the sender's picture is looked up by: the one shown, or
+    /// the address behind a Duck Address relay when Settings shows that
+    /// (#708), so the picture is the person's and not duck.com's.
+    pub(crate) fn face_addr(&self) -> std::borrow::Cow<'_, str> {
+        crate::contacts::shown_addr(self.shown_from_addr())
+    }
+
     /// The sender's name as shown: the address book's for a saved contact
     /// when Settings asks for it (#541), else the one the mail gives.
     pub(crate) fn shown_from_name(&self) -> std::borrow::Cow<'_, str> {

@@ -271,7 +271,7 @@ impl AppModel {
                     heading.push_str(&m.date);
                 }
                 let texture =
-                    match crate::services::avatar::lookup(m.shown_from_addr(), self.gravatar) {
+                    match crate::services::avatar::lookup(&m.face_addr(), self.gravatar) {
                         crate::services::avatar::CacheLookup::Texture(t) => Some(t),
                         _ => None,
                     };
@@ -284,7 +284,7 @@ impl AppModel {
                     preview: indicator::clip(&m.preview, 70),
                     icon: indicator::sender_icon(
                         &m.shown_from_name(),
-                        m.shown_from_addr(),
+                        &m.face_addr(),
                         texture,
                     ),
                 }

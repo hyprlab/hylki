@@ -57,7 +57,15 @@ impl RecipientRow {
         if !valid {
             pill.add_css_class("invalid");
         }
-        let shown = if name.is_empty() { addr } else { name };
+        // A Duck Address relay shows the address behind it when Settings
+        // asks for that (#708); the pill still sends to the relay, which
+        // its tooltip names.
+        let duck = (!field).then(|| crate::contacts::shown_duck(addr)).flatten();
+        let shown = match &duck {
+            Some(original) if name.is_empty() || name.eq_ignore_ascii_case(addr) => original,
+            _ if name.is_empty() => addr,
+            _ => name,
+        };
         pill.update_property(&[gtk::accessible::Property::Label(shown)]);
         if field {
             let icon = gtk::Image::from_icon_name("hylki-merge-field-symbolic");
@@ -70,6 +78,13 @@ impl RecipientRow {
         label.set_max_width_chars(32);
         label.set_single_line_mode(true);
         pill.append(&label);
+        if duck.is_some() {
+            let mark = gtk::Label::new(Some("duck.com"));
+            mark.add_css_class("caption");
+            mark.add_css_class("dim-label");
+            mark.set_margin_start(4);
+            pill.append(&mark);
+        }
         pill.set_tooltip_text(Some(
             if field {
                 i18n("Filled in by Mail Merge")

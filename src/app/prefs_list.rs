@@ -48,6 +48,11 @@ impl AppModel {
                     self.apply_reply_to_sender();
                 }
             }
+            PrefOutput::SetDuckAddresses(on) => {
+                if pref!(self.duck_addresses = on) {
+                    self.apply_duck_addresses();
+                }
+            }
             PrefOutput::SetContactsSearchOpen(on) => {
                 if pref!(self.contacts_search_open = on) {
                     self.contacts_page

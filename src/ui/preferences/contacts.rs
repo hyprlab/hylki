@@ -53,6 +53,9 @@ impl Preferences {
             Out::SetReplyToSender(on) => {
                 let _ = sender.output(PrefOutput::SetReplyToSender(on));
             }
+            Out::SetDuckAddresses(on) => {
+                let _ = sender.output(PrefOutput::SetDuckAddresses(on));
+            }
             // Through the Sidebar page's row, which tells the app.
             Out::SetPlacement(placement) => {
                 if let Some(row) = &self.contacts_placement_row {

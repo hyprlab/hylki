@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **New: the address behind a Duck Address** (#708, requested by
+  somepaulo). Settings → Contacts → Show the address behind a Duck Address
+  shows a DuckDuckGo Email Protection relay address such as
+  `brian_at_gmail.com_jane@duck.com` as brian@gmail.com, with a `duck.com`
+  mark whose tooltip holds the relay address: in the reader's sender and
+  recipient lines, in the composer's recipient pills, and in the list and
+  notifications where the mail gives no name. The sender's picture and a
+  saved contact's name go by the address behind it. Replies, Copy Address
+  and new messages still use the relay address. Off by default. Search
+  finds a relay address by the address behind it, with `from:` and `to:`
+  too, whether the switch is on or off.
+
 - **New: crash reports** (#449, requested by 3v1n0). A crash, a GTK abort
   among them, writes a report to stderr and to `crash.log` in Hylki's data
   folder (`~/.var/app/co.hyprlab.Hylki/data/hylki/` in the Flatpak): the

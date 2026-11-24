@@ -4897,6 +4897,9 @@ msgstr ""
 msgid "Show the Reply-To sender"
 msgstr "Mostrar o remetente de Responder a"
 
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
 msgid "Layout"
 msgstr "Disposição"
 

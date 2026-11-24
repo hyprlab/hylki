@@ -393,6 +393,7 @@ impl AppModel {
             contacts_search_open: prefs.contacts_search_open,
             contact_names: prefs.contact_names,
             reply_to_sender: prefs.reply_to_sender,
+            duck_addresses: prefs.duck_addresses,
             list_search_bottom: prefs.list_search_bottom,
             list_bulk_bar_bottom: prefs.list_bulk_bar_bottom,
             list_search_start: prefs.list_search_start,

@@ -359,18 +359,18 @@ fn circle_html(m: &Message, dark: bool) -> String {
         }
     });
     let face = || {
-        super::faces::known_face(m.shown_from_addr())
+        super::faces::known_face(&m.face_addr())
             .map(|uri| format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"))
     };
     own.or_else(face).unwrap_or_else(|| {
         let initial = crate::ui::initials::word_initials(&m.shown_from_name())
             .first()
             .copied()
-            .or_else(|| m.shown_from_addr().trim().chars().next())
+            .or_else(|| m.face_addr().trim().chars().next())
             .map(|c| c.to_uppercase().to_string())
             .unwrap_or_else(|| "?".to_string());
         let hue = m
-            .shown_from_addr()
+            .face_addr()
             .to_ascii_lowercase()
             .bytes()
             .fold(0u32, |h, b| h.wrapping_mul(31).wrapping_add(b as u32))

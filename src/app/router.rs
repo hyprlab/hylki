@@ -540,6 +540,7 @@ impl AppModel {
             | PrefOutput::SetContactsSearchOpen(..)
             | PrefOutput::SetContactNames(..)
             | PrefOutput::SetReplyToSender(..)
+            | PrefOutput::SetDuckAddresses(..)
             | PrefOutput::SetListSearchBottom(..)
             | PrefOutput::SetListBulkBarBottom(..)
             | PrefOutput::SetListSearchStart(..)

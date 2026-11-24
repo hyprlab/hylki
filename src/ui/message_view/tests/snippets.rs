@@ -293,3 +293,44 @@ fn a_reply_to_sender_card_shows_the_from_address() {
     );
     crate::contacts::set_reply_to_sender(false);
 }
+
+/// A Duck Address relay shows the address behind it, marked, while clicks
+/// and copies keep the relay (#708).
+#[test]
+fn a_duck_relay_shows_the_address_behind_it() {
+    let relay = "brian_at_gmail.com_jane@duck.com";
+    let mut m = super::msg_for_print();
+    m.from_name = relay.into();
+    m.from_addr = relay.into();
+    m.to = format!("Brian <{relay}>, ann@x.example");
+
+    crate::contacts::set_duck_addresses(false);
+    let plain = sender_addr_html(&m);
+    assert!(plain.contains(&format!("&lt;{relay}&gt;")), "{plain}");
+    assert!(!plain.contains("hylki-duck"), "{plain}");
+    assert_eq!(m.shown_from_name(), relay);
+    assert_eq!(m.face_addr(), relay);
+
+    crate::contacts::set_duck_addresses(true);
+    let addr = sender_addr_html(&m);
+    assert!(
+        addr.contains(&format!("data-mail=\"{relay}\" data-addr=\"&lt;brian@gmail.com&gt;\">&lt;brian@gmail.com&gt;")),
+        "{addr}"
+    );
+    assert!(
+        addr.contains(&format!("<span class=\"hylki-duck\" title=\"{relay}\">duck.com</span>")),
+        "{addr}"
+    );
+    assert_eq!(m.shown_from_name(), "brian@gmail.com");
+    assert_eq!(m.face_addr(), "brian@gmail.com");
+    let rcpt = recipients_html(&m, true);
+    assert!(
+        rcpt.contains(&format!("data-mail=\"{relay}\">Brian &lt;brian@gmail.com&gt; <span class=\"hylki-duck\"")),
+        "{rcpt}"
+    );
+    assert!(
+        rcpt.contains("data-mail=\"ann@x.example\">ann@x.example</span>"),
+        "{rcpt}"
+    );
+    crate::contacts::set_duck_addresses(false);
+}

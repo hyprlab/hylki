@@ -756,6 +756,29 @@ fn search_text_keeps_the_fields_apart() {
     assert!(!text.contains("REPORT"));
 }
 
+/// #708: a Duck Address relay is found by the address behind it, as a
+/// sender and as a recipient, whichever way the switch is set.
+#[test]
+fn a_duck_relay_is_found_by_the_address_behind_it() {
+    use super::query::Query;
+    use super::search::text_match;
+    let mut m = msg(1, "a", "");
+    m.from_name = "brian_at_gmail.com_jane@duck.com".into();
+    m.from_addr = "brian_at_gmail.com_jane@duck.com".into();
+    m.to = "Ann <ann_at_x.example_jane@duck.com>, bob@y.example".into();
+    let text = super::search_text_of(&m);
+    for (query, found) in [
+        ("brian@gmail.com", true),
+        ("from:brian@gmail.com", true),
+        ("to:ann@x.example", true),
+        ("to:brian@gmail.com", false),
+        ("from:ann@x.example", false),
+        ("from:brian_at_gmail.com_jane@duck.com", true),
+    ] {
+        assert_eq!(text_match(&Query::parse(query), &text) != 0, found, "{query}");
+    }
+}
+
 /// #509: each word may be found in a different place: the list's own
 /// text, the body on disk, or a server that found them all.
 #[test]

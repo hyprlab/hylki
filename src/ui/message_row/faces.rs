@@ -145,15 +145,17 @@ impl Row {
     /// The address face lookups run against — the first recipient's in a
     /// Sent folder, so the circle shows who the mail went to.
     pub(super) fn face_email(&self, data: &RowData, look: &RowLook) -> String {
+        // A Duck Address relay by the address behind it, when Settings
+        // shows that (#708).
         if look.show_recipient {
             if let Some(addr) = first_recipient_addr(&data.msg.to) {
-                return addr;
+                return crate::contacts::shown_addr(&addr).into_owned();
             }
         }
         if let Some((_, addr)) = &data.meta.from {
-            return addr.clone();
+            return crate::contacts::shown_addr(addr).into_owned();
         }
-        data.msg.shown_from_addr().to_string()
+        data.msg.face_addr().into_owned()
     }
 
     /// What the avatar circle shows: the sender's picture when one is known,

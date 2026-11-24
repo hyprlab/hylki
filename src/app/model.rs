@@ -517,6 +517,8 @@ pub(crate) struct AppModel {
     pub(super) contact_names: bool,
     /// Mail is named by its Reply-To sender (#641).
     pub(super) reply_to_sender: bool,
+    /// The addresses behind Duck Address relays are shown (#708).
+    pub(super) duck_addresses: bool,
     /// The list's search field and bulk bar open under the rows (#496).
     pub(super) list_search_bottom: bool,
     pub(super) list_bulk_bar_bottom: bool,

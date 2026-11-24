@@ -117,6 +117,7 @@ impl AppModel {
             contacts_search_open: self.contacts_search_open,
             contact_names: self.contact_names,
             reply_to_sender: self.reply_to_sender,
+            duck_addresses: self.duck_addresses,
             list_search_bottom: self.list_search_bottom,
             list_bulk_bar_bottom: self.list_bulk_bar_bottom,
             list_search_start: self.list_search_start,

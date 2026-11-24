@@ -201,6 +201,8 @@ pub(crate) enum ContactSourcesOutput {
     SetContactNames(bool),
     /// Mail is named by its Reply-To sender (#641).
     SetReplyToSender(bool),
+    /// Addresses behind Duck Address relays are shown (#708).
+    SetDuckAddresses(bool),
     /// Where Contacts sits in the sidebar.
     SetPlacement(crate::config::SectionPlacement),
 }
@@ -213,6 +215,8 @@ pub(super) struct ContactSourcesInit {
     pub(super) contact_names: bool,
     /// Whether mail is named by its Reply-To sender.
     pub(super) reply_to_sender: bool,
+    /// Whether the addresses behind Duck Address relays are shown.
+    pub(super) duck_addresses: bool,
 }
 
 #[relm4::component(pub(crate))]
@@ -311,6 +315,16 @@ impl SimpleComponent for ContactSources {
                                         set_active: init.reply_to_sender,
                                         connect_active_notify[sender] => move |row| {
                                             let _ = sender.output(ContactSourcesOutput::SetReplyToSender(row.is_active()));
+                                        },
+                                    },
+                                    // #708: mail through a Duck Address
+                                    // carries the other side's address
+                                    // spelled out in a relay address.
+                                    adw::SwitchRow {
+                                        set_title: &i18n("Show the address behind a Duck Address"),
+                                        set_active: init.duck_addresses,
+                                        connect_active_notify[sender] => move |row| {
+                                            let _ = sender.output(ContactSourcesOutput::SetDuckAddresses(row.is_active()));
                                         },
                                     },
                                 },

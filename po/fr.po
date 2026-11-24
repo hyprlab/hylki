@@ -4932,6 +4932,9 @@ msgstr ""
 msgid "Show the Reply-To sender"
 msgstr "Afficher l’expéditeur Répondre à"
 
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
 msgid "Layout"
 msgstr "Disposition"
 

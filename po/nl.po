@@ -4865,6 +4865,9 @@ msgstr ""
 msgid "Show the Reply-To sender"
 msgstr "Toon de antwoord-aan-afzender"
 
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
 msgid "Layout"
 msgstr "Indeling"
 

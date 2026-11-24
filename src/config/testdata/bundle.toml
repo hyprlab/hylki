@@ -116,6 +116,7 @@ list_search_open = false
 contacts_search_open = false
 contact_names = false
 reply_to_sender = false
+duck_addresses = false
 list_search_bottom = false
 list_bulk_bar_bottom = false
 list_search_start = "everywhere"

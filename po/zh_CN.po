@@ -4553,6 +4553,9 @@ msgstr "已保存的地址显示联系人姓名，而非邮件中的姓名。"
 msgid "Show the Reply-To sender"
 msgstr "显示 Reply-To 发件人"
 
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
 msgid "Layout"
 msgstr "布局"
 
