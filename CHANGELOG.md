@@ -1,5 +1,49 @@
 # Changelog
 
+## 1.50.0-beta.3 — 2026-11-24
+
+- **New: the address behind a Duck Address** (#708, requested by
+  somepaulo). Settings → Contacts → Show the address behind a Duck Address
+  shows a DuckDuckGo Email Protection relay address such as
+  `brian_at_gmail.com_jane@duck.com` as brian@gmail.com, with a `duck.com`
+  mark whose tooltip holds the relay address: in the reader's sender and
+  recipient lines, in the composer's recipient pills, and in the list and
+  notifications where the mail gives no name. The sender's picture and a
+  saved contact's name go by the address behind it. Replies, Copy Address
+  and new messages still use the relay address. Off by default. Search
+  finds a relay address by the address behind it, with `from:` and `to:`
+  too, whether the switch is on or off.
+
+- **New: crash reports** (#449, requested by 3v1n0). A crash, a GTK abort
+  among them, writes a report to stderr and to `crash.log` in Hylki's data
+  folder (`~/.var/app/co.hyprlab.Hylki/data/hylki/` in the Flatpak): the
+  signal, GLib's assertion message, the last panic, a backtrace of the
+  thread that crashed and the last 400 lines of the log. Settings → System →
+  Export log includes the newest report. GLib and GTK warnings and criticals
+  are in the log too. Release builds keep their symbol table, so the
+  backtrace names Hylki's functions; the process still ends with the
+  original signal and leaves its core dump as before.
+
+- **Fixed: the account ring around avatars in All Inboxes was cut at the
+  sides** (#706, reported by user839292874). On GTK 4.18 and older, as on
+  Debian 13, the ring drawn outside each avatar lost its left and right
+  edges.
+
+- **Fixed: a second u scrolled the list to the top** (#392, reported by
+  3v1n0). With the Gmail-style keys, u with no message open now leaves the
+  list on the row the keyboard is on, or on the one last read.
+
+- **Fixed: a message dated centuries ahead** (#709, reported by
+  user839292874). A message whose Date header lies more than a day in the
+  future, such as one that showed as 12 Jan 2612, is dated by when the IMAP
+  server received it. Such a date also kept the message at the top of the
+  list. A message already in the cache takes the new date when the folder's
+  newest messages are synced again, or after Reset Cache for an older one.
+
+- **Translations:** Portuguese (Portugal) and Portuguese (Brazil) completed
+  again (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified
+  Chinese (#155 by lancelee25), new, 2596 of 2628 strings translated.
+
 ## 1.50.0-beta.2 — 2026-11-23
 
 - **New: S/MIME signing** (#478, requested by keithvassallomt; PR #705 by
