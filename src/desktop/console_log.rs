@@ -84,6 +84,14 @@ pub(crate) fn stats() -> (usize, usize) {
     (buf.len(), buf.iter().map(|(_, l)| l.len()).sum())
 }
 
+/// The newest `n` lines, oldest first, for a crash report: `None` when the
+/// buffer is held, as it is if the crash came while a line went in.
+pub(crate) fn tail(n: usize) -> Option<Vec<String>> {
+    let buf = BUF.try_lock().ok()?;
+    let skip = buf.len().saturating_sub(n);
+    Some(buf.iter().skip(skip).map(|(_, l)| l.clone()).collect())
+}
+
 /// Everything the console holds, oldest first.
 fn all_lines() -> Vec<String> {
     buffer().iter().map(|(_, l)| l.clone()).collect()
@@ -137,6 +145,15 @@ pub(crate) fn export_text(memory: &str) -> String {
         out.push_str("Messages written in the last 30 days:\n");
         for line in sends {
             out.push_str(&redact_addresses(&line));
+            out.push('\n');
+        }
+        out.push('\n');
+    }
+    // From the run that crashed, so before this run's lines (#449).
+    if let Some((when, report)) = crate::desktop::crash_log::last_report() {
+        out.push_str(&format!("The last crash report, written {when}:\n"));
+        for line in report.lines() {
+            out.push_str(&redact_addresses(line));
             out.push('\n');
         }
         out.push('\n');

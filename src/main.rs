@@ -111,6 +111,7 @@ fn main() {
     // is shown, and the locale set before GTK sets its own.
     i18n::init();
     init_tracing();
+    desktop::crash_log::install();
 
     // The restart helper (see app_icon.rs) never builds a UI: it waits for
     // the running instance to leave, then becomes the new one.
@@ -178,7 +179,8 @@ fn main() {
 
 /// Two log sinks: stderr honours RUST_LOG as before, and the console-mode
 /// ring buffer (console_log.rs) always runs verbose so the status bar's
-/// console has everything under the hood to show.
+/// console has everything under the hood to show, GLib's and GTK's warnings
+/// among it (crash_log.rs copies them under the `glib` target).
 fn init_tracing() {
     use tracing_subscriber::layer::SubscriberExt;
     use tracing_subscriber::util::SubscriberInitExt;
@@ -192,7 +194,7 @@ fn init_tracing() {
         .with_ansi(false)
         .with_target(false)
         .compact()
-        .with_filter(tracing_subscriber::EnvFilter::new("hylki=debug"));
+        .with_filter(tracing_subscriber::EnvFilter::new("hylki=debug,glib=warn"));
     tracing_subscriber::registry()
         .with(stderr)
         .with(console)

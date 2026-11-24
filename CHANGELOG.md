@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **New: crash reports** (#449, requested by 3v1n0). A crash, a GTK abort
+  among them, writes a report to stderr and to `crash.log` in Hylki's data
+  folder (`~/.var/app/co.hyprlab.Hylki/data/hylki/` in the Flatpak): the
+  signal, GLib's assertion message, the last panic, a backtrace of the
+  thread that crashed and the last 400 lines of the log. Settings → System →
+  Export log includes the newest report. GLib and GTK warnings and criticals
+  are in the log too. Release builds keep their symbol table, so the
+  backtrace names Hylki's functions; the process still ends with the
+  original signal and leaves its core dump as before.
+
 - **New: S/MIME signing** (#478, requested by keithvassallomt; PR #705 by
   Adrià). An account can sign the mail it sends with an S/MIME certificate: Settings → Accounts → S/MIME → Sign messages by default, or
   `smime_sign = true` in `accounts.toml`. The menu beside Send then has Sign
