@@ -76,6 +76,15 @@
   several messages and when Show sender and subject is off. Works on GNOME and Plasma,
   in the Flatpak and outside it.
 
+- **Fixed: the account ring around avatars in All Inboxes was cut at the
+  sides** (#706, reported by user839292874). On GTK 4.18 and older, as on
+  Debian 13, the ring drawn outside each avatar lost its left and right
+  edges.
+
+- **Fixed: a second u scrolled the list to the top** (#392, reported by
+  3v1n0). With the Gmail-style keys, u with no message open now leaves the
+  list on the row the keyboard is on, or on the one last read.
+
 - **Fixed: a message dated centuries ahead** (#709, reported by
   user839292874). A message whose Date header lies more than a day in the
   future, such as one that showed as 12 Jan 2612, is dated by when the IMAP
@@ -131,8 +140,8 @@
 
 - **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
-  (PR #707 by Paulo Fino), 2627 of 2627 strings each. Simplified Chinese
-  (#155 by lancelee25), new, 2596 of 2627 strings translated.
+  (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
+  (#155 by lancelee25), new, 2596 of 2628 strings translated.
 
 ## 1.49.2 — 2026-11-23
 
