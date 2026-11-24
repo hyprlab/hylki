@@ -259,6 +259,7 @@ Every language Hylki speaks was given to it by somebody:
   [FLASH911](https://github.com/FLASH911)
 - **Simplified Chinese:** [lancelee25](https://github.com/lancelee25)
 - **Spanish:** [Daniel Miguel](https://github.com/danielmigueltejedor)
+- **Turkish:** [f4646](https://github.com/f4646)
 
 Adding or updating one is the easiest way in: see [po/README.md](../po/README.md).
 

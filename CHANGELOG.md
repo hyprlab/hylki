@@ -141,7 +141,8 @@
 - **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
   (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
-  (#155 by lancelee25), new, 2596 of 2628 strings translated.
+  (#155 by lancelee25), new, 2596 of 2628 strings translated. Turkish (PR #710
+  by f4646), new, 2617 of 2628 strings translated.
 
 ## 1.49.2 — 2026-11-23
 
