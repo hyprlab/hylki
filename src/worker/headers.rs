@@ -169,6 +169,15 @@ pub(super) fn format_date(raw: &[u8]) -> (String, i64) {
     (label_from_timestamp(dt.timestamp()), dt.timestamp())
 }
 
+/// Whether a Date header is ahead of the clock by more than a day: a
+/// message that has arrived cannot have been written in the future, so the
+/// header is wrong (a sender's broken clock, a mangled field) and the
+/// server's delivery date is the better one (#709). Left as it is, such a
+/// date also pins the message to the top of every list sorted by date.
+pub(super) fn date_in_future(ts: i64) -> bool {
+    ts > crate::datefmt::now() + 86_400
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -228,6 +237,12 @@ mod tests {
             1057049557
         );
         assert_eq!(format_date(b" not a date "), ("not a date".to_string(), 0));
+        let now = crate::datefmt::now();
+        assert!(!date_in_future(now));
+        assert!(!date_in_future(now + 3600), "a clock an hour fast is not wrong");
+        assert!(date_in_future(now + 2 * 86_400));
+        // 12 January 2612, as #709 showed it.
+        assert!(date_in_future(20_260_528_080));
         assert_eq!(format_timestamp(0), "");
         assert_eq!(format_timestamp(-5), "");
         assert_eq!(

@@ -64,6 +64,13 @@
   several messages and when Show sender and subject is off. Works on GNOME and Plasma,
   in the Flatpak and outside it.
 
+- **Fixed: a message dated centuries ahead** (#709, reported by
+  user839292874). A message whose Date header lies more than a day in the
+  future, such as one that showed as 12 Jan 2612, is dated by when the IMAP
+  server received it. Such a date also kept the message at the top of the
+  list. A message already in the cache takes the new date when the folder's
+  newest messages are synced again, or after Reset Cache for an older one.
+
 - **Fixed: the date filter's calendar looked out of place** (#696, fixed by
   José Miguel Sarasola). The calendar in the Dates column of the sort and
   filter popover kept GtkCalendar's boxed look: a dark fill, a frame, square
