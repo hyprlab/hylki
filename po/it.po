@@ -5075,6 +5075,9 @@ msgstr ""
 msgid "Show the Reply-To sender"
 msgstr ""
 
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
 msgid "Layout"
 msgstr "Layout"
 

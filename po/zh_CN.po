@@ -1,0 +1,8716 @@
+# Translation template for Hylki.
+# This file is distributed under the same license as the Hylki package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hylki\n"
+"Report-Msgid-Bugs-To: https://github.com/hyprlab/hylki/issues\n"
+"PO-Revision-Date: 2026-11-23 11:14+0800\n"
+"Last-Translator: lance <linanjun@163.com>\n"
+"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. One-sentence description, directly under the version chip.
+msgid "A fast, GNOME-native email client"
+msgstr "快速、GNOME 原生的邮件客户端"
+
+msgid ""
+"This is a beta build for trying upcoming changes early. Expect bugs and "
+"instability — please report anything broken on GitHub. It shares your "
+"accounts and mail with the stable Hylki install."
+msgstr ""
+"这是一个抢先体验即将推出的变更的测试版本。可能会遇到错误和不稳定 — 如有任何损"
+"坏，请在 GitHub 上报告。它与稳定版 Hylki 共享你的账户和邮件。"
+
+msgid "Release Notes"
+msgstr "发行说明"
+
+msgid "Credits"
+msgstr "致谢"
+
+msgid "Contributors and translators"
+msgstr "贡献者与翻译者"
+
+msgid "Keyring Setup Help"
+msgstr "密钥环设置帮助"
+
+msgid "Make account passwords persist on Linux Mint"
+msgstr "让账户密码在 Linux Mint 上持久保存"
+
+#. Project links. Each row shows its URL as a hover tooltip.
+msgid "Project"
+msgstr "项目"
+
+msgid "Website"
+msgstr "网站"
+
+msgid "Report an issue or feature request"
+msgstr "报告问题或功能请求"
+
+msgid "Source Code"
+msgstr "源代码"
+
+msgid "License (GNU AGPL v3)"
+msgstr "许可证（GNU AGPL v3）"
+
+msgid "Buy Me a Coffee"
+msgstr "请我喝杯咖啡"
+
+#. Contributors: people outside Hyprlab whose patches are in the app.
+msgid "Special thanks to these contributors"
+msgstr "特别感谢以下贡献者"
+
+#. Translators: the same list, with the languages each one carried.
+msgid "Translated by"
+msgstr "翻译者"
+
+msgid "© 2026 Hyprlab"
+msgstr "© 2026 Hyprlab"
+
+msgid "About"
+msgstr "关于"
+
+msgid "Hylki couldn’t save your password"
+msgstr "Hylki 无法保存你的密码"
+
+msgid "Keyring setup on Linux Mint"
+msgstr "Linux Mint 上的密钥环设置"
+
+msgid "Got it"
+msgstr "知道了"
+
+msgid "Could not save account: {e}"
+msgstr "无法保存账户：{e}"
+
+msgid "Could not import account: {e}"
+msgstr "无法导入账户：{e}"
+
+msgid "On This Computer is switched off"
+msgstr "“本机”已关闭"
+
+msgid "Could not start: {error}"
+msgstr "无法启动：{error}"
+
+msgid "Off"
+msgstr "关闭"
+
+msgid "No activity yet."
+msgstr "暂无活动。"
+
+msgid "Message from an AI Agent"
+msgstr "来自 AI 代理的邮件"
+
+msgid "An AI agent prepared a message"
+msgstr "AI 代理准备了一封邮件"
+
+msgid "Show"
+msgstr "显示"
+
+msgid "Listed accounts"
+msgstr "列出了账户"
+
+msgid "Listed folders"
+msgstr "列出了文件夹"
+
+msgid "Listed messages"
+msgstr "列出了邮件"
+
+msgid "Searched mail"
+msgstr "搜索了邮件"
+
+msgid "Searched on the server"
+msgstr "在服务器上搜索"
+
+msgid "Read a message"
+msgstr "读取了一封邮件"
+
+msgid "Read a conversation"
+msgstr "读取了一个会话"
+
+msgid "Listed attachments"
+msgstr "列出了附件"
+
+msgid "Read an attachment"
+msgstr "读取了一个附件"
+
+msgid "Looked up contacts"
+msgstr "查找了联系人"
+
+msgid "Prepared a message"
+msgstr "准备了一封邮件"
+
+msgid "Prepared a reply"
+msgstr "准备了回复"
+
+msgid "Prepared a forward"
+msgstr "准备了转发"
+
+msgid "Changed read state"
+msgstr "更改了已读状态"
+
+msgid "Changed stars"
+msgstr "更改了星标"
+
+msgid "Listed tags"
+msgstr "列出了标签"
+
+msgid "Changed tags"
+msgstr "更改了标签"
+
+msgid "Moved messages"
+msgstr "移动了邮件"
+
+msgid "Archived messages"
+msgstr "归档了邮件"
+
+msgid "Moved messages to Trash"
+msgstr "将邮件移到了垃圾箱"
+
+msgid "Read the open conversation"
+msgstr "读取了当前打开的会话"
+
+msgid "Listed open drafts"
+msgstr "列出了打开的草稿"
+
+msgid "Read an open draft"
+msgstr "读取了一个打开的草稿"
+
+msgid "Suggested changes to a draft"
+msgstr "对草稿提出了修改建议"
+
+msgid "Refused or failed: {action}"
+msgstr "被拒绝或失败：{action}"
+
+msgid "Delete the attachment from the server?"
+msgstr "要从服务器删除该附件吗？"
+
+msgid ""
+"“{name}” will be removed from the message on the server. The rest of the "
+"message stays. This can’t be undone."
+msgstr ""
+"“{name}”将从服务器上的邮件中移除。邮件的其余部分会保留。此操作无法撤销。"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Show Accounts"
+msgstr "显示账户"
+
+msgid "Right"
+msgstr "右侧"
+
+msgid "Below"
+msgstr "下方"
+
+msgid "Reading Pane"
+msgstr "阅读窗格"
+
+msgid "Focus Mode"
+msgstr "专注模式"
+
+msgid "Fullscreen"
+msgstr "全屏"
+
+msgid "Print Preview…"
+msgstr "打印预览…"
+
+msgid "Print Message…"
+msgstr "打印邮件…"
+
+msgid "Quit"
+msgstr "退出"
+
+msgid "Use Template"
+msgstr "使用模板"
+
+msgid "Edit Template"
+msgstr "编辑模板"
+
+msgid "Reply"
+msgstr "回复"
+
+msgid "Reply All"
+msgstr "全部回复"
+
+msgid "Forward"
+msgstr "转发"
+
+msgid "Remove Star"
+msgstr "移除星标"
+
+msgid "Star"
+msgstr "加星标"
+
+msgid "Mark as Read"
+msgstr "标记为已读"
+
+msgid "Mark as Unread"
+msgstr "标记为未读"
+
+msgid "Expand All Messages"
+msgstr "展开所有邮件"
+
+msgid "Collapse All Messages"
+msgstr "折叠所有邮件"
+
+msgid "Back to My Fonts and Colors"
+msgstr "返回我的字体和颜色"
+
+msgid "Show Sender's Fonts and Colors"
+msgstr "显示发件人的字体和颜色"
+
+msgid "Create Event from Selection…"
+msgstr "从所选内容创建事件…"
+
+msgid "Create Task from Selection…"
+msgstr "从所选内容创建任务…"
+
+msgid "Create Event…"
+msgstr "创建事件…"
+
+msgid "Create Task…"
+msgstr "创建任务…"
+
+msgid "Create Filter from Message…"
+msgstr "从邮件创建过滤规则…"
+
+msgid "Add Sender to Contacts"
+msgstr "将发件人添加到联系人"
+
+msgid "Create"
+msgstr "创建"
+
+msgid "View"
+msgstr "查看"
+
+msgid "Edit as New Message"
+msgstr "作为新邮件编辑"
+
+msgid "View Source"
+msgstr "查看源代码"
+
+msgid "Save as File…"
+msgstr "另存为文件…"
+
+msgid "More"
+msgstr "更多"
+
+msgid "Copy To…"
+msgstr "复制到…"
+
+msgid "Tags"
+msgstr "标签"
+
+msgid "Not Spam"
+msgstr "不是垃圾邮件"
+
+msgid "Move to Inbox"
+msgstr "移动到收件箱"
+
+msgid "Mark as Spam"
+msgstr "标记为垃圾邮件"
+
+msgid "Move To…"
+msgstr "移动到…"
+
+msgid "Archive"
+msgstr "归档"
+
+msgid "Snooze"
+msgstr "稍后处理"
+
+msgid "Block Remote Content"
+msgstr "阻止远程内容"
+
+msgid "Show Remote Content"
+msgstr "显示远程内容"
+
+msgid "Print Preview"
+msgstr "打印预览"
+
+msgid "Print…"
+msgstr "打印…"
+
+msgid "New Message"
+msgstr "新邮件"
+
+msgid "A group needs a name."
+msgstr "群组需要一个名称。"
+
+msgid ""
+"A group in this address book is kept on its people's cards, so it needs at "
+"least one person."
+msgstr "此地址簿中的群组保存在其成员的卡片上，因此至少需要一个人。"
+
+msgid "Hylki cannot change this kind of group"
+msgstr "Hylki 无法更改此类群组"
+
+msgid "Home"
+msgstr "住宅"
+
+msgid "Work"
+msgstr "工作"
+
+msgid "Mobile"
+msgstr "手机"
+
+msgid "Fax"
+msgstr "传真"
+
+msgid "{field} ({label})"
+msgstr "{field}（{label}）"
+
+msgid "Do not import"
+msgstr "不导入"
+
+msgid "Full name"
+msgstr "全名"
+
+msgid "First name"
+msgstr "名"
+
+msgid "Middle name"
+msgstr "中间名"
+
+msgid "Last name"
+msgstr "姓"
+
+msgid "Name prefix"
+msgstr "姓名前缀"
+
+msgid "Name suffix"
+msgstr "姓名后缀"
+
+msgid "Nickname"
+msgstr "昵称"
+
+msgid "Company"
+msgstr "公司"
+
+msgid "Department"
+msgstr "部门"
+
+msgid "Job title"
+msgstr "职位"
+
+msgid "Notes"
+msgstr "备注"
+
+msgid "Birthday"
+msgstr "生日"
+
+msgid "Birth year"
+msgstr "出生年份"
+
+msgid "Birth month"
+msgstr "出生月份"
+
+msgid "Birth day"
+msgstr "出生日"
+
+msgid "Groups"
+msgstr "群组"
+
+msgid "Email"
+msgstr "电子邮件"
+
+msgid "Phone"
+msgstr "电话"
+
+msgid "Email label"
+msgstr "电子邮件标签"
+
+msgid "Phone label"
+msgstr "电话标签"
+
+msgid "Address label"
+msgstr "地址标签"
+
+msgid "Website label"
+msgstr "网站标签"
+
+msgid "Address"
+msgstr "地址"
+
+msgid "Street"
+msgstr "街道"
+
+msgid "Apartment or suite"
+msgstr "公寓或套房"
+
+msgid "PO box"
+msgstr "邮政信箱"
+
+msgid "City"
+msgstr "城市"
+
+msgid "State or region"
+msgstr "州或地区"
+
+msgid "Postal code"
+msgstr "邮政编码"
+
+msgid "Country"
+msgstr "国家"
+
+msgid "Hylki Address Book"
+msgstr "Hylki 地址簿"
+
+msgid "On This Computer"
+msgstr "本机"
+
+msgid "CardDAV Address Book"
+msgstr "CardDAV 地址簿"
+
+msgid "Enter the server's address."
+msgstr "请输入服务器地址。"
+
+msgid "“{text}” is not a server address."
+msgstr "“{text}”不是服务器地址。"
+
+msgid "The address starts with https:// or http://."
+msgstr "地址以 https:// 或 http:// 开头。"
+
+msgid "Enter the password to sign in."
+msgstr "请输入密码以登录。"
+
+msgid "The server did not accept the user name or password."
+msgstr "服务器未接受该用户名或密码。"
+
+msgid "The server's certificate could not be verified."
+msgstr "无法验证服务器的证书。"
+
+msgid "The server's certificate could not be verified: {error}"
+msgstr "无法验证服务器的证书：{error}"
+
+msgid "Could not connect to the server."
+msgstr "无法连接到服务器。"
+
+msgid "{n} address book"
+msgid_plural "{n} address books"
+msgstr[0] "{n} 个地址簿"
+
+msgid "{n} contact, kept by Hylki"
+msgid_plural "{n} contacts, kept by Hylki"
+msgstr[0] "{n} 位联系人，由 Hylki 保存"
+
+msgid "{books} · kept by GNOME Contacts and Evolution"
+msgstr "{books} · 由 GNOME 联系人和 Evolution 保存"
+
+msgid "Online account"
+msgstr "在线账户"
+
+msgid "Contacts is switched off for this account in GNOME Online Accounts."
+msgstr "在 GNOME 在线账户中，此账户的联系人功能已关闭。"
+
+msgid "Looking for address books…"
+msgstr "正在查找地址簿…"
+
+msgid "This address book is switched off in Evolution."
+msgstr "此地址簿已在 Evolution 中关闭。"
+
+msgid "Evolution Data Server is not available"
+msgstr "Evolution Data Server 不可用"
+
+msgid ""
+"The directory cannot be searched without signing in. Add a sign-in to it in "
+"Settings → Contacts."
+msgstr "未登录时无法搜索该目录。请在“设置 → 联系人”中为其添加登录信息。"
+
+msgid "The directory did not accept the password."
+msgstr "该目录未接受此密码。"
+
+msgid "The directory's certificate could not be verified."
+msgstr "无法验证该目录的证书。"
+
+msgid "The directory's certificate could not be verified: {error}"
+msgstr "无法验证该目录的证书：{error}"
+
+msgid ""
+"Could not connect to {server} over TLS. Check the server, the port and that "
+"it takes LDAPS."
+msgstr ""
+"无法通过 TLS 连接到 {server}。请检查服务器、端口，以及它是否支持 LDAPS。"
+
+msgid "Could not connect to {server}. Check the server and the port."
+msgstr "无法连接到 {server}。请检查服务器和端口。"
+
+msgid ""
+"Could not start StartTLS with {server}: the server does not offer it, or its "
+"certificate is not trusted."
+msgstr "无法与 {server} 启动 StartTLS：服务器未提供该功能，或其证书不受信任。"
+
+msgid "Could not reach {server}. Check the server's name and the network."
+msgstr "无法访问 {server}。请检查服务器名称和网络。"
+
+msgid "The directory needs a password. Add it in Settings → Contacts."
+msgstr "该目录需要密码。请在“设置 → 联系人”中添加。"
+
+msgid "{name} did not answer: {error}"
+msgstr "{name} 未响应：{error}"
+
+msgid "No Thunderbird address books were found in this folder"
+msgstr "在此文件夹中未找到 Thunderbird 地址簿"
+
+msgid "A contact needs a name, an email address or a phone number"
+msgstr "联系人需要姓名、电子邮件地址或电话号码"
+
+msgid "The contact is too large"
+msgstr "联系人过大"
+
+msgid "UTF-16 files are not supported"
+msgstr "不支持 UTF-16 文件"
+
+msgid "The file is not a text file"
+msgstr "该文件不是文本文件"
+
+msgid "The file is larger than {size} MB"
+msgstr "文件大于 {size} MB"
+
+msgid "Personal Address Book"
+msgstr "个人地址簿"
+
+msgid "Collected Addresses"
+msgstr "收集的地址"
+
+msgid "This is not a Thunderbird address book"
+msgstr "这不是 Thunderbird 地址簿"
+
+msgid "{n} person, in Bcc"
+msgid_plural "{n} people, in Bcc"
+msgstr[0] "{n} 人（密送）"
+
+msgid "{n} person"
+msgid_plural "{n} people"
+msgstr[0] "{n} 人"
+
+msgid "Enable Console mode in Settings → System & Appearance"
+msgstr "请在“设置 → 系统与外观”中启用控制台模式"
+
+msgid ""
+"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+msgstr "尚无模板。可在撰写窗口的 ⋯ 菜单中使用“另存为模板”保存一个。"
+
+msgid "New Message from Template"
+msgstr "从模板新建邮件"
+
+msgid "The new message starts as a copy of the template you pick."
+msgstr "新邮件将以你所选模板的副本开始。"
+
+msgid "Insert Template"
+msgstr "插入模板"
+
+msgid "The template goes in where the cursor is."
+msgstr "模板将插入到光标所在位置。"
+
+msgid "Templates"
+msgstr "模板"
+
+msgid "Template saved to {folder} in {account}"
+msgstr "模板已保存到 {account} 中的 {folder}"
+
+msgid "Could not load the template."
+msgstr "无法加载模板。"
+
+msgid "Continue a Draft"
+msgstr "继续草稿"
+
+msgid "The files go into the draft you pick."
+msgstr "这些文件将放入你所选的草稿中。"
+
+msgid "No drafts to continue."
+msgstr "没有可继续的草稿。"
+
+msgid "Attach to This Draft"
+msgstr "附加到此草稿"
+
+msgid "Discard"
+msgstr "丢弃"
+
+msgid "Message discarded"
+msgstr "邮件已丢弃"
+
+msgid "Undo"
+msgstr "撤销"
+
+msgid "No Drafts folder available for this account"
+msgstr "此账户没有可用的草稿文件夹"
+
+msgid "No Templates folder available for this account"
+msgstr "此账户没有可用的模板文件夹"
+
+msgid "Empty “{name}”?"
+msgstr "要清空“{name}”吗？"
+
+msgid "Empty"
+msgstr "清空"
+
+msgid "{count} message will be erased from the server. This can’t be undone."
+msgid_plural ""
+"{count} messages will be erased from the server. This can’t be undone."
+msgstr[0] "{count} 封邮件将从服务器上删除。此操作无法撤销。"
+
+msgid ""
+"Every message in it will be erased from the server. This can’t be undone."
+msgstr "其中的所有邮件都将从服务器上删除。此操作无法撤销。"
+
+msgid "Empty Trash in Every Account?"
+msgstr "要清空所有账户的垃圾箱吗？"
+
+msgid "Empty Junk in Every Account?"
+msgstr "要清空所有账户的垃圾邮件吗？"
+
+msgid ""
+"Every message in them will be erased from the server. This can’t be undone."
+msgstr "其中的所有邮件都将从服务器上删除。此操作无法撤销。"
+
+msgid "{account}: {count} message"
+msgid_plural "{account}: {count} messages"
+msgstr[0] "{account}：{count} 封邮件"
+
+msgid ""
+"The forward of filter {rule} was refused. The message was left where it is "
+"and will be tried again"
+msgstr "过滤规则 {rule} 的转发被拒绝。邮件保留在原处，稍后将重试"
+
+msgid "The forward of filter {rule} is waiting in the Outbox"
+msgstr "过滤规则 {rule} 的转发正在发件箱中等待"
+
+msgid "No filters to apply here yet"
+msgstr "此处还没有可应用的过滤规则"
+
+msgid "Applying Filters"
+msgstr "正在应用过滤规则"
+
+msgid "Run in Background"
+msgstr "在后台运行"
+
+msgid "Looked at {n} message so far"
+msgid_plural "Looked at {n} messages so far"
+msgstr[0] "到目前为止已查看 {n} 封邮件"
+
+msgid "Matched {n} message"
+msgid_plural "Matched {n} messages"
+msgstr[0] "匹配到 {n} 封邮件"
+
+msgid "Tagged {n} message"
+msgid_plural "Tagged {n} messages"
+msgstr[0] "为 {n} 封邮件添加了标签"
+
+msgid "Filed {n} message away"
+msgid_plural "Filed {n} messages away"
+msgstr[0] "归档了 {n} 封邮件"
+
+msgid "Folder {done} of {total}"
+msgstr "文件夹 {done}/{total}"
+
+msgid "started {n} forward"
+msgid_plural "started {n} forwards"
+msgstr[0] "启动了 {n} 次转发"
+
+msgid "marked {n} message as read"
+msgid_plural "marked {n} messages as read"
+msgstr[0] "将 {n} 封邮件标记为已读"
+
+msgid "deleted {n} message"
+msgid_plural "deleted {n} messages"
+msgstr[0] "删除了 {n} 封邮件"
+
+msgid "Filters looked at {n} message, and it matched nothing"
+msgid_plural "Filters looked at {n} messages, and none of them matched"
+msgstr[0] "过滤规则查看了 {n} 封邮件，没有一封匹配"
+
+#. Matches that needed nothing: the rules had already done their
+#. work on an earlier sync (#201). Saying "none matched" here
+#. made working rules look broken.
+msgid "Filters looked at {n} message"
+msgid_plural "Filters looked at {n} messages"
+msgstr[0] "过滤规则查看了 {n} 封邮件"
+
+msgid ""
+"Filters matched {matched} of {n} message, and it was already tagged or filed"
+msgid_plural ""
+"Filters matched {matched} of {n} messages, and all of them were already "
+"tagged or filed"
+msgstr[0] ""
+"过滤规则匹配了 {n} 封邮件中的 {matched} 封，但它们都已被添加标签或归档"
+
+msgid "Filters tagged {tagged} of {n} message"
+msgid_plural "Filters tagged {tagged} of {n} messages"
+msgstr[0] "过滤规则为 {n} 封邮件中的 {tagged} 封添加了标签"
+
+msgid "Filters filed {filed} of {n} message away"
+msgid_plural "Filters filed {filed} of {n} messages away"
+msgstr[0] "过滤规则将 {n} 封邮件中的 {filed} 封归档"
+
+msgid "Filters tagged {tagged} and filed {filed} of {n} message"
+msgid_plural "Filters tagged {tagged} and filed {filed} of {n} messages"
+msgstr[0] ""
+"过滤规则为 {n} 封邮件中的 {tagged} 封添加了标签，并归档了 {filed} 封"
+
+msgid "Filters Applied"
+msgstr "过滤规则已应用"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Unstar"
+msgstr "移除星标"
+
+msgid "Create a folder inside {name}."
+msgstr "在 {name} 中创建文件夹。"
+
+msgid "Create a new folder for this account."
+msgstr "为此账户创建新文件夹。"
+
+msgid "New Folder"
+msgstr "新建文件夹"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Folder name"
+msgstr "文件夹名称"
+
+msgid "Sub-folders keep their place under the new name."
+msgstr "子文件夹会在新名称下保留其位置。"
+
+msgid "Rename"
+msgstr "重命名"
+
+msgid "A folder named {new_name} is already there."
+msgstr "已存在名为 {new_name} 的文件夹。"
+
+msgid "Rename Folder"
+msgstr "重命名文件夹"
+
+msgid ""
+"Its messages are moved to Trash and the folder is removed from the server. "
+"This cannot be undone."
+msgstr "其中的邮件将被移到垃圾箱，该文件夹将从服务器上移除。此操作无法撤销。"
+
+msgid "This account can't have folders at the top level."
+msgstr "此账户不能有顶层文件夹。"
+
+msgid "Folders on this account can't hold other folders."
+msgstr "此账户的文件夹不能包含其他文件夹。"
+
+msgid "Create Folder"
+msgstr "创建文件夹"
+
+msgid "{name} can't hold other folders."
+msgstr "{name} 不能包含其他文件夹。"
+
+msgid "archive"
+msgstr "归档"
+
+msgid "trash"
+msgstr "垃圾箱"
+
+msgid "destination"
+msgstr "目标位置"
+
+msgid "A folder can't be moved into itself."
+msgstr "文件夹不能移动到自身之中。"
+
+msgid "Move Folder"
+msgstr "移动文件夹"
+
+msgid "Attachments"
+msgstr "附件"
+
+msgid "Toggle sidebar"
+msgstr "切换侧边栏"
+
+msgid "Always do this (change it in Settings → System → GNOME Files)"
+msgstr "始终这样做（可在“设置 → 系统 → GNOME 文件”中更改）"
+
+msgid "Could not attach {names}: Hylki cannot read the file."
+msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
+msgstr[0] "无法附加 {n} 个文件（Hylki 无法读取它们）：{names}"
+
+msgid "Send {n} file with Hylki"
+msgid_plural "Send {n} files with Hylki"
+msgstr[0] "使用 Hylki 发送 {n} 个文件"
+
+msgid "{names} ({size}). What should the files go into?"
+msgstr "{names}（{size}）。这些文件要放入哪里？"
+
+msgid "Reply to a Message…"
+msgstr "回复邮件…"
+
+msgid "Continue a Draft…"
+msgstr "继续草稿…"
+
+msgid "Reply to a Message"
+msgstr "回复邮件"
+
+msgid "The files go into a reply to the message you pick."
+msgstr "这些文件会加入到你所选邮件的回复中。"
+
+msgid "No messages to reply to yet."
+msgstr "还没有可回复的邮件。"
+
+msgid "Reply With the Files"
+msgstr "用这些文件回复"
+
+msgid "Large files"
+msgstr "大文件"
+
+msgid ""
+"{names} is {size}, over the {limit} limit. Upload it to cloud storage and "
+"put a download link in the message instead?"
+msgid_plural ""
+"{names} add up to {size}, over the {limit} limit. Upload them to cloud "
+"storage and put download links in the message instead?"
+msgstr[0] ""
+"{names} 合计 {size}，超过 {limit} 上限。是否改为将它们上传到云存储，并在邮件"
+"中放入下载链接？"
+
+msgid "Attach Anyway"
+msgstr "仍然添加"
+
+msgid "Upload to Cloud Storage"
+msgstr "上传到云存储"
+
+msgid "The account has to connect before its folders can change."
+msgstr "账户需要先连接，其文件夹才能更改。"
+
+msgid "This message carries no calendar file to open."
+msgstr "这封邮件不包含可打开的日历文件。"
+
+msgid "This invitation names no organiser to answer."
+msgstr "此邀请未指定组织者，无法回复。"
+
+msgid "Accepted: {subject}"
+msgstr "已接受：{subject}"
+
+msgid "Tentative: {subject}"
+msgstr "暂定：{subject}"
+
+msgid "Declined: {subject}"
+msgstr "已拒绝：{subject}"
+
+msgid "{name} has accepted this invitation."
+msgstr "{name} 已接受此邀请。"
+
+msgid "{name} has tentatively accepted this invitation."
+msgstr "{name} 已暂定接受此邀请。"
+
+msgid "{name} has declined this invitation."
+msgstr "{name} 已拒绝此邀请。"
+
+msgid "Your answer has been sent: accepted."
+msgstr "你的答复已发送：已接受。"
+
+msgid "Your answer has been sent: maybe."
+msgstr "你的答复已发送：不确定。"
+
+msgid "Your answer has been sent: declined."
+msgstr "你的答复已发送：已拒绝。"
+
+msgid "Retry"
+msgstr "重试"
+
+msgid "Waiting for the keyring"
+msgstr "正在等待密钥环"
+
+msgid "Couldn’t read the password"
+msgstr "无法读取密码"
+
+msgid "The keyring gave an error for {accounts}: {error}"
+msgstr "密钥环为 {accounts} 返回了错误：{error}"
+
+msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgstr "密钥环尚未响应 {accounts}。一旦响应，邮件即会连接。"
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys."
+msgstr "请解锁密钥环，例如“密码和密钥”中的“登录”密钥环。"
+
+msgid ""
+"Unlock the keyring, for example the Login keyring in Passwords and Keys, "
+"then choose Retry."
+msgstr "请解锁密钥环，例如“密码和密钥”中的“登录”密钥环，然后选择“重试”。"
+
+msgid "Date (Newest first)"
+msgstr "日期（最新在前）"
+
+msgid "Date (Oldest first)"
+msgstr "日期（最早在前）"
+
+msgid "Sender (A–Z)"
+msgstr "发件人（A–Z）"
+
+msgid "Subject (A–Z)"
+msgstr "主题（A–Z）"
+
+msgid "Unread first"
+msgstr "未读在前"
+
+msgid "Starred first"
+msgstr "已加星标在前"
+
+msgid "Clear Dates"
+msgstr "清除日期"
+
+msgid "Any Date"
+msgstr "任意日期"
+
+msgid "{from} to {to}"
+msgstr "{from} 至 {to}"
+
+msgid "Since {date}"
+msgstr "自 {date} 起"
+
+msgid "Until {date}"
+msgstr "截至 {date}"
+
+msgid "Sender"
+msgstr "发件人"
+
+msgid "Recipients"
+msgstr "收件人"
+
+msgid "Sort by"
+msgstr "排序方式"
+
+msgid "Use for All Folders"
+msgstr "应用到所有文件夹"
+
+msgid "Show only"
+msgstr "仅显示"
+
+msgid "Clear Filters"
+msgstr "清除过滤条件"
+
+msgid "Dates"
+msgstr "日期"
+
+msgid "From"
+msgstr "发件人"
+
+msgid "To"
+msgstr "收件人"
+
+msgid "Sort and filter messages"
+msgstr "排序和过滤邮件"
+
+msgid "Filtered: {names}"
+msgstr "已过滤：{names}"
+
+msgid "Search Messages…"
+msgstr "搜索邮件…"
+
+msgid "Filter"
+msgstr "过滤"
+
+msgid "Sort"
+msgstr "排序"
+
+msgid "Sending {n} message…"
+msgid_plural "Sending {n} messages…"
+msgstr[0] "正在发送 {n} 封邮件…"
+
+#. Each one that failed has said why already, and waits in the
+#. Outbox, a refused one included.
+msgid "Sent {n} of {total} message"
+msgid_plural "Sent {n} of {total} messages"
+msgstr[0] "已发送 {n}/{total} 封邮件"
+
+msgid "Sent {n} message"
+msgid_plural "Sent {n} messages"
+msgstr[0] "已发送 {n} 封邮件"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Show Outbox"
+msgstr "显示发件箱"
+
+#. Rightmost, beside the window controls, as in the main window.
+msgid "Actions"
+msgstr "操作"
+
+msgid "Refresh or long-press for Status Bar"
+msgstr "刷新，或长按以显示状态栏"
+
+msgid "Copying one message to On This Computer…"
+msgid_plural "Copying {n} messages to On This Computer…"
+msgstr[0] "正在将 {n} 封邮件复制到本机…"
+
+msgid "Sending message…"
+msgstr "正在发送邮件…"
+
+msgid "Sending “{subject}”…"
+msgstr "正在发送“{subject}”…"
+
+msgid "Move around"
+msgstr "移动浏览"
+
+msgid "Next message"
+msgstr "下一封邮件"
+
+msgid "Previous message"
+msgstr "上一封邮件"
+
+msgid "Open the selected message"
+msgstr "打开所选邮件"
+
+msgid "Back to the message list"
+msgstr "返回邮件列表"
+
+msgid "Open or fold a conversation in the list"
+msgstr "在列表中打开或折叠会话"
+
+msgid "Next message in the conversation"
+msgstr "会话中的下一封邮件"
+
+msgid "Previous message in the conversation"
+msgstr "会话中的上一封邮件"
+
+msgid "Search"
+msgstr "搜索"
+
+msgid "Act on a message"
+msgstr "对邮件执行操作"
+
+msgid "Reply to all"
+msgstr "全部回复"
+
+msgid "Delete permanently, without going to Trash"
+msgstr "永久删除，不放入垃圾箱"
+
+msgid "Mark as spam"
+msgstr "标记为垃圾邮件"
+
+msgid "Star or unstar"
+msgstr "加星标或取消星标"
+
+msgid "Mark read or unread"
+msgstr "标记为已读或未读"
+
+msgid "Select this row (for a bulk action)"
+msgstr "选中此行（用于批量操作）"
+
+msgid "Add or remove a tag (the first nine, in Settings order)"
+msgstr "添加或移除标签（前九个，按设置中的顺序）"
+
+msgid "Remove every tag"
+msgstr "移除所有标签"
+
+msgid "Print the message you are reading"
+msgstr "打印正在阅读的邮件"
+
+msgid "Preview it as a PDF first"
+msgstr "先以 PDF 预览"
+
+msgid "Writing"
+msgstr "撰写"
+
+msgid "Compose"
+msgstr "撰写"
+
+msgid "New message from a template"
+msgstr "基于模板新建邮件"
+
+msgid "Send the message you are writing"
+msgstr "发送正在撰写的邮件"
+
+msgid "Attach files"
+msgstr "添加附件"
+
+msgid "Go to To, Cc or Bcc, showing the row"
+msgstr "跳转到收件人、抄送或密送，并显示该行"
+
+msgid "Back out of a reply and return to the list"
+msgstr "退出回复并返回列表"
+
+msgid "Emoji chooser, at the cursor"
+msgstr "表情符号选择器，插入到光标处"
+
+msgid "New paragraph (Return starts a new line, unless Settings swaps them)"
+msgstr "新段落（回车开始新行，除非在设置中交换两者）"
+
+msgid "Bold, italic, underline"
+msgstr "粗体、斜体、下划线"
+
+msgid "Preview the highlighted attachment"
+msgstr "预览选中的附件"
+
+msgid "Open the highlighted attachment"
+msgstr "打开选中的附件"
+
+msgid "Previous or next in the gallery's preview"
+msgstr "在图库预览中切换上一项或下一项"
+
+msgid "Close the gallery's preview"
+msgstr "关闭图库预览"
+
+msgid "Everything else"
+msgstr "其他所有操作"
+
+msgid "Undo the last action, or the last edit while you are writing"
+msgstr "撤销上一步操作，撰写时则撤销上一次编辑"
+
+msgid "Redo it (Ctrl+Y does the same)"
+msgstr "重做（Ctrl+Y 效果相同）"
+
+msgid "Reveal the status bar (also: long-press Refresh)"
+msgstr "显示状态栏（也可长按刷新）"
+
+msgid "Show or hide the accounts in the sidebar"
+msgstr "显示或隐藏侧边栏中的账户"
+
+msgid "Check for new mail"
+msgstr "检查新邮件"
+
+msgid "Focus Mode on or off"
+msgstr "开启或关闭专注模式"
+
+msgid "Fullscreen on or off"
+msgstr "开启或关闭全屏"
+
+msgid "Reading pane right of the list, below it, or off"
+msgstr "阅读窗格位于列表右侧、下方，或关闭"
+
+msgid "Message zoom in or out"
+msgstr "放大或缩小邮件"
+
+msgid "Message zoom back to the default"
+msgstr "将邮件缩放恢复为默认"
+
+msgid "Search the Settings window, when it is open"
+msgstr "搜索设置窗口（当其打开时）"
+
+msgid "Console mode (when enabled in Settings)"
+msgstr "控制台模式（在设置中启用时）"
+
+msgid "Close the window (background sync keeps running)"
+msgstr "关闭窗口（后台同步继续进行）"
+
+msgid "Quit Hylki entirely"
+msgstr "完全退出 Hylki"
+
+msgid "Command palette: search actions, folders and tags"
+msgstr "命令面板：搜索操作、文件夹和标签"
+
+msgid "Command palette, actions only"
+msgstr "命令面板，仅搜索操作"
+
+msgid "This list"
+msgstr "此列表"
+
+msgid ""
+"Move down or up the list without opening; while reading, open the next or "
+"previous conversation"
+msgstr "在列表中向下或向上移动而不打开；阅读时则打开下一个或上一个会话"
+
+msgid "Open the message the cursor is on"
+msgstr "打开光标所在的邮件"
+
+msgid "Close the conversation, back to the list"
+msgstr "关闭会话，返回列表"
+
+msgid "Next or previous message in the conversation"
+msgstr "会话中的下一封或上一封邮件"
+
+msgid "Expand or collapse every message of the conversation"
+msgstr "展开或折叠会话中的所有邮件"
+
+msgid "Go to Inbox"
+msgstr "转到收件箱"
+
+msgid "Go to Starred"
+msgstr "转到已加星标"
+
+msgid "Go to Sent"
+msgstr "转到已发送"
+
+msgid "Go to Drafts"
+msgstr "转到草稿"
+
+msgid "Go to Archive"
+msgstr "转到归档"
+
+msgid "Go to Contacts"
+msgstr "转到联系人"
+
+msgid "Archive the conversation"
+msgstr "将会话归档"
+
+msgid "Archive the conversation and open the older one"
+msgstr "将会话归档并打开较早的会话"
+
+msgid "Archive the conversation and open the newer one"
+msgstr "将会话归档并打开较新的会话"
+
+msgid "Mark the conversation as read"
+msgstr "将会话标记为已读"
+
+msgid "Mark the conversation as unread and close it"
+msgstr "将会话标记为未读并关闭"
+
+msgid "Mark as unread from this message on and close it"
+msgstr "从此邮件起标记为未读并关闭"
+
+msgid "Select this row without opening it"
+msgstr "选中此行而不打开"
+
+msgid "Select every row, or none"
+msgstr "选中所有行，或全不选"
+
+msgid "Select the read or the unread conversations"
+msgstr "选中已读或未读的会话"
+
+msgid "Select the starred or the unstarred conversations"
+msgstr "选中已加星标或未加星标的会话"
+
+msgid "Move to a folder"
+msgstr "移动到文件夹"
+
+msgid "Undo the last action"
+msgstr "撤销上一步操作"
+
+msgid "Reply, or reply to all, in a window"
+msgstr "在窗口中回复或全部回复"
+
+msgid "Forward in a window"
+msgstr "在窗口中转发"
+
+msgid "Compose in a window"
+msgstr "在窗口中撰写"
+
+msgid "Action"
+msgstr "操作"
+
+msgid "Reply to All"
+msgstr "全部回复"
+
+msgid "Print"
+msgstr "打印"
+
+msgid "Find in Message"
+msgstr "在邮件中查找"
+
+msgid "Delete Permanently"
+msgstr "永久删除"
+
+msgid "Star or Remove Star"
+msgstr "加星标或取消星标"
+
+msgid "Mark as Read or Unread"
+msgstr "标记为已读或未读"
+
+msgid "Move to Folder"
+msgstr "移动到文件夹"
+
+msgid "Open Message File…"
+msgstr "打开邮件文件…"
+
+msgid "Redo"
+msgstr "重做"
+
+msgid "Check for New Mail"
+msgstr "检查新邮件"
+
+msgid "Search Messages"
+msgstr "搜索邮件"
+
+msgid "Show or Hide the Sidebar"
+msgstr "显示或隐藏侧边栏"
+
+msgid "Reading Pane Right"
+msgstr "阅读窗格在右侧"
+
+msgid "Reading Pane Below"
+msgstr "阅读窗格在下方"
+
+msgid "Reading Pane Off"
+msgstr "关闭阅读窗格"
+
+msgid "Mail Accounts"
+msgstr "邮件账户"
+
+msgid "New Smart Folder…"
+msgstr "新建智能文件夹…"
+
+msgid "Keyboard Shortcuts"
+msgstr "键盘快捷键"
+
+msgid "About Hylki"
+msgstr "关于 Hylki"
+
+msgid "Turn Focus Mode On"
+msgstr "开启专注模式"
+
+msgid "Turn Focus Mode Off"
+msgstr "关闭专注模式"
+
+msgid "All accounts"
+msgstr "所有账户"
+
+msgid "Contacts"
+msgstr "联系人"
+
+msgid "Outbox"
+msgstr "发件箱"
+
+msgid "Tag"
+msgstr "标签"
+
+msgid "Smart Folder"
+msgstr "智能文件夹"
+
+msgid ""
+"Single-key shortcuts are switched off, and Gmail keys with them. Turn them "
+"on in Settings → System."
+msgstr "单键快捷键已关闭，Gmail 快捷键也随之关闭。请在设置 → 系统中开启。"
+
+msgid ""
+"Single-key shortcuts are switched off. Turn them on in Settings → System."
+msgstr "单键快捷键已关闭。请在设置 → 系统中开启。"
+
+msgid "Your tags"
+msgstr "你的标签"
+
+msgid "Hide Status Bar"
+msgstr "隐藏状态栏"
+
+msgid "Reveal Status Bar"
+msgstr "显示状态栏"
+
+msgid "Console"
+msgstr "控制台"
+
+msgid "New Message Instead"
+msgstr "改为新建邮件"
+
+msgid "Search by sender, subject or account"
+msgstr "按发件人、主题或账户搜索"
+
+msgid "(no subject)"
+msgstr "（无主题）"
+
+msgid "Forwarded message"
+msgstr "转发的邮件"
+
+msgid "Subject: {subject}"
+msgstr "主题：{subject}"
+
+msgid "From: {from}"
+msgstr "发件人：{from}"
+
+msgid "Date: {date}"
+msgstr "日期：{date}"
+
+msgid "Export failed: {e}"
+msgstr "导出失败：{e}"
+
+msgid "Export Contacts"
+msgstr "导出联系人"
+
+msgid "{n} contact exported to {path}"
+msgid_plural "{n} contacts exported to {path}"
+msgstr[0] "已将 {n} 位联系人导出到 {path}"
+
+msgid "Could not export contacts: {e}"
+msgstr "无法导出联系人：{e}"
+
+msgid "Delete All Contacts?"
+msgstr "删除所有联系人？"
+
+msgid ""
+"The {n} contact in the Hylki address book is deleted. This cannot be undone; "
+"export the book first to keep a copy."
+msgid_plural ""
+"The {n} contacts in the Hylki address book are deleted. This cannot be "
+"undone; export the book first to keep a copy."
+msgstr[0] ""
+"Hylki 地址簿中的 {n} 位联系人将被删除。此操作无法撤销；请先导出地址簿以保留副"
+"本。"
+
+msgid "Delete All"
+msgstr "全部删除"
+
+msgid "Export Settings"
+msgstr "导出设置"
+
+msgid "Settings exported to {display}"
+msgstr "设置已导出到 {display}"
+
+msgid "Export Log"
+msgstr "导出日志"
+
+msgid "Log exported to {display}"
+msgstr "日志已导出到 {display}"
+
+msgid "Import Settings"
+msgstr "导入设置"
+
+msgid "Settings Imported"
+msgstr "设置已导入"
+
+msgid ""
+"{n} mail account(s), the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
+"of a backup; re-enter them on first use if this is a new machine."
+msgstr ""
+"{n} 个邮件账户、云存储账户以及所有首选项均已导入。请重启 Hylki 以应用。密码和"
+"登录信息不包含在备份中；如果这是新机器，请在首次使用时重新输入。"
+
+msgid "Later"
+msgstr "稍后"
+
+msgid "Restart Hylki"
+msgstr "重启 Hylki"
+
+msgid "Import failed: {e}"
+msgstr "导入失败：{e}"
+
+msgid "The renderer applies the next time Hylki starts."
+msgstr "渲染器将在下次启动 Hylki 时生效。"
+
+msgid "The language applies the next time Hylki starts."
+msgstr "语言将在下次启动 Hylki 时生效。"
+
+msgid "Edit this message"
+msgstr "编辑此邮件"
+
+msgid "Try to send this message now"
+msgstr "立即尝试发送此邮件"
+
+msgid "Send all"
+msgstr "全部发送"
+
+msgid "Delete {n} messages"
+msgstr "删除 {n} 封邮件"
+
+msgid "Customize Toolbar…"
+msgstr "自定义工具栏…"
+
+msgid "Read receipt"
+msgstr "阅读回执"
+
+msgid "Read: {subject}"
+msgstr "已读：{subject}"
+
+msgid ""
+"This is a read receipt for the message sent to {to} on {date} with the "
+"subject \"{subject}\"."
+msgstr ""
+"这是发送给 {to} 的邮件的阅读回执，发送日期为 {date}，主题为“{subject}”。"
+
+msgid ""
+"It means the message was shown on the recipient's screen, not that it was "
+"read or understood."
+msgstr "它表示邮件已显示在收件人的屏幕上，并不表示已被阅读或理解。"
+
+msgid "Read by {reader}"
+msgstr "阅读者：{reader}"
+
+msgid "Full Release Notes on GitHub"
+msgstr "GitHub 上的完整发行说明"
+
+msgid "Delete this conversation?"
+msgstr "删除此会话？"
+
+msgid ""
+"The message in this conversation will be deleted. You can turn this warning "
+"off in Settings."
+msgid_plural ""
+"All {n} messages in this conversation will be deleted. You can turn this "
+"warning off in Settings."
+msgstr[0] "此会话中的全部 {n} 封邮件将被删除。你可以在设置中关闭此警告。"
+
+msgid "Delete Conversation"
+msgstr "删除会话"
+
+msgid "Delete this message permanently?"
+msgid_plural "Delete {n} messages permanently?"
+msgstr[0] "永久删除 {n} 封邮件？"
+
+msgid ""
+"It is already in Trash, so it will be erased from the server. This can’t be "
+"undone."
+msgstr "它已在垃圾箱中，因此将从服务器上清除。此操作无法撤销。"
+
+msgid ""
+"They are already in Trash, so they will be erased from the server. This "
+"can’t be undone."
+msgstr "它们已在垃圾箱中，因此将从服务器上清除。此操作无法撤销。"
+
+msgid ""
+"It will be erased from the server instead of going to Trash. This can’t be "
+"undone."
+msgstr "它将从服务器上清除，而不会放入垃圾箱。此操作无法撤销。"
+
+msgid ""
+"They will be erased from the server instead of going to Trash. This can’t be "
+"undone."
+msgstr "它们将从服务器上清除，而不会放入垃圾箱。此操作无法撤销。"
+
+msgid "No {v1} folder available"
+msgstr "没有可用的 {v1} 文件夹"
+
+msgid "No Junk folder available for this account"
+msgstr "此账户没有可用的垃圾邮件文件夹"
+
+msgid "No Inbox folder available for this account"
+msgstr "此账户没有可用的收件箱文件夹"
+
+msgid "No {v1} folder available for some messages"
+msgstr "部分邮件没有可用的 {v1} 文件夹"
+
+msgid "Remove Account?"
+msgstr "移除账户？"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Select a conversation first."
+msgstr "请先选择一个会话。"
+
+msgid "Remove Tags"
+msgstr "移除标签"
+
+msgid "Open a message first, then print it."
+msgstr "请先打开一封邮件，然后再打印。"
+
+msgid "Message Source"
+msgstr "邮件源码"
+
+msgid "Find in message"
+msgstr "在邮件中查找"
+
+msgid "Previous match"
+msgstr "上一个匹配项"
+
+msgid "Next match"
+msgstr "下一个匹配项"
+
+msgid "Close find"
+msgstr "关闭查找"
+
+msgid "Delete “{name}”?"
+msgstr "删除“{name}”？"
+
+msgid ""
+"The smart folder goes from the sidebar. The mail it shows stays where it is."
+msgstr "智能文件夹将从侧边栏中移除。它显示的邮件仍保留在原处。"
+
+msgid "Snooze until"
+msgstr "稍后处理至"
+
+msgid "Could not add the event: {e}"
+msgstr "无法添加事件：{e}"
+
+msgid "Could not add the task: {e}"
+msgstr "无法添加任务：{e}"
+
+msgid "One message could not be copied to {account}: {error}"
+msgid_plural "{n} messages could not be copied to {account}: {error}"
+msgstr[0] "{n} 封邮件无法复制到 {account}：{error}"
+
+msgid "One message could not be moved to {account}: {error}"
+msgid_plural "{n} messages could not be moved to {account}: {error}"
+msgstr[0] "{n} 封邮件无法移动到 {account}：{error}"
+
+msgid "Copying one message to {account}…"
+msgid_plural "Copying {n} messages to {account}…"
+msgstr[0] "正在将 {n} 封邮件复制到 {account}…"
+
+msgid "Moving one message to {account}…"
+msgid_plural "Moving {n} messages to {account}…"
+msgstr[0] "正在将 {n} 封邮件移动到 {account}…"
+
+msgid "One message stayed put: this account can't take mail from another"
+msgstr "1 封邮件未能移动：此账户无法接收来自其他账户的邮件"
+
+msgid ""
+"{foreign} messages stayed put: this account can't take mail from another"
+msgstr "{foreign} 封邮件未能移动：此账户无法接收来自其他账户的邮件"
+
+msgid "Could not save the message: {e}"
+msgstr "无法保存邮件：{e}"
+
+msgid "Could not decrypt the draft: {e}"
+msgstr "无法解密草稿：{e}"
+
+msgid "Open Hylki"
+msgstr "打开 Hylki"
+
+msgid "View all {n} unread in Inboxes…"
+msgstr "查看收件箱中全部 {n} 封未读邮件…"
+
+msgid "Accounts"
+msgstr "账户"
+
+msgid "No unread mail in Inboxes"
+msgstr "收件箱中没有未读邮件"
+
+msgid "{n} unread in Inboxes"
+msgid_plural "{n} unread in Inboxes"
+msgstr[0] "收件箱中有 {n} 封未读"
+
+msgid "Restarting Hylki"
+msgstr "正在重启 Hylki"
+
+msgid "Applying your new app icon. Hylki will close and reopen in a moment."
+msgstr "正在应用新的应用图标。Hylki 将稍后关闭并重新打开。"
+
+msgid "Restart to finish switching icons?"
+msgstr "是否重启以完成图标切换？"
+
+msgid ""
+"The dock and Hylki's own windows keep the old icon until Hylki restarts."
+msgstr "在 Hylki 重启之前，Dock 和 Hylki 自身的窗口会继续使用旧图标。"
+
+msgid "Restart Now"
+msgstr "立即重启"
+
+msgid ""
+"Couldn't restart automatically — quit and reopen Hylki to finish switching "
+"the icon."
+msgstr "无法自动重启 — 请退出并重新打开 Hylki 以完成图标切换。"
+
+msgid "Move to {name}"
+msgstr "移动到 {name}"
+
+msgid "Add Tag {name}"
+msgstr "添加标签 {name}"
+
+msgid "Remove Tag {name}"
+msgstr "移除标签 {name}"
+
+msgid "Unsubscribe from {name}?"
+msgstr "退订 {name}？"
+
+msgid ""
+"Hylki will ask the list to stop sending you mail. A list can take a few days "
+"to act on the request."
+msgstr ""
+"Hylki 将请求该邮件列表停止向你发送邮件。邮件列表可能需要几天时间才能处理该请"
+"求。"
+
+msgid ""
+"An unsubscribe request will be sent to {addr} from {from}. A list can take a "
+"few days to act on it."
+msgstr ""
+"将向 {addr} 发送来自 {from} 的退订请求。邮件列表处理该请求可能需要几天。"
+
+msgid ""
+"This list offers no direct way to unsubscribe. Its unsubscribe page will "
+"open in your browser."
+msgstr "此邮件列表未提供直接退订的方式。其退订页面将在你的浏览器中打开。"
+
+msgid ""
+"This message carries no unsubscribe header, so Hylki is going by the link in "
+"it."
+msgstr "此邮件没有退订标头，因此 Hylki 使用其中的链接。"
+
+msgid "Unsubscribe"
+msgstr "退订"
+
+msgid "Also delete the message from {addr}"
+msgid_plural "Also delete the {n} messages from {addr}"
+msgstr[0] "同时删除来自 {addr} 的 {n} 封邮件"
+
+msgid "the message offers no way to unsubscribe"
+msgstr "这封邮件未提供退订方式"
+
+msgid "the list's mail address could not be read"
+msgstr "无法读取邮件列表的邮件地址"
+
+msgid "Unsubscribed from {name}."
+msgstr "已退订 {name}。"
+
+msgid "The list's unsubscribe page is open in your browser."
+msgstr "邮件列表的退订页面已在你的浏览器中打开。"
+
+msgid "Save Message"
+msgstr "保存邮件"
+
+msgid "Open Message File"
+msgstr "打开邮件文件"
+
+msgid "Email messages"
+msgstr "电子邮件"
+
+#. Other programs name files .msg too (Tcl's catalogues).
+msgid "it is not an Outlook message"
+msgstr "这不是 Outlook 邮件"
+
+msgid "Could not open {file}: {e}"
+msgstr "无法打开 {file}：{e}"
+
+msgid "No message with the ID {id} was found"
+msgstr "未找到 ID 为 {id} 的邮件"
+
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted. Mail that was being sent is in the Outbox."
+msgstr ""
+"与 {account} 的连接因内部错误而中断，现已重新启动。正在发送的邮件位于发件箱"
+"中。"
+
+msgid ""
+"The connection to {account} stopped after an internal error and was "
+"restarted."
+msgstr "与 {account} 的连接因内部错误而中断，现已重新启动。"
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Mail "
+"that was being sent is in the Outbox. Restart Hylki to connect again."
+msgstr ""
+"与 {account} 的连接反复因内部错误而中断。正在发送的邮件位于发件箱中。请重新启"
+"动 Hylki 以再次连接。"
+
+msgid ""
+"The connection to {account} keeps stopping after an internal error. Restart "
+"Hylki to connect again."
+msgstr "与 {account} 的连接反复因内部错误而中断。请重新启动 Hylki 以再次连接。"
+
+msgid "Main Menu"
+msgstr "主菜单"
+
+msgid "Expand sidebar"
+msgstr "展开侧边栏"
+
+msgid "Collapse sidebar"
+msgstr "折叠侧边栏"
+
+msgid "Search messages (Ctrl+F)"
+msgstr "搜索邮件（Ctrl+F）"
+
+msgid "Search, filters and sort"
+msgstr "搜索、过滤规则和排序"
+
+#. The preview, not the print dialog: it shows what will come
+#. out and prints from there (#359).
+msgid "Print Preview (Ctrl+Shift+P)"
+msgstr "打印预览（Ctrl+Shift+P）"
+
+msgid "Find in message (Ctrl+F)"
+msgstr "在邮件中查找（Ctrl+F）"
+
+msgid "Downloading attachments…"
+msgstr "正在下载附件…"
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "今天 今晚"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "明天"
+
+msgid "Signature"
+msgstr "签名"
+
+msgid "Read/Unread"
+msgstr "已读/未读"
+
+msgid "Spam"
+msgstr "垃圾邮件"
+
+msgid "Replied"
+msgstr "已回复"
+
+msgid "Correspondents"
+msgstr "通信对象"
+
+msgid "Subject"
+msgstr "主题"
+
+msgid "Attachment"
+msgstr "附件"
+
+msgid "Importance"
+msgstr "重要性"
+
+msgid "Account"
+msgstr "账户"
+
+msgid "Due Date"
+msgstr "截止日期"
+
+msgid "Date"
+msgstr "日期"
+
+msgid "Newest messages"
+msgstr "最新邮件"
+
+msgid "Last week"
+msgstr "上周"
+
+msgid "Last month"
+msgstr "上个月"
+
+msgid "Last year"
+msgstr "去年"
+
+msgid "All mail"
+msgstr "所有邮件"
+
+msgid "With sent mail"
+msgstr "包含已发送邮件"
+
+msgid "Folder of the original"
+msgstr "原邮件所在文件夹"
+
+msgid "Folder of the original, not the Inbox"
+msgstr "原邮件所在文件夹，而非收件箱"
+
+msgid "Custom Order"
+msgstr "自定义顺序"
+
+msgid "Name (A to Z)"
+msgstr "名称（A 到 Z）"
+
+msgid "Name (Z to A)"
+msgstr "名称（Z 到 A）"
+
+msgid "Full Path"
+msgstr "完整路径"
+
+msgid "Move To"
+msgstr "移动到"
+
+msgid "Find"
+msgstr "查找"
+
+msgid "{date} at {time}"
+msgstr "{date} {time}"
+
+msgid "Default"
+msgstr "默认"
+
+msgid "Blue square"
+msgstr "蓝色方块"
+
+msgid "Navy square"
+msgstr "藏青色方块"
+
+msgid "Yellow square"
+msgstr "黄色方块"
+
+msgid "Classic"
+msgstr "经典"
+
+msgid ""
+"Hylki checks for new mail and shows notifications while its window is closed."
+msgstr "Hylki 会在窗口关闭时检查新邮件并显示通知。"
+
+msgid "Checking for new mail"
+msgstr "正在检查新邮件"
+
+msgid "{n} unread message"
+msgid_plural "{n} unread messages"
+msgstr[0] "有 {n} 封未读邮件"
+
+msgid "New message"
+msgstr "新邮件"
+
+msgid "Message ready to send"
+msgstr "邮件已准备好发送"
+
+msgid "A new message is open in Hylki."
+msgstr "Hylki 中有一封新邮件已打开。"
+
+msgid "A new message with {n} file attached is open in Hylki."
+msgid_plural "A new message with {n} files attached is open in Hylki."
+msgstr[0] "Hylki 中有一封带 {n} 个附件的新邮件已打开。"
+
+msgid "Message ready"
+msgstr "邮件已就绪"
+
+msgid "An AI agent prepared a message. Check it, then send it."
+msgstr "AI 代理已准备好一封邮件。请检查后发送。"
+
+msgid "On {date} at {time}, {name} wrote:"
+msgstr "在 {date} {time}，{name} 写道："
+
+msgid "Name"
+msgstr "名称"
+
+msgid "First Name"
+msgstr "名字"
+
+msgid "Last Name"
+msgstr "姓氏"
+
+msgid "Column {n}"
+msgstr "第 {n} 列"
+
+msgid "The file is empty."
+msgstr "文件为空。"
+
+msgid "The file has no rows below its first."
+msgstr "该文件除首行外没有任何数据行。"
+
+msgid ""
+"The signing key is not for {addr}, the address this message is from, so the "
+"signature does not show who sent it."
+msgstr ""
+"签名密钥并不属于 {addr}（此邮件的发件地址），因此该签名无法表明是谁发送的。"
+
+msgid "GnuPG (gpg) is not installed, so this message cannot be read."
+msgstr "未安装 GnuPG（gpg），因此无法读取此邮件。"
+
+msgid "Decrypted with your key."
+msgstr "已使用你的密钥解密。"
+
+msgid "Encrypted to key {id}, which is not in your keyring."
+msgstr "已加密至密钥 {id}，该密钥不在你的密钥环中。"
+
+msgid "The encrypted block is damaged or not OpenPGP data."
+msgstr "加密块已损坏或不是 OpenPGP 数据。"
+
+msgid ""
+"Signing key {id} came with the sender's mail or from their domain, not from "
+"your keyring; check its fingerprint with the sender before trusting it."
+msgstr ""
+"签名密钥 {id} 来自发件人的邮件或其域，而非你的密钥环；在信任它之前，请与发件"
+"人核对指纹。"
+
+msgid "Revoked"
+msgstr "已撤销"
+
+msgid "Expired"
+msgstr "已过期"
+
+msgid "Not trusted yet"
+msgstr "尚未受信任"
+
+msgid "Marked as not trusted"
+msgstr "已标记为不受信任"
+
+msgid "Marginally trusted"
+msgstr "边缘信任"
+
+msgid "Trusted"
+msgstr "受信任"
+
+msgid "Your own key"
+msgstr "你自己的密钥"
+
+msgid "No key was found in that file."
+msgstr "该文件中未找到密钥。"
+
+msgid "Nothing to export."
+msgstr "没有可导出的内容。"
+
+msgid "gpg did not create the key."
+msgstr "gpg 未能创建密钥。"
+
+msgid "No key was found for that address."
+msgstr "未找到该地址对应的密钥。"
+
+msgid "gpg could not sign the key."
+msgstr "gpg 无法签名该密钥。"
+
+msgid "gpg could not delete the key."
+msgstr "gpg 无法删除该密钥。"
+
+msgid "gpg did not sign the message."
+msgstr "gpg 未能签名该邮件。"
+
+msgid "gpg did not encrypt the message."
+msgstr "gpg 未能加密该邮件。"
+
+msgid "Signing key {id} is trusted in your keyring."
+msgstr "签名密钥 {id} 在你的密钥环中受信任。"
+
+msgid "Signing key {id} is only marginally trusted in your keyring."
+msgstr "签名密钥 {id} 在你的密钥环中仅为边缘信任。"
+
+msgid "Signing key {id} is marked as not trusted in your keyring."
+msgstr "签名密钥 {id} 在你的密钥环中被标记为不受信任。"
+
+msgid ""
+"Signing key {id} is in your keyring but not marked as trusted; check its "
+"fingerprint with the sender."
+msgstr "签名密钥 {id} 在你的密钥环中，但未标记为受信任；请与发件人核对指纹。"
+
+msgid "Signed with key {id}."
+msgstr "已使用密钥 {id} 签名。"
+
+msgid "Import the sender's public key to verify it."
+msgstr "导入发件人的公钥以进行验证。"
+
+msgid "Labeled"
+msgstr "已加标签"
+
+msgid "Personal"
+msgstr "个人"
+
+msgid "Private"
+msgstr "私有"
+
+msgid "Confidential"
+msgstr "机密"
+
+msgid "The sender marked this message “{label}”."
+msgstr "发件人将此邮件标记为“{label}”。"
+
+msgid ""
+"The sender's organization labeled this message without naming the label in "
+"it. For a Microsoft 365 account, turning on “Show sensitivity label names” "
+"in its settings shows the name. Hylki shows the label but does not apply its "
+"rules."
+msgstr ""
+"发件人所在组织为此邮件添加了标签，但未在其中注明标签名称。对于 Microsoft 365 "
+"账户，在其设置中开启“显示敏感度标签名称”即可显示该名称。Hylki 会显示该标签，"
+"但不会应用其规则。"
+
+msgid ""
+"The sender's organization labeled this message “{label}”. Hylki shows the "
+"label but does not apply its rules."
+msgstr ""
+"发件人所在组织将此邮件标记为“{label}”。Hylki 会显示该标签，但不会应用其规则。"
+
+msgid "gpgsm did not sign the message."
+msgstr ""
+
+msgid "Nothing here proves this came from {from} — or that it didn't."
+msgstr "这里没有任何内容能证明此邮件来自 {from}——也无法证明它不是。"
+
+msgid "These checks aren't known to come from your mail provider"
+msgstr "尚不清楚这些检查是否来自你的邮件服务提供商"
+
+msgid ""
+"{from} checks out, but the addressing doesn't match the name on the message."
+msgstr "{from} 验证通过，但地址与邮件上的名称不匹配。"
+
+msgid "Your mail provider confirmed this really came from {from}."
+msgstr "你的邮件服务提供商已确认此邮件确实来自 {from}。"
+
+msgid ""
+"This message failed the checks that prove it came from {from}. Treat it as a "
+"forgery."
+msgstr "此邮件未能通过证明其来自 {from} 的检查。请将其视为伪造邮件。"
+
+msgid "This message carries a valid signature from {from}."
+msgstr "此邮件带有来自 {from} 的有效签名。"
+
+msgid ""
+"This message couldn't be confirmed as coming from {from}, and the checks "
+"that ran on it failed."
+msgstr "无法确认此邮件来自 {from}，且对其执行的检查均未通过。"
+
+msgid "Your mail provider didn't report any sender checks for this message."
+msgstr "你的邮件服务提供商未报告此邮件的任何发件人检查结果。"
+
+msgid "{name}: passed"
+msgstr "{name}：通过"
+
+msgid "{name}: FAILED"
+msgstr "{name}：未通过"
+
+msgid "{name}: inconclusive"
+msgstr "{name}：无定论"
+
+msgid "DMARC (is the From: address genuine)"
+msgstr "DMARC（发件人地址是否真实）"
+
+msgid "DKIM (signature)"
+msgstr "DKIM（签名）"
+
+msgid "SPF (sending server)"
+msgstr "SPF（发送服务器）"
+
+msgid "Signed by: {d}"
+msgstr "签名者：{d}"
+
+msgid "Checked by: {who}"
+msgstr "检查者：{who}"
+
+msgid "Replies would go to {reply}, not {from}"
+msgstr "回复将发送至 {reply}，而非 {from}"
+
+msgid "Bounces would go to {rp}"
+msgstr "退信将发送至 {rp}"
+
+msgid "The sender's name says \"{claimed}\" but the address is {from}"
+msgstr "发件人姓名显示为“{claimed}”，但地址是 {from}"
+
+msgid "{used} of {limit} used"
+msgstr "已使用 {used}，共 {limit}"
+
+msgid "{free} free ({pct}%)"
+msgstr "剩余 {free}（{pct}%）"
+
+msgid "A folder needs a name."
+msgstr "文件夹需要一个名称。"
+
+msgid "A folder name can't contain “{c}” on this account."
+msgstr "此账户的文件夹名称不能包含“{c}”。"
+
+msgid "Encrypted message"
+msgstr "加密邮件"
+
+msgid "Today, {time}"
+msgstr "今天 {time}"
+
+msgid "just now"
+msgstr "刚刚"
+
+msgid "{n} minutes ago"
+msgstr "{n} 分钟前"
+
+msgid "an hour ago"
+msgstr "1 小时前"
+
+msgid "{n} hours ago"
+msgstr "{n} 小时前"
+
+msgid "yesterday"
+msgstr "昨天"
+
+msgid "{n} days ago"
+msgstr "{n} 天前"
+
+msgid "Waiting since {ago}"
+msgstr "自 {ago} 起等待"
+
+msgid "Scheduled for {when}"
+msgstr "计划于 {when}"
+
+msgid "No read receipt yet"
+msgstr "尚无已读回执"
+
+msgid "{who}, {when}"
+msgstr "{who}，{when}"
+
+msgid "Read by {count} of {total}"
+msgstr "{total} 人中有 {count} 人已读"
+
+msgid "Verified sender"
+msgstr "发件人已验证"
+
+msgid "Sender not verified"
+msgstr "发件人未验证"
+
+msgid "Check this sender"
+msgstr "检查此发件人"
+
+msgid "Possible forgery"
+msgstr "可能是伪造邮件"
+
+msgid "Encrypted with OpenPGP; could not be decrypted"
+msgstr "已使用 OpenPGP 加密；无法解密"
+
+msgid "Encrypted with OpenPGP"
+msgstr "已使用 OpenPGP 加密"
+
+msgid ""
+"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"{addr}"
+msgstr "已加密，并由 {signer} 签名，但其密钥不属于发件人地址 {addr}"
+
+msgid "Encrypted, and signed by {signer}"
+msgstr "已加密，并由 {signer} 签名"
+
+msgid ""
+"Encrypted; the signature does not match, the message may have been altered"
+msgstr "已加密；签名不匹配，邮件可能已被篡改"
+
+msgid "Encrypted; signed with a key you don't have ({id})"
+msgstr "已加密；使用你没有的密钥（{id}）签名"
+
+msgid "Encrypted, and signed by {signer} with an expired key"
+msgstr "已加密，并由 {signer} 使用已过期的密钥签名"
+
+msgid "Encrypted, and signed by {signer} with a revoked key"
+msgstr "已加密，并由 {signer} 使用已撤销的密钥签名"
+
+msgid "Encrypted, and signed by {signer}; the signature has expired"
+msgstr "已加密，并由 {signer} 签名；签名已过期"
+
+msgid "OpenPGP-signed; the signature could not be checked"
+msgstr "已使用 OpenPGP 签名；无法检查该签名"
+
+msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgstr "由 {signer} 签名，但其密钥不属于发件人地址 {addr}"
+
+msgid "Signed by {signer}"
+msgstr "由 {signer} 签名"
+
+msgid "The OpenPGP signature does not match; the message may have been altered"
+msgstr "OpenPGP 签名不匹配；邮件可能已被篡改"
+
+msgid "Signed with a key you don't have ({id})"
+msgstr "使用你没有的密钥（{id}）签名"
+
+msgid "Signed by {signer} with an expired key"
+msgstr "由 {signer} 使用已过期的密钥签名"
+
+msgid "Signed by {signer} with a revoked key"
+msgstr "由 {signer} 使用已撤销的密钥签名"
+
+msgid "Signed by {signer}; the signature has expired"
+msgstr "由 {signer} 签名；签名已过期"
+
+msgid "Not decrypted"
+msgstr "未解密"
+
+msgid "Encrypted"
+msgstr "已加密"
+
+msgid "Signature not checked"
+msgstr "签名未检查"
+
+msgid "Signed by another address"
+msgstr "由其他地址签名"
+
+msgid "Encrypted and signed"
+msgstr "已加密并签名"
+
+msgid "Signed"
+msgstr "已签名"
+
+msgid "Signed, key not trusted"
+msgstr "已签名，密钥不受信任"
+
+msgid "Bad signature"
+msgstr "签名无效"
+
+msgid "Signed, unknown key"
+msgstr "已签名，未知密钥"
+
+msgid "Signed, key expired"
+msgstr "已签名，密钥已过期"
+
+msgid "Signed, key revoked"
+msgstr "已签名，密钥已撤销"
+
+msgid "Signature expired"
+msgstr "签名已过期"
+
+msgid "This message hasn't been checked."
+msgstr "此邮件尚未检查。"
+
+msgid "Harper is not available for this computer."
+msgstr "此计算机上无法使用 Harper。"
+
+msgid "Harper is not downloaded. Download it in Settings → Composing."
+msgstr "Harper 尚未下载。请在“设置 → 撰写”中下载。"
+
+msgid "Harper could not be started: {e}"
+msgstr "无法启动 Harper：{e}"
+
+msgid "Harper's answer could not be read."
+msgstr "无法读取 Harper 的响应。"
+
+msgid "There is no folder to install to."
+msgstr "没有可用于安装的文件夹。"
+
+msgid "There is not enough free space: {size} is needed."
+msgstr "可用空间不足：需要 {size}。"
+
+msgid "The download could not start: {e}"
+msgstr "无法开始下载：{e}"
+
+msgid "The download was cancelled."
+msgstr "下载已取消。"
+
+msgid "The download stopped: {e}"
+msgstr "下载已停止：{e}"
+
+msgid "The downloaded file is not the one expected, so it was not installed."
+msgstr "下载的文件与预期不符，因此未安装。"
+
+msgid "The download could not be unpacked: {e}"
+msgstr "无法解压下载的文件：{e}"
+
+msgid "The files could not be written: {e}"
+msgstr "无法写入文件：{e}"
+
+msgid "{n} MB"
+msgstr "{n} MB"
+
+msgid "The server's answer could not be read."
+msgstr "无法读取服务器的响应。"
+
+msgid "Nothing answers at that address. Check that the server is running."
+msgstr "该地址无响应。请检查服务器是否正在运行。"
+
+msgid "The server's name could not be found."
+msgstr "无法找到服务器的名称。"
+
+msgid "The server's address is not valid."
+msgstr "服务器地址无效。"
+
+msgid "The server could not be reached: {e}"
+msgstr "无法连接到服务器：{e}"
+
+msgid "The server did not accept the username and key."
+msgstr "服务器不接受该用户名和密钥。"
+
+msgid "The message is too long for the server."
+msgstr "邮件对服务器来说过长。"
+
+msgid "Too many requests: try again in a moment."
+msgstr "请求过多：请稍后重试。"
+
+msgid "The server refused the request (error {code})."
+msgstr "服务器拒绝了该请求（错误 {code}）。"
+
+msgid "LanguageTool is not available for this computer."
+msgstr "此计算机上无法使用 LanguageTool。"
+
+msgid "LanguageTool stopped unexpectedly."
+msgstr "LanguageTool 意外停止。"
+
+msgid "LanguageTool is not downloaded. Download it in Settings → Composing."
+msgstr "LanguageTool 尚未下载。请在“设置 → 撰写”中下载。"
+
+msgid "LanguageTool could not be started: {e}"
+msgstr "无法启动 LanguageTool：{e}"
+
+msgid "LanguageTool could not be started."
+msgstr "无法启动 LanguageTool。"
+
+msgid "LanguageTool took too long to start."
+msgstr "LanguageTool 启动耗时过长。"
+
+msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgstr "请在“设置 → 撰写”中输入 LanguageTool 服务器的地址。"
+
+msgid "Enter the server's address first."
+msgstr "请先输入服务器地址。"
+
+msgid ""
+"GNOME Online Accounts could not provide a sign-in token for {email}. Open "
+"Settings → Online Accounts and sign in again."
+msgstr ""
+"GNOME 在线账户无法为 {email} 提供登录令牌。请打开设置 → 在线账户并重新登录。"
+
+msgid "Microsoft 365 has no mailbox at {address}."
+msgstr ""
+
+msgid ""
+"{email} has no access to {address}. Your organization gives access to a "
+"shared mailbox in Exchange."
+msgstr ""
+
+msgid "Microsoft 365 could not be reached. Try again later."
+msgstr ""
+
+msgid ""
+"{reason} If your organization manages your account, an administrator can "
+"approve Hylki for everyone at {link}"
+msgstr ""
+"{reason} 如果你的组织管理你的账户，管理员可以在 {link} 为所有人批准 Hylki"
+
+msgid "The service's answer could not be read."
+msgstr "无法读取服务的响应。"
+
+msgid "The service could not be reached: {e}"
+msgstr "无法连接到服务：{e}"
+
+msgid "The service did not accept the key."
+msgstr "服务不接受该密钥。"
+
+msgid "This month's allowance is used up."
+msgstr "本月的额度已用完。"
+
+msgid "The service refused the request (error {code})."
+msgstr "服务拒绝了该请求（错误 {code}）。"
+
+msgid "Enter the LibreTranslate server's address in Settings → Translation."
+msgstr "请在“设置 → 翻译”中输入 LibreTranslate 服务器的地址。"
+
+msgid "Choose a translation service in Settings → Translation first."
+msgstr "请先在“设置 → 翻译”中选择翻译服务。"
+
+msgid "No key for {service}: add one in Settings → Translation."
+msgstr "没有 {service} 的密钥：请在“设置 → 翻译”中添加。"
+
+msgid "There is no text to translate."
+msgstr "没有可翻译的文本。"
+
+msgid "This message is too long to send for translation."
+msgstr "此邮件过长，无法发送翻译。"
+
+msgid "This is too long to send for translation."
+msgstr "内容过长，无法发送翻译。"
+
+msgid "Mail"
+msgstr "邮件"
+
+msgid "Use this account in Hylki"
+msgstr "在 Hylki 中使用此账户"
+
+msgid "GOA"
+msgstr "GOA"
+
+msgid "Hylki"
+msgstr "Hylki"
+
+msgid "Shared mailbox, opened with a GNOME Online Account"
+msgstr ""
+
+msgid "Imported GNOME Online Account"
+msgstr "导入的 GNOME 在线账户"
+
+msgid "Added directly in Hylki"
+msgstr "直接在 Hylki 中添加"
+
+msgid "Paused: Mail is switched off for this account in GNOME Settings"
+msgstr "已暂停：此账户的邮件功能已在 GNOME 设置中关闭"
+
+msgid "Enable this account"
+msgstr "启用此账户"
+
+msgid "Forward to"
+msgstr "转发至"
+
+msgid "Move to"
+msgstr "移动到"
+
+msgid "forwards to {to}"
+msgstr "转发至 {to}"
+
+msgid "marked as read"
+msgstr "标记为已读"
+
+msgid "deleted for good"
+msgstr "永久删除"
+
+msgid "Then"
+msgstr "然后"
+
+msgid "Add Action"
+msgstr "添加操作"
+
+msgid "Remove action"
+msgstr "移除操作"
+
+msgid "Addresses, separated by commas"
+msgstr "地址，以逗号分隔"
+
+msgid "Folder"
+msgstr "文件夹"
+
+msgid "Permanently deletes the message"
+msgstr "永久删除该邮件"
+
+msgid "Bring this folder back to the sidebar"
+msgstr "将此文件夹恢复到侧边栏"
+
+msgid "Sends through {host}"
+msgstr "通过 {host} 发送"
+
+msgid "Remove this alias"
+msgstr "移除此别名"
+
+msgid "Kept on the server; change it in your provider's webmail."
+msgstr "保留在服务器上；请在你的服务商的网页邮箱中更改。"
+
+msgid "Edit Alias"
+msgstr "编辑别名"
+
+msgid "Add Alias"
+msgstr "添加别名"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Display name (optional)"
+msgstr "显示名称（可选）"
+
+msgid "Email address"
+msgstr "电子邮件地址"
+
+msgid "Default From address"
+msgstr "默认发件地址"
+
+msgid "Sending"
+msgstr "发送"
+
+msgid "Own SMTP server"
+msgstr "自有的 SMTP 服务器"
+
+msgid ""
+"Needed when this account's provider, such as Gmail, rewrites the sender."
+msgstr "当此账户的服务商（例如 Gmail）改写发件人时需要。"
+
+msgid "SMTP server"
+msgstr "SMTP 服务器"
+
+msgid "SMTP port"
+msgstr "SMTP 端口"
+
+msgid "SMTP username"
+msgstr "SMTP 用户名"
+
+msgid "SMTP password"
+msgstr "SMTP 密码"
+
+msgid "Server saves its own copy of sent mail"
+msgstr "服务器自行保存已发送邮件的副本"
+
+msgid "Only when this server files sent mail in this account."
+msgstr "仅当此服务器将已发送邮件归入此账户时。"
+
+msgid "Test SMTP"
+msgstr "测试 SMTP"
+
+msgid "Names that share an address send through this account's server."
+msgstr "共用同一地址的姓名将通过此账户的服务器发送。"
+
+msgid "Testing…"
+msgstr "正在测试…"
+
+msgid "✓ SMTP: connected"
+msgstr "✓ SMTP：已连接"
+
+msgid "✗ SMTP: {e}"
+msgstr "✗ SMTP：{e}"
+
+msgid "Remove condition"
+msgstr "移除条件"
+
+msgid "Where"
+msgstr "位置"
+
+msgid "Match"
+msgstr "匹配"
+
+msgid "Separate alternatives with commas."
+msgstr "用逗号分隔多个备选项。"
+
+msgid "Text to match"
+msgstr "要匹配的文本"
+
+msgid "Add Condition"
+msgstr "添加条件"
+
+msgid "Condition matching"
+msgstr "条件匹配方式"
+
+msgid "All must match"
+msgstr "全部满足"
+
+msgid "Any one may match"
+msgstr "满足任意一个"
+
+msgid "Condition {n}"
+msgstr "条件 {n}"
+
+msgid "Or where"
+msgstr "或者"
+
+msgid "And where"
+msgstr "并且"
+
+msgid "Automatic"
+msgstr "自动"
+
+#. "Disabled", not "Automatic": the rows around it auto-detect a folder
+#. from the server's markings, and this one detects nothing. It is an
+#. override that is either set or not, and unset means the Sent folder
+#. above keeps taking the copies as it always has.
+msgid "Disabled"
+msgstr "禁用"
+
+msgid "Microsoft 365 files its own copy in Sent Items; this cannot be changed."
+msgstr "Microsoft 365 会将自己的副本存入“已发送邮件”，这一点无法更改。"
+
+msgid "POP3 accounts have no server folders to save a copy in."
+msgstr "POP3 账户没有可用于保存副本的服务器文件夹。"
+
+msgid ""
+"Only for an account added in Hylki with Microsoft 365 / Outlook as the "
+"provider, not from GNOME Online Accounts."
+msgstr ""
+"仅适用于在 Hylki 中添加、以 Microsoft 365 / Outlook 为提供方的账户，不适用于"
+"来自 GNOME 在线账户的账户。"
+
+msgid ""
+"Asks Microsoft for access. Some organizations need an administrator to "
+"approve it."
+msgstr "向 Microsoft 申请访问权限。某些组织需要管理员批准。"
+
+msgid ""
+"Switching this off returns the account to the import list. It stays in GNOME "
+"Online Accounts."
+msgstr "关闭此项后，该账户会回到导入列表。它仍会保留在 GNOME 在线账户中。"
+
+msgid "Choose a Picture"
+msgstr "选择图片"
+
+msgid "Images"
+msgstr "图片"
+
+msgid ""
+"The certificate is for another name. If this server is the right one, turn "
+"on “Accept a certificate for another name” above and test again."
+msgstr ""
+"该证书对应的是另一个名称。如果这台服务器是正确的，请打开上方的“接受其他名称的"
+"证书”并重新测试。"
+
+msgid "From address"
+msgstr "发件地址"
+
+msgid "From name"
+msgstr "发件人姓名"
+
+msgid "To or Cc"
+msgstr "收件人或抄送"
+
+msgid "Reply-To address"
+msgstr "回复地址"
+
+msgid "Message body"
+msgstr "邮件正文"
+
+msgid "Sender is in Contacts"
+msgstr "发件人在联系人中"
+
+msgid "Sender is not in Contacts"
+msgstr "发件人不在联系人中"
+
+msgid "contains"
+msgstr "包含"
+
+msgid "is exactly"
+msgstr "完全等于"
+
+msgid "starts with"
+msgstr "开头是"
+
+msgid "ends with"
+msgstr "结尾是"
+
+#. Every condition, joined the way the rule combines them (#192).
+msgid " or "
+msgstr " 或 "
+
+#. Every condition, joined the way the rule combines them (#192).
+msgid " and "
+msgstr " 且 "
+
+msgid ", tagged {tag}"
+msgstr "，标签为 {tag}"
+
+msgid "Remove filter"
+msgstr "移除过滤规则"
+
+msgid "Applying…"
+msgstr "正在应用…"
+
+msgid "Apply Now"
+msgstr "立即应用"
+
+msgid "Edit Filter"
+msgstr "编辑过滤规则"
+
+msgid "Add Filter"
+msgstr "添加过滤规则"
+
+msgid "Name (optional)"
+msgstr "名称（可选）"
+
+msgid "Searched on the server; nothing is downloaded"
+msgstr "在服务器上搜索；不会下载任何内容"
+
+msgid "From address when no Reply-To is set"
+msgstr "未设置回复地址时使用的发件地址"
+
+msgid "Looks in the system address books and the Hylki book"
+msgstr "在系统地址簿和 Hylki 地址簿中查找"
+
+msgid "Tag with"
+msgstr "添加标签"
+
+msgid "None"
+msgstr "无"
+
+msgid "Count unread mail"
+msgstr "统计未读邮件"
+
+msgid "Include the folder's unread mail in the tray icon's unread count"
+msgstr "将该文件夹的未读邮件计入托盘图标的未读数"
+
+msgid ""
+"Any folder, the Inbox included. Applies only to mail sent from here, "
+"starting now."
+msgstr "任意文件夹，包括收件箱。仅适用于从此处发送的邮件，自现在起生效。"
+
+msgid ""
+"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Sent, Drafts, Trash or Junk go with sent mail."
+msgstr ""
+"使用发送回复时原件所在的文件夹。对已发送、草稿、垃圾箱或垃圾邮件中的邮件所作"
+"的回复，会随已发送邮件处理。"
+
+msgid "Never"
+msgstr "从不"
+
+msgid "After {n} day"
+msgid_plural "After {n} days"
+msgstr[0] "{n} 天后"
+
+msgid "API Token"
+msgstr "API 令牌"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Server (host name or URL)"
+msgstr "服务器（主机名或 URL）"
+
+msgid "Port (default 443)"
+msgstr "端口（默认 443）"
+
+msgid "Incoming Server"
+msgstr "接收服务器"
+
+msgid "Port (IMAP 993 / POP3 995)"
+msgstr "端口（IMAP 993 / POP3 995）"
+
+msgid "Import Mbox Files"
+msgstr "导入 Mbox 文件"
+
+msgid "Import Maildir Folders"
+msgstr "导入 Maildir 文件夹"
+
+msgid "Signed in as {address}, not {email}."
+msgstr "已登录为 {address}，而非 {email}。"
+
+msgid "Enter a client ID (and endpoints for a custom provider) first"
+msgstr "请先输入客户端 ID（自定义提供方还需输入端点）"
+
+msgid "Complete the sign-in in the window that opened."
+msgstr "请在打开的窗口中完成登录。"
+
+msgid "Opening browser… complete sign-in there."
+msgstr "正在打开浏览器…请在那里完成登录。"
+
+msgid "Opening browser… approve access to the directory there."
+msgstr "正在打开浏览器…请在那里批准对目录的访问。"
+
+msgid "Approve access to the directory in the window that opened."
+msgstr "请在打开的窗口中批准对目录的访问。"
+
+msgid "Opening browser… approve access to the sensitivity labels there."
+msgstr "正在打开浏览器…请在那里批准对敏感度标签的访问。"
+
+msgid "Approve access to the sensitivity labels in the window that opened."
+msgstr "请在打开的窗口中批准对敏感度标签的访问。"
+
+msgid "✓ Signed in. Save the account to finish."
+msgstr "✓ 已登录。保存账户以完成。"
+
+msgid "Sign-in failed: {e}"
+msgstr "登录失败：{e}"
+
+msgid "Access to the directory approved. Save the account to finish."
+msgstr "已批准对目录的访问。保存账户以完成。"
+
+msgid "Access to the directory was not approved: {e}"
+msgstr "未批准对目录的访问：{e}"
+
+msgid "Access to the sensitivity labels approved. Save the account to finish."
+msgstr "已批准对敏感度标签的访问。保存账户以完成。"
+
+msgid "Access to the sensitivity labels was not approved: {e}"
+msgstr "未批准对敏感度标签的访问：{e}"
+
+msgid "Drag to reorder them in the sidebar."
+msgstr "拖动可在侧边栏中重新排序。"
+
+msgid "Check GNOME Online Accounts for new accounts"
+msgstr "检查 GNOME 在线账户中的新账户"
+
+msgid "Add Account…"
+msgstr "添加账户…"
+
+msgid ""
+"Store mail in folders that live on this computer. Move or copy mail from any "
+"account to here."
+msgstr "将邮件存放在本机的文件夹中。可将任意账户的邮件移动或复制到此处。"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Shared Mailboxes"
+msgstr ""
+
+msgid ""
+"Microsoft 365 mailboxes your organization shares with an account from GNOME "
+"Online Accounts."
+msgstr ""
+
+msgid "Add…"
+msgstr ""
+
+msgid "GNOME Online Accounts"
+msgstr "GNOME 在线账户"
+
+msgid "Mail accounts from GNOME Settings. Switch one on to use it."
+msgstr "来自 GNOME 设置的邮件账户。开启其中一个即可使用。"
+
+msgid "Smart Folders"
+msgstr "智能文件夹"
+
+msgid ""
+"Lists the messages that match its conditions. Shown in the sidebar under the "
+"unified rows."
+msgstr "列出符合其条件的邮件。显示在侧边栏的联合行之下。"
+
+msgid "Add Smart Folder…"
+msgstr "添加智能文件夹…"
+
+msgid "Searching…"
+msgstr "正在搜索…"
+
+msgid "Find Tags…"
+msgstr "查找标签…"
+
+msgid "No New Tags"
+msgstr "没有新标签"
+
+msgid "Every tag in your mailboxes is already set up here."
+msgstr "你邮箱中的每个标签都已在此设置。"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Tags Found"
+msgstr "找到标签"
+
+msgid "{n} tags are in use in your mailboxes but not set up here."
+msgstr "你的邮箱中有 {n} 个标签正在使用，但尚未在此设置。"
+
+msgid "Import Selected"
+msgstr "导入所选"
+
+msgid "Import All"
+msgstr "全部导入"
+
+msgid "{n} messages"
+msgstr "{n} 封邮件"
+
+msgid "Toggles the tag on a message (with single-key shortcuts on)"
+msgstr "在邮件上切换该标签（启用单键快捷键时）"
+
+msgid "Remove tag"
+msgstr "移除标签"
+
+msgid "Edit Tag"
+msgstr "编辑标签"
+
+msgid "Add Tag"
+msgstr "添加标签"
+
+msgid "Keyword"
+msgstr "关键词"
+
+msgid ""
+"How the server stores the tag, without spaces. Thunderbird's built-in tags "
+"are $label1 to $label5."
+msgstr ""
+"服务器存储该标签的方式，不含空格。Thunderbird 的内置标签为 $label1 到 "
+"$label5。"
+
+msgid "Color"
+msgstr "颜色"
+
+msgid "Custom color…"
+msgstr "自定义颜色…"
+
+msgid "Tag Color"
+msgstr "标签颜色"
+
+msgid "Needs an app password, not your login password."
+msgstr "需要应用专用密码，而不是登录密码。"
+
+msgid "Enter your server details manually."
+msgstr "手动输入你的服务器详细信息。"
+
+msgid "Enter your provider's OAuth endpoints, then sign in."
+msgstr "输入提供方的 OAuth 端点，然后登录。"
+
+msgid "Your JMAP server's address or session URL. No SMTP settings needed."
+msgstr "你的 JMAP 服务器地址或会话 URL。无需 SMTP 设置。"
+
+msgid "Signs in through your browser. No password needed."
+msgstr "通过浏览器登录。无需密码。"
+
+msgid "Requires Proton Mail Bridge running locally."
+msgstr "需要在本机运行 Proton Mail Bridge。"
+
+msgid ""
+"Signs in with an API token made in Fastmail under Privacy & Security, with "
+"access to mail and sending."
+msgstr ""
+"使用在 Fastmail 的“隐私与安全”中创建的 API 令牌登录，该令牌需可访问邮件与发"
+"送。"
+
+msgid "Your Stalwart server's address. No SMTP settings needed."
+msgstr "你的 Stalwart 服务器地址。无需 SMTP 设置。"
+
+msgid "Enable POP/IMAP access in GMX settings first."
+msgstr "请先在 GMX 设置中启用 POP/IMAP 访问。"
+
+msgid "Google (Gmail)"
+msgstr "Google (Gmail)"
+
+msgid "Microsoft 365 / Outlook"
+msgstr "Microsoft 365 / Outlook"
+
+msgid "Proton Mail"
+msgstr "Proton Mail"
+
+msgid "Custom OAuth"
+msgstr "自定义 OAuth"
+
+msgid "Folders on this computer"
+msgstr "本机上的文件夹"
+
+msgid "IMAP/POP3 account"
+msgstr "IMAP/POP3 账户"
+
+msgid "IMAP/POP3 account on {host}"
+msgstr "{host} 上的 IMAP/POP3 账户"
+
+msgid "Mail account"
+msgstr "邮件账户"
+
+msgid "Enter a client ID and sign in before saving"
+msgstr "保存前请先输入客户端 ID 并登录"
+
+msgid ""
+"Remove {name} from Hylki? Its folders and the mail in them stay on this "
+"computer, in {dir}, and come back if it is added again."
+msgstr ""
+"要从 Hylki 中移除 {name} 吗？其文件夹及其中的邮件会保留在本机的 {dir} 中，若"
+"再次添加将会恢复。"
+
+msgid ""
+"Remove {name}? It can be added again under Shared Mailboxes. Mail on the "
+"server is not affected."
+msgstr ""
+
+msgid "Edit HTML"
+msgstr "编辑 HTML"
+
+msgid "Edit the signature's HTML source"
+msgstr "编辑签名的 HTML 源代码"
+
+msgid "Follow Settings"
+msgstr "跟随设置"
+
+msgid "On"
+msgstr "开启"
+
+msgid "Opened with {email}, which needs access to it in Exchange."
+msgstr ""
+
+msgid "Add Shared Mailbox"
+msgstr ""
+
+msgid "Open with"
+msgstr ""
+
+msgid "Could Not Add Mailbox"
+msgstr ""
+
+msgid "{address} is already in Mail Accounts."
+msgstr ""
+
+msgid "Signature {n}"
+msgstr "签名 {n}"
+
+msgid "Preview"
+msgstr "预览"
+
+msgid "Import Signature"
+msgstr "导入签名"
+
+msgid "HTML and text files"
+msgstr "HTML 和文本文件"
+
+msgid "Could Not Read the File"
+msgstr "无法读取文件"
+
+msgid "All but Trash and Junk"
+msgstr "除垃圾箱和垃圾邮件之外的全部"
+
+msgid "Remove smart folder"
+msgstr "移除智能文件夹"
+
+msgid "Inbox"
+msgstr "收件箱"
+
+msgid "Sent"
+msgstr "已发送"
+
+msgid "Drafts"
+msgstr "草稿"
+
+msgid "Junk"
+msgstr "垃圾邮件"
+
+msgid "Trash"
+msgstr "垃圾箱"
+
+msgid "Starred"
+msgstr "已加星标"
+
+msgid "Not starred"
+msgstr "未加星标"
+
+msgid "Unread"
+msgstr "未读"
+
+msgid "Read"
+msgstr "已读"
+
+msgid "Has attachments"
+msgstr "有附件"
+
+msgid "No attachments"
+msgstr "无附件"
+
+msgid "Tagged"
+msgstr "已加标签"
+
+msgid "Not tagged"
+msgstr "未加标签"
+
+msgid "Gmail label"
+msgstr "Gmail 标签"
+
+msgid "Message preview"
+msgstr "邮件预览"
+
+msgid "does not contain"
+msgstr "不包含"
+
+msgid "is not"
+msgstr "不是"
+
+msgid "does not start with"
+msgstr "开头不是"
+
+msgid "does not end with"
+msgstr "结尾不是"
+
+msgid "Edit Smart Folder"
+msgstr "编辑智能文件夹"
+
+msgid "Add Smart Folder"
+msgstr "添加智能文件夹"
+
+msgid "Those in the unified section."
+msgstr "联合部分中的那些。"
+
+msgid "Folders"
+msgstr "文件夹"
+
+msgid "Any tag"
+msgstr "任意标签"
+
+msgid "With no text, any label matches."
+msgstr "若不填文本，则任意标签都会匹配。"
+
+msgid "The preview each message has in the list"
+msgstr "每封邮件在列表中的预览"
+
+msgid "Save All Attachments"
+msgstr "保存所有附件"
+
+msgid "Open"
+msgstr "打开"
+
+msgid "Download…"
+msgstr "下载…"
+
+msgid "Show in Message"
+msgstr "在邮件中显示"
+
+msgid "Delete from Server…"
+msgstr "从服务器删除…"
+
+msgid "Key imported"
+msgstr "密钥已导入"
+
+msgid ""
+"The key is in your keyring now. Trust it under Settings, OpenPGP, once you "
+"have checked its fingerprint with its owner."
+msgstr ""
+"密钥现已存入你的密钥环。与所有者核对指纹后，可在“设置”的“OpenPGP”中信任它。"
+
+msgid "Already in your keyring"
+msgstr "已在你的密钥环中"
+
+msgid "That key was imported before."
+msgstr "该密钥此前已导入过。"
+
+msgid "Could not import the key"
+msgstr "无法导入该密钥"
+
+msgid "Download"
+msgstr "下载"
+
+msgid "Import OpenPGP key"
+msgstr "导入 OpenPGP 密钥"
+
+msgid "Show the attachments"
+msgstr "显示附件"
+
+msgid "Hide the attachments"
+msgstr "隐藏附件"
+
+msgid "{n} attachment"
+msgid_plural "{n} attachments"
+msgstr[0] "{n} 个附件"
+
+msgid "Thumbnail size"
+msgstr "缩略图大小"
+
+msgid "Sorted Z to A — switch to A to Z"
+msgstr "已按 Z 到 A 排序 — 切换到 A 到 Z"
+
+msgid "Sorted A to Z — switch to Z to A"
+msgstr "已按 A 到 Z 排序 — 切换到 Z 到 A"
+
+msgid "Show as thumbnails"
+msgstr "以缩略图显示"
+
+msgid "Show as a list"
+msgstr "以列表显示"
+
+msgid "Save All…"
+msgstr "全部保存…"
+
+msgid "Save every attachment to a folder"
+msgstr "将所有附件保存到文件夹"
+
+msgid "Save Attachment"
+msgstr "保存附件"
+
+msgid "Open “{name}”?"
+msgstr "要打开“{name}”吗？"
+
+msgid ""
+"This attachment is a program or a script. Opening it can run it with your "
+"permissions. Open it only if you expected it and trust where it came from."
+msgstr ""
+"此附件是一个程序或脚本。打开它可能会以你的权限运行它。仅在你确实预期收到它并"
+"且信任其来源时才打开。"
+
+msgid "Open Anyway"
+msgstr "仍然打开"
+
+msgid "The file could not be opened"
+msgstr "无法打开该文件"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+#. Offer the steps that actually work.
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Download the file, then open it from Files\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix direct opening"
+msgstr ""
+"桌面门户报告：{error}\n"
+"\n"
+"• 下载该文件，然后从文件管理器中打开\n"
+"• 更新“xdg-desktop-portal”并重新登录或许能修复直接打开的问题"
+
+msgid "Go to Message"
+msgstr "转到邮件"
+
+msgid "Deleting…"
+msgstr "正在删除…"
+
+msgid "Unknown"
+msgstr "未知"
+
+#. Deliberately counts messages, not attachments: until a message has
+#. been described there is no telling how many files it holds.
+msgid "Indexing {n} messages…"
+msgstr "正在索引 {n} 封邮件…"
+
+msgid "Loading more…"
+msgstr "正在加载更多…"
+
+msgid "{shown} of {total}"
+msgstr "{shown} / {total}"
+
+msgid "File"
+msgstr "文件"
+
+msgid "Search by sender, subject, type, filename…"
+msgstr "按发件人、主题、类型、文件名搜索…"
+
+msgid "Loading attachments…"
+msgstr "正在加载附件…"
+
+msgid "Attachments from your inboxes will appear here."
+msgstr "来自你收件箱的附件将在此显示。"
+
+msgid "No matching attachments"
+msgstr "没有匹配的附件"
+
+msgid ""
+"Try a different search, or check which accounts and folders the footer is "
+"pulling from."
+msgstr "请尝试其他搜索，或检查底部栏正在从哪些账户和文件夹获取内容。"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "Thumbnail grid"
+msgstr "缩略图网格"
+
+msgid "Table"
+msgstr "表格"
+
+msgid "Show only this account"
+msgstr "仅显示此账户"
+
+msgid "Folders to pull from"
+msgstr "要获取的文件夹"
+
+msgid "Include Archive"
+msgstr "包括归档"
+
+msgid "Include other folders"
+msgstr "包括其他文件夹"
+
+msgid "Everything that is not an inbox or an archive"
+msgstr "所有既非收件箱也非归档的内容"
+
+msgid "Pulling attachments from"
+msgstr "正在从以下位置获取附件"
+
+msgid "Show only this type"
+msgstr "仅显示此类型"
+
+msgid "All types"
+msgstr "所有类型"
+
+msgid "PDFs"
+msgstr "PDF"
+
+msgid "Documents"
+msgstr "文档"
+
+msgid "Archives"
+msgstr "压缩包"
+
+msgid "Audio & Video"
+msgstr "音频与视频"
+
+msgid "Other"
+msgstr "其他"
+
+msgid "Newest first"
+msgstr "最新优先"
+
+msgid "Oldest first"
+msgstr "最早优先"
+
+msgid "Name (A–Z)"
+msgstr "名称（A–Z）"
+
+msgid "Name (Z–A)"
+msgstr "名称（Z–A）"
+
+msgid "Sender (Z–A)"
+msgstr "发件人（Z–A）"
+
+msgid "Largest first"
+msgstr "最大优先"
+
+msgid "Smallest first"
+msgstr "最小优先"
+
+msgid "Type (A–Z)"
+msgstr "类型（A–Z）"
+
+msgid "Type (Z–A)"
+msgstr "类型（Z–A）"
+
+msgid "Previous"
+msgstr "上一个"
+
+msgid "No preview available"
+msgstr "无可用预览"
+
+msgid "Next"
+msgstr "下一个"
+
+msgid "Open in the default app"
+msgstr "用默认应用打开"
+
+msgid "Waiting for the Keyring"
+msgstr "正在等待密钥环"
+
+msgid ""
+"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Unlock the keyring if it asks."
+msgstr "存储在本机的邮件使用密钥环中的密钥加密。如果系统提示，请解锁密钥环。"
+
+msgid ""
+"This happens once and can take a few minutes. If you quit, your mail is left "
+"as it was."
+msgstr "此操作只进行一次，可能需要几分钟。如果退出，你的邮件会保持原样。"
+
+msgid "Checking the copy"
+msgstr "正在检查副本"
+
+msgid "Encrypting Stored Mail"
+msgstr "正在加密已存储的邮件"
+
+msgid "Decrypting Stored Mail"
+msgstr "正在解密已存储的邮件"
+
+msgid "Store Unencrypted…"
+msgstr "以未加密方式存储…"
+
+msgid "Reset Cache…"
+msgstr "重置缓存…"
+
+msgid "Try Again"
+msgstr "重试"
+
+msgid "Keyring Unavailable"
+msgstr "密钥环不可用"
+
+msgid ""
+"Mail kept on this computer is encrypted with a key stored in the keyring, "
+"and the keyring is locked or did not answer. Unlock it, then try again."
+msgstr ""
+"保存在本机的邮件使用密钥环中的密钥加密，而密钥环已锁定或没有响应。请解锁后重"
+"试。"
+
+msgid "Mail Cache Key Missing"
+msgstr "邮件缓存密钥缺失"
+
+msgid ""
+"Mail kept on this computer is encrypted, and the keyring no longer holds its "
+"key. If the keyring was replaced, restore the old one and try again. "
+"Otherwise reset the cache to download your mail again."
+msgstr ""
+"保存在本机的邮件已加密，而密钥环中已不再保存其密钥。如果密钥环被替换过，请恢"
+"复原来的密钥环后重试。否则请重置缓存以重新下载邮件。"
+
+msgid "Mail Cache Cannot Be Unlocked"
+msgstr "无法解锁邮件缓存"
+
+msgid ""
+"The key in the keyring does not open the mail kept on this computer. If the "
+"keyring was replaced, restore the old one and try again. Otherwise reset the "
+"cache to download your mail again."
+msgstr ""
+"密钥环中的密钥无法打开保存在本机的邮件。如果密钥环被替换过，请恢复原来的密钥"
+"环后重试。否则请重置缓存以重新下载邮件。"
+
+msgid "Mail Cache Not Converted"
+msgstr "邮件缓存未转换"
+
+msgid ""
+"The mail kept on this computer could not be converted, and was left as it "
+"was. Check that the disk has free space, then try again."
+msgstr ""
+"保存在本机的邮件无法转换，已保持原样。请检查磁盘是否有可用空间，然后重试。"
+
+msgid "Mail Cache Unreadable"
+msgstr "邮件缓存无法读取"
+
+msgid ""
+"The mail kept on this computer could not be read. Try again, or reset the "
+"cache to download your mail again."
+msgstr "无法读取保存在本机的邮件。请重试，或重置缓存以重新下载邮件。"
+
+msgid ""
+"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"unsent mail in the Outbox."
+msgstr ""
+"仅存在于本机的邮件将会丢失：POP3 账户的邮件，以及发件箱中尚未发送的邮件。"
+
+msgid ""
+"Mail kept on this computer is deleted and downloaded again from the server."
+msgstr "保存在本机的邮件将被删除，并从服务器重新下载。"
+
+msgid "Reset the Mail Cache?"
+msgstr "要重置邮件缓存吗？"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid ""
+"Anyone who can read your files, or a backup of them, can then read the mail "
+"kept on this computer, including mail that is end-to-end encrypted on the "
+"server."
+msgstr ""
+"任何能读取你的文件或其备份的人，都能读取保存在本机的邮件，包括在服务器上已端"
+"到端加密的邮件。"
+
+msgid "Encryption can be turned back on in Settings → Privacy."
+msgstr "可在“设置 → 隐私”中重新开启加密。"
+
+msgid ""
+"The encrypted cache cannot be opened without the keyring, so it is deleted "
+"and your mail is downloaded again."
+msgstr "没有密钥环就无法打开加密缓存，因此缓存会被删除，你的邮件将重新下载。"
+
+msgid "Store Mail Unencrypted?"
+msgstr "以未加密方式存储邮件？"
+
+msgid "Store Unencrypted"
+msgstr "以未加密方式存储"
+
+msgid "New Event"
+msgstr "新建事件"
+
+msgid "New Task"
+msgstr "新建任务"
+
+msgid "Open in Calendar"
+msgstr "在日历中打开"
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Calendar"
+msgstr "日历"
+
+msgid "Task list"
+msgstr "任务列表"
+
+msgid "All day"
+msgstr "全天"
+
+msgid "Starts"
+msgstr "开始"
+
+msgid "Ends"
+msgstr "结束"
+
+msgid "Alarm"
+msgstr "提醒"
+
+msgid "Second alarm"
+msgstr "第二个提醒"
+
+msgid "At the start"
+msgstr "开始时"
+
+msgid "{n} week before"
+msgid_plural "{n} weeks before"
+msgstr[0] "{n} 周前"
+
+msgid "{n} day before"
+msgid_plural "{n} days before"
+msgstr[0] "{n} 天前"
+
+msgid "{n} hour before"
+msgid_plural "{n} hours before"
+msgstr[0] "{n} 小时前"
+
+msgid "{n} minute before"
+msgid_plural "{n} minutes before"
+msgstr[0] "{n} 分钟前"
+
+msgid "Due"
+msgstr "截止"
+
+msgid "Welcome to Hylki, formerly {old}"
+msgstr "欢迎使用 Hylki（原 {old}）"
+
+msgid ""
+"Your accounts, settings and cached mail were carried over from {old}. There "
+"is nothing to set up again, and nothing in {old} was changed or removed. "
+"Once everything is here, you can remove {old}."
+msgstr ""
+"你的账户、设置和已缓存的邮件都已从 {old} 迁移过来。无需重新设置，{old} 中的任"
+"何内容都没有被更改或删除。等一切就绪后，你就可以移除 {old} 了。"
+
+msgid ""
+"{old} is still the app your desktop opens email links with. To hand that to "
+"Hylki, choose it under Default Apps in Settings."
+msgstr ""
+"{old} 仍是桌面用来打开邮件链接的应用。要把它交给 Hylki，请在“设置”的“默认应"
+"用”中选择 Hylki。"
+
+msgid "To remove {old}, run:"
+msgstr "要移除 {old}，请运行："
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Service"
+msgstr "服务"
+
+msgid "Nickname (optional)"
+msgstr "昵称（可选）"
+
+msgid "Server URL"
+msgstr "服务器 URL"
+
+msgid "Two-step verification code (if used)"
+msgstr "两步验证码（如已启用）"
+
+msgid ""
+"Your Seafile password, and the current code if two-step verification is on. "
+"They are swapped once for an API token, which is kept instead. A token can "
+"also be pasted as the password."
+msgstr ""
+"你的 Seafile 密码，以及启用两步验证时的当前验证码。它们会被一次性换成 API 令"
+"牌，之后只保留该令牌。也可以直接把令牌粘贴为密码。"
+
+msgid "Dropbox app key"
+msgstr "Dropbox 应用密钥"
+
+msgid "Library"
+msgstr "资料库"
+
+msgid "Upload folder"
+msgstr "上传文件夹"
+
+msgid "Server is behind Cloudflare"
+msgstr "服务器位于 Cloudflare 之后"
+
+msgid ""
+"For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 MB "
+"pieces."
+msgstr ""
+"对于位于 Cloudflare 之后的自托管服务器：超过 100 MB 的文件会分成 90 MB 的片段"
+"上传。"
+
+msgid "Links expire after"
+msgstr "链接有效期"
+
+msgid "Days. 0 keeps links forever."
+msgstr "天。0 表示链接永久有效。"
+
+msgid "Protect links with a password"
+msgstr "用密码保护链接"
+
+msgid "Each file gets its own password, shown to you to pass on."
+msgstr "每个文件都有各自的密码，会显示给你以便转交。"
+
+msgid "Link defaults"
+msgstr "链接默认值"
+
+msgid "Used unless you change them in the upload dialog for one email."
+msgstr "除非你在某封邮件的上传对话框中修改，否则将使用这些默认值。"
+
+msgid "Check Connection"
+msgstr "检查连接"
+
+msgid "{email} (Files is off)"
+msgstr "{email}（文件功能已关闭）"
+
+msgid ""
+"No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings, "
+"Online Accounts."
+msgstr ""
+"GNOME 在线账户中还没有 Microsoft 365 账户。请在“设置”的“在线账户”中添加一个。"
+
+msgid "OneDrive signs in through the online account above. No password needed."
+msgstr "OneDrive 通过上面的在线账户登录，无需密码。"
+
+msgid ""
+"Link expiry and passwords need Microsoft 365 or OneDrive for Business. A "
+"free personal OneDrive refuses links with either set."
+msgstr ""
+"链接有效期和密码需要 Microsoft 365 或 OneDrive for Business。免费的 OneDrive "
+"个人版会拒绝设置了这两项之一的链接。"
+
+msgid ""
+"Days. 0 keeps links forever. Needs Microsoft 365 or OneDrive for Business."
+msgstr "天。0 表示链接永久有效。需要 Microsoft 365 或 OneDrive for Business。"
+
+msgid ""
+"Each file gets its own password, shown to you to pass on. Needs Microsoft "
+"365 or OneDrive for Business."
+msgstr ""
+"每个文件都有各自的密码，会显示给你以便转交。需要 Microsoft 365 或 OneDrive "
+"for Business。"
+
+msgid "User name"
+msgstr "用户名"
+
+msgid "App password (leave empty to keep)"
+msgstr "应用密码（留空则保持不变）"
+
+msgid "App password"
+msgstr "应用密码"
+
+msgid "E-mail"
+msgstr "电子邮件"
+
+msgid "Password (leave empty to keep)"
+msgstr "密码（留空则保持不变）"
+
+msgid ""
+"Each file gets its own password, shown to you to pass on. Paid Dropbox plans "
+"only."
+msgstr "每个文件都有各自的密码，会显示给你以便转交。仅限付费 Dropbox 方案。"
+
+msgid "Connect with Dropbox…"
+msgstr "使用 Dropbox 连接…"
+
+msgid ""
+"Dropbox needs an app registered to you:\n"
+"1. At dropbox.com/developers/apps, press Create app.\n"
+"2. Choose Scoped access, then App folder or Full Dropbox.\n"
+"3. Give it a name no one else has used and press Create app.\n"
+"4. On Permissions, tick account_info.read, files.content.write and "
+"sharing.write, then press Submit.\n"
+"5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
+"6. Copy the App key into the field above.\n"
+"Development status is enough. Leave the field empty to use this build's own "
+"key, if it has one."
+msgstr ""
+"Dropbox 需要注册一个属于你的应用：\n"
+"1. 在 dropbox.com/developers/apps 上点击 Create app。\n"
+"2. 选择 Scoped access，然后选择 App folder 或 Full Dropbox。\n"
+"3. 取一个没人用过的名称，然后点击 Create app。\n"
+"4. 在 Permissions 中勾选 account_info.read、files.content.write 和 "
+"sharing.write，然后点击 Submit。\n"
+"5. 在 Settings 的 OAuth 2 下，添加重定向 URI {uri} 并点击 Add。\n"
+"6. 将 App key 复制到上面的字段中。\n"
+"开发状态就足够了。留空该字段可使用此版本自带的密钥（如果有）。"
+
+msgid "Connected as {who}."
+msgstr "已连接为 {who}。"
+
+msgid "Choose an online account first."
+msgstr "请先选择一个在线账户。"
+
+msgid "Signing in…"
+msgstr "正在登录…"
+
+msgid "Enter the app key of a Dropbox app first."
+msgstr "请先输入 Dropbox 应用的 App key。"
+
+msgid "Waiting for the sign-in in your browser…"
+msgstr "正在等待你在浏览器中完成登录…"
+
+msgid "Fill in the server URL, e-mail and password first."
+msgstr "请先填写服务器 URL、电子邮件和密码。"
+
+msgid "Fill in the server URL, user name and app password first."
+msgstr "请先填写服务器 URL、用户名和应用密码。"
+
+msgid "Signed in as {who}."
+msgstr "已登录为 {who}。"
+
+msgid ""
+"Uploads and plain links work. Link expiry and passwords need a Microsoft 365 "
+"subscription, so both are off for this account."
+msgstr ""
+"上传和普通链接可用。链接有效期和密码需要 Microsoft 365 订阅，因此对此账户两者"
+"都已关闭。"
+
+msgid ""
+"Uploads, links and expiry work. OneDrive for Business links take no "
+"password, so that is off for this account."
+msgstr ""
+"上传、链接和有效期均可用。OneDrive for Business 的链接不使用密码，因此对此账"
+"户该功能已关闭。"
+
+msgid ""
+"Uploads, links and passwords work. Link expiry is not available, so it is "
+"off for this account."
+msgstr "上传、链接和密码均可用。链接有效期不可用，因此对此账户该功能已关闭。"
+
+msgid "Signed in as {who}. {terms}"
+msgstr "已登录为 {who}。{terms}"
+
+msgid "Cloud Storage"
+msgstr "云存储"
+
+msgid "Cloud storage"
+msgstr "云存储"
+
+msgid ""
+"Upload large files and send a link instead of attaching them.\n"
+"\n"
+"Supported providers: Nextcloud, ownCloud, OpenCloud, OneDrive, Dropbox and "
+"Seafile."
+msgstr ""
+"上传大文件并发送链接，而不是作为附件发送。\n"
+"\n"
+"支持的服务商：Nextcloud、ownCloud、OpenCloud、OneDrive、Dropbox 和 Seafile。"
+
+msgid "No cloud accounts yet."
+msgstr "尚无云账户。"
+
+msgid "Cloud Account"
+msgstr "云账户"
+
+msgid "Remove {name}?"
+msgstr "要移除 {name} 吗？"
+
+msgid ""
+"Files already uploaded and links sent stay active on the provider's service."
+msgstr "已上传的文件和已发送的链接仍会在服务商的服务上保持有效。"
+
+msgid "Removed {name}"
+msgstr "已移除 {name}"
+
+msgid "Could not store the sign-in in the keyring: {e}"
+msgstr "无法将登录信息存入密钥环：{e}"
+
+msgid "Edit Cloud Account"
+msgstr "编辑云账户"
+
+msgid "Add Cloud Account"
+msgstr "添加云账户"
+
+msgid "links expire after {n} days"
+msgstr "链接在 {n} 天后过期"
+
+msgid "password-protected"
+msgstr "受密码保护"
+
+msgid "Offer this account in the composer"
+msgstr "在撰写窗口中提供此账户"
+
+msgid "Command Palette"
+msgstr "命令面板"
+
+msgid "Type an action, a folder or a tag, or > for actions only"
+msgstr "输入操作、文件夹或标签，或输入 > 仅查看操作"
+
+msgid "Cc"
+msgstr "抄送"
+
+msgid "Bcc"
+msgstr "密送"
+
+msgid ""
+"An AI agent prepared this message. Check who it goes to before you send it."
+msgstr "这封邮件由 AI 代理准备。发送前请检查收件人。"
+
+msgid "It has no recipients yet."
+msgstr "它还没有收件人。"
+
+msgid "Bcc, hidden from the others:"
+msgstr "密送，其他人不可见："
+
+msgid "In Bcc: the other recipients will not see this address"
+msgstr "在密送中：其他收件人不会看到此地址"
+
+msgid "Outside your own domains"
+msgstr "在你的域名之外"
+
+msgid "Not now"
+msgstr "暂不"
+
+msgid "Accept or reject the AI agent's suggested changes first."
+msgstr "请先接受或拒绝 AI 代理建议的更改。"
+
+msgid "Wait for the translation to come back, then accept the changes."
+msgstr "请等待翻译结果返回，然后接受更改。"
+
+msgid "Changes suggested by an AI agent"
+msgstr "AI 代理建议的更改"
+
+msgid "Nothing changes until you accept them."
+msgstr "在你接受之前，不会有任何更改。"
+
+msgid "Reject"
+msgstr "拒绝"
+
+msgid "Accept"
+msgstr "接受"
+
+msgid "To:"
+msgstr "收件人："
+
+msgid "Cc:"
+msgstr "抄送："
+
+msgid "Subject:"
+msgstr "主题："
+
+msgid "Accepting removes this text's formatting, links and pictures."
+msgstr "接受后，此文本的格式、链接和图片将被移除。"
+
+msgid "Taken out"
+msgstr "已移除"
+
+msgid "Added in Bcc: the other recipients will not see this address"
+msgstr "已加入密送：其他收件人不会看到此地址"
+
+msgid "Added, outside your own domains"
+msgstr "已添加，在你的域名之外"
+
+msgid "Added"
+msgstr "已添加"
+
+msgid "Send without an attachment?"
+msgstr "不带附件发送？"
+
+msgid "The message mentions “{word}”, but nothing is attached."
+msgstr "邮件中提到了“{word}”，但没有任何附件。"
+
+msgid "Send Anyway"
+msgstr "仍然发送"
+
+msgid "The file was moved or deleted. Attach it again from where it is now."
+msgstr "文件已被移动或删除。请从它当前所在的位置重新附加。"
+
+msgid "Not found"
+msgstr "未找到"
+
+msgid "{name} (link)"
+msgstr "{name}（链接）"
+
+msgid "Uploading…"
+msgstr "正在上传…"
+
+msgid "Attach Files"
+msgstr "附加文件"
+
+msgid "Attach {name}"
+msgstr "附加 {name}"
+
+msgid "Remove {name}"
+msgstr "移除 {name}"
+
+msgid "Upload {n} file and put its share link in the message."
+msgid_plural "Upload {n} files and put their share links in the message."
+msgstr[0] "上传 {n} 个文件并将其分享链接放入邮件。"
+
+msgid "Upload"
+msgstr "上传"
+
+msgid "Days; 0 keeps the link indefinitely"
+msgstr "天；0 表示链接永久有效"
+
+msgid "Protect with a password"
+msgstr "用密码保护"
+
+msgid "Download password (empty: generated)"
+msgstr "下载密码（留空则自动生成）"
+
+msgid "link expires {date}"
+msgstr "链接于 {date} 过期"
+
+msgid "Could not upload {name}"
+msgstr "无法上传 {name}"
+
+msgid "Not signed in"
+msgstr "未登录"
+
+msgid ""
+"The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, "
+"and enter it again."
+msgstr "{name} 的登录信息不在密钥环中。请打开“设置”的“云存储”，重新输入。"
+
+msgid "Rich text"
+msgstr "富文本"
+
+msgid "Markdown"
+msgstr "Markdown"
+
+msgid "HTML source"
+msgstr "HTML 源码"
+
+msgid "Plain text"
+msgstr "纯文本"
+
+msgid "Format as you type; it is sent as HTML"
+msgstr "边输入边设置格式；以 HTML 发送"
+
+msgid "Write Markdown; it is sent as formatted mail"
+msgstr "撰写 Markdown；以带格式的邮件发送"
+
+msgid "Write the message's HTML by hand"
+msgstr "手动编写邮件的 HTML"
+
+msgid "No formatting at all"
+msgstr "完全不使用格式"
+
+msgid ""
+"Zoom of the text on screen, not of the message sent. A click here, or "
+"Ctrl+0, puts it back to 100%."
+msgstr "缩放屏幕上的文字，而非发送的邮件。点击此处或按 Ctrl+0 可恢复为 100%。"
+
+msgid ""
+"Show the editor in light or dark mode. The message sent is not affected."
+msgstr "以浅色或深色模式显示编辑器。不影响发送的邮件。"
+
+msgid "Light / Dark Mode"
+msgstr "浅色 / 深色模式"
+
+msgid "Writing in {format}"
+msgstr "正在以{format}撰写"
+
+msgid "Switch to plain text?"
+msgstr "切换到纯文本？"
+
+msgid "Formatting, images and links are removed."
+msgstr "格式、图片和链接将被移除。"
+
+msgid "Switch"
+msgstr "切换"
+
+msgid "Typing"
+msgstr "输入"
+
+msgid "Collapse into reader"
+msgstr "折叠到阅读器"
+
+msgid "Open in window"
+msgstr "在窗口中打开"
+
+msgid "Save the template?"
+msgstr "保存模板？"
+
+msgid ""
+"Its changes have not been saved. Save them to the template, or discard them."
+msgstr "其更改尚未保存。请保存到模板，或丢弃这些更改。"
+
+msgid "Save Template"
+msgstr "保存模板"
+
+msgid "Save the message?"
+msgstr "保存邮件？"
+
+msgid "It has not been sent. Save it to Drafts to finish later, or discard it."
+msgstr "它尚未发送。保存到草稿稍后完成，或丢弃。"
+
+msgid "Save Draft"
+msgstr "保存草稿"
+
+msgid "Keep Editing"
+msgstr "继续编辑"
+
+msgid "Upload to cloud storage and share a link"
+msgstr "上传到云存储并分享链接"
+
+msgid "Open Contacts"
+msgstr "打开联系人"
+
+msgid "Sign with your OpenPGP key"
+msgstr "用你的 OpenPGP 密钥签名"
+
+msgid "Encrypt with OpenPGP to every recipient's key"
+msgstr "用 OpenPGP 加密到每个收件人的密钥"
+
+msgid "Show Cc, Bcc and Reply-To"
+msgstr "显示抄送、密送和回复地址"
+
+msgid "They prefer encrypted mail."
+msgstr "他们偏好加密邮件。"
+
+msgid "No OpenPGP key: mail to this recipient cannot be encrypted."
+msgstr "没有 OpenPGP 密钥：无法加密发往此收件人的邮件。"
+
+msgid ""
+"OpenPGP key from older mail: their recent mail came without it, so they may "
+"no longer read encrypted mail."
+msgstr ""
+"来自较早邮件的 OpenPGP 密钥：他们近期的邮件未附带该密钥，因此他们可能已无法阅"
+"读加密邮件。"
+
+msgid "OpenPGP key in your keyring."
+msgstr "OpenPGP 密钥在你的密钥环中。"
+
+msgid "OpenPGP key sent with their mail (Autocrypt)."
+msgstr "随他们的邮件发送的 OpenPGP 密钥（Autocrypt）。"
+
+msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgstr "在他人的加密邮件中传递的 OpenPGP 密钥。"
+
+msgid "OpenPGP key published by their mail domain (WKD)."
+msgstr "由其邮件域发布的 OpenPGP 密钥（WKD）。"
+
+msgid "OpenPGP key from the keyserver keys.openpgp.org."
+msgstr "来自密钥服务器 keys.openpgp.org 的 OpenPGP 密钥。"
+
+msgid "Cannot merge an encrypted message"
+msgstr "无法合并加密邮件"
+
+msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgstr "每封邮件都需要其收件人的密钥。请关闭“加密”以合并。"
+
+msgid "Check the From address"
+msgstr "检查发件人地址"
+
+msgid "Insert Merge Field"
+msgstr "插入合并字段"
+
+msgid "Contact Groups"
+msgstr "联系人组"
+
+msgid "Choose a CSV File…"
+msgstr "选择 CSV 文件…"
+
+msgid ""
+"There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
+"OpenPGP, or choose a key in the account's settings."
+msgstr ""
+"{addr} 没有你自己的 OpenPGP 密钥。请在“设置”的“OpenPGP”中生成一个，或在账户设"
+"置中选择一个密钥。"
+
+msgid ""
+"There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
+"it under Settings, OpenPGP."
+msgstr ""
+"没有 {addr} 的 OpenPGP 密钥。请向他们索取公钥，或在“设置”的“OpenPGP”中获取。"
+
+msgid "Encrypt to keys you have not checked?"
+msgstr "加密到尚未核验的密钥？"
+
+msgid ""
+"Nothing confirms that the keys for {addresses} belong to them. If one is "
+"someone else's, that person can read this message and the recipient cannot. "
+"To check a key, compare its fingerprint with its owner and trust it under "
+"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+msgstr ""
+"没有任何证据能确认 {addresses} 的密钥属于他们。如果其中某个密钥属于他人，那个"
+"人就能读取此邮件，而收件人反而不能。要核验密钥，请将它的指纹与其所有者比对，"
+"并在“设置”的“OpenPGP”中信任它。“仍然发送”不会再就这些密钥询问。"
+
+msgid "Send later"
+msgstr "稍后发送"
+
+msgid "Schedule"
+msgstr "计划发送"
+
+msgid "The From has to be one address, such as Ann <ann@example.com>."
+msgstr "发件人必须是一个地址，例如 Ann <ann@example.com>。"
+
+msgid "“{address}” is not an email address."
+msgstr "“{address}”不是电子邮件地址。"
+
+msgid "Cannot send with OpenPGP"
+msgstr "无法用 OpenPGP 发送"
+
+msgid "An attachment is missing"
+msgstr "有附件缺失"
+
+msgid ""
+"Hylki cannot read {names}. It was moved or deleted after it was attached. "
+"Remove it, or attach it again from where it is now."
+msgstr ""
+"Hylki 无法读取 {names}。它在附加后被移动或删除了。请移除它，或从它当前所在的"
+"位置重新附加。"
+
+msgid "Type a From address"
+msgstr "输入发件人地址"
+
+msgid "Choose from your addresses"
+msgstr "从你的地址中选择"
+
+msgid ""
+"“{addr}” is a mail merge field. Send with Mail Merge…, in the menu beside "
+"Send."
+msgstr "“{addr}”是邮件合并字段。请使用“发送”旁菜单中的“邮件合并…”发送。"
+
+msgid "“{addr}” is not an email address."
+msgstr "“{addr}”不是电子邮件地址。"
+
+msgid "Check the address"
+msgstr "检查地址"
+
+msgid "Send now"
+msgstr "立即发送"
+
+msgid "Tomorrow morning ({time})"
+msgstr "明天早上（{time}）"
+
+msgid "Tomorrow afternoon ({time})"
+msgstr "明天下午（{time}）"
+
+msgid "Monday morning ({time})"
+msgstr "周一早上（{time}）"
+
+msgid "Pick a date and time…"
+msgstr "选择日期和时间…"
+
+msgid "Mail Merge…"
+msgstr "邮件合并…"
+
+msgid "Request a read receipt"
+msgstr "请求已读回执"
+
+msgid "Not every mail app sends one."
+msgstr "并非所有邮件应用都会发送回执。"
+
+msgid "High"
+msgstr "高"
+
+msgid "Normal"
+msgstr "普通"
+
+msgid "Low"
+msgstr "低"
+
+msgid "Sign with S/MIME"
+msgstr ""
+
+msgid "Show the message as it will be sent"
+msgstr "按将要发送的样子显示邮件"
+
+msgid "Translate what you wrote"
+msgstr "翻译你所写的内容"
+
+msgid "Insert Signature"
+msgstr "插入签名"
+
+msgid "No Signature"
+msgstr "无签名"
+
+msgid "Insert Before the Text"
+msgstr "插入到正文之前"
+
+msgid "Insert After the Text"
+msgstr "插入到正文之后"
+
+msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
+
+msgid "Show Original"
+msgstr "显示原文"
+
+msgid "Show Translation"
+msgstr "显示译文"
+
+msgid "{language} (the quoted message)"
+msgstr "{language}（引用的邮件）"
+
+msgid "Other Languages"
+msgstr "其他语言"
+
+msgid "Translate into"
+msgstr "翻译为"
+
+msgid "Not translated"
+msgstr "未翻译"
+
+msgid ""
+"This message is set to be encrypted, so its text is not sent for translation."
+msgstr "此邮件已设为加密，因此其文本不会被发送用于翻译。"
+
+msgid "Nothing to translate yet"
+msgstr "尚无可翻译的内容"
+
+msgid "Write something first, or select the text to translate."
+msgstr "请先写些内容，或选择要翻译的文本。"
+
+msgid "Could not translate"
+msgstr "无法翻译"
+
+msgid "Save to Templates"
+msgstr "保存到模板"
+
+msgid "Save to Drafts"
+msgstr "保存到草稿"
+
+msgid "More ways to save"
+msgstr "更多保存方式"
+
+msgid "Keep a copy in Templates to start new messages from"
+msgstr "在模板中保留副本，以便据此撰写新邮件"
+
+msgid "Save as Template"
+msgstr "另存为模板"
+
+msgid "Move this draft to Trash"
+msgstr "将此草稿移到垃圾箱"
+
+msgid "Delete Draft"
+msgstr "删除草稿"
+
+msgid "Send"
+msgstr "发送"
+
+msgid "Send options"
+msgstr "发送选项"
+
+msgid "Show From, To and Subject"
+msgstr "显示发件人、收件人和主题"
+
+msgid "Send now instead"
+msgstr "改为立即发送"
+
+msgid "Download password for {name}: {password}"
+msgstr "{name} 的下载密码：{password}"
+
+msgid "Reply-To"
+msgstr "回复至"
+
+msgid "Look in"
+msgstr "查找范围"
+
+msgid "All Mail"
+msgstr "所有邮件"
+
+msgid "Import from Mail"
+msgstr "从邮件导入"
+
+msgid "Import"
+msgstr "导入"
+
+msgid "Import into"
+msgstr "导入到"
+
+msgid "Search names and addresses"
+msgstr "搜索姓名和地址"
+
+msgid "Select All"
+msgstr "全选"
+
+msgid "Select None"
+msgstr "全不选"
+
+msgid "{n} selected"
+msgid_plural "{n} selected"
+msgstr[0] "已选择 {n} 项"
+
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} 封邮件"
+
+msgid "Reading your mail…"
+msgstr "正在读取你的邮件…"
+
+msgid "No One New"
+msgstr "没有新联系人"
+
+msgid "Everyone in this mail is in Contacts already."
+msgstr "这封邮件中的每个人都已经在联系人中。"
+
+msgid "No Results Found"
+msgstr "未找到结果"
+
+msgid "Match a column to a name, an email address or a phone number."
+msgstr "将某一列对应到姓名、电子邮件地址或电话号码。"
+
+msgid "Import Contacts"
+msgstr "导入联系人"
+
+msgid "Keeps no groups: their names stay on each contact."
+msgstr "不保留群组：其名称会保留在每个联系人上。"
+
+msgid "Not imported"
+msgstr "未导入"
+
+msgid "vCard files"
+msgstr "vCard 文件"
+
+msgid "The name used here and in Contacts. Left blank, it is {own}."
+msgstr "在此处和联系人中使用的名称。留空则为 {own}。"
+
+msgid ""
+"The name used here and in Contacts; GNOME Contacts keeps its own. Left "
+"blank, it is {own}."
+msgstr ""
+"在此处和联系人中使用的名称；GNOME 联系人保留自己的名称。留空则为 {own}。"
+
+msgid "Address books"
+msgstr "地址簿"
+
+msgid "Rename a book for Hylki, or switch it off to leave it out."
+msgstr "为 Hylki 重命名地址簿，或将其关闭以排除在外。"
+
+msgid "Use in Hylki"
+msgstr "在 Hylki 中使用"
+
+msgid "Address book"
+msgstr "地址簿"
+
+msgid "Server"
+msgstr "服务器"
+
+msgid "Sign-in"
+msgstr "登录"
+
+msgid "Password (saved; type to replace it)"
+msgstr "密码（已保存；输入以替换）"
+
+msgid "Enter the user name."
+msgstr "请输入用户名。"
+
+msgid "Enter the password."
+msgstr "请输入密码。"
+
+msgid ""
+"Recipients are looked up here as you type, and Contacts searches it too."
+msgstr "输入时会在此处查找收件人，“联系人”也会搜索它。"
+
+msgid "Encryption"
+msgstr "加密"
+
+msgid "StartTLS"
+msgstr "StartTLS"
+
+msgid "TLS (LDAPS)"
+msgstr "TLS (LDAPS)"
+
+msgid "Port"
+msgstr "端口"
+
+msgid "Search base, such as dc=example,dc=com"
+msgstr "搜索基准，例如 dc=example,dc=com"
+
+msgid "Whole tree"
+msgstr "整个目录树"
+
+msgid "First level"
+msgstr "第一层"
+
+msgid "Leave empty for a directory that needs no sign-in."
+msgstr "如果目录无需登录，请留空。"
+
+msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
+msgstr "登录身份，例如 cn=jane,ou=people,dc=example,dc=com"
+
+msgid "Enter the directory's server."
+msgstr "请输入目录服务器。"
+
+msgid "The server took too long to answer."
+msgstr "服务器响应超时。"
+
+msgid "Kept by Evolution Data Server"
+msgstr "由 Evolution Data Server 保存"
+
+msgid "The address books GNOME Contacts and Evolution keep on this computer."
+msgstr "GNOME 联系人和 Evolution 保存在本机的地址簿。"
+
+msgid "Open GNOME Contacts"
+msgstr "打开 GNOME 联系人"
+
+msgid "Set up in GNOME Online Accounts"
+msgstr "在 GNOME 在线账户中设置"
+
+msgid "Its sign-in and its Contacts switch are in GNOME Settings."
+msgstr "它的登录设置和联系人开关位于 GNOME 设置中。"
+
+msgid "Open Online Accounts"
+msgstr "打开在线账户"
+
+msgid "Add Address Book"
+msgstr "添加地址簿"
+
+msgid "Added in GNOME Online Accounts"
+msgstr "在 GNOME 在线账户中添加"
+
+msgid ""
+"Google and Microsoft 365 sign in through GNOME Online Accounts. Add the "
+"account there with Contacts on, and it will be listed here."
+msgstr ""
+"Google 和 Microsoft 365 通过 GNOME 在线账户登录。在那里添加账户并开启联系人，"
+"它就会列在这里。"
+
+msgid "Kept in Hylki's own data folder. Works without GNOME."
+msgstr "保存在 Hylki 自己的数据文件夹中。无需 GNOME 即可使用。"
+
+msgid "Contacts in the Hylki book"
+msgstr "Hylki 地址簿中的联系人"
+
+msgid "Import vCard or CSV files"
+msgstr "导入 vCard 或 CSV 文件"
+
+msgid ""
+"Adds contacts from .vcf or .csv files. Importing a file again updates "
+"existing entries."
+msgstr "从 .vcf 或 .csv 文件添加联系人。再次导入同一文件会更新已有条目。"
+
+msgid "Export as a vCard file"
+msgstr "导出为 vCard 文件"
+
+msgid "Saves every contact in the Hylki book in one .vcf file."
+msgstr "将 Hylki 地址簿中的所有联系人保存到一个 .vcf 文件中。"
+
+msgid "Delete all contacts"
+msgstr "删除所有联系人"
+
+msgid "Other address books are not touched."
+msgstr "不会影响其他地址簿。"
+
+msgid "Set up in Hylki"
+msgstr "在 Hylki 中设置"
+
+msgid "From GNOME Online Accounts"
+msgstr "来自 GNOME 在线账户"
+
+msgid "Evolution"
+msgstr "Evolution"
+
+msgid "Kept by Evolution Data Server, set up in Evolution or GNOME Contacts"
+msgstr "由 Evolution Data Server 保存，在 Evolution 或 GNOME 联系人中设置"
+
+msgid ""
+"Evolution and other apps stop seeing it too. Nothing on the server changes."
+msgstr "Evolution 和其他应用也将看不到它。服务器上的内容不会改变。"
+
+msgid ""
+"Evolution and other apps stop seeing them too. Nothing on the server changes."
+msgstr "Evolution 和其他应用也将看不到它们。服务器上的内容不会改变。"
+
+msgid "{name}: {problem}"
+msgstr "{name}：{problem}"
+
+msgid "No address books were found on {name} yet."
+msgstr "在 {name} 上尚未找到地址簿。"
+
+msgid "Found {n} address book on {name}"
+msgid_plural "Found {n} address books on {name}"
+msgstr[0] "{name} 上找到 {n} 个地址簿"
+
+msgid "Connected to {name}"
+msgstr "已连接到 {name}"
+
+msgid "Use an app-specific password, not your usual one."
+msgstr "请使用应用专用密码，而不是常用密码。"
+
+msgid "CardDAV Server"
+msgstr "CardDAV 服务器"
+
+msgid ""
+"The server's address is usually enough. Two-step sign-in needs an app "
+"password."
+msgstr "通常只需服务器地址。两步验证登录需要应用密码。"
+
+msgid ""
+"Such as cloud.example.org. With two-factor sign-in, make an app password in "
+"Nextcloud under Settings → Security."
+msgstr ""
+"例如 cloud.example.org。若启用了双重验证，请在 Nextcloud 的“设置 → 安全”中创"
+"建应用密码。"
+
+msgid ""
+"Use an app password with access to contacts, made in Fastmail under Settings "
+"→ Privacy & Security."
+msgstr ""
+"请使用可访问联系人的应用密码，可在 Fastmail 的“设置 → 隐私与安全”中创建。"
+
+msgid "LDAP Directory"
+msgstr "LDAP 目录"
+
+msgid "Address Books"
+msgstr "地址簿"
+
+msgid ""
+"Where contacts come from for Contacts, suggestions, sender pictures and "
+"filters. Switching one off leaves it out of Hylki."
+msgstr ""
+"“联系人”、建议、发件人图片和过滤规则中的联系人来源于此。关闭某一地址簿会将其"
+"从 Hylki 中排除。"
+
+msgid "Look again for address books"
+msgstr "重新查找地址簿"
+
+msgid "Add Address Book…"
+msgstr "添加地址簿…"
+
+msgid ""
+"Address books need Evolution Data Server, which is not installed. Install "
+"the evolution-data-server package (it runs without GNOME) and reopen this "
+"page."
+msgstr ""
+"地址簿需要 Evolution Data Server，但它尚未安装。请安装 evolution-data-server "
+"软件包（它无需 GNOME 即可运行），然后重新打开此页面。"
+
+msgid "New Contacts"
+msgstr "新建联系人"
+
+msgid "Save new contacts in"
+msgstr "新联系人保存到"
+
+msgid "Unless another is picked when the contact is made."
+msgstr "除非创建联系人时选择了其他地址簿。"
+
+msgid "In Mail"
+msgstr "在邮件中"
+
+msgid "Show names from Contacts"
+msgstr "显示联系人的姓名"
+
+msgid "Saved addresses show the contact's name, not the mail's."
+msgstr "已保存的地址显示联系人姓名，而非邮件中的姓名。"
+
+msgid "Show the Reply-To sender"
+msgstr "显示 Reply-To 发件人"
+
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
+msgid "Layout"
+msgstr "布局"
+
+msgid "Contacts placement"
+msgstr "联系人位置"
+
+msgid "'In the footer' disables expand/collapse."
+msgstr "“在页脚中”会禁用展开/折叠。"
+
+msgid "Keep the search field open"
+msgstr "保持搜索框常开"
+
+msgid "Address Book"
+msgstr "地址簿"
+
+msgid "Looking for address books on {name}…"
+msgstr "正在 {name} 上查找地址簿…"
+
+msgid "Hylki, on this computer"
+msgstr "Hylki，本机"
+
+msgid "Edit Group"
+msgstr "编辑群组"
+
+msgid "Delete Group…"
+msgstr "删除群组…"
+
+msgid "New Contact"
+msgstr "新建联系人"
+
+msgid "New Group"
+msgstr "新建群组"
+
+msgid "Rename…"
+msgstr "重命名…"
+
+msgid "Show or hide"
+msgstr "显示或隐藏"
+
+msgid "Search contacts"
+msgstr "搜索联系人"
+
+msgid "No Contacts"
+msgstr "没有联系人"
+
+msgid "Add contacts in the Contacts view to see them here."
+msgstr "在“联系人”视图中添加联系人后即可在此看到。"
+
+msgid "Rename Address Book"
+msgstr "重命名地址簿"
+
+msgid ""
+"The name is used in Hylki only; GNOME Contacts and Evolution keep the book's "
+"own."
+msgstr ""
+"该名称仅在 Hylki 中使用；GNOME 联系人和 Evolution 仍保留地址簿自身的名称。"
+
+msgid "Use Its Own Name"
+msgstr "使用其自身名称"
+
+msgid "All Address Books"
+msgstr "所有地址簿"
+
+msgid "Move Contact?"
+msgstr "移动联系人？"
+
+msgid ""
+"This will move {name} out of {from} and into {to}, locally and on the "
+"server. A group in {from} that holds the contact will no longer have it."
+msgstr ""
+"这会将 {name} 从 {from} 移出并移入 {to}，在本地和服务器上都会生效。{from} 中"
+"包含该联系人的群组将不再包含它。"
+
+msgid "Move {n} Contact?"
+msgid_plural "Move {n} Contacts?"
+msgstr[0] "移动 {n} 个联系人？"
+
+msgid ""
+"This will move {n} contact out of the address book it is in and into {to}, "
+"locally and on the server. A group there that holds it will no longer have "
+"it."
+msgid_plural ""
+"This will move {n} contacts out of the address books they are in and into "
+"{to}, locally and on the server. Groups there that hold them will no longer "
+"have them."
+msgstr[0] ""
+"这会将 {n} 个联系人从所在地址簿移入 {to}，在本地和服务器上都会生效。其中包含"
+"这些联系人的群组将不再包含它们。"
+
+msgid "Move"
+msgstr "移动"
+
+msgid "View photo"
+msgstr "查看照片"
+
+msgid "Add to Contacts"
+msgstr "添加到联系人"
+
+#. ---- note ----
+msgid "Note"
+msgstr "备注"
+
+msgid "Directory"
+msgstr "目录"
+
+msgid "Details"
+msgstr "详情"
+
+msgid "Members"
+msgstr "成员"
+
+msgid "No email address"
+msgstr "无电子邮件地址"
+
+msgid "No one is in this group yet."
+msgstr "此群组中还没有成员。"
+
+msgid "Changed in the app it came from"
+msgstr "已在来源应用中更改"
+
+msgid "This group names its members by contact, which Hylki does not edit."
+msgstr "此群组按联系人指定成员，Hylki 不会编辑这一点。"
+
+msgid ""
+"Saving moves the group to this address book, with its people, and removes it "
+"from {book}."
+msgstr "保存后会将群组及其成员移动到该地址簿，并从 {book} 中移除。"
+
+msgid ""
+"Groups here hold addresses, so people with no email address are left out."
+msgstr "这里的群组保存的是地址，因此没有电子邮件地址的人会被排除。"
+
+msgid "Group"
+msgstr "群组"
+
+msgid "Send as Bcc"
+msgstr "以密送方式发送"
+
+msgid "Members do not see each other's addresses."
+msgstr "成员之间看不到彼此的地址。"
+
+#. An Apple group (iCloud's) or a category (Nextcloud's) holds
+#. cards of its own book.
+msgid ""
+"Groups in this address book hold its own contacts: anyone added who is not "
+"in it yet is added to it."
+msgstr ""
+"此地址簿中的群组包含该地址簿自己的联系人：添加的任何人如果还不在其中，都会被"
+"加入。"
+
+msgid "Edit Contact"
+msgstr "编辑联系人"
+
+#. ---- identity fields ----
+msgid "Identity"
+msgstr "身份"
+
+msgid "Organization"
+msgstr "组织"
+
+msgid "Another book moves the contact there when saved."
+msgstr "选择其他地址簿会在保存时把联系人移到那里。"
+
+msgid "Add email"
+msgstr "添加电子邮件"
+
+msgid "Add phone"
+msgstr "添加电话"
+
+msgid "Add website"
+msgstr "添加网站"
+
+msgid "No label"
+msgstr "无标签"
+
+msgid "Label"
+msgstr "标签"
+
+msgid "Add address"
+msgstr "添加地址"
+
+msgid "No birthday"
+msgstr "无生日"
+
+msgid "Year"
+msgstr "年份"
+
+msgid "Change Photo…"
+msgstr "更改照片…"
+
+msgid "Remove Photo"
+msgstr "移除照片"
+
+msgid "Choose a Photo"
+msgstr "选择照片"
+
+msgid "In Directories"
+msgstr "在目录中"
+
+msgid "Type three letters or more to search the directory."
+msgstr "输入三个或更多字符以搜索目录。"
+
+msgid "Nobody in the directory matches."
+msgstr "目录中没有匹配项。"
+
+msgid "Remove from Group"
+msgstr "从群组中移除"
+
+msgid "Add to Group"
+msgstr "添加到群组"
+
+msgid "Move to Address Book…"
+msgstr "移动到地址簿…"
+
+msgid "Delete…"
+msgstr "删除…"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Open in GNOME Contacts"
+msgstr "在 GNOME 联系人中打开"
+
+msgid "{n} Group Selected"
+msgid_plural "{n} Groups Selected"
+msgstr[0] "已选择 {n} 个群组"
+
+msgid "{n} Contact Selected"
+msgid_plural "{n} Contacts Selected"
+msgstr[0] "已选择 {n} 个联系人"
+
+msgid "Move to…"
+msgstr "移动到…"
+
+msgid "Move to another address book"
+msgstr "移动到其他地址簿"
+
+msgid "Selected"
+msgstr "已选择"
+
+msgid "Add a person by name or address"
+msgstr "按姓名或地址添加人员"
+
+msgid "No email address · {book}"
+msgstr "无电子邮件地址 · {book}"
+
+msgid "Sort and filter contacts"
+msgstr "排序和筛选联系人"
+
+msgid "From Files…"
+msgstr "从文件…"
+
+msgid "From Thunderbird…"
+msgstr "从 Thunderbird…"
+
+msgid "From Mail…"
+msgstr "从邮件…"
+
+msgid "Contact files"
+msgstr "联系人文件"
+
+msgid "All files"
+msgstr "所有文件"
+
+msgid ""
+"{name} leaves {from}, locally and on the server, and any group there that "
+"holds the contact."
+msgstr ""
+"{name} 将离开 {from}（在本地和服务器上均如此），那里的任何包含该联系人的群组"
+"也会移除它。"
+
+msgid ""
+"{n} contact leaves its address book, locally and on the server, and any "
+"group there that holds it."
+msgid_plural ""
+"{n} contacts leave their address books, locally and on the server, and any "
+"group there that holds them."
+msgstr[0] ""
+"{n} 个联系人将离开其地址簿（在本地和服务器上均如此），那里的任何包含这些联系"
+"人的群组也会移除它们。"
+
+msgid "Move to Address Book"
+msgstr "移动到地址簿"
+
+msgid "Directories"
+msgstr "目录"
+
+msgid "Has Photo"
+msgstr "有照片"
+
+msgid "Has Email"
+msgstr "有电子邮件"
+
+msgid "Has Phone"
+msgstr "有电话"
+
+msgid "Has Address"
+msgstr "有地址"
+
+msgid "Has Birthday"
+msgstr "有生日"
+
+msgid "Has Company"
+msgstr "有公司"
+
+msgid "Not in a Group"
+msgstr "不在群组中"
+
+msgid ""
+"This will remove the group {name} from your address book locally and on the "
+"server. The contacts are not removed."
+msgstr ""
+"这将从你的地址簿中移除群组 {name}，在本地和服务器上均如此。联系人不会被移除。"
+
+msgid ""
+"This will remove the group {name} from your address book. The contacts are "
+"not removed."
+msgstr "这将从你的地址簿中移除群组 {name}。联系人不会被移除。"
+
+msgid "Delete Group?"
+msgstr "删除群组？"
+
+msgid ""
+"This will remove the contact {name} from your address book locally and on "
+"the server."
+msgstr "这将从你的地址簿中移除联系人 {name}，在本地和服务器上均如此。"
+
+msgid "This will remove the contact {name} from your address book."
+msgstr "这将从你的地址簿中移除联系人 {name}。"
+
+msgid "Delete Contact?"
+msgstr "删除联系人？"
+
+msgid "Delete {n} Group?"
+msgid_plural "Delete {n} Groups?"
+msgstr[0] "删除 {n} 个群组？"
+
+msgid ""
+"This will remove {n} group from your address books locally and on the "
+"server. The contacts are not removed."
+msgid_plural ""
+"This will remove {n} groups from your address books locally and on the "
+"server. The contacts are not removed."
+msgstr[0] ""
+"这将从你的地址簿中移除 {n} 个群组，在本地和服务器上均如此。联系人不会被移除。"
+
+msgid ""
+"This will remove {n} group from your address book. The contacts are not "
+"removed."
+msgid_plural ""
+"This will remove {n} groups from your address books. The contacts are not "
+"removed."
+msgstr[0] "这将从你的地址簿中移除 {n} 个群组。联系人不会被移除。"
+
+msgid "Delete {n} Contact?"
+msgid_plural "Delete {n} Contacts?"
+msgstr[0] "删除 {n} 个联系人？"
+
+msgid ""
+"This will remove {n} contact from your address books locally and on the "
+"server."
+msgid_plural ""
+"This will remove {n} contacts from your address books locally and on the "
+"server."
+msgstr[0] "这将从你的地址簿中移除 {n} 个联系人，在本地和服务器上均如此。"
+
+msgid "This will remove {n} contact from your address book."
+msgid_plural "This will remove {n} contacts from your address books."
+msgstr[0] "这将从你的地址簿中移除 {n} 个联系人。"
+
+msgid "New contact or group"
+msgstr "新建联系人或群组"
+
+msgid "Loading Contacts…"
+msgstr "正在加载联系人…"
+
+msgid ""
+"Add a contact with the + button, or import vCard or CSV files. Contacts are "
+"kept in Hylki's own address book, and the address books of GNOME Contacts "
+"are listed here too."
+msgstr ""
+"使用 + 按钮添加联系人，或导入 vCard、CSV 文件。联系人保存在 Hylki 自己的地址"
+"簿中，GNOME 联系人的地址簿也会列在这里。"
+
+msgid "Search contacts (Ctrl+F)"
+msgstr "搜索联系人（Ctrl+F）"
+
+msgid "Edit contact"
+msgstr "编辑联系人"
+
+msgid "Attach"
+msgstr "附加"
+
+msgid "Insert in Text"
+msgstr "插入正文"
+
+msgid "Upload to Cloud"
+msgstr "上传到云端"
+
+msgid "Attach to New Message"
+msgstr "附加到新邮件"
+
+msgid "Insert in New Message"
+msgstr "插入新邮件"
+
+msgid "Share Link in New Message"
+msgid_plural "Share Links in New Message"
+msgstr[0] "在新邮件中分享链接"
+
+msgid "{n} file · {size}"
+msgid_plural "{n} files · {size}"
+msgstr[0] "{n} 个文件 · {size}"
+
+msgid "Send as a normal attachment"
+msgid_plural "Send as normal attachments"
+msgstr[0] "作为普通附件发送"
+
+msgid "Place the picture where the cursor is"
+msgid_plural "Place the pictures where the cursor is"
+msgstr[0] "将图片放在光标所在位置"
+
+msgid "Pictures insert where the cursor is placed, other files attach normally"
+msgstr "图片插入到光标所在位置，其他文件作为普通附件"
+
+msgid "Share a download link from {name}"
+msgstr "分享来自 {name} 的下载链接"
+
+msgid "Share a download link"
+msgstr "分享下载链接"
+
+msgid "Start a message with the file attached"
+msgid_plural "Start a message with the files attached"
+msgstr[0] "开始撰写一封带有这些附件的邮件"
+
+msgid "Start a message with the picture in the text"
+msgid_plural "Start a message with the pictures in the text"
+msgstr[0] "开始撰写一封正文中带有这些图片的邮件"
+
+msgid ""
+"Start a message with the pictures in the text and the other files attached"
+msgstr "开始撰写一封正文中带有图片、其他文件作为附件的邮件"
+
+msgid "Start a message with a download link from {name}"
+msgid_plural "Start a message with download links from {name}"
+msgstr[0] "开始撰写一封带有来自 {name} 的下载链接的邮件"
+
+msgid "Start a message with a download link"
+msgid_plural "Start a message with download links"
+msgstr[0] "开始撰写一封带有下载链接的邮件"
+
+msgid "Search folders"
+msgstr "搜索文件夹"
+
+msgid "Whole conversation"
+msgstr "整个会话"
+
+msgid "Later today ({time})"
+msgstr "今天稍后（{time}）"
+
+msgid "Saturday morning ({time})"
+msgstr "周六早上（{time}）"
+
+msgid "Unsnooze"
+msgstr "取消稍后处理"
+
+msgid "That time has passed"
+msgstr "该时间已过去"
+
+msgid "Choose a time later than now."
+msgstr "请选择晚于当前的时间。"
+
+msgid "the portal answered response code {code}"
+msgstr "门户返回了响应代码 {code}"
+
+msgid "The link could not be opened"
+msgstr "无法打开链接"
+
+#. No Flatseal toggle can help here: portal access is not a
+#. permission, and the failure is inside the portal's own launcher.
+msgid ""
+"The desktop portal reported: {error}\n"
+"\n"
+"• Right-click the link, copy it, and open it in your browser\n"
+"• Updating “xdg-desktop-portal” and logging back in may fix opening links "
+"directly"
+msgstr ""
+"桌面门户报告：{error}\n"
+"\n"
+"• 右键单击链接，复制后在浏览器中打开\n"
+"• 更新“xdg-desktop-portal”并重新登录，可能可以修复直接打开链接的问题"
+
+msgid "{name} · {current} of {total}"
+msgstr "{name} · 第 {current} 个，共 {total} 个"
+
+msgid "To needs the field that holds the address, such as {{Email}}."
+msgstr "“收件人”需要存放地址的字段，例如 {{Email}}。"
+
+msgid "No row has an address to send to."
+msgstr "没有行包含可发送的地址。"
+
+msgid "Text"
+msgstr "文本"
+
+msgid "In {places}"
+msgstr "在 {places} 中"
+
+msgid "Takes under a minute"
+msgstr "不到一分钟"
+
+msgid "Takes about a minute"
+msgstr "大约一分钟"
+
+msgid "Takes about {n} minute"
+msgid_plural "Takes about {n} minutes"
+msgstr[0] "大约 {n} 分钟"
+
+msgid "Takes about {n} hour"
+msgid_plural "Takes about {n} hours"
+msgstr[0] "大约 {n} 小时"
+
+msgid "Mail Merge"
+msgstr "邮件合并"
+
+msgid "Send to"
+msgstr "发送到"
+
+msgid "A CSV file"
+msgstr "一个 CSV 文件"
+
+msgid "CSV file"
+msgstr "CSV 文件"
+
+msgid "Its first row names the fields."
+msgstr "其第一行为字段名称。"
+
+msgid "Choose…"
+msgstr "选择…"
+
+msgid "Fields"
+msgstr "字段"
+
+msgid "Leave these fields empty"
+msgstr "将这些字段留空"
+
+msgid "Limit sending rate"
+msgstr "限制发送速率"
+
+msgid "Messages"
+msgstr "邮件"
+
+msgid "per minute"
+msgstr "每分钟"
+
+msgid "per hour"
+msgstr "每小时"
+
+msgid "{n} of {total}"
+msgstr "第 {n} 个，共 {total} 个"
+
+msgid "Not in {source}"
+msgstr "不在 {source} 中"
+
+msgid "{n} row has no address and is left out."
+msgid_plural "{n} rows have no address and are left out."
+msgstr[0] "{n} 行没有地址，已被排除。"
+
+msgid "Send {n} Message"
+msgid_plural "Send {n} Messages"
+msgstr[0] "发送 {n} 封邮件"
+
+msgid "Choose a CSV File"
+msgstr "选择 CSV 文件"
+
+msgid "CSV files"
+msgstr "CSV 文件"
+
+msgid "The file could not be read: {error}"
+msgstr "无法读取文件：{error}"
+
+msgid "No Messages"
+msgstr "没有邮件"
+
+msgid "No Matching Messages"
+msgstr "没有匹配的邮件"
+
+msgid "There's nothing here right now."
+msgstr "此处目前没有任何内容。"
+
+msgid "No message here passes the filters."
+msgstr "这里没有通过过滤的邮件。"
+
+msgid "Clear selection"
+msgstr "清除选择"
+
+#. The scope button beside it says where it looks.
+msgid "Search…"
+msgstr "搜索…"
+
+msgid "Searching the server…"
+msgstr "正在搜索服务器…"
+
+msgid "Choose which folders to search"
+msgstr "选择要搜索的文件夹"
+
+msgid "Has Attachments"
+msgstr "有附件"
+
+msgid "Addressed to Me"
+msgstr "发给我的"
+
+msgid "From Contacts"
+msgstr "来自联系人"
+
+msgid "High Importance"
+msgstr "高重要性"
+
+msgid "Today"
+msgstr "今天"
+
+msgid "Customize Columns…"
+msgstr "自定义列…"
+
+msgid "Remove Stars"
+msgstr "移除星标"
+
+msgid "Star Conversation"
+msgstr "为会话加星标"
+
+msgid "Mark All as Read"
+msgstr "全部标记为已读"
+
+msgid "Mark All as Unread"
+msgstr "全部标记为未读"
+
+msgid "This account (except Trash and Junk)"
+msgstr "此账户（垃圾箱和垃圾邮件除外）"
+
+msgid "All folders (except Trash and Junk)"
+msgstr "所有文件夹（垃圾箱和垃圾邮件除外）"
+
+msgid "Everywhere"
+msgstr "所有位置"
+
+msgid "This folder"
+msgstr "此文件夹"
+
+msgid "This account"
+msgstr "此账户"
+
+msgid "All folders"
+msgstr "所有文件夹"
+
+msgid ""
+"Every folder of this account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"此账户的所有文件夹，垃圾箱和垃圾邮件除外。在垃圾箱或垃圾邮件中发起的搜索也会"
+"在那里查找。"
+
+msgid ""
+"Every folder of every account, except Trash and Junk. A search started in "
+"Trash or Junk looks there too."
+msgstr ""
+"所有账户的所有文件夹，垃圾箱和垃圾邮件除外。在垃圾箱或垃圾邮件中发起的搜索也"
+"会在那里查找。"
+
+msgid "Every folder of every account, Trash and Junk included."
+msgstr "所有账户的所有文件夹，包括垃圾箱和垃圾邮件。"
+
+msgid "Only the folder or view the list is showing."
+msgstr "仅列表中当前显示的文件夹或视图。"
+
+msgid "Every folder of this account, Trash and Junk included."
+msgstr "此账户的所有文件夹，包括垃圾箱和垃圾邮件。"
+
+msgid "me"
+msgstr "我"
+
+msgid "Show conversation"
+msgstr "显示会话"
+
+msgid "Drag to resize, double-click for the usual width"
+msgstr "拖动以调整大小，双击恢复默认宽度"
+
+msgid "High importance"
+msgstr "高重要性"
+
+msgid "Low importance"
+msgstr "低重要性"
+
+msgid "Forwarded"
+msgstr "已转发"
+
+msgid "Snoozed until {when}"
+msgstr "已稍后处理至 {when}"
+
+msgid "In {folder}"
+msgstr "在 {folder} 中"
+
+msgid "Yesterday"
+msgstr "昨天"
+
+msgid "Last 7 days"
+msgstr "最近 7 天"
+
+msgid "Last 14 days"
+msgstr "最近 14 天"
+
+msgid "Older"
+msgstr "更早"
+
+msgid "{n} conversation selected"
+msgid_plural "{n} conversations selected"
+msgstr[0] "已选择 {n} 个会话"
+
+msgid "{n} message selected"
+msgid_plural "{n} messages selected"
+msgstr[0] "已选择 {n} 封邮件"
+
+msgid "No draft selected"
+msgstr "未选择草稿"
+
+msgid "No message selected"
+msgstr "未选择邮件"
+
+msgid "The actions above the list apply to all of them."
+msgstr "列表上方的操作将应用于全部。"
+
+msgid "Choose a draft from the list to edit it here."
+msgstr "从列表中选择一封草稿以在此编辑。"
+
+msgid "Choose a message from the list to read it here."
+msgstr "从列表中选择一封邮件在此处阅读。"
+
+msgid "Show Message"
+msgstr "显示邮件"
+
+msgid "Remote content (images, trackers) is blocked to protect your privacy."
+msgstr "为保护你的隐私，远程内容（图片、跟踪器）已被阻止。"
+
+msgid "Load"
+msgstr "加载"
+
+msgid "Always allow sender"
+msgstr "始终允许发件人"
+
+msgid "No matches"
+msgstr "无匹配结果"
+
+msgid "{cur} of {total}"
+msgstr "{cur} / {total}"
+
+msgid ""
+"Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
+"click here, or Ctrl+0, puts it back to the default from Settings."
+msgstr ""
+"邮件缩放。使用 Ctrl+ 和 Ctrl-，或 Ctrl 加滚轮可进行调整；单击此处或按 Ctrl+0 "
+"可恢复为设置中的默认值。"
+
+msgid ""
+"Show this message in light or dark mode. Other messages are not affected."
+msgstr "以浅色或深色模式显示此邮件。其他邮件不受影响。"
+
+msgid ""
+"Reader View shows a message as its text alone, in one plain format, without "
+"the sender's layout, colors and fonts."
+msgstr "阅读视图仅以纯文本形式显示邮件，不带发件人的排版、颜色和字体。"
+
+msgid "Reader View"
+msgstr "阅读视图"
+
+#. Dimming comes from the cover's own foreground, which
+#. is picked for the message theme — `dim-label` would
+#. fade it against the app's instead.
+msgid "Loading…"
+msgstr "正在加载…"
+
+msgid "Show quoted text"
+msgstr "显示引用文本"
+
+msgid "Hide quoted text"
+msgstr "隐藏引用文本"
+
+msgid "Copy Address"
+msgstr "复制地址"
+
+msgid "Double-click to open in a new window"
+msgstr "双击在新窗口中打开"
+
+msgid "{n} recipient"
+msgid_plural "{n} recipients"
+msgstr[0] "{n} 位收件人"
+
+msgid "Hide recipients"
+msgstr "隐藏收件人"
+
+msgid "Show recipients"
+msgstr "显示收件人"
+
+msgid "Click to open this message"
+msgstr "单击以打开这封邮件"
+
+msgid "Repeats daily"
+msgstr "每天重复"
+
+msgid "Repeats every {n} days"
+msgstr "每 {n} 天重复"
+
+msgid "Repeats weekly"
+msgstr "每周重复"
+
+msgid "Repeats every {n} weeks"
+msgstr "每 {n} 周重复"
+
+msgid "Repeats monthly"
+msgstr "每月重复"
+
+msgid "Repeats every {n} months"
+msgstr "每 {n} 个月重复"
+
+msgid "Repeats yearly"
+msgstr "每年重复"
+
+msgid "Repeats every {n} years"
+msgstr "每 {n} 年重复"
+
+msgid "Repeats"
+msgstr "重复"
+
+msgid "Somebody answered this invitation."
+msgstr "有人回复了此邀请。"
+
+msgid "{name} accepted this invitation."
+msgstr "{name} 接受了此邀请。"
+
+msgid "{name} answered maybe to this invitation."
+msgstr "{name} 对此邀请回复了“可能参加”。"
+
+msgid "{name} declined this invitation."
+msgstr "{name} 拒绝了此邀请。"
+
+msgid "Meeting"
+msgstr "会议"
+
+msgid "Cancelled"
+msgstr "已取消"
+
+msgid "Updated invitation"
+msgstr "已更新的邀请"
+
+msgid "Invitation"
+msgstr "邀请"
+
+msgid "Organised by {name}"
+msgstr "组织者：{name}"
+
+msgid "{n} guest"
+msgid_plural "{n} guests"
+msgstr[0] "{n} 位来宾"
+
+msgid "This meeting has been called off."
+msgstr "此会议已取消。"
+
+msgid "You accepted this invitation."
+msgstr "你接受了此邀请。"
+
+msgid "You accepted this invitation on {date}."
+msgstr "你已于 {date} 接受了此邀请。"
+
+msgid "You answered maybe to this invitation."
+msgstr "你对此邀请回复了“可能参加”。"
+
+msgid "You answered maybe to this invitation on {date}."
+msgstr "你已于 {date} 对此邀请回复了“可能参加”。"
+
+msgid "You declined this invitation."
+msgstr "你拒绝了此邀请。"
+
+msgid "You declined this invitation on {date}."
+msgstr "你已于 {date} 拒绝了此邀请。"
+
+msgid "Tells the organiser you will be there"
+msgstr "告知组织者你将出席"
+
+msgid "Maybe"
+msgstr "可能"
+
+msgid "Tells the organiser you might be there"
+msgstr "告知组织者你可能会出席"
+
+msgid "Decline"
+msgstr "拒绝"
+
+msgid "Tells the organiser you will not be there"
+msgstr "告知组织者你不会出席"
+
+msgid "Opens the meeting in your calendar application"
+msgstr "在你的日历应用中打开该会议"
+
+msgid "Add to Calendar"
+msgstr "添加到日历"
+
+msgid "Open Link"
+msgstr "打开链接"
+
+msgid "Copy Email Address"
+msgstr "复制电子邮件地址"
+
+msgid "Copy Link Address"
+msgstr "复制链接地址"
+
+msgid "Save Image As…"
+msgstr "图像另存为…"
+
+msgid "Save Image"
+msgstr "保存图像"
+
+msgid "Copy Image"
+msgstr "复制图像"
+
+msgid "Copy Image Address"
+msgstr "复制图像地址"
+
+msgid "Translate"
+msgstr "翻译"
+
+msgid "Encrypted messages are not sent for translation."
+msgstr "加密邮件不会被发送用于翻译。"
+
+msgid "The message has not loaded yet."
+msgstr "邮件尚未加载。"
+
+msgid "That key is no longer in your keyring."
+msgstr "该密钥已不在你的密钥环中。"
+
+msgid "Key trusted."
+msgstr "已信任该密钥。"
+
+msgid ""
+"Generate a key of your own first (Settings, OpenPGP): trusting a key means "
+"signing it with yours."
+msgstr ""
+"请先生成你自己的密钥（设置中的 OpenPGP）：信任某个密钥意味着用你的密钥为它签"
+"名。"
+
+msgid "From:"
+msgstr "发件人："
+
+msgid "Bcc:"
+msgstr "密送："
+
+msgid "Date:"
+msgstr "日期："
+
+msgid "Message"
+msgstr "邮件"
+
+msgid "{name} asked for a read receipt."
+msgstr "{name} 请求发送已读回执。"
+
+msgid "{name} asked for a read receipt, to be sent to {addr}."
+msgstr "{name} 请求发送已读回执，回执将发送至 {addr}。"
+
+msgid "Send Receipt"
+msgstr "发送回执"
+
+msgid "Tells the sender you opened this message"
+msgstr "告知发件人你已打开这封邮件"
+
+msgid "Ignore"
+msgstr "忽略"
+
+msgid "Sends nothing and stops asking"
+msgstr "不发送任何内容，并且不再询问"
+
+msgid "Copied"
+msgstr "已复制"
+
+msgid "Trust this key?"
+msgstr "信任此密钥？"
+
+msgid ""
+"Compare the fingerprint with the one {uid} gives you in person or over "
+"another channel. Trusting a key you have not checked lets an impostor's "
+"signature pass as theirs."
+msgstr ""
+"请将指纹与 {uid} 当面或通过其他渠道提供的指纹进行比对。信任未经核实的密钥，会"
+"让冒充者的签名被当作其本人的签名。"
+
+msgid "Trust"
+msgstr "信任"
+
+msgid "The sender's key was taken from the message."
+msgstr "发件人的密钥已从邮件中提取。"
+
+msgid "The sender's key was fetched and imported."
+msgstr "发件人的密钥已获取并导入。"
+
+msgid "The sender's key was already in your keyring."
+msgstr "发件人的密钥已在你的密钥环中。"
+
+msgid "OpenPGP"
+msgstr "OpenPGP"
+
+msgid "Fetch the sender's key"
+msgstr "获取发件人的密钥"
+
+msgid "Trust this key…"
+msgstr "信任此密钥…"
+
+msgid "A pass proves the address wasn't forged — not that the message is safe."
+msgstr "通过验证只能证明地址未被伪造 — 不能证明邮件是安全的。"
+
+msgid "This message is a template."
+msgstr "这封邮件是一个模板。"
+
+msgid "Change the template itself"
+msgstr "修改模板本身"
+
+msgid "Start a new message from a copy of the template"
+msgstr "基于该模板的副本撰写新邮件"
+
+msgid "Save…"
+msgstr "保存…"
+
+#. The translation decides where the address sits; only the text around
+#. it is escaped, and the address goes in as a link of its own.
+msgid "via {sender}"
+msgstr "经由 {sender}"
+
+msgid "Translating…"
+msgstr "正在翻译…"
+
+msgid "Could not translate: {why}"
+msgstr "无法翻译：{why}"
+
+msgid "Translated from {language} by {service}."
+msgstr "由 {service} 从{language}翻译。"
+
+msgid "Translated by {service}."
+msgstr "由 {service} 翻译。"
+
+msgid "Showing the original."
+msgstr "正在显示原文。"
+
+msgid "This message is in {language}."
+msgstr "这封邮件的语言是{language}。"
+
+msgid "Unsubscribing…"
+msgstr "正在退订…"
+
+msgid "Unsubscribing didn't work: {why}"
+msgstr "退订失败：{why}"
+
+#. Mail sent well after the request means the list did not
+#. act on it, or that the List-Id covers more than the one
+#. list that was left (#284); the banner must not say
+#. "unsubscribed" over the proof that it was not.
+msgid "You unsubscribed on {date}, but this list is still sending mail."
+msgstr "你已于 {date} 退订，但该邮件列表仍在发送邮件。"
+
+msgid "You unsubscribed from this list on {date}."
+msgstr "你已于 {date} 退订此邮件列表。"
+
+#. A message that said so in its headers is from a list;
+#. one whose footer link gave it away only has a link.
+msgid "This message is from a mailing list."
+msgstr "这封邮件来自某个邮件列表。"
+
+msgid "This message has an unsubscribe link."
+msgstr "这封邮件包含退订链接。"
+
+msgid "Asks the list to stop sending you mail"
+msgstr "请求该列表停止向你发送邮件"
+
+msgid "Sends an unsubscribe request by email"
+msgstr "通过电子邮件发送退订请求"
+
+msgid "Unsubscribe…"
+msgstr "退订…"
+
+msgid "Opens the list's unsubscribe page in your browser"
+msgstr "在浏览器中打开该列表的退订页面"
+
+msgid "Clear all"
+msgstr "全部清除"
+
+msgid "Export log"
+msgstr "导出日志"
+
+msgid "Collapse status bar"
+msgstr "折叠状态栏"
+
+msgid ""
+"Offline: there is no network connection, so mail is not being checked or "
+"sent. Messages you send wait in the Outbox. Everything syncs again once the "
+"network is back."
+msgstr ""
+"离线：没有网络连接，因此不会收取或发送邮件。你发送的邮件会等待在发件箱中。网"
+"络恢复后一切都会重新同步。"
+
+msgid "Status bar ({n})"
+msgstr "状态栏（{n}）"
+
+msgid "Ask Again"
+msgstr "再次询问"
+
+msgid "All keys"
+msgstr "所有密钥"
+
+msgid "Not trusted"
+msgstr "不受信任"
+
+msgid "Expired or revoked"
+msgstr "已过期或已吊销"
+
+msgid "expires {date}"
+msgstr "{date} 过期"
+
+msgid "expired {date}"
+msgstr "已于 {date} 过期"
+
+msgid "signs and encrypts"
+msgstr "签名并加密"
+
+msgid "signs only: no encryption subkey"
+msgstr "仅签名：没有加密子密钥"
+
+msgid "{n} more address"
+msgid_plural "{n} more addresses"
+msgstr[0] "另有 {n} 个地址"
+
+msgid "Export public key…"
+msgstr "导出公钥…"
+
+msgid "Delete this key"
+msgstr "删除此密钥"
+
+msgid "Trust…"
+msgstr "信任…"
+
+msgid "Remove this key"
+msgstr "移除此密钥"
+
+msgid "2 years"
+msgstr "2 年"
+
+msgid "1 year"
+msgstr "1 年"
+
+msgid "5 years"
+msgstr "5 年"
+
+msgid "GnuPG"
+msgstr "GnuPG"
+
+msgid "The same keyring the gpg command and other mail apps use."
+msgstr "与 gpg 命令及其他邮件应用使用相同的密钥环。"
+
+msgid "Finding keys"
+msgstr "查找密钥"
+
+msgid "Keys found here are kept apart from your keyring."
+msgstr "在此找到的密钥与你的密钥环分开保存。"
+
+msgid "Look up recipients' keys"
+msgstr "查找收件人的密钥"
+
+msgid "Each recipient's domain (WKD) learns that you write to them."
+msgstr "每个收件人的域名（WKD）都会得知你在给他们写信。"
+
+msgid "Also ask a keyserver"
+msgstr "同时询问密钥服务器"
+
+msgid "keys.openpgp.org learns who you write to."
+msgstr "keys.openpgp.org 会得知你在给谁写信。"
+
+msgid "Your keys"
+msgstr "你的密钥"
+
+msgid ""
+"Your key signs what you send and opens what is encrypted to you. Share its "
+"public half with people who write to you."
+msgstr ""
+"你的密钥会为你发送的内容签名，并解密发送给你的加密内容。请把它的公钥部分分享"
+"给给你写信的人。"
+
+msgid "Import…"
+msgstr "导入…"
+
+msgid "Generate…"
+msgstr "生成…"
+
+msgid "Other people's keys"
+msgstr "其他人的密钥"
+
+msgid ""
+"Keys you encrypt to and check signatures with. Check a fingerprint with its "
+"owner before trusting it."
+msgstr "你用于加密和验证签名的密钥。信任之前，请与密钥所有者核对指纹。"
+
+msgid "Fetch by address…"
+msgstr "按地址获取…"
+
+msgid "Search by name, address or key ID"
+msgstr "按姓名、地址或密钥 ID 搜索"
+
+msgid "Unchecked keys you encrypt to"
+msgstr "你向其加密但未核实的密钥"
+
+msgid "Send Anyway stopped the warning for these keys."
+msgstr "“仍然发送”已停止对这些密钥发出警告。"
+
+msgid "No keys from other people yet."
+msgstr "还没有其他人的密钥。"
+
+msgid "GnuPG {version} found."
+msgstr "已找到 GnuPG {version}。"
+
+msgid ""
+"GnuPG was not found. Install the gnupg package to read encrypted mail and "
+"check signatures."
+msgstr "未找到 GnuPG。请安装 gnupg 软件包以阅读加密邮件并验证签名。"
+
+msgid "No key of your own yet. Generate one for your address."
+msgstr "你还没有自己的密钥。请为你的地址生成一个。"
+
+msgid "Your key is ready."
+msgstr "你的密钥已就绪。"
+
+msgid "Could not generate the key: {e}"
+msgstr "无法生成密钥：{e}"
+
+msgid "No key found: {e}"
+msgstr "未找到密钥：{e}"
+
+msgid "Generate a Key"
+msgstr "生成密钥"
+
+msgid ""
+"This will be kept in the GnuPG keyring. The passphrase is asked for when the "
+"key is used."
+msgstr "它将保存在 GnuPG 密钥环中。使用该密钥时会要求输入口令。"
+
+msgid "Generate"
+msgstr "生成"
+
+msgid "Expires"
+msgstr "过期时间"
+
+msgid "Passphrase"
+msgstr "口令"
+
+msgid "Confirm passphrase"
+msgstr "确认口令"
+
+msgid "The passphrases differ"
+msgstr "两次输入的口令不一致"
+
+msgid "Type the same passphrase twice."
+msgstr "请将同一口令输入两次。"
+
+msgid "Generating the key…"
+msgstr "正在生成密钥…"
+
+msgid "Import Key"
+msgstr "导入密钥"
+
+msgid "OpenPGP keys"
+msgstr "OpenPGP 密钥"
+
+msgid "Could not import: {e}"
+msgstr "无法导入：{e}"
+
+msgid "Export Public Key"
+msgstr "导出公钥"
+
+msgid "Delete your key?"
+msgstr "删除你的密钥？"
+
+msgid ""
+"{uid} will be removed, secret half included. Mail encrypted to it can never "
+"be read again, unless you have a backup of the key."
+msgstr ""
+"{uid} 将被移除，包括私钥部分。除非你备份了该密钥，否则用它加密的邮件将永远无"
+"法再读取。"
+
+msgid "Remove this key?"
+msgstr "移除此密钥？"
+
+msgid ""
+"{uid} will be removed from your keyring. It can be imported or fetched again "
+"later."
+msgstr "{uid} 将从你的密钥环中移除。之后可以再次导入或获取它。"
+
+msgid "Could not delete: {e}"
+msgstr "无法删除：{e}"
+
+msgid "Fetch a Key"
+msgstr "获取密钥"
+
+msgid ""
+"Looks the address up where its provider publishes keys (WKD), then on the "
+"keyservers."
+msgstr ""
+"先在该地址的提供商发布密钥的位置（WKD）查找，然后再到密钥服务器上查找。"
+
+msgid "Fetch"
+msgstr "获取"
+
+msgid "Looking for a key for {addr}…"
+msgstr "正在查找 {addr} 的密钥…"
+
+msgid ""
+"Generate a key of your own first: trusting a key means signing it with yours."
+msgstr "请先生成你自己的密钥：信任某个密钥意味着用你的密钥为它签名。"
+
+msgid ""
+"Compare the fingerprint with the one {uid} gives you in person or another "
+"way. Trusting an unchecked key lets an impostor's signature pass."
+msgstr ""
+"请将指纹与 {uid} 当面或以其他方式提供的指纹进行比对。信任未经核实的密钥会让冒"
+"充者的签名蒙混过关。"
+
+msgid "Could not sign the key: {e}"
+msgstr "无法为该密钥签名：{e}"
+
+msgid "{n} key imported."
+msgid_plural "{n} keys imported."
+msgstr[0] "已导入 {n} 个密钥。"
+
+msgid "That key was already in your keyring."
+msgstr "该密钥已在你的密钥环中。"
+
+msgid "Choose a Sound"
+msgstr "选择声音"
+
+msgid "Sounds"
+msgstr "声音"
+
+msgid "Drag to move"
+msgstr "拖动以移动"
+
+msgid "Left group"
+msgstr "左侧组"
+
+msgid "Always shown · up to {n}"
+msgstr "始终显示 · 最多 {n} 个"
+
+msgid "Right group"
+msgstr "右侧组"
+
+msgid "Folds into ⋯ when narrow"
+msgstr "窗口变窄时收起至 ⋯"
+
+msgid "Not shown"
+msgstr "不显示"
+
+msgid "Drop a button here to hide it"
+msgstr "将按钮拖到此处即可隐藏"
+
+msgid "Shown"
+msgstr "已显示"
+
+msgid "Left to right"
+msgstr "从左到右"
+
+msgid "Drop a column here to hide it"
+msgstr "将列拖到此处即可隐藏"
+
+msgid "App icon"
+msgstr "应用图标"
+
+msgid "Symbolic"
+msgstr "符号图标"
+
+msgid "All unread inbox mail"
+msgstr "收件箱中所有未读邮件"
+
+msgid "New since the window was last in front"
+msgstr "自窗口上次置于前端以来新增的邮件"
+
+msgid "Follow system"
+msgstr "跟随系统"
+
+msgid "Light"
+msgstr "浅色"
+
+msgid "Dark"
+msgstr "深色"
+
+msgid "Aug 23, 2026"
+msgstr "2026 年 8 月 23 日"
+
+msgid "23 Aug 2026"
+msgstr "2026 年 8 月 23 日"
+
+msgid "2026 Aug 23"
+msgstr "2026 年 8 月 23 日"
+
+msgid "System"
+msgstr "系统"
+
+msgid "12-hour (5:40 PM)"
+msgstr "12 小时制（下午 5:40）"
+
+msgid "24-hour (17:40)"
+msgstr "24 小时制（17:40）"
+
+msgid "Manually"
+msgstr "手动"
+
+msgid "Every minute"
+msgstr "每分钟"
+
+msgid "Every 5 minutes"
+msgstr "每 5 分钟"
+
+msgid "Every 15 minutes"
+msgstr "每 15 分钟"
+
+msgid "Every 30 minutes"
+msgstr "每 30 分钟"
+
+msgid "In the footer"
+msgstr "在页脚中"
+
+msgid "Above the accounts"
+msgstr "在账户上方"
+
+msgid "Below the accounts"
+msgstr "在账户下方"
+
+#. GNOME Settings' own names for its alert sounds.
+msgid "Click"
+msgstr "咔嗒"
+
+#. GNOME Settings' own names for its alert sounds.
+msgid "Hum"
+msgstr "嗡嗡"
+
+#. GNOME Settings' own names for its alert sounds.
+msgid "String"
+msgstr "弦乐"
+
+#. GNOME Settings' own names for its alert sounds.
+msgid "Swing"
+msgstr "摇摆"
+
+msgid "Custom File"
+msgstr "自定义文件"
+
+msgid "Downloading: {done} of {total}"
+msgstr "正在下载：{done} / {total}"
+
+msgid "Not available for this computer."
+msgstr "此计算机上不可用。"
+
+msgid "Version {version}, on this computer."
+msgstr "版本 {version}，位于此计算机上。"
+
+msgid "Not downloaded yet. The download is {size}."
+msgstr "尚未下载。下载大小为 {size}。"
+
+msgid "The files could not be removed."
+msgstr "无法移除这些文件。"
+
+msgid "The download stopped unexpectedly."
+msgstr "下载意外停止。"
+
+msgid "Grammar"
+msgstr "语法"
+
+msgid "Check grammar and style"
+msgstr "检查语法和风格"
+
+msgid "Right-click a marked phrase for suggestions."
+msgstr "右键单击标记的短语可查看建议。"
+
+msgid "Checker"
+msgstr "检查器"
+
+msgid "Harper"
+msgstr "Harper"
+
+msgid "LanguageTool"
+msgstr "LanguageTool"
+
+msgid "LanguageTool server"
+msgstr "LanguageTool 服务器"
+
+msgid "English only. Nothing leaves this computer."
+msgstr "仅支持英语。任何内容都不会离开此计算机。"
+
+msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+msgstr "支持多种语言。任何内容都不会离开此计算机。占用 1GB 内存"
+
+msgid "What you write is sent to the server as you type."
+msgstr "你输入的内容会在输入时发送到服务器。"
+
+msgid "Username (LanguageTool Premium)"
+msgstr "用户名（LanguageTool Premium）"
+
+msgid "API key (LanguageTool Premium)"
+msgstr "API 密钥（LanguageTool Premium）"
+
+msgid "Check the settings"
+msgstr "检查设置"
+
+msgid "Sends a test sentence to the server."
+msgstr "向服务器发送一个测试句子。"
+
+msgid "Check"
+msgstr "检查"
+
+msgid "Checking…"
+msgstr "正在检查…"
+
+msgid "The check stopped unexpectedly."
+msgstr "检查意外停止。"
+
+msgid "It works: {server} answered."
+msgstr "运行正常：{server} 已响应。"
+
+msgid "Drop actions on the row · up to {n}"
+msgstr ""
+
+msgid "Drop actions here"
+msgstr ""
+
+msgid "Drop an action here to hide it"
+msgstr ""
+
+msgid "Lunch on Friday?"
+msgstr ""
+
+msgid "Are you free at noon? There is a new place by the station."
+msgstr ""
+
+msgid "Messages already read"
+msgstr "已读的邮件"
+
+msgid "All but the newest"
+msgstr "除最新一封以外的所有邮件"
+
+msgid "Top of the message"
+msgstr "邮件顶部"
+
+msgid "Bottom of the message"
+msgstr "邮件底部"
+
+msgid "Remember the last choice"
+msgstr "记住上次的选择"
+
+msgid "Reader View on"
+msgstr "开启阅读视图"
+
+msgid "Reader View off"
+msgstr "关闭阅读视图"
+
+msgid "Needs Sushi, the GNOME file previewer."
+msgstr "需要 GNOME 文件预览器 Sushi。"
+
+msgid "Ask each time"
+msgstr "每次询问"
+
+msgid "A new message"
+msgstr "新邮件"
+
+msgid "A draft you pick"
+msgstr "你选择的草稿"
+
+msgid "A reply to a message you pick"
+msgstr "对你所选邮件的回复"
+
+msgid "Attach them anyway"
+msgstr "仍然附加"
+
+msgid "Upload to cloud storage and link them"
+msgstr "上传到云存储并添加链接"
+
+msgid "System default"
+msgstr "系统默认"
+
+msgid "Account of the current folder"
+msgstr "当前文件夹所属的账户"
+
+msgid "Same as reading pane zoom"
+msgstr "与阅读窗格缩放相同"
+
+msgid "Above the quoted message"
+msgstr "在引用邮件上方"
+
+msgid "Below the quoted message"
+msgstr "在引用邮件下方"
+
+msgid "{n} second"
+msgid_plural "{n} seconds"
+msgstr[0] "{n} 秒"
+
+msgid "Above the messages"
+msgstr "在邮件上方"
+
+msgid "Below the messages"
+msgstr "在邮件下方"
+
+msgid "Follows the reading order"
+msgstr "跟随阅读顺序"
+
+msgid "System language"
+msgstr "系统语言"
+
+#. A group's description is markup: "<code>" would be
+#. read as a tag and the whole line dropped.
+msgid ""
+"No dictionaries found. On Flatpak, add a language with: flatpak config --set "
+"extra-languages <code>"
+msgstr ""
+"未找到词典。在 Flatpak 上，可用以下命令添加语言：flatpak config --set extra-"
+"languages <code>"
+
+msgid "Add a word"
+msgstr "添加单词"
+
+msgid "Software"
+msgstr "软件"
+
+msgid "Unified style"
+msgstr "统一风格"
+
+msgid "Tree style"
+msgstr "树状风格"
+
+msgid "All Inboxes"
+msgstr "所有收件箱"
+
+msgid "The last account's inbox"
+msgstr "最后一个账户的收件箱"
+
+msgid "The last folder"
+msgstr "最后一个文件夹"
+
+msgid "Left"
+msgstr "左侧"
+
+msgid "1 line"
+msgstr "1 行"
+
+msgid "2 lines"
+msgstr "2 行"
+
+msgid "3 lines"
+msgstr "3 行"
+
+msgid "Cards"
+msgstr "卡片"
+
+msgid "Single line"
+msgstr "单行"
+
+msgid "Top of the list"
+msgstr "列表顶部"
+
+msgid "Bottom of the list"
+msgstr "列表底部"
+
+msgid "Theme"
+msgstr "主题"
+
+msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
+msgstr "启动器在其他位置显示了一套图标。在此处选择一套会替换它。"
+
+msgid "Always"
+msgstr "总是"
+
+msgid "A year"
+msgstr "一年"
+
+msgid "90 days"
+msgstr "90 天"
+
+msgid "30 days"
+msgstr "30 天"
+
+msgid "Bottom of the window"
+msgstr "窗口底部"
+
+msgid "Top of the window"
+msgstr "窗口顶部"
+
+msgid "When displayed"
+msgstr "显示时"
+
+msgid "After two seconds"
+msgstr "两秒后"
+
+msgid "{percent}%"
+msgstr "{percent}%"
+
+msgid "Filters"
+msgstr "过滤规则"
+
+msgid "Senders"
+msgstr "发件人"
+
+msgid "Translation"
+msgstr "翻译"
+
+msgid "General"
+msgstr "常规"
+
+msgid "Appearance"
+msgstr "外观"
+
+msgid "Sidebar"
+msgstr "侧边栏"
+
+msgid "Message List"
+msgstr "邮件列表"
+
+msgid "Conversations"
+msgstr "会话"
+
+msgid "Reading"
+msgstr "阅读"
+
+msgid "Composing"
+msgstr "撰写"
+
+msgid "Privacy"
+msgstr "隐私"
+
+msgid "MCP"
+msgstr "MCP"
+
+msgid "Date and Time"
+msgstr "日期和时间"
+
+msgid "Backup"
+msgstr "备份"
+
+msgid "Save the filter?"
+msgstr "保存过滤规则？"
+
+msgid "Your changes are lost if you discard them."
+msgstr "如果丢弃，你的更改将会丢失。"
+
+msgid "Save the smart folder?"
+msgstr "保存智能文件夹？"
+
+msgid "Save the tag?"
+msgstr "保存标签？"
+
+msgid "Save the address book?"
+msgstr "保存地址簿？"
+
+msgid "Save the account?"
+msgstr "保存账户？"
+
+msgid "See message lists"
+msgstr "查看邮件列表"
+
+msgid "Senders, subjects, dates, previews and folders."
+msgstr "发件人、主题、日期、预览和文件夹。"
+
+msgid "Read message text"
+msgstr "读取邮件正文"
+
+msgid "Search on the mail server"
+msgstr "在邮件服务器上搜索"
+
+msgid "Finds mail not downloaded yet."
+msgstr "查找尚未下载的邮件。"
+
+msgid "Read attachments"
+msgstr "读取附件"
+
+msgid "Prepare messages"
+msgstr "准备邮件"
+
+msgid "Each opens in a window for you to check and send."
+msgstr "每封邮件都会在窗口中打开，供你检查并发送。"
+
+msgid "Mark as read or unread"
+msgstr "标记为已读或未读"
+
+msgid "Add and remove stars"
+msgstr "添加和移除星标"
+
+msgid "Add and remove tags"
+msgstr "添加和移除标签"
+
+msgid "Move and archive"
+msgstr "移动和归档"
+
+msgid "Move to Trash"
+msgstr "移动到垃圾箱"
+
+msgid "See open conversation"
+msgstr "查看已打开的会话"
+
+msgid "The one you are reading, as you read it."
+msgstr "你正在阅读的会话，随阅读进度更新。"
+
+msgid "Read and edit open drafts"
+msgstr "读取和编辑已打开的草稿"
+
+msgid "Those agents prepared. You accept each edit."
+msgstr "这些草稿由代理准备，每次编辑都需你确认。"
+
+msgid "Include drafts you started"
+msgstr "包含你创建的草稿"
+
+msgid "What you are writing, unsaved text too."
+msgstr "你正在撰写的内容，包括未保存的文本。"
+
+msgid ""
+"Hylki contains no AI agent of its own but you can allow outside agents to "
+"access your mail using MCP (Model Context Protocol)"
+msgstr ""
+"Hylki 自身不包含 AI 代理，但你可以允许外部代理通过 MCP（Model Context "
+"Protocol）访问你的邮件"
+
+msgid "Allow AI agent access"
+msgstr "允许 AI 代理访问"
+
+msgid "Recent Activity"
+msgstr "最近活动"
+
+msgid ""
+"Nothing is shared until you allow it. Agents can't send mail, erase it "
+"permanently (moving to Trash is ok) or read encrypted mail."
+msgstr ""
+"在你允许之前，不会共享任何内容。代理无法发送邮件、永久删除邮件（移到垃圾箱可"
+"以），也无法读取加密邮件。"
+
+msgid "Command for the agent"
+msgstr "供代理使用的命令"
+
+msgid "Address books and directories"
+msgstr "地址簿和目录"
+
+msgid "People in your mail"
+msgstr "你邮件中的人"
+
+msgid "From every account, shared or not."
+msgstr "来自所有账户，无论是否已共享。"
+
+msgid "Full access"
+msgstr "完全访问"
+
+msgid "Grant access to entire account (except Trash and Junk)"
+msgstr "授予整个账户的访问权限（垃圾箱和垃圾邮件除外）"
+
+msgid "Junk and Trash are hidden until you allow them."
+msgstr "在你允许之前，垃圾邮件和垃圾箱是隐藏的。"
+
+msgid "Reset to Defaults"
+msgstr "重置为默认值"
+
+msgid "Reset permissions?"
+msgstr "重置权限？"
+
+msgid ""
+"The account stays shared, but only for reading and preparing messages. Junk "
+"and Trash are hidden again."
+msgstr "账户仍会保持共享，但仅限于读取和准备邮件。垃圾邮件和垃圾箱将再次隐藏。"
+
+msgid ""
+"Accounts, preferences, filters, tags and layout, in one file. Passwords, "
+"OAuth client secrets and OpenPGP keys are not included."
+msgstr ""
+"账户、首选项、过滤规则、标签和布局，全部在一个文件中。密码、OAuth 客户端密钥"
+"和 OpenPGP 密钥不包含在内。"
+
+msgid "Export settings"
+msgstr "导出设置"
+
+msgid "Import settings"
+msgstr "导入设置"
+
+msgid ""
+"Replaces everything in place. Don't remove accounts first: that deletes "
+"their passwords."
+msgstr "就地替换所有内容。不要先删除账户：那会删除它们的密码。"
+
+msgid "Group messages by conversation"
+msgstr "按会话为邮件分组"
+
+msgid "Expandable conversations"
+msgstr "可展开的会话"
+
+msgid "Off, a conversation's messages show only in the reading pane."
+msgstr "关闭时，会话中的邮件只在阅读窗格中显示。"
+
+msgid "Expand conversations by default"
+msgstr "默认展开会话"
+
+msgid "Newest message first"
+msgstr "最新邮件在前"
+
+msgid "In the reading pane."
+msgstr "在阅读窗格中。"
+
+msgid "Fold earlier messages"
+msgstr "折叠较早的邮件"
+
+msgid "The newest always opens."
+msgstr "最新的邮件始终会展开。"
+
+msgid "Show your own replies in the message list"
+msgstr "在邮件列表中显示你自己的回复"
+
+msgid "Off shows the last message that arrived."
+msgstr "关闭时显示最后到达的邮件。"
+
+msgid "Reply editor position"
+msgstr "回复编辑器位置"
+
+msgid "Following the reading order puts it where the conversation ends."
+msgstr "跟随阅读顺序会将其放在会话结束的位置。"
+
+msgid "Attachments on each message"
+msgstr "每封邮件上的附件"
+
+msgid "Attachment drawer"
+msgstr "附件抽屉"
+
+msgid "Confirm conversation deletion"
+msgstr "确认删除会话"
+
+msgid "Dates follow the system unless a format is chosen here."
+msgstr "除非在此选择格式，否则日期遵循系统设置。"
+
+msgid "Date format"
+msgstr "日期格式"
+
+msgid "Clock"
+msgstr "时钟"
+
+msgid ""
+"While it is on, this page decides the layout in place of the other settings. "
+"Ctrl+Shift+F or the main menu turns it on."
+msgstr ""
+"开启后，此页面将代替其他设置决定布局。Ctrl+Shift+F 或主菜单可将其开启。"
+
+msgid "Start in Focus Mode"
+msgstr "启动时进入专注模式"
+
+msgid "Fold the sidebar to the icon rail"
+msgstr "将侧边栏折叠为图标栏"
+
+msgid "Unread counts"
+msgstr "未读计数"
+
+msgid "Unread dots instead of counts"
+msgstr "用圆点代替计数显示未读"
+
+msgid "Expand the sidebar on hover"
+msgstr "悬停时展开侧边栏"
+
+msgid "Hide the accounts in the sidebar"
+msgstr "隐藏侧边栏中的账户"
+
+msgid "Only the unified section stays."
+msgstr "仅保留统一区域。"
+
+msgid "Fold up the accounts"
+msgstr "折叠账户"
+
+msgid "Collapses expanded accounts into their avatars"
+msgstr "将展开的账户收拢为头像"
+
+msgid "Fold accounts with one click"
+msgstr "单击即折叠账户"
+
+msgid "Fold up the unified rows"
+msgstr "折叠统一行"
+
+msgid "Unified"
+msgstr "统一"
+
+msgid "Inboxes"
+msgstr "收件箱"
+
+msgid "Snoozed"
+msgstr "已稍后处理"
+
+msgid "Sections"
+msgstr "区域"
+
+msgid "Favorites"
+msgstr "收藏"
+
+msgid "Show column headings"
+msgstr "显示列标题"
+
+msgid "Preview lines"
+msgstr "预览行数"
+
+msgid "Fold the message list's header"
+msgstr "折叠邮件列表的标题栏"
+
+msgid "Everything but the sidebar toggle goes into ⋯."
+msgstr "除侧边栏开关外，其余内容都收进 ⋯ 中。"
+
+msgid "Hide sender avatars"
+msgstr "隐藏发件人头像"
+
+msgid "Hide the subject"
+msgstr "隐藏主题"
+
+msgid "Tag chips hide with it."
+msgstr "标签也会随之隐藏。"
+
+msgid "Tags and labels under the text"
+msgstr "文本下方的标签和标记"
+
+msgid "Hide stars"
+msgstr "隐藏星标"
+
+msgid "Hide attachment icons"
+msgstr "隐藏附件图标"
+
+msgid "Fold the reading pane's toolbar"
+msgstr "折叠阅读窗格的工具栏"
+
+msgid "Every button goes into its ⋯ menu."
+msgstr "所有按钮都会收进 ⋯ 菜单。"
+
+msgid "Open messages in Reader View."
+msgstr "在阅读器视图中打开邮件。"
+
+msgid "Instant new mail (push)"
+msgstr "即时收取新邮件（推送）"
+
+msgid "Microsoft 365 accounts check at the interval above."
+msgstr "Microsoft 365 账户按上述间隔检查。"
+
+msgid "Save data on metered connections"
+msgstr "在按流量计费的连接上节省流量"
+
+msgid "New mail still arrives. Nothing else is fetched ahead."
+msgstr "新邮件仍会送达。其他内容都不会预先获取。"
+
+msgid "Notifications"
+msgstr "通知"
+
+msgid "Desktop notifications"
+msgstr "桌面通知"
+
+msgid "For new mail and errors, while the window is in the background."
+msgstr "在窗口处于后台时，针对新邮件和错误发出通知。"
+
+msgid "Show sender and subject"
+msgstr "显示发件人和主题"
+
+msgid "Read receipts"
+msgstr "已读回执"
+
+msgid "When someone opens mail you asked a receipt for."
+msgstr "当有人打开你请求回执的邮件时。"
+
+msgid "Sound for new mail"
+msgstr "新邮件提示音"
+
+msgid "Sound"
+msgstr "声音"
+
+msgid "Play"
+msgstr "播放"
+
+msgid "Sound file"
+msgstr "声音文件"
+
+msgid "Also play while Hylki is in front"
+msgstr "Hylki 在前台时也播放"
+
+msgid "Notification Buttons"
+msgstr "通知按钮"
+
+msgid "Up to three buttons on a notification about one message."
+msgstr "关于一封邮件的通知上最多有三个按钮。"
+
+msgid "Show sender avatars"
+msgstr "显示发件人头像"
+
+msgid "Sent mail uses your account circle"
+msgstr "已发送邮件使用你的账户圆圈头像"
+
+msgid "The account's picture or emoji, as in the sidebar."
+msgstr "账户的图片或表情符号，与侧边栏中一致。"
+
+msgid "Automatic uses single lines in wide windows."
+msgstr "自动模式在宽窗口中采用单行显示。"
+
+msgid "Resize the list with the window"
+msgstr "列表随窗口调整大小"
+
+msgid "Off, it keeps its width and the reader resizes."
+msgstr "关闭时，列表保持其宽度，阅读窗格随之调整。"
+
+msgid "Off also stops downloading previews."
+msgstr "关闭后也会停止下载预览。"
+
+msgid "Group by date"
+msgstr "按日期分组"
+
+msgid "Gives the subject its full width."
+msgstr "让主题占满整个宽度。"
+
+msgid "Search field position"
+msgstr "搜索框位置"
+
+msgid "Search starts in"
+msgstr "搜索起始于"
+
+msgid "Selection bar position"
+msgstr "选择栏位置"
+
+msgid "Tint tagged messages"
+msgstr "为带标签的邮件着色"
+
+msgid "In the color of its first tag."
+msgstr "使用其第一个标签的颜色。"
+
+msgid "Swipe actions"
+msgstr "滑动手势操作"
+
+msgid ""
+"Left deletes, right archives. Drag with the mouse or swipe with two fingers."
+msgstr "向左删除，向右归档。可用鼠标拖动，或用两指滑动。"
+
+msgid "Reverse swipe directions"
+msgstr "反转滑动方向"
+
+msgid "Trackpad swipe sensitivity"
+msgstr "触控板滑动灵敏度"
+
+msgid "Raise it if swipes stop short. Mouse drags are unaffected."
+msgstr "如果滑动距离不足，请调高此值。鼠标拖动不受影响。"
+
+msgid "Hover Actions"
+msgstr ""
+
+msgid "Show actions on hover"
+msgstr ""
+
+msgid "Restore Defaults"
+msgstr "恢复默认值"
+
+msgid "Columns"
+msgstr "列"
+
+msgid ""
+"For the single-line layout. Drag columns to reorder them or out to remove "
+"them. Due Date shows only for Microsoft 365 mail."
+msgstr ""
+"用于单行布局。拖动列可重新排序，将其拖出可移除。到期日期仅对 Microsoft 365 邮"
+"件显示。"
+
+msgid "Fit columns to the list"
+msgstr "使列适应列表"
+
+msgid "Off, a narrow list scrolls sideways."
+msgstr "关闭时，列表较窄会横向滚动。"
+
+msgid "Hylki collects no telemetry and sends no analytics."
+msgstr "Hylki 不收集遥测数据，也不发送分析数据。"
+
+msgid "Always load remote content"
+msgstr "始终加载远程内容"
+
+msgid "Pre-load remote content for the next messages"
+msgstr "为后续邮件预加载远程内容"
+
+msgid "Remove trackers from links"
+msgstr "从链接中移除跟踪器"
+
+msgid "Warn when remote content is blocked"
+msgstr "远程内容被阻止时发出警告"
+
+msgid "Off hides the banner. Remote content stays blocked."
+msgstr "关闭则隐藏横幅。远程内容仍会被阻止。"
+
+msgid "Warn when the addressing doesn't match"
+msgstr "地址不匹配时发出警告"
+
+msgid "Use Gravatar when a contact has no photo"
+msgstr "联系人没有照片时使用 Gravatar"
+
+msgid "Sends a hash of the sender's address to Gravatar."
+msgstr "将发件人地址的哈希值发送给 Gravatar。"
+
+msgid "Show sender logos"
+msgstr "显示发件人徽标"
+
+msgid "Send read receipts"
+msgstr "发送已读回执"
+
+#. Not "On This Computer": that names an account kind.
+msgid "Stored Mail"
+msgstr "存储的邮件"
+
+msgid "Encrypt stored mail"
+msgstr "加密存储的邮件"
+
+msgid "Encrypt Stored Mail?"
+msgstr "加密存储的邮件？"
+
+msgid ""
+"Mail stored on this computer will be encrypted at the next start which can "
+"take a few minutes. Earlier versions of the app cannot open it. Turn this "
+"setting off and restart before going back to an older version."
+msgstr ""
+"存储在此计算机上的邮件将在下次启动时加密，这可能需要几分钟。较早版本的应用无"
+"法打开这些邮件。若要退回较早版本，请先关闭此设置并重新启动。"
+
+msgid "Encrypt"
+msgstr "加密"
+
+msgid "Open at startup"
+msgstr "启动时打开"
+
+msgid "Accounts in the sidebar"
+msgstr "侧边栏中的账户"
+
+msgid ""
+"Off leaves only the unified section. Toggle with Ctrl+Shift+A or the main "
+"menu."
+msgstr "关闭后仅保留统一区域。可用 Ctrl+Shift+A 或主菜单切换。"
+
+msgid "Folder order"
+msgstr "文件夹顺序"
+
+msgid "Dragging a folder switches to Custom Order."
+msgstr "拖动文件夹会切换到自定义顺序。"
+
+msgid "Chevron placement"
+msgstr "箭头位置"
+
+msgid "When off, only its chevron or a double click activates the fold."
+msgstr "关闭时，只有其箭头或双击才会触发折叠。"
+
+msgid "Show Attachments Browser"
+msgstr "显示附件浏览器"
+
+msgid "Browse every account's attachments in one place."
+msgstr "在一处浏览所有账户的附件。"
+
+msgid "Hovering the icon rail floats the full sidebar out."
+msgstr "悬停图标栏会浮出完整侧边栏。"
+
+msgid "Remember the sidebar layout"
+msgstr "记住侧边栏布局"
+
+msgid "Off starts every launch folded up."
+msgstr "关闭则每次启动时都处于折叠状态。"
+
+msgid "Remember icon rail state"
+msgstr "记住图标栏状态"
+
+msgid "Highlight only new unread mail"
+msgstr "仅高亮新的未读邮件"
+
+msgid "A count turns grey once you have looked at the folder."
+msgstr "查看过文件夹后，计数会变为灰色。"
+
+msgid "Shown only with more than one account."
+msgstr "仅在多于一个账户时显示。"
+
+msgid "Shown only while mail is snoozed."
+msgstr "仅在邮件被稍后处理期间显示。"
+
+msgid "Shown on the unified rows while they are folded up."
+msgstr "在统一行折叠时对其显示。"
+
+msgid "Section style"
+msgstr "区域样式"
+
+msgid "Filters placement"
+msgstr "过滤规则位置"
+
+msgid "Tags placement"
+msgstr "标签位置"
+
+msgid "Favorites placement"
+msgstr "收藏位置"
+
+msgid "Icon rail"
+msgstr "图标栏"
+
+msgid "The count stays in the tooltip."
+msgstr "计数保留在工具提示中。"
+
+msgid "Fold up expanded items"
+msgstr "折叠已展开的项目"
+
+msgid "The items below start folded up in the rail. Long-press to open one."
+msgstr "下列项目在图标栏中初始为折叠状态。长按可展开其一。"
+
+msgid ""
+"Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask "
+"each time\" picks the browser per link with the option to remember it."
+msgstr ""
+"在 Flatpak 沙盒中，链接会通过桌面的选择器打开。“每次询问”会为每个链接选择浏览"
+"器，并可选择记住该选择。"
+
+msgid "\"Ask each time\" lets the desktop ask before each link."
+msgstr "“每次询问”让桌面在打开每个链接前先询问。"
+
+msgid "Not installed"
+msgstr "未安装"
+
+msgid "Installed and loaded by Files"
+msgstr "已安装，并已由文件管理器加载"
+
+msgid "Installed, but nautilus-python is missing"
+msgstr "已安装，但缺少 nautilus-python"
+
+msgid "Installed. Restart Files to load it; it needs nautilus-python"
+msgstr "已安装。重新启动文件管理器以加载它；它需要 nautilus-python"
+
+msgid "Installed, but from another version"
+msgstr "已安装，但来自其他版本"
+
+msgid "Measuring…"
+msgstr "正在测量…"
+
+msgid ""
+"Messages {bodies}, attachments {files}. {total} in all, with the message "
+"list."
+msgstr "邮件 {bodies}，附件 {files}。合计 {total}，包含邮件列表。"
+
+msgid "Could not install the extension"
+msgstr "无法安装扩展"
+
+msgid "Remove downloaded mail?"
+msgstr "移除已下载的邮件？"
+
+msgid ""
+"Mail and attachments on this computer are removed and fetched again when "
+"opened. Nothing on the server changes."
+msgstr ""
+"此计算机上的邮件和附件将被移除，并在打开时重新获取。服务器上的内容不会改变。"
+
+msgid "Could not remove the extension"
+msgstr "无法移除扩展"
+
+msgid "Could not restart Files"
+msgstr "无法重新启动文件管理器"
+
+msgid "Other Font…"
+msgstr "其他字体…"
+
+msgid "Search Settings"
+msgstr "搜索设置"
+
+msgid "Search settings"
+msgstr "搜索设置"
+
+msgid "No Results"
+msgstr "无结果"
+
+#. Translators: words the settings search finds the Contacts page by,
+#. separated by spaces; keep "CardDAV" and "LDAP".
+msgid ""
+"address books CardDAV LDAP directory directories Online Accounts Nextcloud "
+"iCloud Google Microsoft vCard"
+msgstr ""
+"地址簿 目录 CardDAV LDAP 在线账户 Nextcloud iCloud Google Microsoft vCard"
+
+msgid "System language — {language}"
+msgstr "系统语言 — {language}"
+
+msgid "Forget this word"
+msgstr "忘记此单词"
+
+msgid "Print Message"
+msgstr "打印邮件"
+
+msgid "No PDF writer is available on this system"
+msgstr "此系统上没有可用的 PDF 写入器"
+
+msgid "Page {page} of {pages}"
+msgstr "第 {page} 页，共 {pages} 页"
+
+msgid "Save as PDF…"
+msgstr "另存为 PDF…"
+
+msgid "No Preview"
+msgstr "无预览"
+
+msgid "Save as PDF"
+msgstr "另存为 PDF"
+
+msgid "Saved {name}"
+msgstr "已保存 {name}"
+
+msgid "Could not save the PDF: {error}"
+msgstr "无法保存 PDF：{error}"
+
+msgid "Filled in by Mail Merge"
+msgstr "由邮件合并填写"
+
+msgid "Custom…"
+msgstr "自定义…"
+
+msgid "Sans Serif"
+msgstr "无衬线"
+
+msgid "Serif"
+msgstr "衬线"
+
+msgid "Monospace"
+msgstr "等宽"
+
+msgid "Grammar check failed: {error}"
+msgstr "语法检查失败：{error}"
+
+msgid "No suggestions"
+msgstr "无建议"
+
+msgid "Spelling Language"
+msgstr "拼写语言"
+
+msgid "Heading 1"
+msgstr "标题 1"
+
+msgid "Heading 2"
+msgstr "标题 2"
+
+msgid "Heading 3"
+msgstr "标题 3"
+
+msgid "Preformatted"
+msgstr "预格式化文本"
+
+msgid "Bold"
+msgstr "粗体"
+
+msgid "Italic"
+msgstr "斜体"
+
+msgid "Underline"
+msgstr "下划线"
+
+msgid "Strikethrough"
+msgstr "删除线"
+
+msgid "Bulleted list"
+msgstr "项目符号列表"
+
+msgid "Numbered list"
+msgstr "编号列表"
+
+msgid "Decrease indent"
+msgstr "减少缩进"
+
+msgid "Increase indent"
+msgstr "增加缩进"
+
+msgid "Quote"
+msgstr "引用"
+
+msgid "Insert link"
+msgstr "插入链接"
+
+msgid "Insert emoji"
+msgstr "插入表情符号"
+
+msgid "Insert picture"
+msgstr "插入图片"
+
+msgid "Clear formatting"
+msgstr "清除格式"
+
+msgid "Paragraph style"
+msgstr "段落样式"
+
+msgid "Font"
+msgstr "字体"
+
+msgid "Font size"
+msgstr "字号"
+
+msgid "Text color"
+msgstr "文字颜色"
+
+msgid "Highlight"
+msgstr "高亮"
+
+msgid "No highlight"
+msgstr "无高亮"
+
+msgid "Fewer formatting tools"
+msgstr "更少的格式工具"
+
+msgid "More formatting tools"
+msgstr "更多的格式工具"
+
+msgid "Pictures"
+msgstr "图片"
+
+msgid "Insert Picture"
+msgstr "插入图片"
+
+msgid "Insert Link"
+msgstr "插入链接"
+
+msgid "Insert"
+msgstr "插入"
+
+msgid "Show or hide folders"
+msgstr "显示或隐藏文件夹"
+
+msgid "Long-press to expand or collapse"
+msgstr "长按以展开或折叠"
+
+msgid "Show or hide labels"
+msgstr "显示或隐藏标签"
+
+msgid "Labels ({len})"
+msgstr "标签（{len}）"
+
+msgid "Folders ({len})"
+msgstr "文件夹（{len}）"
+
+msgid "Labels"
+msgstr "标签"
+
+msgid "Sort Folders"
+msgstr "文件夹排序"
+
+msgid "Add Folder"
+msgstr "添加文件夹"
+
+msgid "Show or hide sub-folders"
+msgstr "显示或隐藏子文件夹"
+
+msgid "Mark Inbox as Read"
+msgstr "将收件箱标记为已读"
+
+msgid "Refresh"
+msgstr "刷新"
+
+msgid "New Folder…"
+msgstr "新建文件夹…"
+
+msgid "Reset Folder Order"
+msgstr "重置文件夹顺序"
+
+msgid "Account Settings…"
+msgstr "账户设置…"
+
+msgid "Remove Account…"
+msgstr "移除账户…"
+
+msgid "Follow Settings: {sort}"
+msgstr "跟随设置：{sort}"
+
+msgid "Remove from Favorites"
+msgstr "从收藏中移除"
+
+msgid "Add to Favorites"
+msgstr "添加到收藏"
+
+msgid "Apply Filters"
+msgstr "应用过滤规则"
+
+msgid "Edit Filter…"
+msgstr "编辑过滤规则…"
+
+msgid "Rename Folder…"
+msgstr "重命名文件夹…"
+
+msgid "Delete Folder…"
+msgstr "删除文件夹…"
+
+msgid "Hide Folder"
+msgstr "隐藏文件夹"
+
+msgid "Empty Trash…"
+msgstr "清空垃圾箱…"
+
+msgid "Empty Junk…"
+msgstr "清空垃圾邮件…"
+
+msgid "Edit Tag…"
+msgstr "编辑标签…"
+
+msgid "Add account"
+msgstr "添加账户"
+
+msgid "Add first account"
+msgstr "添加第一个账户"
+
+msgid "No accounts yet"
+msgstr "还没有账户"
+
+msgid "New Message from Template…"
+msgstr "从模板新建邮件…"
+
+msgid "Show each inbox"
+msgstr "分别显示每个收件箱"
+
+msgid "Show each account"
+msgstr "分别显示每个账户"
+
+msgid "Show each folder"
+msgstr "分别显示每个文件夹"
+
+msgid "Show each tag"
+msgstr "分别显示每个标签"
+
+msgid "Show each smart folder"
+msgstr "分别显示每个智能文件夹"
+
+msgid "Show each address book"
+msgstr "分别显示每个地址簿"
+
+msgid "Show or hide tags"
+msgstr "显示或隐藏标签"
+
+msgid "Edit Smart Folder…"
+msgstr "编辑智能文件夹…"
+
+msgid "Delete Smart Folder…"
+msgstr "删除智能文件夹…"
+
+msgid ""
+"Uses a translation service under your own key. A message's text is sent only "
+"when you translate it."
+msgstr ""
+"使用你自己的密钥通过翻译服务翻译。只有在你翻译某封邮件时，该邮件的文本才会被"
+"发送。"
+
+msgid "Key"
+msgstr "密钥"
+
+msgid "Region (empty for a global resource)"
+msgstr "区域（全球资源请留空）"
+
+msgid "Translates a greeting to test the service."
+msgstr "翻译一句问候语以测试该服务。"
+
+msgid "Hylki's language ({language})"
+msgstr "Hylki 的语言（{language}）"
+
+msgid "Offer to translate"
+msgstr "提供翻译建议"
+
+msgid ""
+"Messages in another language show a Translate button. The language is "
+"detected on this computer."
+msgstr "其他语言的邮件会显示“翻译”按钮。语言在本机检测。"
+
+msgid "Key (if the server asks for one)"
+msgstr "密钥（如果服务器要求）"
+
+msgid "It works: “{sent}” came back as “{back}”."
+msgstr "成功：“{sent}”返回为“{back}”。"
+
+msgid "Sign In"
+msgstr "登录"
+
+msgid "The sign-in window was closed."
+msgstr "登录窗口已关闭。"
+
+msgid "✓ {email} — added"
+msgstr "✓ {email} — 已添加"
+
+msgid "Add another email account"
+msgstr "添加另一个电子邮件账户"
+
+msgid "Enter your email address, the client ID and both OAuth URLs first."
+msgstr "请先输入你的电子邮件地址、客户端 ID 和两个 OAuth URL。"
+
+msgid "Sign In & Add"
+msgstr "登录并添加"
+
+msgid "Test & Add"
+msgstr "测试并添加"
+
+msgid "IMAP server"
+msgstr "IMAP 服务器"
+
+msgid "IMAP port"
+msgstr "IMAP 端口"
+
+msgid "Enter your email address and password first."
+msgstr "请先输入你的电子邮件地址和密码。"
+
+msgid "Checking the connection…"
+msgstr "正在检查连接…"
+
+msgid "✓ {email} — connected and added"
+msgstr "✓ {email} — 已连接并添加"
+
+msgid "{email} — mail server: {e}"
+msgstr "{email} — 邮件服务器：{e}"
+
+msgid "{email} — sending (SMTP): {e}"
+msgstr "{email} — 发送（SMTP）：{e}"
+
+msgid "✓ {email} — signed in and added"
+msgstr "✓ {email} — 已登录并添加"
+
+msgid ""
+"A clean, fast home for your mail.\n"
+"Let's set things up — it takes about a minute."
+msgstr ""
+"一个干净、快速的邮件之家。\n"
+"我们来完成设置吧——大约只需一分钟。"
+
+msgid "Language"
+msgstr "语言"
+
+msgid ""
+"Choosing another language restarts Hylki: it closes for a moment and this "
+"wizard comes back in that language."
+msgstr "选择其他语言会重启 Hylki：它会关闭片刻，然后此向导会以该语言重新出现。"
+
+msgid "Get Started"
+msgstr "开始使用"
+
+msgid "Import your online accounts"
+msgstr "导入你的在线账户"
+
+msgid ""
+"Mail accounts signed in under GNOME Settings → Online Accounts can be added "
+"here in one click. Google accounts are only supported through GNOME Online "
+"Accounts."
+msgstr ""
+"在 GNOME 设置 → 在线账户中登录的邮件账户可以在此一键添加。Google 账户仅通过 "
+"GNOME 在线账户支持。"
+
+msgid "No mail accounts were found in Online Accounts."
+msgstr "在线账户中没有找到邮件账户。"
+
+msgid "Open Online Accounts…"
+msgstr "打开在线账户…"
+
+msgid "Scan Again"
+msgstr "重新扫描"
+
+msgid "Privacy, your way"
+msgstr "隐私，由你掌控"
+
+msgid ""
+"Hylki sends no telemetry, ever. These control what leaves your machine while "
+"you read."
+msgstr "Hylki 从不发送遥测数据。以下选项控制你阅读时哪些数据会离开本机。"
+
+msgid "Block remote images"
+msgstr "阻止远程图片"
+
+msgid "Stops senders tracking when and where you open mail"
+msgstr "阻止发件人追踪你打开邮件的时间和位置"
+
+msgid "Fetch Gravatar portraits"
+msgstr "获取 Gravatar 头像"
+
+msgid "Asks gravatar.com about each sender's address"
+msgstr "向 gravatar.com 查询每位发件人的地址"
+
+msgid "Fetch sender logos"
+msgstr "获取发件人徽标"
+
+msgid "Looks up company icons for the message list"
+msgstr "在邮件列表中查找公司图标"
+
+msgid "Show message content in notifications"
+msgstr "在通知中显示邮件内容"
+
+msgid "Off keeps senders and subjects off the lock screen"
+msgstr "关闭后，锁屏界面不会显示发件人和主题"
+
+msgid "Make it yours"
+msgstr "打造你的专属体验"
+
+msgid "A few popular choices — everything can be changed later in Settings."
+msgstr "几个常用选项——之后可在设置中随时更改。"
+
+msgid "Message text shown under each subject"
+msgstr "在每个主题下显示邮件正文"
+
+msgid "Sender avatars"
+msgstr "发件人头像"
+
+msgid "Colorful initials beside each message"
+msgstr "每封邮件旁显示彩色姓名首字母"
+
+msgid "Conversation view"
+msgstr "会话视图"
+
+msgid "Group messages into threads"
+msgstr "将邮件归入同一会话"
+
+#. The app icon: the whole set as one sideways-scrolling row on its
+#. own card, the default ringed.
+msgid "Pick your app icon"
+msgstr "选择你的应用图标"
+
+msgid "You're all set"
+msgstr "一切就绪"
+
+msgid ""
+"Enjoy! If you encounter an issue or have a feature request,\n"
+"please open an issue on our <a href=\"{url}\">Github</a>."
+msgstr ""
+"祝你使用愉快！如果遇到问题或有功能建议，\n"
+"请在我们的 <a href=\"{url}\">Github</a> 上提交问题。"
+
+msgid "Welcome to Hylki"
+msgstr "欢迎使用 Hylki"
+
+msgid "Add your email account"
+msgstr "添加你的电子邮件账户"
+
+msgid "Provider"
+msgstr "服务商"
+
+msgid "Your name"
+msgstr "你的名字"
+
+msgid "Server details"
+msgstr "服务器详情"
+
+msgid "Filled in for known providers"
+msgstr "已为已知服务商自动填写"
+
+msgid "OAuth Client ID"
+msgstr "OAuth 客户端 ID"
+
+msgid "OAuth Client Secret (optional)"
+msgstr "OAuth 客户端密钥（可选）"
+
+msgid "Authorization URL"
+msgstr "授权 URL"
+
+msgid "Token URL"
+msgstr "令牌 URL"
+
+msgid "Scopes (space-separated)"
+msgstr "权限范围（以空格分隔）"
+
+msgid "Continue"
+msgstr "继续"
+
+msgid "Finish"
+msgstr "完成"
+
+msgid "Skip"
+msgstr "跳过"
+
+msgid ""
+"Offline: there is no network connection. Mail syncs again once the network "
+"is back. Click to try now, or long-press for Status Bar"
+msgstr ""
+"离线：没有网络连接。网络恢复后邮件会再次同步。点击立即重试，或长按查看状态栏"
+
+msgid ""
+"Could not read the password for {email} from the keyring ({e}). Hylki tries "
+"again at the next connection."
+msgstr "无法从密钥环读取 {email} 的密码（{e}）。Hylki 会在下次连接时重试。"
+
+msgid "The draft is not an OpenPGP message."
+msgstr "该草稿不是 OpenPGP 邮件。"
+
+msgid "The draft could not be decrypted."
+msgstr "无法解密该草稿。"
+
+msgid "no OpenPGP key for {addr}"
+msgstr "{addr} 没有 OpenPGP 密钥"
+
+msgid ""
+"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+msgstr "{addr} 没有你自己的 OpenPGP 密钥；请在设置 → OpenPGP 中生成一个"
+
+msgid ""
+"No S/MIME certificate for {address}. Import one with gpgsm, or turn off Sign "
+"with S/MIME in the Send menu."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has been revoked."
+msgstr ""
+
+msgid "The S/MIME certificate for {address} has expired."
+msgstr ""
+
+msgid ""
+"The S/MIME certificate for {address} is not trusted. Add its root "
+"certificate to gpgsm's trustlist.txt."
+msgstr ""
+
+msgid "Could not save template: {e}"
+msgstr "无法保存模板：{e}"
+
+msgid "Could not save draft: {e}"
+msgstr "无法保存草稿：{e}"
+
+msgid "Saving template…"
+msgstr "正在保存模板…"
+
+msgid "Saving draft…"
+msgstr "正在保存草稿…"
+
+msgid "Syncing…"
+msgstr "正在同步…"
+
+msgid "Could not fetch mail: {e}"
+msgstr "无法收取邮件：{e}"
+
+msgid "Could not load message: {e}"
+msgstr "无法加载邮件：{e}"
+
+msgid "Could not load attachments: {e}"
+msgstr "无法加载附件：{e}"
+
+msgid "Could not reach the server"
+msgstr "无法连接到服务器"
+
+msgid "Sending…"
+msgstr "正在发送…"
+
+msgid "unknown folder"
+msgstr "未知文件夹"
+
+msgid "Could not move message: {e}"
+msgstr "无法移动邮件：{e}"
+
+msgid "Could not mark as spam: {e}"
+msgstr "无法标记为垃圾邮件：{e}"
+
+msgid "Could not mark as not spam: {e}"
+msgstr "无法标记为非垃圾邮件：{e}"
+
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "无法将 {len} 封邮件标记为非垃圾邮件：{e}"
+
+msgid "Could not move messages: {e}"
+msgstr "无法移动邮件：{e}"
+
+msgid "Could not empty the folder: {e}"
+msgstr "无法清空文件夹：{e}"
+
+msgid "Undo failed: {e}"
+msgstr "撤销失败：{e}"
+
+msgid "Could not create folder: {e}"
+msgstr "无法创建文件夹：{e}"
+
+msgid "the folder it goes in is gone"
+msgstr "它所属的文件夹已不存在"
+
+msgid "Could not rename folder: {e}"
+msgstr "无法重命名文件夹：{e}"
+
+msgid "Could not delete folder: unknown folder"
+msgstr "无法删除文件夹：未知文件夹"
+
+msgid "Could not delete folder: {e}"
+msgstr "无法删除文件夹：{e}"
+
+msgid "Removing the attachment…"
+msgstr "正在移除附件…"
+
+msgid "Could not remove the attachment: {e}"
+msgstr "无法移除附件：{e}"
+
+msgid ""
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Settings → Mail Accounts and sign in to it again."
+msgstr ""
+"Microsoft 未接受 {email} 的已保存登录信息。请打开 Hylki 的设置 → 邮件账户并重"
+"新登录。"
+
+msgid "The attachment is no longer in the message on the server"
+msgstr "服务器上的该邮件中已没有此附件"
+
+msgid ""
+"This account may not send from {address}. Your organization gives that right "
+"in Exchange."
+msgstr ""
+
+msgid "Still could not send “{subject}”: {e}"
+msgstr "仍无法发送“{subject}”：{e}"
+
+msgid "Could not load source: {e}"
+msgstr "无法加载源：{e}"
+
+msgid "A Microsoft account can't receive mail from another account"
+msgstr "Microsoft 账户无法从其他账户收取邮件"
+
+msgid "“{folder}” is left out of search: {reason}"
+msgstr "“{folder}”未纳入搜索：{reason}"
+
+msgid "Connecting to {host}…"
+msgstr "正在连接到 {host}…"
+
+msgid "Could not list folders: {e}"
+msgstr "无法列出文件夹：{e}"
+
+msgid "Connection failed: {e}"
+msgstr "连接失败：{e}"
+
+msgid ""
+"This account has no IMAP server. Hylki can't use Exchange accounts from "
+"Online Accounts: remove it and add it as an IMAP or Microsoft 365 account."
+msgstr ""
+"此账户没有 IMAP 服务器。Hylki 无法使用来自在线账户的 Exchange 账户：请将其移"
+"除，并以 IMAP 或 Microsoft 365 账户的形式添加。"
+
+msgid "could not reach the server"
+msgstr "无法连接到服务器"
+
+msgid "the server's reply could not be read (it began: {reply})"
+msgstr "无法读取服务器的回复（开头为：{reply}）"
+
+msgid "Could not load {path}: {e}"
+msgstr "无法加载 {path}：{e}"
+
+msgid "This message was moved or deleted on the server."
+msgstr "此邮件已在服务器上被移动或删除。"
+
+msgid "Could not load conversation: {e}"
+msgstr "无法加载会话：{e}"
+
+msgid ""
+"Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
+"there when Hylki next connects."
+msgstr ""
+"邮件已发送，但保存到已发送失败：{e}。副本已保留，Hylki 下次连接时会将其保存到"
+"那里。"
+
+msgid "Message sent, but saving to Sent failed: {e}"
+msgstr "邮件已发送，但保存到已发送失败：{e}"
+
+msgid "Could not update message: {e}"
+msgstr "无法更新邮件：{e}"
+
+msgid "Could not change the star: {e}"
+msgstr "无法更改星标：{e}"
+
+msgid ""
+"This server does not store tags, so Hylki keeps them on this computer only"
+msgstr "此服务器不存储标签，因此 Hylki 仅将其保存在本机"
+
+msgid "Could not tag message: {e}"
+msgstr "无法为邮件添加标签：{e}"
+
+msgid "Could not mark folder read: {e}"
+msgstr "无法将文件夹标记为已读：{e}"
+
+msgid ""
+"Gmail keeps a copy of every message in All Mail, so Hylki cannot remove an "
+"attachment there"
+msgstr ""
+"Gmail 会在“所有邮件”中保留每封邮件的副本，因此 Hylki 无法在那里移除附件"
+
+msgid "Could not move {len} messages: {e}"
+msgstr "无法移动 {len} 封邮件：{e}"
+
+msgid "Could not delete permanently: {e}"
+msgstr "无法永久删除：{e}"
+
+msgid "Could not move folder: {e}"
+msgstr "无法移动文件夹：{e}"
+
+msgid "Downloading attachments… {n} remaining"
+msgid_plural "Downloading attachments… {n} remaining"
+msgstr[0] "正在下载附件… 剩余 {n}"
+
+msgid "IMAP connection stopped making progress"
+msgstr "IMAP 连接停止响应"
+
+msgid "That folder is not on the server"
+msgstr "该文件夹不在服务器上"
+
+msgid "Could not reach the JMAP server: {e}"
+msgstr "无法连接到 JMAP 服务器：{e}"
+
+msgid "Mail on this computer is not sent, and has no drafts"
+msgstr "本机的邮件不会被发送，也没有草稿"
+
+msgid "Mail is not sent from On This Computer: choose another From address"
+msgstr "无法从“本机”发送邮件：请选择其他发件人地址"
+
+msgid "Could not import {path}: {e}"
+msgstr "无法导入 {path}：{e}"
+
+msgid "Importing {done} of {total} messages…"
+msgstr "正在导入 {done}/{total} 封邮件…"
+
+msgid "A folder by that name already exists"
+msgstr "同名文件夹已存在"
+
+msgid "The folder still holds mail"
+msgstr "文件夹中仍有邮件"
+
+msgid "That is not a folder name"
+msgstr "这不是有效的文件夹名称"
+
+msgid "Could not store the message: {e}"
+msgstr "无法存储邮件：{e}"
+
+msgid "Message sent, but saving it to On This Computer failed: {e}"
+msgstr "邮件已发送，但保存到“本机”失败：{e}"
+
+msgid "Could not open the folders on this computer: {e}"
+msgstr "无法打开本机上的文件夹：{e}"
+
+msgid "Reading {n} messages…"
+msgstr "正在读取 {n} 封邮件…"
+
+#. Nothing failed: the message waits for the network, which the
+#. Refresh button already shows is down (#442).
+msgid ""
+"No network connection. The message is in the Outbox and will be sent when "
+"the connection is back."
+msgstr "无网络连接。邮件已放入发件箱，连接恢复后将发送。"
+
+#. A merge's message the server would not take: retrying will
+#. not help unless it is edited, or the server's limit resets.
+msgid "Send failed: {e}. The message is in the Outbox."
+msgstr "发送失败：{e}。邮件已放入发件箱。"
+
+msgid ""
+"Send failed: {e}. The message is in the Outbox and will be sent when the "
+"connection is back."
+msgstr "发送失败：{e}。邮件已放入发件箱，连接恢复后将发送。"
+
+msgid "Send failed: {e}"
+msgstr "发送失败：{e}"
+
+msgid "“{subject}” will be sent {when}"
+msgstr "“{subject}”将于 {when} 发送"
+
+msgid "Could not schedule the message."
+msgstr "无法安排该邮件的发送时间。"
+
+msgid "The connection stopped after an internal error."
+msgstr "连接因内部错误而中断。"
+
+msgid "Could not delete message: {e}"
+msgstr "无法删除邮件：{e}"
+
+msgid "POP3 accounts don't support folders"
+msgstr "POP3 账户不支持文件夹"
+
+msgid "A POP3 account can't receive mail from another account"
+msgstr "POP3 账户无法从其他账户收取邮件"
+
+msgid ""
+"POP3 cannot change a message on the server, so the attachment was not removed"
+msgstr "POP3 无法更改服务器上的邮件，因此未移除附件"
+
+#. What a crash leaves in the Outbox says why it is there; a failure
+#. that is reported replaces it.
+msgid "Hylki closed before the message was sent."
+msgstr "Hylki 在邮件发送前关闭了。"
+
+msgid "The message is signed or encrypted, and removing a file would break it"
+msgstr "该邮件已签名或加密，移除文件会使其损坏"
+
+msgid "The attachment is the whole message; delete the message instead"
+msgstr "附件就是整封邮件；请改为删除该邮件"
+
+msgid ""
+"You deleted an attachment from this message. The original MIME headers for "
+"the attachment were:"
+msgstr "你从这封邮件中删除了一个附件。该附件原来的 MIME 头为："
+
+msgid "no network connection"
+msgstr "无网络连接"
+
+msgid "runtime error: {e}"
+msgstr "运行时错误：{e}"
+
+msgid "No contacts were found in the selected files"
+msgstr "所选文件中未找到联系人"
+
+msgid ""
+"Contacts imported: {added} new, {updated} updated, {skipped} skipped, "
+"{errors} damaged"
+msgstr ""
+"联系人已导入：新增 {added} 个，更新 {updated} 个，跳过 {skipped} 个，损坏 "
+"{errors} 个"
+
+msgid "Contacts imported: {added} new, {updated} updated"
+msgstr "联系人已导入：新增 {added} 个，更新 {updated} 个"
+
+msgid "No address book available to add contacts"
+msgstr "没有可用于添加联系人的地址簿"
+
+msgid "Added to Contacts"
+msgstr "已添加到联系人"
+
+msgid "Added email to {name}"
+msgstr "已将电子邮件添加到 {name}"
+
+msgid "Already in Contacts ({name})"
+msgstr "已在联系人中（{name}）"
+
+msgid "Could not add contact: {e}"
+msgstr "无法添加联系人：{e}"
+
+msgid "No address book available"
+msgstr "没有可用的地址簿"
+
+msgid "Could not rename the address book: {e}"
+msgstr "无法重命名地址簿：{e}"
+
+msgid "{n} contact was not copied: {e}"
+msgid_plural "{n} contacts were not copied: {e}"
+msgstr[0] "有 {n} 个联系人未被复制：{e}"
+
+msgid "{n} contact was not moved: {e}"
+msgid_plural "{n} contacts were not moved: {e}"
+msgstr[0] "有 {n} 个联系人未被移动：{e}"
+
+msgid "Could not update contact: {e}"
+msgstr "无法更新联系人：{e}"
+
+msgid "Choose Thunderbird's Profile Folder"
+msgstr "选择 Thunderbird 的配置文件文件夹"
+
+msgid "Could not import contacts: {e}"
+msgstr "无法导入联系人：{e}"
+
+msgid "Could not read: {files}"
+msgstr "无法读取：{files}"
+
+msgid "{folder} in {account}"
+msgstr "{account} 中的 {folder}"
+
+msgid "Search filters"
+msgstr "搜索过滤规则"
+
+msgid ""
+"File or tag incoming mail automatically. Filters run on each Inbox as it "
+"syncs; Apply Now runs them over the mail already there."
+msgstr ""
+"自动归档或标记收到的邮件。过滤规则会在每个收件箱同步时运行；“立即应用”则会对"
+"已有的邮件运行。"
+
+msgid "Add Filter…"
+msgstr "添加过滤规则…"
+
+msgid "Run every rule over the mail already in your inboxes"
+msgstr "对所有收件箱中已有的邮件运行每条规则"
+
+msgid "Keys are managed under OpenPGP in the sidebar."
+msgstr "密钥在侧边栏的 OpenPGP 下管理。"
+
+msgid "Automatic uses the key whose address matches."
+msgstr "自动选择地址匹配的密钥。"
+
+msgid "Sign messages by default"
+msgstr "默认签名邮件"
+
+msgid "Hide the subject of encrypted mail"
+msgstr "隐藏加密邮件的主题"
+
+msgid "Only the recipients see the subject. Others see \"...\"."
+msgstr "只有收件人能看到主题。其他人看到的是“……”。"
+
+msgid "Send your key with your mail"
+msgstr "随邮件发送你的密钥"
+
+msgid "Autocrypt. Keys others send this way are kept too."
+msgstr "Autocrypt。以此方式从他人处收到的密钥也会保留。"
+
+msgid "Encrypt by default"
+msgstr "默认加密"
+
+msgid "Mail to people who ask for the same is encrypted."
+msgstr "发给要求加密的人的邮件会被加密。"
+
+msgid "S/MIME"
+msgstr ""
+
+msgid "Certificates are managed with gpgsm."
+msgstr ""
+
+msgid "The Send menu turns it off for one message."
+msgstr ""
+
+msgid "GNOME Online Account"
+msgstr "GNOME 在线账户"
+
+msgid "Show in Hylki"
+msgstr "在 Hylki 中显示"
+
+msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
+msgstr "关闭后会将其返回导入列表。它仍保留在 GNOME 在线账户中。"
+
+msgid ""
+"Managed by GNOME Online Accounts. Its address, servers and password are "
+"changed in Settings → Online Accounts."
+msgstr "由 GNOME 在线账户管理。其地址、服务器和密码在设置 → 在线账户中更改。"
+
+msgid "Storage"
+msgstr "存储"
+
+msgid "Mail Account"
+msgstr "邮件账户"
+
+msgid "Display Name"
+msgstr "显示名称"
+
+msgid "Email Address"
+msgstr "电子邮件地址"
+
+msgid "Incoming Protocol"
+msgstr "接收协议"
+
+msgid "SMTP Server (optional)"
+msgstr "SMTP 服务器（可选）"
+
+msgid "SMTP Port (default 587)"
+msgstr "SMTP 端口（默认 587）"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "Sign in with an API token"
+msgstr "使用 API 令牌登录"
+
+msgid "For servers, like Fastmail, that take a token instead of a password."
+msgstr "适用于像 Fastmail 这样使用令牌而非密码的服务器。"
+
+msgid "Advanced"
+msgstr "高级"
+
+msgid "Sign in with another app registration"
+msgstr "使用其他应用注册登录"
+
+msgid "Client ID"
+msgstr "客户端 ID"
+
+msgid "Tenant (common, organizations, consumers or an ID)"
+msgstr "租户（common、organizations、consumers 或一个 ID）"
+
+msgid "Redirect URI"
+msgstr "重定向 URI"
+
+msgid "Sign In with Browser"
+msgstr "使用浏览器登录"
+
+msgid ""
+"Google and Microsoft sign in through GNOME Online Accounts. Sign in there, "
+"then reopen this window and switch the account on under GNOME Online "
+"Accounts."
+msgstr ""
+"Google 和 Microsoft 通过 GNOME 在线账户登录。请在那里登录，然后重新打开此窗"
+"口，并在 GNOME 在线账户下开启该账户。"
+
+msgid "Separate SMTP credentials"
+msgstr "单独的 SMTP 凭据"
+
+msgid "Off uses the credentials above."
+msgstr "关闭时使用上方的凭据。"
+
+msgid "SMTP Username"
+msgstr "SMTP 用户名"
+
+msgid "SMTP Password"
+msgstr "SMTP 密码"
+
+msgid "Accept a certificate for another name"
+msgstr "接受其他名称的证书"
+
+msgid ""
+"For shared hosting. Turn on only when the connection test says the names "
+"differ."
+msgstr "用于共享主机。仅当连接测试提示名称不一致时才开启。"
+
+msgid "Show in All Inboxes"
+msgstr "在“所有收件箱”中显示"
+
+msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
+msgstr "也显示在统一的已加星标、已发送、草稿、归档、过滤规则和标签中。"
+
+msgid "Test Connection"
+msgstr "测试连接"
+
+msgid "Account accent color"
+msgstr "账户强调色"
+
+msgid "Use my Gravatar"
+msgstr "使用我的 Gravatar"
+
+msgid "Sends gravatar.com a hash of the address."
+msgstr "向 gravatar.com 发送地址的哈希值。"
+
+msgid "Circle shows"
+msgstr "圆形头像显示"
+
+msgid "Initials or emoji"
+msgstr "姓名首字母或表情符号"
+
+msgid "Picture"
+msgstr "图片"
+
+msgid "Emoji"
+msgstr "表情符号"
+
+msgid "Instead of initials."
+msgstr "代替姓名首字母。"
+
+msgid "Use initials"
+msgstr "使用姓名首字母"
+
+msgid "Send-as aliases"
+msgstr "发件身份别名"
+
+msgid "Add Alias…"
+msgstr "添加别名…"
+
+msgid "Signatures"
+msgstr "签名"
+
+msgid "Add Signature"
+msgstr "添加签名"
+
+msgid "Import File…"
+msgstr "导入文件…"
+
+msgid "Delete Signature"
+msgstr "删除签名"
+
+msgid "Sender name"
+msgstr "发件人名称"
+
+msgid "Replaces the account's name in From. Aliases keep their own."
+msgstr "替换“发件人”中的账户名称。别名保留各自的名称。"
+
+msgid "Start messages with this signature"
+msgstr "新邮件以此签名开头"
+
+msgid "Syncing"
+msgstr "同步"
+
+msgid "Turn off for servers that stall on push connections."
+msgstr "对于推送连接会卡住的服务器，请关闭此项。"
+
+msgid "Empty Junk automatically"
+msgstr "自动清空垃圾邮件"
+
+msgid "Empty Trash automatically"
+msgstr "自动清空垃圾箱"
+
+msgid "Move list mail to Trash"
+msgstr "将邮件列表邮件移至垃圾箱"
+
+msgid ""
+"Inbox mail with an unsubscribe link older than this gets trashed unless it's "
+"starred."
+msgstr "收件箱中带有退订链接且早于此时长的邮件会被移入垃圾箱，除非已加星标。"
+
+msgid "Keep mail cached"
+msgstr "保留邮件缓存"
+
+msgid "Leaves out Trash, Junk and Drafts."
+msgstr "不包括垃圾箱、垃圾邮件和草稿。"
+
+msgid "Include attachments"
+msgstr "包含附件"
+
+msgid "Can consume a lot of hard drive space."
+msgstr "可能占用大量硬盘空间。"
+
+msgid "Copy mail to On This Computer"
+msgstr "将邮件复制到“本机”"
+
+msgid ""
+"Downloads copies of every message from every folder of this account to this "
+"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
+msgstr ""
+"将此账户每个文件夹中的每封邮件副本下载到此计算机（垃圾箱、垃圾邮件和草稿除"
+"外），并存储到“本机”中。"
+
+msgid "Mail already here is not imported again."
+msgstr "此处已有的邮件不会再次导入。"
+
+msgid "Maildir folders"
+msgstr "Maildir 文件夹"
+
+msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgstr "Evolution 的“本机”、Dovecot 及其他 Maildir 目录树。"
+
+msgid "Mbox files"
+msgstr "Mbox 文件"
+
+msgid "Thunderbird's folders and other mbox files."
+msgstr "Thunderbird 的文件夹及其他 mbox 文件。"
+
+msgid "Microsoft 365"
+msgstr "Microsoft 365"
+
+msgid "Search the organization directory"
+msgstr "搜索组织目录"
+
+msgid "Suggests people from your organization as you type."
+msgstr "输入时从你的组织推荐联系人。"
+
+msgid "Suggest only from this account"
+msgstr "仅从此账户推荐"
+
+msgid "Suggestions come from the directory and this account's mail only."
+msgstr "仅从目录和此账户的邮件中获取建议。"
+
+msgid "Show sensitivity label names"
+msgstr "显示敏感度标签名称"
+
+msgid "Shows a label's name when a message gives only its ID."
+msgstr "当邮件仅提供标签 ID 时显示标签名称。"
+
+msgid "Folder Order"
+msgstr "文件夹顺序"
+
+msgid "Also in the right-click menu of its Folders heading."
+msgstr "也出现在其“文件夹”标题的右键菜单中。"
+
+msgid "Special Folders"
+msgstr "特殊文件夹"
+
+msgid ""
+"Follows the server's own markings unless you pick a folder. Nothing already "
+"on the server moves."
+msgstr ""
+"除非你选择文件夹，否则遵循服务器自身的标记。服务器上已有的内容不会移动。"
+
+msgid "Save a copy of sent mail in"
+msgstr "将已发送邮件的副本保存到"
+
+msgid "Save a copy of replies in"
+msgstr "将回复的副本保存到"
+
+msgid "For Gmail and others that file sent mail themselves."
+msgstr "适用于 Gmail 等自行归档已发送邮件的服务。"
+
+msgid "Hidden Folders"
+msgstr "隐藏的文件夹"
+
+msgid ""
+"Hidden folders are not synced. Hide one from its right-click menu in the "
+"sidebar."
+msgstr "隐藏的文件夹不会同步。可在侧边栏中通过其右键菜单隐藏文件夹。"
+
+msgid "No hidden folders."
+msgstr "没有隐藏的文件夹。"
+
+msgid "Your password is kept in the system keyring, never in plain text."
+msgstr "你的密码保存在系统密钥环中，绝不会以明文存储。"
+
+msgid "Search senders"
+msgstr "搜索发件人"
+
+msgid "Allowed Senders"
+msgstr "允许的发件人"
+
+msgid "Messages from these senders load remote content automatically."
+msgstr "来自这些发件人的邮件会自动加载远程内容。"
+
+msgid "Allow this sender"
+msgstr "允许此发件人"
+
+msgid "Blocked Senders"
+msgstr "阻止的发件人"
+
+msgid ""
+"Their mail is moved to Trash on arrival. Enter an address, or a domain like "
+"\"example.com\" to apply to all senders from that domain."
+msgstr ""
+"他们的邮件到达后会被移入垃圾箱。输入一个地址，或类似“example.com”的域名以适用"
+"于该域名的所有发件人。"
+
+msgid "Address or domain"
+msgstr "地址或域名"
+
+msgid "Block this sender"
+msgstr "阻止此发件人"
+
+msgid ""
+"Tags are stored on the server as IMAP keywords, so Thunderbird and other "
+"clients show them too.\n"
+"\n"
+"Drag to reorder. The first nine are mapped to the 1–9 keys."
+msgstr ""
+"标签以 IMAP 关键字的形式存储在服务器上，因此 Thunderbird 和其他客户端也会显示"
+"它们。\n"
+"\n"
+"拖动可重新排序。前九个对应 1–9 键。"
+
+msgid "Add Tag…"
+msgstr "添加标签…"
+
+msgid "Look through every mailbox for tags other clients have set"
+msgstr "检查所有邮箱以查找其他客户端设置的标签"
+
+msgid "Style"
+msgstr "样式"
+
+msgid "Messages have their own setting under Reading."
+msgstr "邮件在“阅读”下有各自的设置。"
+
+msgid "Text size"
+msgstr "文字大小"
+
+msgid "Adjusts the interface and message text size."
+msgstr "调整界面和邮件文字的大小。"
+
+msgid "Use your desktop environment's icon set"
+msgstr "使用桌面环境的图标集"
+
+msgid "This window opens to"
+msgstr "此窗口打开时显示"
+
+msgid "Toolbar"
+msgstr "工具栏"
+
+msgid ""
+"Drag buttons between the groups. The right group folds into ⋯ when the pane "
+"is narrow."
+msgstr "在各组之间拖动按钮。窗格较窄时，右侧组会折叠进 ⋯。"
+
+msgid "Always fold the right group into ⋯"
+msgstr "始终将右侧组折叠进 ⋯"
+
+msgid "Compose in the main window"
+msgstr "在主窗口中撰写"
+
+msgid "Off opens new messages in their own window."
+msgstr "关闭时在独立窗口中打开新邮件。"
+
+msgid "Reply and forward in the main window"
+msgstr "在主窗口中回复和转发"
+
+msgid "Show From, To and Subject in the reply panel"
+msgstr "在回复面板中显示发件人、收件人和主题"
+
+msgid "Off folds them behind a button."
+msgstr "关闭时将它们折叠到一个按钮后面。"
+
+msgid "Send new messages from"
+msgstr "发送新邮件时使用"
+
+msgid "Replies answer from the address they were sent to."
+msgstr "回复时使用邮件原本发送到的地址。"
+
+msgid "Paste as plain text"
+msgstr "以纯文本粘贴"
+
+msgid "Right-clicking the editor offers both either way."
+msgstr "无论何种设置，右键单击编辑器都会提供这两种选项。"
+
+msgid "Return starts a new paragraph"
+msgstr "回车开始新段落"
+
+msgid "Shift+Return does the other."
+msgstr "Shift+回车则执行另一种操作。"
+
+msgid "Formatting toolbar"
+msgstr "格式工具栏"
+
+msgid "For new messages. The toolbar's chevron toggles it."
+msgstr "用于新邮件。工具栏上的折角按钮可切换它。"
+
+msgid "Always collapsed"
+msgstr "始终折叠"
+
+msgid "Always expanded"
+msgstr "始终展开"
+
+msgid "Start new messages in"
+msgstr "新邮件初始格式"
+
+msgid "Reply in the original's format"
+msgstr "按原邮件格式回复"
+
+msgid "Ask before switching to plain text"
+msgstr "切换到纯文本前询问"
+
+msgid "Only when formatting, images or links would be removed."
+msgstr "仅在会移除格式、图片或链接时。"
+
+msgid "For rich text. Default leaves it to the recipient's own font."
+msgstr "用于富文本。默认使用收件人自己的字体。"
+
+msgid "For rich text, in points."
+msgstr "用于富文本，单位为磅。"
+
+msgid "Default zoom"
+msgstr "默认缩放"
+
+msgid "Signature in replies"
+msgstr "回复中的签名"
+
+msgid "Separator line above the signature"
+msgstr "签名上方的分隔线"
+
+msgid "The standard “-- ” line, which other mail apps recognize."
+msgstr "其他邮件应用可识别的标准“-- ”行。"
+
+msgid "Fold quoted text"
+msgstr "折叠引用文本"
+
+msgid "Replies and forwards open with the original behind •••."
+msgstr "回复和转发打开时，原邮件折叠在 ••• 之后。"
+
+msgid "Undo Send"
+msgstr "撤销发送"
+
+msgid "How long Undo is offered after sending."
+msgstr "发送后提供撤销的时长。"
+
+msgid "Undo after Discard"
+msgstr "丢弃后可撤销"
+
+msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr "会有通知提供恢复该邮件的选项。无论何种情况，Ctrl+Z 都有效。"
+
+msgid "Request read receipts"
+msgstr "请求已读回执"
+
+msgid "Returned receipts"
+msgstr "返回的回执"
+
+msgid "Sent mail shows who read it; the receipt goes here."
+msgstr "已发送邮件会显示谁已阅读；回执会存入此处。"
+
+msgid "Keep in Inbox"
+msgstr "保留在收件箱"
+
+msgid "Reply Header"
+msgstr "回复标头"
+
+msgid "{name}, {address}, {date} and {time} are filled in from the original."
+msgstr "{name}、{address}、{date} 和 {time} 会从原邮件中填入。"
+
+msgid "Line above the quoted message"
+msgstr "引用邮件上方的行"
+
+msgid "Restore Default"
+msgstr "恢复默认值"
+
+msgid "Attachment Reminder"
+msgstr "附件提醒"
+
+msgid ""
+"Send asks first when the message mentions one of these words and nothing is "
+"attached."
+msgstr "当邮件提到这些词之一且没有附加任何内容时，发送前会先询问。"
+
+msgid "Words, separated by commas"
+msgstr "词语，以逗号分隔"
+
+msgid "Spelling"
+msgstr "拼写"
+
+msgid "Check spelling as you type"
+msgstr "输入时检查拼写"
+
+msgid "Right-click a word for corrections."
+msgstr "右键单击单词可获取更正建议。"
+
+msgid "Languages"
+msgstr "语言"
+
+msgid "Added words"
+msgstr "已添加的单词"
+
+msgid "Changes apply after a restart."
+msgstr "更改在重新启动后生效。"
+
+msgid "Mark as read"
+msgstr "标记为已读"
+
+msgid "Conversations mark each message as it comes into view."
+msgstr "会话中每封邮件一进入视野就会被标记。"
+
+msgid "Message appearance"
+msgstr "邮件外观"
+
+msgid "Light / Dark Mode switch"
+msgstr "浅色 / 深色模式切换"
+
+msgid "Shown in the message header and the composer."
+msgstr "显示在邮件标头和撰写窗口中。"
+
+msgid "Show account in message header"
+msgstr "在邮件标头中显示账户"
+
+msgid "The account a message is in, above its subject."
+msgstr "邮件所属的账户，显示在主题上方。"
+
+msgid "Ctrl+0 returns to the default."
+msgstr "Ctrl+0 恢复默认值。"
+
+msgid "Use my own font"
+msgstr "使用我自己的字体"
+
+msgid "The font below replaces the sender's."
+msgstr "下方的字体将替换发件人的字体。"
+
+msgid "Message font"
+msgstr "邮件字体"
+
+msgid "The interface font unless another is chosen."
+msgstr "未选择其他字体时使用界面字体。"
+
+msgid "Use my own colors"
+msgstr "使用我自己的颜色"
+
+msgid "Ignores the sender's colors. Pictures stay; links use the accent color."
+msgstr "忽略发件人的颜色。图片保留；链接使用强调色。"
+
+msgid "Plain-text messages in monospace"
+msgstr "纯文本邮件使用等宽字体"
+
+msgid "Formatted messages are not affected."
+msgstr "格式化的邮件不受影响。"
+
+msgid "Monospace font"
+msgstr "等宽字体"
+
+msgid "The system's monospace font unless another is chosen."
+msgstr "未选择其他字体时使用系统的等宽字体。"
+
+msgid "Single messages as cards"
+msgstr "单封邮件显示为卡片"
+
+msgid "Off fills the pane edge to edge."
+msgstr "关闭时内容会填满整个窗格。"
+
+msgid "Always show recipients"
+msgstr "始终显示收件人"
+
+msgid "Name the OpenPGP result"
+msgstr "标明 OpenPGP 结果"
+
+msgid "Off shows the icons alone."
+msgstr "关闭时仅显示图标。"
+
+msgid "Find bar position"
+msgstr "查找栏位置"
+
+msgid "Space shows pictures and PDFs in Sushi"
+msgstr "空格键在 Sushi 中显示图片和 PDF"
+
+msgid "A message's text alone, without the sender's layout, colors and fonts."
+msgstr "仅显示邮件的文字，不含发件人的布局、颜色和字体。"
+
+msgid "Show Reader View switch in message header"
+msgstr "在邮件标头中显示阅读视图切换"
+
+msgid "When a message is opened"
+msgstr "打开邮件时"
+
+msgid "The header's switch still changes the open message."
+msgstr "标头中的切换仍会更改已打开的邮件。"
+
+msgid "Printing"
+msgstr "打印"
+
+msgid "Page numbers"
+msgstr "页码"
+
+msgid "Date printed"
+msgstr "打印日期"
+
+msgid "Wider left margin"
+msgstr "更宽的左边距"
+
+msgid "25 mm, so punched holes miss the text."
+msgstr "25 毫米，以便打孔不会遮挡文字。"
+
+msgid "Applies after a restart."
+msgstr "重新启动后生效。"
+
+msgid "Renderer"
+msgstr "渲染器"
+
+msgid "Try OpenGL or Software on older graphics. Applies after a restart."
+msgstr "在较旧的显卡上可尝试 OpenGL 或软件渲染。重新启动后生效。"
+
+msgid "Keep running in the background"
+msgstr "在后台保持运行"
+
+msgid "Closing the window hides it. Quit from Background Apps."
+msgstr "关闭窗口会将其隐藏。可从“后台应用”退出。"
+
+msgid "Start at login"
+msgstr "登录时启动"
+
+msgid "Starts hidden."
+msgstr "以隐藏方式启动。"
+
+msgid "Start fullscreen"
+msgstr "以全屏启动"
+
+msgid "F11 switches fullscreen on and off."
+msgstr "F11 可开启和关闭全屏。"
+
+msgid "Show a tray icon"
+msgstr "显示托盘图标"
+
+msgid "To use on GNOME, install an AppIndicator extension."
+msgstr "要在 GNOME 上使用，请安装 AppIndicator 扩展。"
+
+msgid "Tray icon"
+msgstr "托盘图标"
+
+msgid "Unread mail in the tray menu"
+msgstr "托盘菜单中的未读邮件"
+
+msgid "Unread count on the app icon"
+msgstr "应用图标上的未读数量"
+
+msgid "To use on GNOME, install a dock extension such as Dash to Dock."
+msgstr "要在 GNOME 上使用，请安装 Dash to Dock 之类的坞站扩展。"
+
+msgid "Single-key shortcuts"
+msgstr "单键快捷键"
+
+msgid "Press Ctrl+? to list all shortcuts."
+msgstr "按 Ctrl+? 列出所有快捷键。"
+
+msgid "Gmail keys"
+msgstr "Gmail 快捷键"
+
+msgid "Swaps the single-key shortcuts for Gmail equivalents."
+msgstr "将单键快捷键替换为 Gmail 的等效快捷键。"
+
+msgid "Status bar"
+msgstr "状态栏"
+
+msgid "Console mode"
+msgstr "控制台模式"
+
+msgid "Shows a console in the status bar."
+msgstr "在状态栏中显示控制台。"
+
+msgid "For bug reports. Addresses are cut to their domain for privacy."
+msgstr "用于错误报告。为保护隐私，地址会被截断为域名。"
+
+msgid "Downloaded mail"
+msgstr "已下载的邮件"
+
+msgid "Remove…"
+msgstr "移除…"
+
+msgid "Keep downloaded mail"
+msgstr "保留已下载的邮件"
+
+msgid "Mail inside an account's offline period is kept."
+msgstr "账户离线期间内的邮件会被保留。"
+
+msgid "GNOME Files Integration"
+msgstr "GNOME 文件集成"
+
+msgid ""
+"Adds “Send with Hylki” to the right-click menu in Files. Needs the nautilus-"
+"python package and a restart of Files."
+msgstr ""
+"在“文件”的右键菜单中添加“Send with Hylki”。需要 nautilus-python 软件包并重启"
+"“文件”。"
+
+msgid "Right-click menu entry"
+msgstr "右键菜单项"
+
+msgid "Install nautilus-python first"
+msgstr "请先安装 nautilus-python"
+
+msgid "Restart Files"
+msgstr "重启“文件”"
+
+msgid "Closes every Files window, like “nautilus -q”."
+msgstr "关闭所有“文件”窗口，类似于“nautilus -q”。"
+
+msgid "Restart"
+msgstr "重启"
+
+msgid "Default Send with Hylki behavior"
+msgstr "“Send with Hylki”的默认行为"
+
+msgid "Default large attachments behavior"
+msgstr "大附件的默认行为"
+
+msgid "Without a cloud storage account, files are attached."
+msgstr "没有云存储账户时，文件会作为附件添加。"
+
+msgid "Size limit"
+msgstr "大小限制"
+
+msgid "In MB, for all the files together."
+msgstr "单位为 MB，按所有文件的总和计算。"
+
+msgid "Links"
+msgstr "链接"
+
+msgid "Open links in"
+msgstr "打开链接的方式"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Install"
+msgstr "安装"
+
+msgid "Send as Attachment Instead"
+msgstr "改为作为附件发送"
+
+msgid "Small"
+msgstr "小"
+
+msgid "Medium"
+msgstr "中"
+
+msgid "Large"
+msgstr "大"
+
+msgid "Original Size"
+msgstr "原始大小"
+
+msgid "Will be recompressed to the size shown when this is sent"
+msgstr "发送时将重新压缩至所示大小"
+
+msgid "Recompress to This Size on Send"
+msgstr "发送时重新压缩至此大小"
+
+msgid "Paste with Formatting"
+msgstr "带格式粘贴"
+
+msgid "Paste as Plain Text"
+msgstr "以纯文本粘贴"
+
+msgid "Cut"
+msgstr "剪切"
+
+msgid "Insert Emoji"
+msgstr "插入表情符号"
+
+msgid "Email Client"
+msgstr "电子邮件客户端"
+
+msgid ""
+"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
+"source and private by default."
+msgstr ""
+"一款快速的 GNOME 原生电子邮件客户端，使用 Rust 和 libadwaita 构建。开源且默认"
+"保护隐私。"
+
+msgid "Email;Mail;IMAP;"
+msgstr "电子邮件;邮件;IMAP;"
+
+msgid ""
+"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
+"libadwaita. Your mail and credentials stay on your machine, remote content "
+"is blocked until you allow it, and there is no telemetry. It works with "
+"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
+"Proton Bridge to a Stalwart of your own."
+msgstr ""
+"Hylki 是一款面向 Wayland 上 GNOME 的桌面电子邮件客户端，使用 Rust 和 "
+"libadwaita 编写。你的邮件和凭据都保留在你的机器上，远程内容在你允许之前会被阻"
+"止，并且没有任何遥测。它支持 IMAP、POP3、JMAP 和 Microsoft 365，并可与从 "
+"iCloud 到 Proton Bridge 再到你自己的 Stalwart 的任何服务器配合使用。"
+
+msgid "Accounts and mail:"
+msgstr "账户与邮件："
+
+msgid ""
+"Multiple accounts with a unified Inboxes view; Google, Microsoft and custom "
+"OAuth sign-in, or an account imported from GNOME Online Accounts"
+msgstr ""
+"多账户与统一的收件箱视图；支持 Google、Microsoft 和自定义 OAuth 登录，或从 "
+"GNOME 在线账户导入的账户"
+
+msgid ""
+"Whole-mailbox sync and search, conversation threading, and changes made on "
+"other devices synced back"
+msgstr "整个邮箱的同步与搜索、会话串接，以及其他设备上所做的更改会同步回来"
+
+msgid ""
+"Folder management, filters, tags, unified and filtered folders, and Trash "
+"and Junk emptied by hand or on a schedule"
+msgstr ""
+"文件夹管理、过滤规则、标签、统一和过滤文件夹，以及手动或按计划清空的垃圾箱和"
+"垃圾邮件"
+
+msgid "An attachment gallery, an Outbox for sends that fail, and Send Later"
+msgstr "附件画廊、用于存放发送失败邮件的发件箱，以及稍后发送"
+
+msgid "Writing:"
+msgstr "撰写："
+
+msgid ""
+"Rich text, Markdown, HTML or plain text, with HTML signatures, inline "
+"images, spell check and undo"
+msgstr ""
+"富文本、Markdown、HTML 或纯文本，支持 HTML 签名、内嵌图片、拼写检查和撤销"
+
+msgid ""
+"Drafts, quote folding, split replies, and forwarding that keeps the "
+"attachments"
+msgstr "草稿、引用折叠、分开回复，以及保留附件的转发"
+
+msgid ""
+"Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
+"Send with Hylki entry in GNOME Files"
+msgstr ""
+"将大文件上传到你自己的 Nextcloud、OneDrive、Dropbox 或 Seafile；在 GNOME 文件"
+"中提供 Send with Hylki 条目"
+
+msgid "Reading:"
+msgstr "阅读："
+
+msgid ""
+"Reader View, your own font and colors, and per-message light or dark "
+"rendering"
+msgstr "阅读视图、自定义字体和颜色，以及每封邮件的浅色或深色渲染"
+
+msgid ""
+"OpenPGP signing, encryption and reading; DKIM, SPF and DMARC checked on "
+"arrival"
+msgstr "OpenPGP 签名、加密和读取；邮件到达时检查 DKIM、SPF 和 DMARC"
+
+msgid ""
+"Meeting invitations answered in place, and one-click unsubscribe from list "
+"mail"
+msgstr "就地回复会议邀请，以及一键退订邮件列表邮件"
+
+msgid "The app:"
+msgstr "应用："
+
+msgid ""
+"Adaptive three-pane layout, five appearance themes, Focus Mode, a "
+"customizable toolbar and swipe actions"
+msgstr "自适应三窗格布局、五种外观主题、专注模式、可自定义的工具栏和滑动操作"
+
+msgid ""
+"Gmail-style single-key shortcuts, notifications with actions, an optional "
+"tray icon and background running"
+msgstr "Gmail 风格的单键快捷键、带操作的通知、可选的托盘图标和后台运行"
+
+msgid ""
+"GNOME Contacts integration, your choice of language and clock, and passwords "
+"kept in the system keyring"
+msgstr "GNOME 联系人集成、自选语言和时钟，以及保存在系统密钥环中的密码"
+
+msgid "The unified inbox in light mode"
+msgstr "浅色模式下的统一收件箱"
+
+msgid "Hyprlab"
+msgstr "Hyprlab"

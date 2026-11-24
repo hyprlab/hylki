@@ -24,14 +24,22 @@ pub(crate) fn search_text_of(m: &Message) -> Box<str> {
     // The Reply-To sender counts as the sender too, so the name a row
     // shows with Settings → Contacts → Show the Reply-To sender (#641)
     // finds it, whichever way the switch is set.
-    let (name, addr);
+    // So does the address behind a Duck Address relay (#708).
+    let (name, mut addr);
     let (from_name, from_addr) = if m.reply_to.is_empty() {
-        (m.from_name.as_str(), m.from_addr.as_str())
+        addr = m.from_addr.clone();
+        (m.from_name.as_str(), &mut addr)
     } else {
         name = format!("{} {}", m.from_name, m.reply_to_name);
         addr = format!("{} {}", m.from_addr, m.reply_to);
-        (name.as_str(), addr.as_str())
+        (name.as_str(), &mut addr)
     };
+    for relay in [m.from_addr.as_str(), m.reply_to.split(',').next().unwrap_or("")] {
+        if let Some(original) = crate::contacts::duck_original(relay) {
+            from_addr.push(' ');
+            from_addr.push_str(&original);
+        }
+    }
     search_text_parts(
         &m.subject,
         from_name,
@@ -84,7 +92,8 @@ pub(crate) fn load_address_names() {
     });
 }
 
-/// A message's recipients, To, Cc and Bcc, each as its name and address.
+/// A message's recipients, To, Cc and Bcc, each as its name and address,
+/// and a Duck Address relay with the address behind it (#708).
 fn recipients_of(m: &Message) -> String {
     let names = ADDRESS_NAMES.read().ok().and_then(|n| n.clone());
     [m.to.as_str(), &m.cc, &m.bcc]
@@ -92,12 +101,20 @@ fn recipients_of(m: &Message) -> String {
         .flat_map(|list| list.split(','))
         .map(str::trim)
         .filter(|a| !a.is_empty())
-        .map(
-            |a| match names.as_ref().and_then(|n| n.get(&a.to_lowercase())) {
+        .map(|a| {
+            let mut entry = match names.as_ref().and_then(|n| n.get(&a.to_lowercase())) {
                 Some(name) => format!("{name} {a}"),
                 None => a.to_string(),
-            },
-        )
+            };
+            let bare = a
+                .rsplit_once('<')
+                .map_or(a, |(_, rest)| rest.trim_end_matches('>'));
+            if let Some(original) = crate::contacts::duck_original(bare) {
+                entry.push(' ');
+                entry.push_str(&original);
+            }
+            entry
+        })
         .collect::<Vec<_>>()
         .join(", ")
 }

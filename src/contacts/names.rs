@@ -1,6 +1,7 @@
 //! The names saved in the address books, shown instead of the names mail
 //! gives itself when Settings → Contacts asks for it (#541), and whether
-//! mail is named by its Reply-To sender (#641).
+//! mail is named by its Reply-To sender (#641) or by the address behind a
+//! Duck Address (#708).
 //!
 //! Only books kept by hand count: a book that fills itself from mail
 //! would hand back whatever name a message once claimed. So a forged
@@ -29,6 +30,17 @@ thread_local! {
 /// and what is on screen wants drawing again.
 pub(crate) fn set_reply_to_sender(on: bool) -> bool {
     if REPLY_TO_SENDER.with(|c| c.replace(on)) == on {
+        return false;
+    }
+    GENERATION.with(|g| g.set(g.get().wrapping_add(1)));
+    true
+}
+
+/// Show the address behind a Duck Address from now on (#708), or the
+/// relay address. True when that changed, and what is on screen wants
+/// drawing again.
+pub(crate) fn set_duck_addresses(on: bool) -> bool {
+    if !super::duck::set_duck_addresses(on) {
         return false;
     }
     GENERATION.with(|g| g.set(g.get().wrapping_add(1)));
@@ -76,7 +88,8 @@ pub(crate) fn contact_names_generation() -> u64 {
     GENERATION.with(Cell::get)
 }
 
-/// The saved name for `addr`, if the switch is on and it has one.
+/// The saved name for `addr`, if the switch is on and it has one. A
+/// Duck Address relay goes by the contact behind it when that is shown.
 pub(crate) fn contact_name(addr: &str) -> Option<String> {
     let addr = addr.trim();
     if addr.is_empty() {
@@ -87,23 +100,33 @@ pub(crate) fn contact_name(addr: &str) -> Option<String> {
         if names.is_empty() {
             return None;
         }
-        names.get(&addr.to_lowercase()).cloned()
+        names.get(&addr.to_lowercase()).cloned().or_else(|| {
+            let original = super::duck::shown_duck(addr)?;
+            names.get(&original.to_lowercase()).cloned()
+        })
     })
 }
 
 /// What to call the sender or recipient `name` <`addr`>: the saved name
-/// when there is one, else the name the mail gives.
+/// when there is one, else the name the mail gives. Mail that gives no
+/// name has its address for one, so a Duck Address relay shows the
+/// address behind it there too.
 pub(crate) fn shown_name<'a>(name: &'a str, addr: &str) -> Cow<'a, str> {
-    match contact_name(addr) {
-        Some(saved) => Cow::Owned(saved),
-        None => Cow::Borrowed(name),
+    if let Some(saved) = contact_name(addr) {
+        return Cow::Owned(saved);
     }
+    if name.trim().eq_ignore_ascii_case(addr.trim()) {
+        if let Some(original) = super::duck::shown_duck(addr) {
+            return Cow::Owned(original);
+        }
+    }
+    Cow::Borrowed(name)
 }
 
 /// [`shown_name`], or the bare address where neither names anyone.
 pub(crate) fn shown_name_or_addr<'a>(name: &'a str, addr: &'a str) -> Cow<'a, str> {
     match shown_name(name, addr) {
-        n if n.trim().is_empty() => Cow::Borrowed(addr),
+        n if n.trim().is_empty() => super::duck::shown_addr(addr),
         n => n,
     }
 }

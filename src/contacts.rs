@@ -18,6 +18,7 @@ mod categories;
 mod csv_import;
 mod demo;
 mod details;
+mod duck;
 mod edit;
 mod eds_write;
 mod names;
@@ -37,6 +38,7 @@ pub(crate) mod thunderbird;
 
 pub(crate) use demo::*;
 pub(crate) use details::*;
+pub(crate) use duck::{duck_original, shown_addr, shown_duck};
 pub(crate) use edit::*;
 pub(crate) use eds_write::*;
 pub(crate) use names::*;

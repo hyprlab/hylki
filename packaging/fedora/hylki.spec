@@ -1,6 +1,7 @@
 %global appid co.hyprlab.Hylki
 # The payload is a binary built outside rpmbuild (tools/build-packages.sh),
-# so there is nothing to extract debuginfo from.
+# with no debug info to extract; its symbol table stays for crash reports
+# (#449).
 %global debug_package %{nil}
 
 Name:           hylki

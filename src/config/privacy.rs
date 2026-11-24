@@ -480,6 +480,10 @@ pub(crate) struct PrivacyFile {
     /// one (#641). Off by default.
     #[serde(default)]
     pub(crate) reply_to_sender: bool,
+    /// A Duck Address relay (`brian_at_gmail.com_jane@duck.com`) shows the
+    /// address behind it (#708). Off by default.
+    #[serde(default)]
+    pub(crate) duck_addresses: bool,
     /// The search field and the bulk bar open under the list instead of
     /// above it (#496). Off by default.
     #[serde(default)]
@@ -832,6 +836,7 @@ impl Default for PrivacyFile {
             contacts_search_open: false,
             contact_names: false,
             reply_to_sender: false,
+            duck_addresses: false,
             list_search_bottom: false,
             list_bulk_bar_bottom: false,
             list_search_start: SearchStart::Everywhere,

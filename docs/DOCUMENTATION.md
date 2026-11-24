@@ -690,6 +690,21 @@ sets Reply-To to its own address is named by the list. Mail downloaded by
 an earlier version shows the Reply-To address in place of the name until
 it is fetched again.
 
+**Show the address behind a Duck Address**, below that, is for DuckDuckGo
+Email Protection. Mail between a Duck Address and someone else goes through
+a relay address that spells out the other person's address:
+`brian_at_gmail.com_jane@duck.com` is brian@gmail.com writing to, or written
+to from, jane@duck.com. With the switch on, the reader shows such an address
+as brian@gmail.com with a `duck.com` mark after it; pointing at the mark
+shows the relay address. The message list and notifications show it the
+same way where the mail gives no name, and a saved contact for
+brian@gmail.com names it. The sender's picture is looked up by
+brian@gmail.com, and a recipient pill in the composer shows it with the
+same mark. Clicking the address, Copy Address, replies and new messages
+keep using the relay address, so the mail still goes through duck.com. The
+switch is off by default. Searching for brian@gmail.com, `from:` and `to:`
+included, finds the relay address however it is set.
+
 A contact's photo is the sender's circle in the message list and in the
 reader's message headers. Without one, the circle shows the sender's
 Gravatar or their domain's logo when those are switched on in **Settings →

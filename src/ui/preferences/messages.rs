@@ -185,6 +185,7 @@ pub(crate) struct PrefInit {
     pub(crate) contacts_search_open: bool,
     pub(crate) contact_names: bool,
     pub(crate) reply_to_sender: bool,
+    pub(crate) duck_addresses: bool,
     pub(crate) list_search_bottom: bool,
     pub(crate) list_bulk_bar_bottom: bool,
     pub(crate) list_search_start: crate::config::SearchStart,
@@ -569,6 +570,8 @@ pub(crate) enum PrefOutput {
     SetContactNames(bool),
     /// Mail is named by its Reply-To sender (#641).
     SetReplyToSender(bool),
+    /// Addresses behind Duck Address relays are shown (#708).
+    SetDuckAddresses(bool),
     /// The list's search field under the rows, not above them (#496).
     SetListSearchBottom(bool),
     /// The list's bulk bar under the rows, not above them (#496).

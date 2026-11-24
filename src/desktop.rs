@@ -7,6 +7,7 @@ pub(crate) mod app_icon;
 pub(crate) mod background;
 pub(crate) mod brand;
 pub(crate) mod console_log;
+pub(crate) mod crash_log;
 pub(crate) mod icon_theme;
 pub(crate) mod launcher_badge;
 pub(crate) mod legacy;

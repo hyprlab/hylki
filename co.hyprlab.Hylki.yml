@@ -158,6 +158,11 @@ modules:
         sha256: cbd790eca560de5e8ec8bd64117a00dfd0bc06b091c8f52d23e44ea00d3e8461
   - name: hylki
     buildsystem: simple
+    # Leave the binary as cargo built it, symbol table included, so a crash
+    # report's backtrace names Hylki's functions (#449). flatpak-builder
+    # would otherwise strip it into a .Debug extension nobody installs.
+    build-options:
+      no-debuginfo: true
     build-commands:
       - cargo --offline fetch --manifest-path Cargo.toml --verbose
       - cargo --offline build --release --verbose

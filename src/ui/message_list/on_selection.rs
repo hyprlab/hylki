@@ -352,10 +352,27 @@ impl MessageList {
         // The "back to list" shortcut: deliberately returns to the
         // selected row (that's the point — resume j/k navigation
         // from what you were reading), so it's allowed to scroll.
-        if !self.shown.is_empty() {
-            let pos = self.selected_positions().first().copied().unwrap_or(0);
+        if self.shown.is_empty() {
+            return;
+        }
+        if let Some(&pos) = self.selected_positions().first() {
             self.shared.set_cursor(None);
             self.focus_row(pos);
+            return;
+        }
+        // Nothing open: the keyboard is already on a row (a second u),
+        // or goes back to the row last read. Never to the top (#392).
+        if self.cursor_position().is_some() {
+            return;
+        }
+        let last = self.shared.cursor().and_then(|c| {
+            self.shown
+                .iter()
+                .position(|m| (m.account_id, m.id) == c)
+        });
+        match last {
+            Some(pos) => self.focus_row(pos),
+            None => self.on_reclaim_focus(),
         }
     }
 

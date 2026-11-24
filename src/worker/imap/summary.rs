@@ -4,7 +4,9 @@
 use async_imap::types::{Fetch, Flag};
 
 use crate::models::Message;
-use crate::worker::headers::{bytes_to_string, format_date, format_timestamp, unescape_quoted};
+use crate::worker::headers::{
+    bytes_to_string, date_in_future, format_date, format_timestamp, unescape_quoted,
+};
 use crate::worker::ids::{merge_msgids, normalize_msgid, normalize_msgids};
 use crate::worker::imap::keywords::{custom_flags, FORWARDED_KEYWORD};
 use crate::worker::imap::structure::structure_has_attachment;
@@ -66,7 +68,7 @@ pub(super) fn summary_from_headers(account_id: u32, fetch: &Fetch, folder_id: u3
             let ts = d.to_timestamp();
             (format_timestamp(ts), ts)
         })
-        .filter(|(_, ts)| *ts > 0)
+        .filter(|(_, ts)| *ts > 0 && !date_in_future(*ts))
         .unwrap_or_else(|| internal_date_summary(fetch));
     let to = parsed.as_ref().map(|p| mp_list(p.to())).unwrap_or_default();
     let cc = parsed.as_ref().map(|p| mp_list(p.cc())).unwrap_or_default();
@@ -166,7 +168,7 @@ pub(super) fn build_summary(account_id: u32, fetch: &Fetch, folder_id: u32) -> M
     let (date, timestamp) = env
         .and_then(|e| e.date.as_deref())
         .map(format_date)
-        .filter(|(_, ts)| *ts > 0)
+        .filter(|(_, ts)| *ts > 0 && !date_in_future(*ts))
         .unwrap_or_else(|| internal_date_summary(fetch));
     let to = address_list(env.and_then(|e| e.to.as_ref()));
     let cc = address_list(env.and_then(|e| e.cc.as_ref()));
@@ -353,7 +355,7 @@ fn address_parts(addr: &async_imap::imap_proto::types::Address) -> (String, Stri
 }
 
 /// Fall back to the server's `INTERNALDATE` (the delivery date) when a message
-/// carries no parseable `Date:` header. Some senders omit `Date:` entirely,
+/// carries no parseable `Date:` header, or one in the future. Some senders omit `Date:` entirely,
 /// which would otherwise leave the row with a blank date label and a zero sort
 /// timestamp (sinking it to the bottom of the list). Returns `("", 0)` if the
 /// server didn't supply an INTERNALDATE either.

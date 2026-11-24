@@ -194,12 +194,18 @@ pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
                 parts.push_str(", ");
             }
             // A saved contact by its saved name alone (#541): the address
-            // is in the right-click menu.
-            let shown = crate::contacts::contact_name(mail);
+            // is in the right-click menu. A Duck Address relay shows the
+            // address behind it, marked (#708).
+            let duck = crate::contacts::shown_duck(mail);
+            let text = match (crate::contacts::contact_name(mail), &duck) {
+                (Some(saved), _) => escape_html(&saved),
+                (None, Some(original)) => escape_html(&entry.replace(mail, original)),
+                (None, None) => escape_html(entry),
+            };
             parts.push_str(&format!(
-                "<span class=\"hylki-mail\" data-mail=\"{}\">{}</span>",
+                "<span class=\"hylki-mail\" data-mail=\"{}\">{text}{}</span>",
                 escape_html(mail).replace('"', "&quot;"),
-                escape_html(shown.as_deref().unwrap_or(entry))
+                duck_mark_html(mail, duck.is_some())
             ));
         }
         lines.push_str(&format!(
@@ -228,10 +234,16 @@ pub(super) fn sender_addr_html(m: &Message) -> String {
     // markup through the attributes.
     let esc = |s: &str| escape_html(s).replace('"', "&quot;");
     if !m.shows_reply_to() || m.from_addr.trim().is_empty() {
+        // A Duck Address relay (#708) shows the address behind it, while
+        // `data-mail` keeps the relay so replies still go through it.
+        let duck = crate::contacts::shown_duck(shown);
+        let text = duck.as_deref().unwrap_or(shown);
         return format!(
             "<span class=\"hylki-addr hylki-mail\" data-mail=\"{0}\" \
-                 data-addr=\"&lt;{0}&gt;\">&lt;{0}&gt;</span>",
-            esc(shown)
+                 data-addr=\"&lt;{1}&gt;\">&lt;{1}&gt;{2}</span>",
+            esc(shown),
+            esc(text),
+            duck_mark_html(shown, duck.is_some())
         );
     }
     // The translation decides where the address sits; only the text around
@@ -250,6 +262,19 @@ pub(super) fn sender_addr_html(m: &Message) -> String {
         "<span class=\"hylki-addr\" data-addr=\"&lt;{0}&gt; {reveal}\">\
              <span class=\"hylki-mail\" data-mail=\"{0}\">&lt;{0}&gt;</span> {via}</span>",
         esc(shown)
+    )
+}
+
+/// The `duck.com` mark after an address shown in place of the Duck Address
+/// relay `relay` (#708), which its tooltip spells out. Empty when `shown`
+/// is false.
+pub(super) fn duck_mark_html(relay: &str, shown: bool) -> String {
+    if !shown {
+        return String::new();
+    }
+    format!(
+        " <span class=\"hylki-duck\" title=\"{}\">duck.com</span>",
+        escape_html(relay.trim()).replace('"', "&quot;")
     )
 }
 

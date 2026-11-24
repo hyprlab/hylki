@@ -187,7 +187,7 @@ impl MessageView {
         };
         let mut seen = HashSet::new();
         for m in &self.thread {
-            let email = key(m.shown_from_addr());
+            let email = key(&m.face_addr());
             if email.is_empty() || !seen.insert(email.clone()) {
                 continue;
             }
@@ -241,7 +241,7 @@ impl MessageView {
         let keys: Vec<String> = self
             .thread
             .iter()
-            .filter(|m| key(m.shown_from_addr()) == email && avatar::own_face(email).is_none())
+            .filter(|m| key(&m.face_addr()) == email && avatar::own_face(email).is_none())
             .map(|m| format!("{}:{}", m.account_id, m.id))
             .collect();
         if keys.is_empty() {

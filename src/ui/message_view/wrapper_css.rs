@@ -274,6 +274,11 @@ pub(super) fn wrapper_css(
          body[data-hylki-pgpicons] .hylki-pgp svg{{width:0.95em;height:0.95em;}}\
          body[data-hylki-pgpicons] .hylki-pgp-text{{display:none;}}\
          .hylki-mail{{cursor:pointer;}}\
+         /* Marks an address shown in place of a Duck Address relay \
+         (#708); the tooltip holds the relay. */\
+         .hylki-duck{{display:inline-block;font-size:0.8em;line-height:1.4;\
+         padding:0 0.5em;border-radius:999px;background:rgba(128,128,128,0.16);\
+         text-decoration:none;}}\
          .hylki-mail:hover{{text-decoration:underline;}}\
          /* Styled after the app's own context menus (context_menu.rs +\
          .context-menu-list in styles.css): same padding, min width,\

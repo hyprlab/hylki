@@ -4907,6 +4907,9 @@ msgstr "В сохраненных адресах отображается имя
 msgid "Show the Reply-To sender"
 msgstr "Показывать отправителя из поля «Кому ответить»"
 
+msgid "Show the address behind a Duck Address"
+msgstr ""
+
 msgid "Layout"
 msgstr "Разметка"
 
