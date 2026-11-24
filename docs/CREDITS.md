@@ -257,6 +257,7 @@ Every language Hylki speaks was given to it by somebody:
 - **Portuguese (Portugal and Brazil):** [Paulo Fino](https://github.com/somepaulo)
 - **Russian:** [Ilya Semenkovich](https://github.com/iliasen) and
   [FLASH911](https://github.com/FLASH911)
+- **Simplified Chinese:** [lancelee25](https://github.com/lancelee25)
 - **Spanish:** [Daniel Miguel](https://github.com/danielmigueltejedor)
 
 Adding or updating one is the easiest way in: see [po/README.md](../po/README.md).
