@@ -118,7 +118,8 @@
   a second and a half leaves the question as it was, without a number.
 
 - **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
-  translated.
+  translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
+  (PR #707 by Paulo Fino), 2627 of 2627 strings each.
 
 ## 1.49.2 — 2026-11-23
 
