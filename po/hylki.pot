@@ -4452,11 +4452,6 @@ msgstr ""
 msgid "Address Books"
 msgstr ""
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-
 msgid "Look again for address books"
 msgstr ""
 

@@ -4821,13 +4821,6 @@ msgstr "LDAP-directory"
 msgid "Address Books"
 msgstr "Adresboeken"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Waar contacten vandaan komen voor contacten, suggesties, afzenderfoto's en "
-"filters. Als je er één uitschakelt, blijft deze buiten Hylki."
-
 msgid "Look again for address books"
 msgstr "Zoek opnieuw naar adresboeken"
 
@@ -9280,3 +9273,10 @@ msgstr "De uniforme inbox in lichte modus"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Waar contacten vandaan komen voor contacten, suggesties, afzenderfoto's "
+#~ "en filters. Als je er één uitschakelt, blijft deze buiten Hylki."

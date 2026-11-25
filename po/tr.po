@@ -4819,14 +4819,6 @@ msgstr "LDAP Dizini"
 msgid "Address Books"
 msgstr "Adres Defterleri"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Kişiler, öneriler, gönderen fotoğrafları ve filtreler için kullanılacak "
-"kişilerin alındığı kaynaklar. Bir kaynağı devre dışı bırakmak, onu Hylki'nin "
-"dışında tutar."
-
 msgid "Look again for address books"
 msgstr "Adres defterlerini yeniden ara"
 
@@ -9229,3 +9221,11 @@ msgstr "Açık kipte birleşik gelen kutusu"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Kişiler, öneriler, gönderen fotoğrafları ve filtreler için kullanılacak "
+#~ "kişilerin alındığı kaynaklar. Bir kaynağı devre dışı bırakmak, onu "
+#~ "Hylki'nin dışında tutar."

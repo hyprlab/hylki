@@ -4896,13 +4896,6 @@ msgstr "LDAP-Verzeichnis"
 msgid "Address Books"
 msgstr "Adressbücher"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Quelle für Kontakte, die Vorschläge des Editors, Absenderbilder und Filter. "
-"Beim Deaktivieren wird diese in Hylki nicht mehr verwendet."
-
 msgid "Look again for address books"
 msgstr "Erneut nach Adressbüchern suchen"
 
@@ -9432,6 +9425,13 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Quelle für Kontakte, die Vorschläge des Editors, Absenderbilder und "
+#~ "Filter. Beim Deaktivieren wird diese in Hylki nicht mehr verwendet."
 
 #~ msgid "What this searches"
 #~ msgstr "Durchsuchte Ordner"

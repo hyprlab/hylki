@@ -5033,11 +5033,6 @@ msgstr "Directory LDAP"
 msgid "Address Books"
 msgstr "Rubrica"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-
 #, fuzzy
 msgid "Look again for address books"
 msgstr "Ricerca di una chiave per {addr} in corso…"

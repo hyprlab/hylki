@@ -4926,13 +4926,6 @@ msgstr "Directori LDAP"
 msgid "Address Books"
 msgstr "Llibretes d'adreces"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"D'on surten els contactes per a Contactes, els suggeriments, les imatges "
-"dels remitents i els filtres. Desactivar-ne una la deixa fora de l'Hylki."
-
 msgid "Look again for address books"
 msgstr "Torna a cercar llibretes d'adreces"
 
@@ -9451,6 +9444,13 @@ msgstr "La bústia d'entrada unificada en mode clar"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "D'on surten els contactes per a Contactes, els suggeriments, les imatges "
+#~ "dels remitents i els filtres. Desactivar-ne una la deixa fora de l'Hylki."
 
 #~ msgid "What this searches"
 #~ msgstr "Què cerca això"

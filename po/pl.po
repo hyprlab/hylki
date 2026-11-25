@@ -5134,11 +5134,6 @@ msgstr ""
 msgid "Address Books"
 msgstr "Książka adresowa"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-
 #, fuzzy
 msgid "Look again for address books"
 msgstr "Wyszukiwanie klucza dla adresu {addr}…"

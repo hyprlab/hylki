@@ -4511,13 +4511,6 @@ msgstr "LDAP 目录"
 msgid "Address Books"
 msgstr "地址簿"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"“联系人”、建议、发件人图片和过滤规则中的联系人来源于此。关闭某一地址簿会将其"
-"从 Hylki 中排除。"
-
 msgid "Look again for address books"
 msgstr "重新查找地址簿"
 
@@ -8718,3 +8711,10 @@ msgstr "浅色模式下的统一收件箱"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "“联系人”、建议、发件人图片和过滤规则中的联系人来源于此。关闭某一地址簿会将"
+#~ "其从 Hylki 中排除。"

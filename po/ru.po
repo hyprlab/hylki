@@ -4864,13 +4864,6 @@ msgstr "Каталог LDAP"
 msgid "Address Books"
 msgstr "Адресные книги"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Откуда берутся контакты для контактов, предложений, изображений отправителей "
-"и фильтров. Отключение одного из них исключает его из Хилки."
-
 msgid "Look again for address books"
 msgstr "Еще раз поищите адресные книги"
 
@@ -9346,6 +9339,13 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Откуда берутся контакты для контактов, предложений, изображений "
+#~ "отправителей и фильтров. Отключение одного из них исключает его из Хилки."
 
 #~ msgid "What this searches"
 #~ msgstr "Что это ищет"

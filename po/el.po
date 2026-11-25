@@ -4913,14 +4913,6 @@ msgstr "Κατάλογος LDAP"
 msgid "Address Books"
 msgstr "Κατάλογοι διευθύνσεων"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Από εδώ προέρχονται οι επαφές για την προβολή Επαφές, τις προτάσεις, τις "
-"φωτογραφίες αποστολέων και τα φίλτρα. Αν απενεργοποιήσετε έναν κατάλογο, δεν "
-"θα εμφανίζεται στο Hylki."
-
 msgid "Look again for address books"
 msgstr "Νέα αναζήτηση καταλόγων διευθύνσεων"
 
@@ -9462,6 +9454,14 @@ msgstr "Τα ενοποιημένα εισερχόμενα σε φωτεινή �
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Από εδώ προέρχονται οι επαφές για την προβολή Επαφές, τις προτάσεις, τις "
+#~ "φωτογραφίες αποστολέων και τα φίλτρα. Αν απενεργοποιήσετε έναν κατάλογο, "
+#~ "δεν θα εμφανίζεται στο Hylki."
 
 #~ msgid "What this searches"
 #~ msgstr "Τι αναζητά αυτή η επιλογή"

@@ -4876,13 +4876,6 @@ msgstr "Directorio LDAP"
 msgid "Address Books"
 msgstr "Libretas de direcciones"
 
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Origen de los contactos para la vista Contactos, las sugerencias, las fotos "
-"de remitentes y los filtros. Al desactivar una libreta, se excluye de Hylki."
-
 msgid "Look again for address books"
 msgstr "Volver a buscar libretas de direcciones"
 
@@ -9383,6 +9376,14 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Origen de los contactos para la vista Contactos, las sugerencias, las "
+#~ "fotos de remitentes y los filtros. Al desactivar una libreta, se excluye "
+#~ "de Hylki."
 
 #~ msgid "What this searches"
 #~ msgstr "Ámbito de búsqueda"

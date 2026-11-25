@@ -243,7 +243,6 @@ impl SimpleComponent for ContactSources {
                             set_child = &adw::PreferencesPage {
                                 add = &adw::PreferencesGroup {
                                     set_title: &i18n("Address Books"),
-                                    set_description: Some(&i18n("Where contacts come from for Contacts, suggestions, sender pictures and filters. Switching one off leaves it out of Hylki.")),
                                     #[wrap(Some)]
                                     set_header_suffix = &gtk::Box {
                                         set_orientation: gtk::Orientation::Horizontal,
