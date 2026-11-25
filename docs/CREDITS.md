@@ -193,8 +193,13 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
 - [**BastianC**](https://github.com/bastiancolpaert) ([#702](https://github.com/hyprlab/hylki/pull/702),
   [#704](https://github.com/hyprlab/hylki/pull/704)): the buttons a message
   row shows on hover, and the Dutch translation.
-- [**Adrià**](https://github.com/adriadam10) ([#705](https://github.com/hyprlab/hylki/pull/705)):
-  signing outgoing mail with S/MIME through gpgsm.
+- [**Adrià**](https://github.com/adriadam10) ([#705](https://github.com/hyprlab/hylki/pull/705),
+  [#711](https://github.com/hyprlab/hylki/pull/711),
+  [#712](https://github.com/hyprlab/hylki/pull/712),
+  [#713](https://github.com/hyprlab/hylki/pull/713)): signing outgoing mail
+  with S/MIME through gpgsm, keeping a folded composer inside a narrow
+  reader, fitting wide mail to the reader, and showing a picture in a
+  message in the preview on a click.
 
 ## Reports, design and ideas
 
@@ -259,6 +264,7 @@ Every language Hylki speaks was given to it by somebody:
   [FLASH911](https://github.com/FLASH911)
 - **Simplified Chinese:** [lancelee25](https://github.com/lancelee25)
 - **Spanish:** [Daniel Miguel](https://github.com/danielmigueltejedor)
+- **Turkish:** [f4646](https://github.com/f4646)
 
 Adding or updating one is the easiest way in: see [po/README.md](../po/README.md).
 

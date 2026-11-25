@@ -21,6 +21,7 @@ thread_row_newest = false
 thread_newest_first = false
 fold_messages = "never"
 always_show_recipients = false
+fit_wide_mail = true
 pgp_labels = false
 key_lookup = false
 keyserver_lookup = false

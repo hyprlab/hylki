@@ -526,12 +526,14 @@ impl Component for MessageView {
                 self.single_message_card = on;
             }
             MessageViewInput::SetPgpLabels(on) => self.on_set_pgp_labels(on),
+            MessageViewInput::SetFitWide(on) => self.on_set_fit_wide(on),
             MessageViewInput::SetCardAttachments(map) => self.on_set_card_attachments(map),
             MessageViewInput::SetCardAttachmentsShown(on) => self.on_set_card_attachments_shown(on),
             MessageViewInput::SetAttachmentDrawer(on) => self.on_set_attachment_drawer(on),
             MessageViewInput::ScrollToAttachments { account_id, id } => {
                 self.on_scroll_to_attachments(account_id, id)
             }
+            MessageViewInput::ShowImage(uri) => super::links::show_image(&uri, &sender),
             MessageViewInput::AttachmentAction {
                 account_id,
                 id,

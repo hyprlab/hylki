@@ -6,7 +6,7 @@
 
 use super::bridge::{parse_bridge, Bridge};
 use super::chrome::ClassRules;
-use super::links::{is_launchable_uri, link_destination, CLICK_LINK_PROBE};
+use super::links::{is_launchable_uri, link_destination, CLICK_IMAGE_PROBE, CLICK_LINK_PROBE};
 use super::menu::{menu_lookup, menu_skipped, MenuHit};
 use super::types::{ChipAction, MessageViewInput};
 use super::MessageView;
@@ -154,8 +154,15 @@ impl MessageView {
         // in the first message that has one, once, a few seconds after a
         // conversation is in, and logs what the click landed on. Exercises
         // the whole link path (frame → policy decision → launcher, #202)
-        // without a pointer.
-        let click_link = std::env::var("HYLKI_SHOWCASE_CLICK_LINK").is_ok();
+        // without a pointer. HYLKI_SHOWCASE_CLICK_IMAGE=1 clicks the first
+        // picture instead (frame → bridge → lightbox).
+        let click_image = std::env::var("HYLKI_SHOWCASE_CLICK_IMAGE").is_ok();
+        let click_link = click_image || std::env::var("HYLKI_SHOWCASE_CLICK_LINK").is_ok();
+        let probe = if click_image {
+            CLICK_IMAGE_PROBE
+        } else {
+            CLICK_LINK_PROBE
+        };
         let clicked = std::rc::Rc::new(std::cell::Cell::new(false));
         // Bumped per load, so the backstop of a page already replaced can't
         // say the next one is ready (and lift its still) before it is.
@@ -179,19 +186,25 @@ impl MessageView {
                 if click_link && !clicked.get() {
                     let view = view.clone();
                     let clicked = clicked.clone();
+                    let shown = ready_sender.clone();
                     gtk::glib::timeout_add_local_once(
                         std::time::Duration::from_secs(4),
                         move || {
                             view.evaluate_javascript(
-                                CLICK_LINK_PROBE,
+                                probe,
                                 None,
                                 None,
                                 None::<&gtk::gio::Cancellable>,
                                 move |r| match r {
                                     Ok(v) => {
                                         let text = v.to_str().to_string();
-                                        if text.starts_with("clicked") {
+                                        if let Some(rest) = text.strip_prefix("clicked ") {
                                             clicked.set(true);
+                                            if click_image {
+                                                shown.input_sender().emit(
+                                                    MessageViewInput::ShowImage(rest.to_string()),
+                                                );
+                                            }
                                         }
                                         tracing::info!("showcase: click-link probe: {text}");
                                     }

@@ -39,6 +39,7 @@ impl AppModel {
             thread_newest_first: self.thread_newest_first,
             fold_messages: self.fold_messages,
             always_show_recipients: self.always_show_recipients,
+            fit_wide_mail: self.fit_wide_mail,
             pgp_labels: self.pgp_labels,
             key_lookup: on_disk.key_lookup,
             keyserver_lookup: on_disk.keyserver_lookup,
@@ -248,6 +249,8 @@ impl AppModel {
             ));
         self.message_view
             .emit(MessageViewInput::SetPgpLabels(self.pgp_labels));
+        self.message_view
+            .emit(MessageViewInput::SetFitWide(self.fit_wide_mail));
         self.message_view
             .emit(MessageViewInput::SetFindBottom(self.reader_find_bottom));
         self.message_view

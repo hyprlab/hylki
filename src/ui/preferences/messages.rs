@@ -37,6 +37,8 @@ pub(crate) struct PrefInit {
     pub(crate) fold_messages: crate::config::FoldMessages,
     /// Reader always shows the recipients line under the sender.
     pub(crate) always_show_recipients: bool,
+    /// Mail a little wider than the reader is fitted to it (#712).
+    pub(crate) fit_wide_mail: bool,
     /// The OpenPGP chip says its verdict in words (#300).
     pub(crate) pgp_labels: bool,
     /// The reader's find bar opens under the message (#392).
@@ -470,6 +472,7 @@ pub(crate) enum PrefOutput {
     SetThreadNewestFirst(bool),
     SetFoldMessages(crate::config::FoldMessages),
     SetAlwaysShowRecipients(bool),
+    SetFitWideMail(bool),
     SetPgpLabels(bool),
     SetReaderFindBottom(bool),
     SetSingleMessageCard(bool),

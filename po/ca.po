@@ -9058,6 +9058,10 @@ msgstr ""
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 torna al valor per defecte."
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "Comença els missatges amb aquesta signatura"
+
 msgid "Use my own font"
 msgstr "Utilitza la meva pròpia font"
 

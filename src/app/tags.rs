@@ -61,9 +61,13 @@ impl AppModel {
     }
 
     /// Whether a tag view covers an account: its own, or for the unified
-    /// Tags row every account merged into the unified section (#267).
+    /// Tags row every account merged into the unified section (#267), all
+    /// of them when none is (#714).
     fn in_tag_scope(&self, scope: Option<u32>, account_id: u32) -> bool {
-        scope.map_or_else(|| self.in_unified(account_id), |id| id == account_id)
+        scope.map_or_else(
+            || self.in_every_account_view(account_id),
+            |id| id == account_id,
+        )
     }
 
     /// The keywords a tag view answers: one, or — the unified Tags row —

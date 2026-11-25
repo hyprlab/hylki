@@ -12,6 +12,18 @@
 // at 90% the body always looked wider than its frame: each pass of the widen
 // loop grew the frame by 1/zoom and centred mail drifted right (#473).
 //
+// A frame widened to its content lays all of its text out at that width,
+// not only the wide part: one 600px signature table in a pane of 527 left
+// every line of the message cut off at the pane's edge, readable only by
+// scrolling sideways. Mail wider than the pane is zoomed down until it fits,
+// however narrow the pane, so nothing scrolls sideways (#712). The zoom is
+// taken again up to four times: a part laid out against the viewport grows
+// as the zoom widens it. The fit is undone before each measure, so a wider
+// pane gives the mail its own size back, and the mail's own inline zoom is
+// put back rather than cleared. A frame given a new document forgets it.
+// Settings → Reading → Scale message width to fit reader switches it off
+// (`hylkiFit`), and wide mail then pans sideways in `.hylki-pan`.
+//
 // A frame is shown once its document is parsed, not at its `load` event:
 // that waits for every remote image and stylesheet in the mail, and a slow
 // or silent image host left the card blank for up to a minute (#487).
@@ -37,15 +49,18 @@
 /// Re-measures as images load and as content reflows.
 pub(super) const SIZE_SCRIPT: &str = "\
 function zf(d){try{return parseFloat(d.defaultView.getComputedStyle(d.documentElement).zoom)||1;}catch(_){return 1;}}\
+function widen(f,b,e,z){f.style.width='';void f.offsetWidth;var w=0;\
+for(var k=0;k<8;k++){w=Math.max(b?Math.ceil(b.scrollWidth*z):0,e?e.scrollWidth:0);\
+if(w<=f.clientWidth+1)break;f.style.width=w+'px';void f.offsetWidth;}return w;}\
 function s(f){if(f._s)return;f._s=1;try{var d=f.contentDocument;if(!d||d.URL==='about:blank')return;\
 f.classList.add('hylki-live');\
 var b=d.body,e=d.documentElement;\
 var sy=window.scrollY;var _r=f.getBoundingClientRect();\
 var above=_r.bottom<=0;var old=_r.height||0;\
-f.style.width='';void f.offsetWidth;\
-var z=zf(d);\
-for(var k=0;k<8;k++){var w=Math.max(b?Math.ceil(b.scrollWidth*z):0,e?e.scrollWidth:0);\
-if(w<=f.clientWidth+1)break;f.style.width=w+'px';void f.offsetWidth;}\
+if(f._fit){e.style.zoom=f._fz;f._fit=0;}\
+var z=zf(d),w=widen(f,b,e,z),p=f.parentNode?f.parentNode.clientWidth:0;\
+if(window.hylkiFit!==false&&p>0&&w>p+1){f._fz=e.style.zoom;f._fit=1;\
+for(var j=0;j<4&&w>p+1;j++){z=z*(p-2)/w;e.style.zoom=z;w=widen(f,b,e,z);}}\
 var prev=f.style.height;f.style.height='0px';void f.offsetHeight;\
 var h=Math.max(b?Math.ceil(b.scrollHeight*z):0,e?e.scrollHeight:0,b?Math.ceil(b.offsetHeight*z):0);\
 if(h>0){f.style.height=h+'px';\
@@ -162,7 +177,7 @@ setTimeout(function(){f.classList.remove('anim');s(f);\
 if(on){var br=b.getBoundingClientRect();\
 if(br.top>innerHeight*0.6)window.scrollBy({top:Math.min(br.top-innerHeight*0.3,to-from),behavior:'smooth'});}},280);});}catch(_){}}\
 function wake(f){var d=f.getAttribute('data-hylki-srcdoc');if(d===null)return;\
-f.removeAttribute('data-hylki-srcdoc');f._i=0;f._c=0;f._u=0;f.srcdoc=d;}\
+f.removeAttribute('data-hylki-srcdoc');f._i=0;f._c=0;f._u=0;f._fit=0;f.srcdoc=d;}\
 function foldCard(sec){if(!sec)return;var on=!sec.classList.contains('hylki-folded');\
 sec.classList.toggle('hylki-folded',on);\
 try{window.webkit.messageHandlers.hylki.postMessage('fold:'+sec.dataset.key+':'+(on?1:0));}catch(_){}\
@@ -239,7 +254,8 @@ var rsecs=document.querySelectorAll('.hylki-msg');\
 for(var ri=0;ri<rsecs.length;ri++){if(rsecs[ri].querySelector('.hylki-dot')&&!rsecs[ri].querySelector('.hylki-loading'))rio.observe(rsecs[ri]);}}\
 window.vf={marks:[],cur:-1};\
 window.vfZoom=function(z){window.vfZ=z;var fs=all();for(var i=0;i<fs.length;i++){try{var d=fs[i].contentDocument;\
-if(d&&d.documentElement)d.documentElement.style.zoom=z;fs[i]._h=0;s(fs[i]);}catch(_){}}};\
+if(d&&d.documentElement)d.documentElement.style.zoom=z;fs[i]._fit=0;fs[i]._h=0;s(fs[i]);}catch(_){}}};\
+window.vfFit=function(on){window.hylkiFit=on;var fs=all();for(var i=0;i<fs.length;i++){fs[i]._h=0;s(fs[i]);}};\
 window.vfDocs=function(){var ds=[document];var fs=document.querySelectorAll('iframe');\
 for(var i=0;i<fs.length;i++){try{if(fs[i].contentDocument)ds.push(fs[i].contentDocument);}catch(_){}}return ds;};\
 window.vfCss=function(d){if(d.getElementById('hylki-find-css'))return;\

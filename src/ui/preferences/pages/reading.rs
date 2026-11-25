@@ -14,6 +14,7 @@ pub(in crate::ui::preferences) struct ReadingPage {
     pub(in crate::ui::preferences) theme_switch_row: adw::SwitchRow,
     pub(in crate::ui::preferences) account_chip_row: adw::SwitchRow,
     pub(in crate::ui::preferences) reader_zoom_row: adw::ComboRow,
+    pub(in crate::ui::preferences) fit_wide_row: adw::SwitchRow,
     pub(in crate::ui::preferences) override_fonts_row: adw::SwitchRow,
     pub(in crate::ui::preferences) reader_font_row: adw::ActionRow,
     pub(in crate::ui::preferences) reader_font_button: gtk::FontDialogButton,
@@ -81,6 +82,14 @@ impl ReadingPage {
                         set_subtitle: &i18n("Ctrl+0 returns to the default."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeReaderZoom(row.selected()));
+                        },
+                    },
+
+                    #[name = "fit_wide_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Scale message width to fit reader"),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetFitWideMail(row.is_active()));
                         },
                     },
 
@@ -256,6 +265,7 @@ impl ReadingPage {
             theme_switch_row,
             account_chip_row,
             reader_zoom_row,
+            fit_wide_row,
             override_fonts_row,
             reader_font_row,
             reader_font_button,

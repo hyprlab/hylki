@@ -481,7 +481,11 @@ impl AppModel {
             self.reader_split_top.set_visible(false);
             let overlay = gtk::Overlay::new();
             overlay.set_child(Some(split));
-            overlay.add_overlay(&self.reader_compose_revealer);
+            cover_slot::mount(
+                &overlay,
+                &self.reader_compose_revealer,
+                Some(widgets.reader_bin.upcast_ref()),
+            );
             // Over everything: the send morph's stage covers the whole pane.
             overlay.add_overlay(&self.send_morph);
             widgets.reader_bin.set_child(Some(&overlay));

@@ -136,6 +136,10 @@ fn message_view_output_msg(out: MessageViewOutput) -> AppMsg {
             id,
             show,
         },
+        MessageViewOutput::ShowImage(att) => AppMsg::ShowLightbox {
+            items: vec![att],
+            start: 0,
+        },
         MessageViewOutput::OpenWindow(m) => AppMsg::OpenMessageWindow {
             message: *m,
             thread: Vec::new(),

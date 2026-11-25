@@ -49,6 +49,7 @@ impl Preferences {
             .always_show_recipients_row
             .set_active(init.always_show_recipients);
         widgets.reading.pgp_labels_row.set_active(init.pgp_labels);
+        widgets.reading.fit_wide_row.set_active(init.fit_wide_mail);
         let find_place = &widgets.reading.find_place_row;
         find_place.set_model(Some(&gtk::StringList::new(&[
             &i18n("Top of the message"),

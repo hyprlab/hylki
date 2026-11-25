@@ -355,7 +355,7 @@ impl Component for ContactsPage {
             decoding: std::collections::HashSet::new(),
         };
         let widgets = view_output!();
-        widgets.detail_overlay.add_overlay(&compose_slot);
+        crate::ui::cover_slot::mount(&widgets.detail_overlay, &compose_slot, None);
 
         // Delete on the list asks to remove the contact being looked at. The
         // controller sits on the list, not the page, so Delete inside the

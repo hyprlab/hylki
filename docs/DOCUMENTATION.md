@@ -453,6 +453,11 @@ the arrow keys move through that message's files. The attachment gallery and
 the composer have **Preview** in a file's right-click menu too. Without
 Sushi, **Space** does what a double click does.
 
+A click on a picture in a message's text shows it in the same preview. A
+picture from the sender's server comes from the copy the reader already
+shows, so nothing more is fetched. A picture that is a link follows the link
+instead, and pictures under 48 pixels, such as icons, are left alone.
+
 **Settings → Reading → Space shows pictures and PDFs in Sushi** sends
 those to Sushi too, in the drawer and in the reader. Off, as it starts,
 **Space** shows them in Hylki's own preview.
@@ -2309,6 +2314,16 @@ Above the subject, the message header names the account the message is in,
 in the account's color. **Settings → Reading → Show account in message
 header** hides it, in the main window and in a message's own window. It is
 stored as `account_chip` in `privacy.toml`.
+
+### Mail wider than the reader
+
+A message laid out wider than the reader, a 600-pixel newsletter or
+signature in a reader on half a screen, is scaled down to fit it, however
+narrow the reader, so nothing in it scrolls sideways. The narrower the
+reader, the smaller its text. A wider window gives the message back its own
+size. **Settings → Reading → Scale message width to fit reader**, on by
+default, turns this off, and a message wider than the reader then keeps its
+own size and scrolls sideways. It is stored as `fit_wide_mail` in `privacy.toml`.
 
 ### Finding in a message
 

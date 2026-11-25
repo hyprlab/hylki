@@ -255,6 +255,12 @@ impl AppModel {
                     self.popouts_emit(|| MessageWindowInput::SetReaderDefault(policy));
                 }
             }
+            PrefOutput::SetFitWideMail(on) => {
+                if pref!(self.fit_wide_mail = on) {
+                    self.message_view.emit(MessageViewInput::SetFitWide(on));
+                    self.popouts_emit(|| MessageWindowInput::SetFitWide(on));
+                }
+            }
             PrefOutput::SetPgpLabels(on) => {
                 if pref!(self.pgp_labels = on) {
                     self.message_view.emit(MessageViewInput::SetPgpLabels(on));

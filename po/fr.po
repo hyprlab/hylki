@@ -8989,6 +8989,10 @@ msgstr "Le compte auquel appartient un message, au-dessus de son objet."
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 revient à la valeur par défaut."
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "Démarrer les messages avec cette signature"
+
 msgid "Use my own font"
 msgstr "Utiliser ma propre police"
 

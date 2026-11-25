@@ -80,6 +80,10 @@ _TRANSLATIONS = {
         "label": "Отправить через Hylki",
         "tip": "Прикрепить выбранные файлы к новому сообщению в Hylki",
     },
+    "tr": {
+        "label": "Hylki ile Gönder",
+        "tip": "Seçili dosyaları Hylki'de yeni bir iletiye ekle",
+    },
 }
 
 

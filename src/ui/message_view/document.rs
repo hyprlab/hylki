@@ -24,6 +24,18 @@ use crate::i18n::{i18n, ni18n_f};
 use crate::models::Message;
 use relm4::prelude::*;
 
+thread_local! {
+    /// Settings → Reading → Scale message width to fit reader. Held here
+    /// rather than by each reader, so a pop-out window renders with it too.
+    static FIT_WIDE: std::cell::Cell<bool> = const { std::cell::Cell::new(true) };
+}
+
+/// Hand the readers the switch that fits mail a little wider than the pane
+/// to it (#712).
+pub(super) fn set_fit_wide(on: bool) {
+    FIT_WIDE.with(|c| c.set(on));
+}
+
 /// The wrapper's Content-Security-Policy and its one script (the frame
 /// sizer), under a nonce made for this render.
 fn wrapper_scripts() -> (String, String) {
@@ -66,8 +78,10 @@ fn wrapper_scripts() -> (String, String) {
                 i18n("Copy Address"),
                 i18n("Add to Contacts"),
             ]);
+            let fit = FIT_WIDE.with(std::cell::Cell::get);
             format!(
-                "<script nonce=\"{n}\">var vireoQT={qt};var hylkiAM={am};{SIZE_SCRIPT}</script>"
+                "<script nonce=\"{n}\">var vireoQT={qt};var hylkiAM={am};var hylkiFit={fit};\
+                 {SIZE_SCRIPT}</script>"
             )
         }
         None => String::new(),

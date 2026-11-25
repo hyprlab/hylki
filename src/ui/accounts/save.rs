@@ -47,7 +47,17 @@ impl AccountsWindow {
         widgets: &AccountsWindowWidgets,
         sender: ComponentSender<Self>,
     ) {
-        widgets.form.host_row.remove_css_class("error");
+        let form = &widgets.form;
+        let checked: [&gtk::Widget; 5] = [
+            form.host_row.upcast_ref(),
+            form.user_row.upcast_ref(),
+            form.pass_row.upcast_ref(),
+            form.smtp_user_row.upcast_ref(),
+            form.smtp_pass_row.upcast_ref(),
+        ];
+        for row in checked {
+            row.remove_css_class("error");
+        }
         let mut account = read_account(widgets, self.saved_emoji(), self.saved_avatar());
         account.aliases = self.alias_edits.clone();
         account.hidden_folders = self.hidden_edits.clone();
@@ -98,16 +108,34 @@ impl AccountsWindow {
         // fields Hylki does own: label, signature, color, aliases.
         // On This Computer (#552) has no connection at all.
         let is_goa_edit = account.goa_id.is_some() || account.is_local();
-        if !is_goa_edit
-            && (account.imap_host.is_empty()
-                || account.username.is_empty()
-                || !password_ok
-                || !oauth_ready
-                || (account.smtp_separate
-                    && (account.smtp_username.is_empty() || account.smtp_password.is_empty())))
-        {
-            widgets.form.host_row.add_css_class("error");
-            return;
+        if !is_goa_edit {
+            // Each empty field is marked on its own row (#716): marking
+            // only the server made a missing password look like a wrong
+            // host name.
+            let smtp = account.smtp_separate;
+            let missing: [(bool, &gtk::Widget); 5] = [
+                (account.imap_host.is_empty(), form.host_row.upcast_ref()),
+                (account.username.is_empty(), form.user_row.upcast_ref()),
+                (!password_ok, form.pass_row.upcast_ref()),
+                (
+                    smtp && account.smtp_username.is_empty(),
+                    form.smtp_user_row.upcast_ref(),
+                ),
+                (
+                    smtp && account.smtp_password.is_empty(),
+                    form.smtp_pass_row.upcast_ref(),
+                ),
+            ];
+            let mut blocked = !oauth_ready;
+            for (empty, row) in missing {
+                if empty {
+                    row.add_css_class("error");
+                    blocked = true;
+                }
+            }
+            if blocked {
+                return;
+            }
         }
         self.pending_oauth_refresh = None;
 

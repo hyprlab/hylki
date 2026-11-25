@@ -1,6 +1,7 @@
 //! The pointer over the reader's cards: a click on a card's text selects the
-//! card, and a drag from a card's header carries the message to a folder in
-//! the sidebar, as a drag of its row in the list does.
+//! card, a click on a picture in it shows the picture in the lightbox, and a
+//! drag from a card's header carries the message to a folder in the sidebar,
+//! as a drag of its row in the list does.
 //!
 //! Both are watched on the GTK side. The body frames run no scripts, so the
 //! page never hears their clicks, and WebKit claims every press for itself,
@@ -38,6 +39,11 @@ pub(super) struct PointerPress {
     dragging: bool,
     /// The drag under way, kept alive until it ends.
     drag: Option<gdk::Drag>,
+    /// The picture WebKit last said is under the pointer, when it is not a
+    /// link (a linked one follows its link).
+    under_image: Option<String>,
+    /// The picture the press went down on.
+    image: Option<String>,
 }
 
 pub(super) type Pointer = Rc<RefCell<PointerPress>>;
@@ -63,10 +69,13 @@ impl MessageView {
                     let serial = {
                         let mut p = pointer.borrow_mut();
                         let serial = p.serial + 1;
+                        let under_image = p.under_image.take();
                         *p = PointerPress {
                             at: Some(at),
                             device: event.device(),
                             serial,
+                            image: under_image.clone(),
+                            under_image,
                             ..PointerPress::default()
                         };
                         serial
@@ -96,16 +105,28 @@ impl MessageView {
                     Propagation::Stop
                 }
                 gdk::EventType::ButtonRelease if primary => {
-                    let (from, dragging) = {
+                    let (from, dragging, image) = {
                         let mut p = pointer.borrow_mut();
                         p.handle = None;
-                        (p.at.take(), p.dragging)
+                        (p.at.take(), p.dragging, p.image.take())
                     };
                     if dragging {
                         return Propagation::Stop;
                     }
                     if from.is_some_and(|from| distance(from, at) <= CLICK_SLOP) {
-                        pick_card_at(&view, at, event.modifier_state());
+                        let state = event.modifier_state();
+                        pick_card_at(&view, at, state);
+                        // Shift and Ctrl clicks pick cards; only a plain one
+                        // opens the picture.
+                        let plain = !state.intersects(
+                            gdk::ModifierType::SHIFT_MASK
+                                | gdk::ModifierType::CONTROL_MASK
+                                | gdk::ModifierType::ALT_MASK
+                                | gdk::ModifierType::META_MASK,
+                        );
+                        if let Some(uri) = image.filter(|_| plain) {
+                            sender.emit(MessageViewInput::ShowImage(uri));
+                        }
                     }
                     Propagation::Proceed
                 }
@@ -113,6 +134,15 @@ impl MessageView {
             }
         });
         self.webview.add_controller(legacy);
+        let pointer = self.pointer.clone();
+        self.webview
+            .connect_mouse_target_changed(move |_view, hit, _modifiers| {
+                pointer.borrow_mut().under_image = (hit.context_is_image()
+                    && !hit.context_is_link())
+                .then(|| hit.image_uri())
+                .flatten()
+                .map(|u| u.to_string());
+            });
     }
 
     /// Start dragging the card `key` (or the selected cards, when it is one

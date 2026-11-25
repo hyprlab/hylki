@@ -17,12 +17,20 @@
 
 use adw::prelude::*;
 use gtk::{glib, subclass::prelude::*};
+use std::cell::RefCell;
 
 mod imp {
     use super::*;
 
     #[derive(Default)]
-    pub(crate) struct CoverBin;
+    pub(crate) struct CoverBin {
+        /// A pane that ignores its child's minimum (an `AdwBreakpointBin`
+        /// with breakpoints has none but its own size request), and the
+        /// width it asks for with no composer in the slot.
+        pub(super) floor: RefCell<Option<(glib::WeakRef<gtk::Widget>, i32)>>,
+        /// The composer whose width request the floor follows.
+        pub(super) watch: RefCell<Option<(gtk::Widget, glib::SignalHandlerId)>>,
+    }
 
     #[glib::object_subclass]
     impl ObjectSubclass for CoverBin {
@@ -92,6 +100,43 @@ pub(crate) fn new() -> gtk::Revealer {
     r
 }
 
+/// Lay `slot` over `overlay`'s pane. The composer it brings is drawn over
+/// the pane, so the overlay would leave it out of the pane's minimum, and
+/// a composer whose header folds no narrower than the pane's floor (longer
+/// labels than English) was cut off at the window's edge: the composer's
+/// floor counts too. Once a closed composer has slid away and been taken
+/// out (`set_child` with `None`), the slot asks for nothing.
+///
+/// `floor` is a pane above the overlay that drops its child's minimum (an
+/// `AdwBreakpointBin`): while a composer is in the slot, its width request
+/// goes no lower than the composer's.
+pub(crate) fn mount(overlay: &gtk::Overlay, slot: &gtk::Revealer, floor: Option<&gtk::Widget>) {
+    overlay.add_overlay(slot);
+    overlay.set_measure_overlay(slot, true);
+    if let (Some(pane), Some(bin)) = (floor, cover_bin(slot)) {
+        bin.imp()
+            .floor
+            .replace(Some((pane.downgrade(), pane.width_request())));
+    }
+}
+
+fn cover_bin(slot: &gtk::Revealer) -> Option<CoverBin> {
+    slot.child()?.downcast().ok()
+}
+
+/// Raise the floor pane to `composer`'s width request, or back to its own
+/// with none.
+fn follow_floor(bin: &CoverBin, composer: Option<&gtk::Widget>) {
+    let Some((pane, base)) = bin.imp().floor.borrow().clone() else {
+        return;
+    };
+    let Some(pane) = pane.upgrade() else { return };
+    let want = composer.map_or(base, |c| base.max(c.width_request()));
+    if pane.width_request() != want {
+        pane.set_width_request(want);
+    }
+}
+
 /// The composer in `slot`, if one is there.
 pub(crate) fn child(slot: &gtk::Revealer) -> Option<gtk::Widget> {
     slot.child()?.first_child()
@@ -99,11 +144,23 @@ pub(crate) fn child(slot: &gtk::Revealer) -> Option<gtk::Widget> {
 
 /// Put `widget` in `slot`, or empty it with `None`.
 pub(crate) fn set_child(slot: &gtk::Revealer, widget: Option<&gtk::Widget>) {
-    let Some(bin) = slot.child() else { return };
+    let Some(bin) = cover_bin(slot) else { return };
+    if let Some((old, id)) = bin.imp().watch.take() {
+        old.disconnect(id);
+    }
     while let Some(old) = bin.first_child() {
         old.unparent();
     }
     if let Some(w) = widget {
         w.set_parent(&bin);
+        // The composer raises its floor once its header folds.
+        let weak = bin.downgrade();
+        let id = w.connect_notify_local(Some("width-request"), move |w, _| {
+            if let Some(bin) = weak.upgrade() {
+                follow_floor(&bin, Some(w));
+            }
+        });
+        bin.imp().watch.replace(Some((w.clone(), id)));
     }
+    follow_floor(&bin, widget);
 }
