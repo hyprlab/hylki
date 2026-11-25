@@ -431,6 +431,7 @@ impl Component for MessageView {
         model.watch_loads(&sender);
         model.watch_context_menu(&sender);
         model.watch_bridge(&sender);
+        model.watch_image_clicks(&sender);
         model.watch_theme(&sender);
 
         let header_tags = gtk::Box::new(gtk::Orientation::Horizontal, 4);
@@ -532,6 +533,7 @@ impl Component for MessageView {
             MessageViewInput::ScrollToAttachments { account_id, id } => {
                 self.on_scroll_to_attachments(account_id, id)
             }
+            MessageViewInput::ShowImage(uri) => super::links::show_image(&uri, &sender),
             MessageViewInput::AttachmentAction {
                 account_id,
                 id,

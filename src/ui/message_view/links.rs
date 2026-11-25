@@ -16,6 +16,14 @@ var who=el?el.tagName+(el.className?'.'+el.className:''):'nothing';a.click();\
 return 'clicked '+a.href+' at '+Math.round(x)+','+Math.round(y)+' over '+who;}\
 return 'no web link in any frame';})()";
 
+/// The HYLKI_SHOWCASE_CLICK_IMAGE probe: the address of the first picture
+/// in any message frame, for the reader to show as a click on it would.
+pub(super) const CLICK_IMAGE_PROBE: &str =
+    "(function(){var fs=document.querySelectorAll('iframe.hylki-frame');\
+for(var i=0;i<fs.length;i++){var d=fs[i].contentDocument;if(!d)continue;\
+var m=d.querySelector('img');if(m)return 'clicked '+m.src;}\
+return 'no picture in any frame';})()";
+
 /// Whether a clicked link may be handed to the desktop's default handler.
 ///
 /// An allowlist, not a blocklist: every scheme a desktop registers is a program
@@ -175,3 +183,53 @@ pub(super) fn remote_image_name(url: &str, content_type: &str) -> String {
         }
     }
 }
+
+/// Show a picture clicked in a message body in the app's lightbox: from the
+/// message's own bytes, or from the cache a remote one was shown through, so
+/// the click sends nothing new to the sender (as "Save Image As…", #569). A
+/// remote picture that was blocked is only an address, and shows nothing,
+/// as do icons and spacers smaller than [`MIN_SHOWN`] either way.
+pub(super) fn show_image(uri: &str, sender: &relm4::ComponentSender<super::MessageView>) {
+    let show = |name: &str, data: Vec<u8>, sender: &relm4::ComponentSender<super::MessageView>| {
+        let small = gtk::gdk::Texture::from_bytes(&gtk::glib::Bytes::from(&data)).is_ok_and(|t| {
+            use gtk::prelude::TextureExt;
+            t.width() < MIN_SHOWN || t.height() < MIN_SHOWN
+        });
+        if small {
+            return;
+        }
+        // Named by its content, the lightbox routing by extension; an SVG
+        // has no magic bytes and keeps the name its type gave it.
+        let name = match name.rsplit_once('.') {
+            Some((_, "svg")) => name.to_string(),
+            split => format!(
+                "{}.{}",
+                split.map_or(name, |(stem, _)| stem),
+                crate::models::image_ext(&data)
+            ),
+        };
+        let _ = sender.output(super::types::MessageViewOutput::ShowImage(
+            crate::models::Attachment {
+                name,
+                data: data.into(),
+            },
+        ));
+    };
+    if let Some((mime, data)) = own_picture(uri) {
+        show(&default_image_name(&mime), data, sender);
+    } else if let Some(web) = crate::services::remote_content::web_url(uri) {
+        let sender = sender.clone();
+        crate::services::remote_content::get(uri, move |entry| match entry {
+            Some(e) => show(
+                &remote_image_name(&web, &e.content_type),
+                e.bytes.to_vec(),
+                &sender,
+            ),
+            None => tracing::warn!("show image: the picture could not be loaded"),
+        });
+    }
+}
+
+/// The smallest picture a click shows, in either direction: below it, a
+/// logo in a signature, an icon or a tracking pixel.
+const MIN_SHOWN: i32 = 48;

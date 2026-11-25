@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **New: a picture in a message opens in the lightbox.** A click on a
+  picture in a message body shows it over the whole window, as an attached
+  one shows, to zoom in on, save or print. A remote picture is shown from
+  the copy the reader already loaded, so the click fetches nothing; a
+  picture inside a link still follows the link, and icons and spacers
+  smaller than 48 pixels are left alone.
+
 - **New: the address behind a Duck Address** (#708, requested by
   somepaulo). Settings → Contacts → Show the address behind a Duck Address
   shows a DuckDuckGo Email Protection relay address such as
