@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.50.0-beta.4 — 2026-11-25
+
+- **New: a picture in a message opens in the lightbox** (#713, by
+  adriadam10). A click on a picture in a message body shows it over the
+  whole window, as an attached one shows, to zoom in on, save or print. A
+  remote picture is shown from the copy the reader already loaded, so the
+  click fetches nothing. A picture inside a link still follows the link, and
+  icons and spacers smaller than 48 pixels are left alone.
+
+- **Fixed: mail wider than the reader was cut off at its edge** (#712, fixed
+  by adriadam10). The reader widens a message to its widest part, so one
+  600-pixel signature laid every line of the mail out at 600 pixels, and in a
+  narrow reader (a window on half a screen) the end of each line was out of
+  sight, there only by scrolling sideways. Mail wider than the reader is now
+  scaled down to fit it, however narrow the reader, and nothing scrolls
+  sideways. Settings → Reading → Scale message width to fit reader, on by
+  default, turns it off.
+
+- **Fixed: the composer was cut off at the window's edge in a narrow reader**
+  (#711, fixed by adriadam10). In languages whose labels are longer than English,
+  such as Spanish, the folded composer header needs more than the reader's
+  441-pixel floor, so with the window tiled to half the screen the composer
+  ran past the right edge, its body text with it. While a composer covers
+  the reader or a contact card, that pane now goes no narrower than the
+  composer, and the list gives up the difference.
+
+- **Fixed: tags and smart folders showed no messages** (#714, reported by
+  bstegmaier75). With Show in All Inboxes off for every account, the Tags
+  rows above the accounts and a smart folder set to no account looked in no
+  account at all. They now cover every account when none is in All Inboxes.
+
+- **Fixed: a blank password marked the server as wrong** (#716, reported by
+  perdakovich). When an account would not save, the account editor turned
+  the incoming server row red whatever field was missing. It now marks the
+  empty field itself: the incoming server, or the username or password for
+  incoming or outgoing mail.
+
+- **Translations:** Turkish (PR #710 by f4646), new, 2617 of 2629 strings
+  translated.
+
 ## 1.50.0-beta.3 — 2026-11-24
 
 - **New: the address behind a Duck Address** (#708, requested by

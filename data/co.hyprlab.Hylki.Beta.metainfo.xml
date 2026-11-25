@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.50.0-beta.4" date="2026-11-25" type="development">
+      <description>
+        <p>A picture in a message opens in the lightbox, and mail wider than the reader is scaled down to fit it. A folded composer stays inside a narrow reader, tags and smart folders show their mail when no account is in All Inboxes, and the account editor marks the field that is empty. Hylki is translated into Turkish.</p>
+      </description>
+    </release>
     <release version="1.50.0-beta.3" date="2026-11-24" type="development">
       <description>
         <p>A DuckDuckGo Duck Address can show the address behind it, and a crash writes a report with a backtrace that an exported log includes. The account ring in All Inboxes is whole on GTK 4.18, a second u no longer scrolls the list to the top, and a message dated centuries ahead is dated by its arrival. Portuguese is complete again, and Hylki is translated into Simplified Chinese.</p>
