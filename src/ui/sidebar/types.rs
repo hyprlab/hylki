@@ -94,7 +94,7 @@ pub(super) fn row_icon(row: UnifiedRow) -> &'static str {
     match row {
         UnifiedRow::Kind(kind) => kind.icon(),
         UnifiedRow::Favorites => "user-bookmarks-symbolic",
-        UnifiedRow::Filtered => "filter-folder-symbolic",
+        UnifiedRow::Filtered => "filter-symbolic",
         UnifiedRow::Tags => "tag-outline-symbolic",
         UnifiedRow::Smart => "folder-saved-search-symbolic",
         UnifiedRow::Contacts => "x-office-address-book-symbolic",

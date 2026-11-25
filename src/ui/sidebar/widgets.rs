@@ -296,7 +296,7 @@ pub(super) fn with_unread_overlay(
     (overlay, badge)
 }
 
-/// The icon a folder row in an account wears: the filter-folder glyph in
+/// The icon a folder row in an account wears: the filter glyph in
 /// the account's color where a filter rule files into it, a tag for a Gmail
 /// label, otherwise its kind's own.
 pub(super) fn filter_icon(section: &SectionData, folder: &Folder) -> FolderGlyph {
@@ -328,11 +328,11 @@ pub(super) enum FolderGlyph {
 }
 
 /// The icon of a folder a filter files into: a custom folder wears the
-/// filter-folder glyph, a main folder (Archive, Junk…) keeps its own —
+/// filter glyph, a main folder (Archive, Junk…) keeps its own —
 /// either in the account's color, which is what says "part of a filter".
 pub(super) fn filtered_folder_icon(folder: &Folder, account_id: u32) -> gtk::Image {
     let name = if folder.kind == FolderKind::Custom {
-        "filter-folder-symbolic"
+        "filter-symbolic"
     } else {
         folder.kind.icon()
     };

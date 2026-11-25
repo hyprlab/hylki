@@ -32,7 +32,7 @@ pub(super) const SIDE_PAGES: &[(&str, &[SidePage])] = &[
             SidePage {
                 id: "filters",
                 title: i18n_noop("Filters"),
-                icon: "filter-folder-symbolic",
+                icon: "filter-symbolic",
                 accounts: true,
             },
             SidePage {

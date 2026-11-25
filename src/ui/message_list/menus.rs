@@ -102,7 +102,7 @@ impl MessageList {
                 item(
                     RowAction::CreateFilter,
                     &i18n("Create Filter from Message…"),
-                    "filter-folder-symbolic",
+                    "filter-symbolic",
                 ),
                 item(
                     RowAction::AddContact,

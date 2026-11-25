@@ -206,7 +206,7 @@ fn card_create_sections(
             item(
                 RowAction::CreateFilter,
                 i18n("Create Filter from Message…"),
-                "filter-folder",
+                "filter",
             ),
             item(
                 RowAction::AddContact,
