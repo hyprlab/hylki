@@ -3,12 +3,12 @@
 /// The narrowest the reader pane may be squeezed. The header's right-hand
 /// actions collapse into the overflow menu below READER_ACTIONS_BREAKPOINT
 /// (the left group — Reply … Delete — stays). What binds is the composer
-/// written in the reader's place: it lies over the pane, so the window's
-/// floor never measures it, and its header (Cancel, Save Draft, ⋯, Send,
-/// close) runs past a narrower pane. Kept modest on purpose: the window's
-/// total minimum width must stay under half of a 1920px screen, or GNOME
-/// refuses to tile the window to the left/right screen edge (it only offers
-/// the top-edge maximize).
+/// written in the reader's place: its folded header (Cancel, Save Draft, ⋯,
+/// Send, close) needs this much in English. Longer labels raise the pane's
+/// floor while a composer is open (cover_slot::mount). Kept modest on
+/// purpose: the window's total minimum width must stay under half of a
+/// 1920px screen, or GNOME refuses to tile the window to the left/right
+/// screen edge (it only offers the top-edge maximize).
 pub(super) const READER_MIN_WIDTH: i32 = 441;
 
 /// Byte budgets for the in-RAM body and attachment caches (issue #106). Bodies
