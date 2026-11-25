@@ -453,6 +453,11 @@ the arrow keys move through that message's files. The attachment gallery and
 the composer have **Preview** in a file's right-click menu too. Without
 Sushi, **Space** does what a double click does.
 
+A click on a picture in a message's text shows it in the same preview. A
+picture from the sender's server comes from the copy the reader already
+shows, so nothing more is fetched. A picture that is a link follows the link
+instead, and pictures under 48 pixels, such as icons, are left alone.
+
 **Settings → Reading → Space shows pictures and PDFs in Sushi** sends
 those to Sushi too, in the drawer and in the reader. Off, as it starts,
 **Space** shows them in Hylki's own preview.

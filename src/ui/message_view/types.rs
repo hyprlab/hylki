@@ -77,6 +77,9 @@ pub(crate) enum MessageViewInput {
         account_id: u32,
         id: u32,
     },
+    /// A picture in a message body was clicked: its address as the page
+    /// loaded it (`data:`, a lifted inline picture, or a cached remote one).
+    ShowImage(String),
     /// A card's attachment chip was clicked (open), its save button, or
     /// Space was pressed on it (#213, #625).
     AttachmentAction {
@@ -489,6 +492,8 @@ pub(crate) enum MessageViewOutput {
         y: f64,
         hit: MenuHit,
     },
+    /// Show this picture from a message body in the app's lightbox.
+    ShowImage(crate::models::Attachment),
     /// An email address in a card header was clicked — open a composer to it.
     ComposeTo(String),
     /// "Add to Contacts" picked on an address's right-click menu.

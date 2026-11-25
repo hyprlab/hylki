@@ -195,9 +195,11 @@ shows. Want to join them? See [CONTRIBUTING.md](CONTRIBUTING.md).
   row shows on hover, and the Dutch translation.
 - [**Adrià**](https://github.com/adriadam10) ([#705](https://github.com/hyprlab/hylki/pull/705),
   [#711](https://github.com/hyprlab/hylki/pull/711),
-  [#712](https://github.com/hyprlab/hylki/pull/712)): signing outgoing mail
+  [#712](https://github.com/hyprlab/hylki/pull/712),
+  [#713](https://github.com/hyprlab/hylki/pull/713)): signing outgoing mail
   with S/MIME through gpgsm, keeping a folded composer inside a narrow
-  reader, and fitting wide mail to the reader.
+  reader, fitting wide mail to the reader, and showing a picture in a
+  message in the preview on a click.
 
 ## Reports, design and ideas
 

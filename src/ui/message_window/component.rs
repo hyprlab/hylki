@@ -454,5 +454,9 @@ fn from_reader(out: MessageViewOutput) -> MessageWindowInput {
             action,
         },
         MessageViewOutput::AddContactAddr(addr) => MessageWindowInput::AddContactAddr(addr),
+        MessageViewOutput::ShowImage(att) => MessageWindowInput::Lightbox {
+            items: vec![att],
+            start: 0,
+        },
     }
 }

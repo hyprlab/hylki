@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **New: a picture in a message opens in the lightbox** (#713, by
+  adriadam10). A click on a picture in a message body shows it over the
+  whole window, as an attached one shows, to zoom in on, save or print. A
+  remote picture is shown from the copy the reader already loaded, so the
+  click fetches nothing. A picture inside a link still follows the link, and
+  icons and spacers smaller than 48 pixels are left alone.
+
 - **Fixed: mail wider than the reader was cut off at its edge** (#712, fixed
   by adriadam10). The reader widens a message to its widest part, so one
   600-pixel signature laid every line of the mail out at 600 pixels, and in a

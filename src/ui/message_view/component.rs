@@ -533,6 +533,7 @@ impl Component for MessageView {
             MessageViewInput::ScrollToAttachments { account_id, id } => {
                 self.on_scroll_to_attachments(account_id, id)
             }
+            MessageViewInput::ShowImage(uri) => super::links::show_image(&uri, &sender),
             MessageViewInput::AttachmentAction {
                 account_id,
                 id,
