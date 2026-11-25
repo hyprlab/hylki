@@ -85,6 +85,11 @@
   3v1n0). With the Gmail-style keys, u with no message open now leaves the
   list on the row the keyboard is on, or on the one last read.
 
+- **Fixed: tags and smart folders showed no messages** (#714, reported by
+  bstegmaier75). With Show in All Inboxes off for every account, the Tags
+  rows above the accounts and a smart folder set to no account looked in no
+  account at all. They now cover every account when none is in All Inboxes.
+
 - **Fixed: a message dated centuries ahead** (#709, reported by
   user839292874). A message whose Date header lies more than a day in the
   future, such as one that showed as 12 Jan 2612, is dated by when the IMAP

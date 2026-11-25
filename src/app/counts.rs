@@ -210,6 +210,15 @@ impl AppModel {
         self.account_config(account_id).is_none_or(|c| c.in_unified)
     }
 
+    /// Whether a view that names no account (the Tags row, a smart folder
+    /// with no account) covers an account: the unified section's accounts,
+    /// or every account when none is in it. The sidebar shows those rows
+    /// either way, and with every account kept apart they listed nothing
+    /// (#714).
+    pub(super) fn in_every_account_view(&self, account_id: u32) -> bool {
+        self.in_unified(account_id) || !self.accounts.iter().any(|a| self.in_unified(a.id))
+    }
+
     /// Counts set aside while marks or moves were on their way (#333, #336):
     /// with those stored, sync each such folder that is clear now. A count
     /// was dropped because it could be stale, but it may also have been the

@@ -131,14 +131,15 @@ impl AppModel {
 
     /// Where a smart folder (#417) looks, per account: the folders it is
     /// held to (`None` for all) and the ones it leaves out. One account
-    /// when it names one, else every account in the unified section; one
-    /// kind of folder when it names one, else all but Trash and Junk.
+    /// when it names one, else every account in the unified section (all of
+    /// them when none is, #714); one kind of folder when it names one, else
+    /// all but Trash and Junk.
     pub(super) fn smart_scope(&self, f: &config::SmartFolder) -> SmartScope {
         self.accounts
             .iter()
             .filter(|a| {
                 if f.account_email.is_empty() {
-                    self.in_unified(a.id)
+                    self.in_every_account_view(a.id)
                 } else {
                     a.email.eq_ignore_ascii_case(&f.account_email)
                 }
