@@ -114,6 +114,12 @@
   rows above the accounts and a smart folder set to no account looked in no
   account at all. They now cover every account when none is in All Inboxes.
 
+- **Fixed: a blank password marked the server as wrong** (#716, reported by
+  perdakovich). When an account would not save, the account editor turned
+  the incoming server row red whatever field was missing. It now marks the
+  empty field itself: the incoming server, or the username or password for
+  incoming or outgoing mail.
+
 - **Fixed: a message dated centuries ahead** (#709, reported by
   user839292874). A message whose Date header lies more than a day in the
   future, such as one that showed as 12 Jan 2612, is dated by when the IMAP
@@ -171,7 +177,7 @@
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
   (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
   (#155 by lancelee25), new, 2596 of 2628 strings translated. Turkish (PR #710
-  by f4646), new, 2617 of 2628 strings translated.
+  by f4646), new, 2617 of 2629 strings translated.
 
 ## 1.49.2 — 2026-11-23
 
