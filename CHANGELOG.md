@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Fixed: mail a little wider than the reader was cut off at its edge.**
+  The reader widens a message to its widest part, so one 600-pixel
+  signature laid every line of the mail out at 600 pixels, and in a narrow
+  reader (a window on half a screen) the end of each line was out of
+  sight, there only by scrolling sideways. Mail up to 1.4 times the
+  reader's width is now scaled down to fit it; wider mail keeps its text to
+  the reader's width, and only what is wider scrolls sideways.
+
 - **New: the address behind a Duck Address** (#708, requested by
   somepaulo). Settings → Contacts → Show the address behind a Duck Address
   shows a DuckDuckGo Email Protection relay address such as

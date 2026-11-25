@@ -12,6 +12,16 @@
 // at 90% the body always looked wider than its frame: each pass of the widen
 // loop grew the frame by 1/zoom and centred mail drifted right (#473).
 //
+// A frame widened to its content lays all of its text out at that width,
+// not only the wide part: one 600px signature table in a pane of 527 left
+// every line of the message cut off at the pane's edge, readable only by
+// scrolling sideways. Mail at most `FIT` times the pane's width is zoomed
+// down to fit it instead (its text no smaller than 70%). Wider mail would
+// get too small to read: its body is held to the pane's width, so its text
+// wraps there and only what is wider (a table laid out for a desktop
+// screen) scrolls sideways. Both are undone before each measure, so a
+// wider pane gives them back.
+//
 // A frame is shown once its document is parsed, not at its `load` event:
 // that waits for every remote image and stylesheet in the mail, and a slow
 // or silent image host left the card blank for up to a minute (#487).
@@ -37,15 +47,19 @@
 /// Re-measures as images load and as content reflows.
 pub(super) const SIZE_SCRIPT: &str = "\
 function zf(d){try{return parseFloat(d.defaultView.getComputedStyle(d.documentElement).zoom)||1;}catch(_){return 1;}}\
+var FIT=1.4;\
+function widen(f,b,e,z){f.style.width='';void f.offsetWidth;var w=0;\
+for(var k=0;k<8;k++){w=Math.max(b?Math.ceil(b.scrollWidth*z):0,e?e.scrollWidth:0);\
+if(w<=f.clientWidth+1)break;f.style.width=w+'px';void f.offsetWidth;}return w;}\
 function s(f){if(f._s)return;f._s=1;try{var d=f.contentDocument;if(!d||d.URL==='about:blank')return;\
 f.classList.add('hylki-live');\
 var b=d.body,e=d.documentElement;\
 var sy=window.scrollY;var _r=f.getBoundingClientRect();\
 var above=_r.bottom<=0;var old=_r.height||0;\
-f.style.width='';void f.offsetWidth;\
-var z=zf(d);\
-for(var k=0;k<8;k++){var w=Math.max(b?Math.ceil(b.scrollWidth*z):0,e?e.scrollWidth:0);\
-if(w<=f.clientWidth+1)break;f.style.width=w+'px';void f.offsetWidth;}\
+if(f._fit){e.style.zoom=f._fz;f._fit=0;}if(b&&f._mw){b.style.maxWidth='';f._mw=0;}\
+var z=zf(d),w=widen(f,b,e,z),p=f.parentNode?f.parentNode.clientWidth:0;\
+if(p>0&&w>p+1){if(w<=p*FIT){f._fz=e.style.zoom;f._fit=1;z=z*(p-2)/w;e.style.zoom=z;}\
+else if(b){f._mw=1;b.style.maxWidth=Math.floor(p/z)+'px';}widen(f,b,e,z);}\
 var prev=f.style.height;f.style.height='0px';void f.offsetHeight;\
 var h=Math.max(b?Math.ceil(b.scrollHeight*z):0,e?e.scrollHeight:0,b?Math.ceil(b.offsetHeight*z):0);\
 if(h>0){f.style.height=h+'px';\
@@ -239,7 +253,7 @@ var rsecs=document.querySelectorAll('.hylki-msg');\
 for(var ri=0;ri<rsecs.length;ri++){if(rsecs[ri].querySelector('.hylki-dot')&&!rsecs[ri].querySelector('.hylki-loading'))rio.observe(rsecs[ri]);}}\
 window.vf={marks:[],cur:-1};\
 window.vfZoom=function(z){window.vfZ=z;var fs=all();for(var i=0;i<fs.length;i++){try{var d=fs[i].contentDocument;\
-if(d&&d.documentElement)d.documentElement.style.zoom=z;fs[i]._h=0;s(fs[i]);}catch(_){}}};\
+if(d&&d.documentElement)d.documentElement.style.zoom=z;fs[i]._fit=0;fs[i]._h=0;s(fs[i]);}catch(_){}}};\
 window.vfDocs=function(){var ds=[document];var fs=document.querySelectorAll('iframe');\
 for(var i=0;i<fs.length;i++){try{if(fs[i].contentDocument)ds.push(fs[i].contentDocument);}catch(_){}}return ds;};\
 window.vfCss=function(d){if(d.getElementById('hylki-find-css'))return;\
