@@ -76,6 +76,14 @@
   several messages and when Show sender and subject is off. Works on GNOME and Plasma,
   in the Flatpak and outside it.
 
+- **Fixed: the composer was cut off at the window's edge in a narrow reader**
+  (fixed by adriadam10). In languages whose labels are longer than English,
+  such as Spanish, the folded composer header needs more than the reader's
+  441-pixel floor, so with the window tiled to half the screen the composer
+  ran past the right edge, its body text with it. While a composer covers
+  the reader or a contact card, that pane now goes no narrower than the
+  composer, and the list gives up the difference.
+
 - **Fixed: the account ring around avatars in All Inboxes was cut at the
   sides** (#706, reported by user839292874). On GTK 4.18 and older, as on
   Debian 13, the ring drawn outside each avatar lost its left and right
