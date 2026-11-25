@@ -9334,6 +9334,10 @@ msgstr ""
 msgid "Ctrl+0 returns to the default."
 msgstr ""
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "Üzenet indítása a melléklet csatolásával"
+
 msgid "Use my own font"
 msgstr "Saját betűtípus használata"
 

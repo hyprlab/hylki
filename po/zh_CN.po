@@ -8358,6 +8358,10 @@ msgstr "邮件所属的账户，显示在主题上方。"
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 恢复默认值。"
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "新邮件以此签名开头"
+
 msgid "Use my own font"
 msgstr "使用我自己的字体"
 

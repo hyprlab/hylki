@@ -9060,6 +9060,10 @@ msgstr "Ο λογαριασμός στον οποίο βρίσκεται το μ
 msgid "Ctrl+0 returns to the default."
 msgstr "Το Ctrl+0 επαναφέρει την προεπιλογή."
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "Έναρξη μηνυμάτων με αυτήν την υπογραφή"
+
 msgid "Use my own font"
 msgstr "Χρήση δικής μου γραμματοσειράς"
 

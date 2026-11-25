@@ -8886,6 +8886,10 @@ msgstr "Het account waarin een bericht zich bevindt, boven het onderwerp."
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 keert terug naar de standaardwaarde."
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "Begin berichten met deze handtekening"
+
 msgid "Use my own font"
 msgstr "Gebruik mijn eigen lettertype"
 

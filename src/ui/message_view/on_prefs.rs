@@ -31,6 +31,12 @@ impl MessageView {
         self.run_js(&js);
     }
 
+    /// Measures every open frame again, so the page shows the change at once.
+    pub(super) fn on_set_fit_wide(&mut self, on: bool) {
+        super::document::set_fit_wide(on);
+        self.run_js(&format!("window.vfFit&&window.vfFit({on})"));
+    }
+
     pub(super) fn on_set_card_attachments_shown(&mut self, on: bool) {
         if self.card_atts_shown != on {
             self.card_atts_shown = on;

@@ -2310,6 +2310,16 @@ in the account's color. **Settings → Reading → Show account in message
 header** hides it, in the main window and in a message's own window. It is
 stored as `account_chip` in `privacy.toml`.
 
+### Mail wider than the reader
+
+A message laid out wider than the reader, a 600-pixel newsletter or
+signature in a reader on half a screen, is scaled down to fit it, however
+narrow the reader, so nothing in it scrolls sideways. The narrower the
+reader, the smaller its text. A wider window gives the message back its own
+size. **Settings → Reading → Scale message width to fit reader**, on by
+default, turns this off, and a message wider than the reader then keeps its
+own size and scrolls sideways. It is stored as `fit_wide_mail` in `privacy.toml`.
+
 ### Finding in a message
 
 <kbd>Ctrl+F</kbd> with the message focused, or the magnifier in the reader's

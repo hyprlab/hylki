@@ -82,6 +82,7 @@ impl AppModel {
             thread_newest_first: self.thread_newest_first,
             fold_messages: self.fold_messages,
             always_show_recipients: self.always_show_recipients,
+            fit_wide_mail: self.fit_wide_mail,
             pgp_labels: self.pgp_labels,
             reader_find_bottom: self.reader_find_bottom,
             single_message_card: self.single_message_card,

@@ -124,6 +124,10 @@ pub(crate) struct PrivacyFile {
     /// Whether the reader always shows the recipients line under the sender.
     #[serde(default)]
     pub(crate) always_show_recipients: bool,
+    /// Whether mail a little wider than the reader is scaled down to fit it,
+    /// and wider mail has its text wrapped at the reader's width (#712).
+    #[serde(default = "default_on")]
+    pub(crate) fit_wide_mail: bool,
     /// Whether the OpenPGP chip beside a sender's name says its verdict in
     /// words (#300); off, the default, shows the lock and shield icons alone.
     #[serde(default)]
@@ -752,6 +756,7 @@ impl Default for PrivacyFile {
             thread_newest_first: false,
             fold_messages: FoldMessages::Never,
             always_show_recipients: false,
+            fit_wide_mail: true,
             pgp_labels: false,
             key_lookup: false,
             keyserver_lookup: false,

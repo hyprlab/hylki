@@ -9024,6 +9024,10 @@ msgstr "Das Konto einer Nachricht, oberhalb ihres Betreffs"
 msgid "Ctrl+0 returns to the default."
 msgstr "»Strg+0« setzt auf den Standardwert zurück."
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "Neue Nachricht mit dieser Signatur"
+
 msgid "Use my own font"
 msgstr "Eigene Schriftart verwenden"
 

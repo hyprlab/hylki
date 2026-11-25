@@ -76,6 +76,7 @@ impl Component for MessageWindow {
         view.emit(MessageViewInput::SetThemeSwitchShown(init.theme_switch));
         view.emit(MessageViewInput::SetAccountChipShown(init.account_chip));
         view.emit(MessageViewInput::SetPgpLabels(init.pgp_labels));
+        view.emit(MessageViewInput::SetFitWide(init.fit_wide));
         view.emit(MessageViewInput::SetFindBottom(init.find_bottom));
         view.emit(MessageViewInput::SetReaderDefault(init.reader_default));
         view.emit(MessageViewInput::SetTags(init.tags.clone()));
@@ -249,6 +250,7 @@ impl Component for MessageWindow {
             MessageWindowInput::SetPgpLabels(on) => {
                 self.view.emit(MessageViewInput::SetPgpLabels(on))
             }
+            MessageWindowInput::SetFitWide(on) => self.view.emit(MessageViewInput::SetFitWide(on)),
             MessageWindowInput::SetFindBottom(on) => {
                 self.view.emit(MessageViewInput::SetFindBottom(on))
             }

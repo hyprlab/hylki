@@ -35,6 +35,8 @@ pub(crate) enum MessageViewInput {
     SetUnderSplit(bool),
     /// The "always show recipients" preference changed (re-render follows).
     SetAlwaysShowRecipients(bool),
+    /// Mail a little wider than the reader is fitted to it (#712).
+    SetFitWide(bool),
     /// The "single messages as cards" preference changed (re-render follows).
     SetSingleMessageCard(bool),
     /// Which messages of a conversation open folded (#326).

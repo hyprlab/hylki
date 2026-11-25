@@ -8840,6 +8840,10 @@ msgstr "Konusunun üstünde iletinin bulunduğu hesap."
 msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 varsayılana döndürür."
 
+#, fuzzy
+msgid "Scale message width to fit reader"
+msgstr "İletilere bu imzayla başla"
+
 msgid "Use my own font"
 msgstr "Kendi yazı tipimi kullan"
 

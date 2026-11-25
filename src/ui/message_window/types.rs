@@ -58,6 +58,8 @@ pub(crate) struct MessageWindowInit {
     pub(crate) tags: Vec<crate::config::Tag>,
     /// The OpenPGP chip says its verdict in words (#300).
     pub(crate) pgp_labels: bool,
+    /// Mail a little wider than the reader is fitted to it (#712).
+    pub(crate) fit_wide: bool,
     /// The find bar opens under the message (#392).
     pub(crate) find_bottom: bool,
     /// The main window's single-key and Gmail switches, shared so a change
@@ -91,6 +93,8 @@ pub(crate) enum MessageWindowInput {
     SetSenderCheck(Box<crate::models::SenderCheck>),
     /// The OpenPGP chip's words on or off (#300).
     SetPgpLabels(bool),
+    /// Mail a little wider than the reader fitted to it, or not (#712).
+    SetFitWide(bool),
     /// The find bar under the message, not above it (#392).
     SetFindBottom(bool),
     /// The Settings switch for the "Check this sender" banner changed.

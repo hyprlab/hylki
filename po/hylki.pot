@@ -8242,6 +8242,9 @@ msgstr ""
 msgid "Ctrl+0 returns to the default."
 msgstr ""
 
+msgid "Scale message width to fit reader"
+msgstr ""
+
 msgid "Use my own font"
 msgstr ""
 

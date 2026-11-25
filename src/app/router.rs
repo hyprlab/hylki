@@ -519,6 +519,7 @@ impl AppModel {
             | PrefOutput::SetThreadNewestFirst(..)
             | PrefOutput::SetFoldMessages(..)
             | PrefOutput::SetAlwaysShowRecipients(..)
+            | PrefOutput::SetFitWideMail(..)
             | PrefOutput::SetCardAttachments(..)
             | PrefOutput::SetAttachmentDrawer(..)
             | PrefOutput::SetPreviewerPictures(..)

@@ -618,6 +618,8 @@ pub(crate) struct AppModel {
     pub(super) fold_messages: config::FoldMessages,
     /// Reader always shows the recipients line under the sender.
     pub(super) always_show_recipients: bool,
+    /// Mail a little wider than the reader is fitted to it (#712).
+    pub(super) fit_wide_mail: bool,
     /// The OpenPGP chip says its verdict in words (#300).
     pub(super) pgp_labels: bool,
     /// The reader's find bar opens under the message (#392).

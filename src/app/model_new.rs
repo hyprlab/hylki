@@ -434,6 +434,7 @@ impl AppModel {
             thread_newest_first: prefs.thread_newest_first,
             fold_messages: prefs.fold_messages,
             always_show_recipients: prefs.always_show_recipients,
+            fit_wide_mail: prefs.fit_wide_mail,
             pgp_labels: prefs.pgp_labels,
             reader_find_bottom: prefs.reader_find_bottom,
             show_unified_pref: prefs.show_unified,
