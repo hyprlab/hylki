@@ -167,11 +167,12 @@
   Thunderbird Flatpak's folder, read-only.
 
 - **New: Empty Trash and Empty Junk say how many messages they erase**
-  (#676, requested by DarkStarCrashes123). The question asks the server for
-  the folder's count first: "47 messages will be erased from the server".
-  Emptying every account's Trash or Junk from the unified row gives the
-  total and each account's own count. A server that does not answer within
-  a second and a half leaves the question as it was, without a number.
+  (#676, requested by DarkStarCrashes123): "47 messages will be erased from
+  the server". The number comes from the cache at once, and the server's
+  count replaces it when it answers, in the open question too. The count
+  goes ahead of folder syncs already queued for the account, so a slow
+  server answers it sooner. Emptying every account's Trash or Junk from the
+  unified row gives the total and each account's own count.
 
 - **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
