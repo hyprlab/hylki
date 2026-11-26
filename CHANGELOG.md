@@ -215,7 +215,8 @@
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
   (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
   (#155 by lancelee25), new, 2596 of 2628 strings translated. Turkish (PR #710
-  by f4646), new, 2617 of 2629 strings translated.
+  by f4646), new, 2617 of 2629 strings translated. German (PR #718 by Samuel
+  Edlmeier) caught up with the text review, 2589 of 2590 strings translated.
 
 ## 1.49.2 — 2026-11-23
 
