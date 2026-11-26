@@ -231,7 +231,8 @@
   (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
   (#155 by lancelee25), new, 2596 of 2628 strings translated. Turkish (PR #710
   by f4646), new, 2617 of 2629 strings translated. German (PRs #718 and #719 by
-  Samuel Edlmeier) caught up with the text review, complete.
+  Samuel Edlmeier) caught up with the text review, complete. French (PR #721
+  by frenchy82) caught up with the text review, complete.
 
 ## 1.49.2 — 2026-11-23
 
