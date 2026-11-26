@@ -250,6 +250,7 @@ impl AppModel {
             return;
         };
         // Optimistic in-memory update so the UI reacts instantly.
+        self.note_folder_read(account_id, folder_id);
         if let Some(msgs) = self.message_cache.get_mut(&(account_id, folder_id)) {
             for m in msgs {
                 m.unread = false;

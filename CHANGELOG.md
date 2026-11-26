@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: smart folder and tag counts changed seconds after a mark.**
+  Marking mail read or unread, tagging it or marking a folder read now moves
+  the counts on the Smart Folders and Tags rows at once, as the folder counts
+  already did. They used to wait for the server to take the mark and for a
+  recount of the cache, and a recount that ran before the mark reached the
+  cache put the old number back for a moment.
+
 - **New: unread counts on the Tags rows, and an Untagged filter** (#717,
   requested by bstegmaier75). Each tag under Tags, in the unified section
   and in each account, shows how many unread messages carry it, counted as

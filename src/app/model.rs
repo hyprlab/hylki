@@ -721,6 +721,8 @@ pub(crate) struct AppModel {
     /// running: syncs come in bursts, and one count covers a burst.
     pub(super) smart_counts_due: bool,
     pub(super) smart_counts_running: bool,
+    /// The tag rows' and smart folders' chips, moved by marks made here.
+    pub(super) view_counts: super::view_counts::ViewCounts,
     /// When each account's keywords were last re-synced from the server
     /// (#166), so reopening a tag view within a few seconds does not scan
     /// every folder again.
