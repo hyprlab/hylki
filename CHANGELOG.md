@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.50.0-beta.6 — 2026-11-26
+
+- **Fixed: a move or delete waited behind folder fetches** (#676, reported
+  by DarkStarCrashes123). Yahoo took 20 to 60 seconds to fetch a folder's
+  newest 50 messages, and a delete queued behind a few of those fetches
+  reached Trash minutes later. Moves, deletes, Spam and Not Spam, Undo and
+  Empty Trash now go ahead of queued folder fetches and refresh ticks. They
+  never pass another change, and never cut a fetch short.
+
+- **Fixed: folder watchers set off Yahoo's login limit** (#676). Every
+  folder opened gets a connection that watches it for changes, and each is
+  a login: ten in eight minutes made Yahoo refuse the next with "[LIMIT]
+  LOGIN Rate limit hit.", and a refused login on the main connection fails
+  a move. A watcher now logs in only while the account has had fewer than
+  five logins in ten minutes, and waits 15 minutes after a server says it
+  is limiting logins. The main connection is never held back.
+
+- **Translations:** French (PR #721 by frenchy82) caught up with the text
+  review, complete.
+
 ## 1.50.0-beta.5 — 2026-11-26
 
 - **New: unread counts on the Tags rows, and an Untagged filter** (#717,

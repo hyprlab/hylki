@@ -63,6 +63,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.50.0-beta.6" date="2026-11-26" type="development">
+      <description>
+        <p>A move or delete no longer waits behind folder fetches, and folder watchers stay under Yahoo's login limit. French is complete again.</p>
+      </description>
+    </release>
     <release version="1.50.0-beta.5" date="2026-11-26" type="development">
       <description>
         <p>The Tags rows show unread counts, Show only has an Untagged filter and the interface text is shorter and plainer throughout. Smart folder and tag counts move as soon as mail is marked, the Empty Trash count shows at once and a folder with no new mail opens in about a second on a slow server. German is complete again.</p>
