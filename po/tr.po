@@ -1753,6 +1753,20 @@ msgstr "Etiketleri Kaldır"
 msgid "Open a message first, then print it."
 msgstr "Önce bir ileti açın, ardından yazdırın."
 
+msgid "Delete “{name}”?"
+msgstr "“{name}” silinsin mi?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Akıllı klasör kenar çubuğundan kaldırılacak. Gösterdiği e-postalar "
+"bulundukları yerde kalacak."
+
+msgid "Snooze until"
+msgstr "Şu zamana kadar ertele"
+
 msgid "Message Source"
 msgstr "İleti Kaynağı"
 
@@ -1767,20 +1781,6 @@ msgstr "Sonraki eşleşme"
 
 msgid "Close find"
 msgstr "Aramayı kapat"
-
-msgid "Delete “{name}”?"
-msgstr "“{name}” silinsin mi?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Akıllı klasör kenar çubuğundan kaldırılacak. Gösterdiği e-postalar "
-"bulundukları yerde kalacak."
-
-msgid "Snooze until"
-msgstr "Şu zamana kadar ertele"
 
 msgid "Could not add the event: {e}"
 msgstr "Etkinlik eklenemedi: {e}"
@@ -5585,6 +5585,10 @@ msgstr "Kişilerden"
 
 msgid "High Importance"
 msgstr "Yüksek Önem"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Etiketli"
 
 msgid "Today"
 msgstr "Bugün"

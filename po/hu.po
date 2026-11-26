@@ -1879,6 +1879,18 @@ msgstr "Címkék eltávolítása"
 msgid "Open a message first, then print it."
 msgstr "Előbb nyisson meg egy üzenetet, majd nyomtassa ki."
 
+#, fuzzy
+msgid "Delete “{name}”?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+
+msgid "Snooze until"
+msgstr ""
+
 msgid "Message Source"
 msgstr "Üzenetforrás"
 
@@ -1893,18 +1905,6 @@ msgstr "Következő találat"
 
 msgid "Close find"
 msgstr "Keresés bezárása"
-
-#, fuzzy
-msgid "Delete “{name}”?"
-msgstr "Kiüríti ezt: „{name}”?"
-
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-
-msgid "Snooze until"
-msgstr ""
 
 #, fuzzy
 msgid "Could not add the event: {e}"
@@ -5851,6 +5851,10 @@ msgstr "Nincsenek névjegyek"
 #, fuzzy
 msgid "High Importance"
 msgstr "Kulcs importálása"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Nincs telepítve"
 
 msgid "Today"
 msgstr ""

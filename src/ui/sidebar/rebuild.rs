@@ -254,6 +254,7 @@ impl Sidebar {
         self.filtered_badges.clear();
         self.account_circle_badges.clear();
         self.tag_sections.clear();
+        self.tag_badges.clear();
         self.kind_widgets.clear();
     }
 

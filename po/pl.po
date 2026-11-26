@@ -1923,6 +1923,18 @@ msgstr "Usuń etykiety"
 msgid "Open a message first, then print it."
 msgstr "Najpierw otwórz wiadomość, a potem ją wydrukuj."
 
+#, fuzzy
+msgid "Delete “{name}”?"
+msgstr "Czy opróżnić katalog „{name}”?"
+
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+
+msgid "Snooze until"
+msgstr ""
+
 msgid "Message Source"
 msgstr "Źródło wiadomości"
 
@@ -1937,18 +1949,6 @@ msgstr "Następny wynik"
 
 msgid "Close find"
 msgstr "Zamknij wyszukiwanie"
-
-#, fuzzy
-msgid "Delete “{name}”?"
-msgstr "Czy opróżnić katalog „{name}”?"
-
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-
-msgid "Snooze until"
-msgstr ""
 
 #, fuzzy
 msgid "Could not add the event: {e}"
@@ -5935,6 +5935,10 @@ msgstr "Brak kontaktów"
 #, fuzzy
 msgid "High Importance"
 msgstr "Importuj klucz"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Niezainstalowane"
 
 msgid "Today"
 msgstr ""

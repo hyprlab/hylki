@@ -1820,6 +1820,20 @@ msgstr "Αφαίρεση ετικετών"
 msgid "Open a message first, then print it."
 msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτυπώστε το."
 
+msgid "Delete “{name}”?"
+msgstr "Διαγραφή του «{name}»;"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Ο έξυπνος φάκελος αφαιρείται από την πλευρική στήλη. Τα μηνύματα που "
+"εμφανίζει παραμένουν στη θέση τους."
+
+msgid "Snooze until"
+msgstr "Αναβολή έως"
+
 msgid "Message Source"
 msgstr "Πηγαίος κώδικας μηνύματος"
 
@@ -1834,20 +1848,6 @@ msgstr "Επόμενη αντιστοιχία"
 
 msgid "Close find"
 msgstr "Κλείσιμο εύρεσης"
-
-msgid "Delete “{name}”?"
-msgstr "Διαγραφή του «{name}»;"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Ο έξυπνος φάκελος αφαιρείται από την πλευρική στήλη. Τα μηνύματα που "
-"εμφανίζει παραμένουν στη θέση τους."
-
-msgid "Snooze until"
-msgstr "Αναβολή έως"
 
 msgid "Could not add the event: {e}"
 msgstr "Δεν ήταν δυνατή η προσθήκη του συμβάντος: {e}"
@@ -5701,6 +5701,10 @@ msgstr "Από τις επαφές"
 
 msgid "High Importance"
 msgstr "Υψηλή προτεραιότητα"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Με ετικέτα"
 
 msgid "Today"
 msgstr "Σήμερα"

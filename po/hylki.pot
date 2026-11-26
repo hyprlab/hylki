@@ -1630,6 +1630,17 @@ msgstr ""
 msgid "Open a message first, then print it."
 msgstr ""
 
+msgid "Delete “{name}”?"
+msgstr ""
+
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+
+msgid "Snooze until"
+msgstr ""
+
 msgid "Message Source"
 msgstr ""
 
@@ -1643,17 +1654,6 @@ msgid "Next match"
 msgstr ""
 
 msgid "Close find"
-msgstr ""
-
-msgid "Delete “{name}”?"
-msgstr ""
-
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-
-msgid "Snooze until"
 msgstr ""
 
 msgid "Could not add the event: {e}"
@@ -5079,6 +5079,9 @@ msgid "From Contacts"
 msgstr ""
 
 msgid "High Importance"
+msgstr ""
+
+msgid "Untagged"
 msgstr ""
 
 msgid "Today"

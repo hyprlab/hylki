@@ -36,6 +36,7 @@ pub(crate) use assistant::{MailScope, ScopedFolder};
 pub(crate) use gallery::*;
 pub(crate) use local_copies::CopyKey;
 pub(crate) use messages::*;
+pub(crate) use smart::TagMarks;
 pub(crate) use text_index::body_text;
 
 #[cfg(test)]

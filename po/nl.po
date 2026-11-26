@@ -1764,6 +1764,19 @@ msgstr "Tags verwijderen"
 msgid "Open a message first, then print it."
 msgstr "Open eerst een bericht en druk het vervolgens af."
 
+msgid "Delete “{name}”?"
+msgstr "“{name}” verwijderen?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"De slimme map komt uit de zijbalk. De getoonde e-mail blijft waar hij is."
+
+msgid "Snooze until"
+msgstr "Snoozen tot"
+
 msgid "Message Source"
 msgstr "Berichtbron"
 
@@ -1778,19 +1791,6 @@ msgstr "Volgende overeenkomst"
 
 msgid "Close find"
 msgstr "Zoekbalk sluiten"
-
-msgid "Delete “{name}”?"
-msgstr "“{name}” verwijderen?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"De slimme map komt uit de zijbalk. De getoonde e-mail blijft waar hij is."
-
-msgid "Snooze until"
-msgstr "Snoozen tot"
 
 msgid "Could not add the event: {e}"
 msgstr "Kon de gebeurtenis niet toevoegen: {e}"
@@ -5591,6 +5591,10 @@ msgstr "Van Contacten"
 
 msgid "High Importance"
 msgstr "Hoog belang"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Getagd"
 
 msgid "Today"
 msgstr "Vandaag"

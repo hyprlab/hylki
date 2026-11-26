@@ -303,6 +303,15 @@ impl Sidebar {
         }
     }
 
+    pub(super) fn on_set_tag_unread(&mut self, counts: TagUnread) {
+        for (key, badge) in &self.tag_badges {
+            let n = counts.get(key).copied().unwrap_or(0);
+            badge.set_label(&n.to_string());
+            badge.set_visible(n > 0);
+        }
+        self.tag_unread = counts;
+    }
+
     pub(super) fn on_set_unread(
         &mut self,
         folders: HashMap<(u32, u32), u32>,

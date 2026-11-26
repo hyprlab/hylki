@@ -96,6 +96,9 @@ impl AppModel {
                 if !self.pending_seen.keys().any(|(a, _, _)| *a == account_id) {
                     self.resync_dropped_unread(account_id);
                 }
+                // The index holds the mark now: the smart folders' and tag
+                // rows' chips follow it.
+                self.schedule_smart_counts(&sender);
             }
 
             AppMsg::Answered {
@@ -123,6 +126,7 @@ impl AppModel {
                 {
                     *until = (*until).min(soon);
                 }
+                self.schedule_smart_counts(&sender);
             }
 
             AppMsg::MovesSettled {

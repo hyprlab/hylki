@@ -393,10 +393,14 @@ impl Sidebar {
             let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
             hbox.add_css_class("folder-row");
             let disc = crate::ui::context_menu::swatch_widget(&t.color, true);
+            let key = (slot.account(), t.keyword.clone());
+            let unread = self.tag_unread.get(&key).copied().unwrap_or(0);
             if self.collapsed {
                 hbox.set_halign(gtk::Align::Center);
-                hbox.append(&disc);
+                let (overlay, badge) = with_unread_overlay(&disc, unread);
+                hbox.append(&overlay);
                 row.set_tooltip_text(Some(&t.name));
+                self.tag_badges.insert(key, badge);
             } else {
                 // Laid out like the Filtered Folders rows: the same leaf
                 // expander slot, then the disc exactly where their glyph
@@ -415,6 +419,11 @@ impl Sidebar {
                 label.set_halign(gtk::Align::Start);
                 label.set_ellipsize(gtk::pango::EllipsizeMode::End);
                 hbox.append(&label);
+                let badge = gtk::Label::new(Some(&unread.to_string()));
+                style_badge(&badge, 5);
+                badge.set_visible(unread > 0);
+                hbox.append(&badge);
+                self.tag_badges.insert(key, badge);
             }
             row.set_child(Some(&hbox));
             list.append(&row);
@@ -864,17 +873,19 @@ impl Sidebar {
     fn fill_tags(&mut self, sub: &gtk::ListBox, sender: &ComponentSender<Self>) {
         for t in &self.tags {
             let disc = crate::ui::context_menu::swatch_widget(&t.color, true);
+            let key = (None, t.keyword.clone());
+            let unread = self.tag_unread.get(&key).copied().unwrap_or(0);
             let (row, badge) = build_unified_sub_row(
                 &tree_indent(&disc, self.collapsed),
                 &t.name,
                 &t.name,
-                0,
+                unread,
                 self.collapsed,
                 self.chevrons_left,
                 false,
             );
-            badge.set_visible(false);
             sub.append(&row);
+            self.tag_badges.insert(key, badge);
         }
         let ss = sender.input_sender().clone();
         let quiet = self.quiet.clone();

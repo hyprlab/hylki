@@ -1800,6 +1800,20 @@ msgstr "Удалить теги"
 msgid "Open a message first, then print it."
 msgstr "Сначала откройте сообщение, затем распечатайте его."
 
+msgid "Delete “{name}”?"
+msgstr "Удалить «{name}»?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Умная папка открывается с боковой панели. Почта, которую он показывает, "
+"остается там, где она есть."
+
+msgid "Snooze until"
+msgstr "Отложить до"
+
 msgid "Message Source"
 msgstr "Исходный текст сообщения"
 
@@ -1814,20 +1828,6 @@ msgstr "Следующее совпадение"
 
 msgid "Close find"
 msgstr "Закрыть поиск"
-
-msgid "Delete “{name}”?"
-msgstr "Удалить «{name}»?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Умная папка открывается с боковой панели. Почта, которую он показывает, "
-"остается там, где она есть."
-
-msgid "Snooze until"
-msgstr "Отложить до"
 
 msgid "Could not add the event: {e}"
 msgstr "Не удалось добавить событие: {e}"
@@ -5667,6 +5667,10 @@ msgstr "Из контактов"
 
 msgid "High Importance"
 msgstr "Высокая важность"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "с тегами"
 
 msgid "Today"
 msgstr "Сегодня"

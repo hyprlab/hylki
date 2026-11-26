@@ -1819,6 +1819,20 @@ msgstr "Treu les etiquetes"
 msgid "Open a message first, then print it."
 msgstr "Obre primer un missatge i després imprimeix-lo."
 
+msgid "Delete “{name}”?"
+msgstr "Vols suprimir «{name}»?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"La carpeta intel·ligent desapareixerà de la barra lateral. El correu que "
+"mostra es queda on és."
+
+msgid "Snooze until"
+msgstr ""
+
 msgid "Message Source"
 msgstr "Codi font del missatge"
 
@@ -1833,20 +1847,6 @@ msgstr "Coincidència següent"
 
 msgid "Close find"
 msgstr "Tanca la cerca"
-
-msgid "Delete “{name}”?"
-msgstr "Vols suprimir «{name}»?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"La carpeta intel·ligent desapareixerà de la barra lateral. El correu que "
-"mostra es queda on és."
-
-msgid "Snooze until"
-msgstr ""
 
 #, fuzzy
 msgid "Could not add the event: {e}"
@@ -5709,6 +5709,10 @@ msgstr "De contactes"
 
 msgid "High Importance"
 msgstr "Importància alta"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Etiquetat"
 
 msgid "Today"
 msgstr "Avui"

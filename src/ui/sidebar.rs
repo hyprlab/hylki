@@ -33,7 +33,7 @@ mod types;
 mod unified;
 mod widgets;
 
-pub(crate) use messages::{CtxAction, SidebarInput, SidebarOutput};
+pub(crate) use messages::{CtxAction, SidebarInput, SidebarOutput, TagUnread};
 pub(crate) use tree::{
     container_ancestors, folder_depth, order_folders, placed_run, TREE_EXPANDER_WIDTH,
 };
@@ -207,6 +207,9 @@ pub(crate) struct Sidebar {
     /// Whether the unified "Tags" section is open.
     tags_expanded: bool,
     tag_sections: HashMap<Slot, SectionWidgets>,
+    /// Each tag row's unread mail (#717), and the chips that show it.
+    tag_unread: TagUnread,
+    tag_badges: HashMap<(Option<u32>, String), gtk::Label>,
     /// The rail's own open states: anything opened or folded while the
     /// sidebar is the icon rail lands here, the saved state untouched, so
     /// the full sidebar comes back as it was left. Cleared whenever the
@@ -396,6 +399,8 @@ impl Component for Sidebar {
             tags: Vec::new(),
             tags_expanded: init.tags_expanded,
             tag_sections: HashMap::new(),
+            tag_unread: HashMap::new(),
+            tag_badges: HashMap::new(),
             unified_kinds: crate::config::UnifiedKinds::NONE,
             kind_expanded: HashMap::from([
                 (FolderKind::Starred, init.starred_expanded),
@@ -507,6 +512,7 @@ impl Sidebar {
             SidebarInput::ToggleSmartExpand => self.on_toggle_smart_expand(sender),
             SidebarInput::SmartRowSelected(index) => self.on_smart_row_selected(index, sender),
             SidebarInput::SetSmartUnread(counts) => self.on_set_smart_unread(counts),
+            SidebarInput::SetTagUnread(counts) => self.on_set_tag_unread(counts),
             SidebarInput::FavoriteRowSelected(index) => {
                 self.on_favorite_row_selected(index, sender)
             }

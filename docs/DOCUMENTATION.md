@@ -227,6 +227,11 @@ set to **Tree style** draws all four as a tree instead: the caret that
 opens and closes the list stands where the icon was, and the row has no
 chevron at its end. Clicking the name opens the combined view either way.
 
+Each tag under Tags, in the unified section and in each account, shows how
+many unread messages carry it. The count covers what the tag's view lists:
+mail in Trash and Junk is left out, and a Gmail message under several labels
+counts once.
+
 ### Favorites
 
 Right-click any folder in the sidebar and choose **Add to Favorites** to list
@@ -2620,6 +2625,8 @@ others kept. **Show only** holds the quick filters:
 - **From Contacts**: the sender is in your Contacts, as for filter rules
 - **High Importance**
 - **Tagged**: the message has a tag or a Gmail label
+- **Untagged**: the message has neither; turning on Tagged or Untagged turns
+  the other off
 - **Today**: it arrived since midnight on this computer's clock
 
 In **Dates**, the list shows only the mail that arrived from the start of

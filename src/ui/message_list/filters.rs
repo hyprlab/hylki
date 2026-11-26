@@ -17,11 +17,12 @@ pub(crate) enum QuickFilter {
     Contacts,
     Important,
     Tagged,
+    Untagged,
     Today,
 }
 
 impl QuickFilter {
-    pub(crate) const ALL: [QuickFilter; 8] = [
+    pub(crate) const ALL: [QuickFilter; 9] = [
         QuickFilter::Unread,
         QuickFilter::Starred,
         QuickFilter::Attachment,
@@ -29,6 +30,7 @@ impl QuickFilter {
         QuickFilter::Contacts,
         QuickFilter::Important,
         QuickFilter::Tagged,
+        QuickFilter::Untagged,
         QuickFilter::Today,
     ];
 
@@ -42,6 +44,7 @@ impl QuickFilter {
             QuickFilter::Contacts => i18n_noop("From Contacts"),
             QuickFilter::Important => i18n_noop("High Importance"),
             QuickFilter::Tagged => i18n_noop("Tagged"),
+            QuickFilter::Untagged => i18n_noop("Untagged"),
             QuickFilter::Today => i18n_noop("Today"),
         })
     }
@@ -56,6 +59,7 @@ impl QuickFilter {
             QuickFilter::Contacts => "x-office-address-book-symbolic",
             QuickFilter::Important => "emblem-important-symbolic",
             QuickFilter::Tagged => "tag-symbolic",
+            QuickFilter::Untagged => "tag-outline-symbolic",
             QuickFilter::Today => "x-office-calendar-symbolic",
         }
     }
@@ -87,15 +91,20 @@ impl QuickFilters {
         self.bits & f.bit() != 0
     }
 
+    /// `f` turned on or off. Tagged and Untagged together would let
+    /// nothing through, so turning one on turns the other off.
     pub(crate) fn with(self, f: QuickFilter, on: bool) -> Self {
-        Self {
-            bits: if on {
-                self.bits | f.bit()
-            } else {
-                self.bits & !f.bit()
-            },
-            ..self
-        }
+        let opposite = match f {
+            QuickFilter::Tagged => Some(QuickFilter::Untagged),
+            QuickFilter::Untagged => Some(QuickFilter::Tagged),
+            _ => None,
+        };
+        let bits = match (on, opposite) {
+            (true, Some(o)) => (self.bits | f.bit()) & !o.bit(),
+            (true, None) => self.bits | f.bit(),
+            (false, _) => self.bits & !f.bit(),
+        };
+        Self { bits, ..self }
     }
 
     pub(crate) fn date(self, end: DateBound) -> Option<chrono::NaiveDate> {
@@ -182,6 +191,7 @@ impl QuickFilterContext {
                     .is_some_and(|c| c.contains(&m.from_addr.trim().to_lowercase())),
                 QuickFilter::Important => m.importance == crate::models::Importance::High,
                 QuickFilter::Tagged => !m.pills(&self.tags).is_empty(),
+                QuickFilter::Untagged => m.pills(&self.tags).is_empty(),
                 QuickFilter::Today => m.timestamp >= self.today,
             })
     }

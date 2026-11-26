@@ -3,6 +3,10 @@
 
 use super::*;
 
+/// The unread mail each tag row counts, by the account its section belongs
+/// to (`None` for the unified Tags rows) and the tag's keyword.
+pub(crate) type TagUnread = HashMap<(Option<u32>, String), u32>;
+
 #[derive(Debug, Clone)]
 pub(crate) enum SidebarInput {
     SetContents {
@@ -131,6 +135,8 @@ pub(crate) enum SidebarInput {
     SmartRowSelected(i32),
     /// Each smart folder's unread count, by id.
     SetSmartUnread(HashMap<String, u32>),
+    /// Each tag row's unread count (#717).
+    SetTagUnread(TagUnread),
     ToggleCollapseLocal(u32),
     /// A click on a rail avatar: show that account's inbox, or with a second
     /// click straight after it, open or fold the account.

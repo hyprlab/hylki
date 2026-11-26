@@ -1651,6 +1651,18 @@ msgstr "移除标签"
 msgid "Open a message first, then print it."
 msgstr "请先打开一封邮件，然后再打印。"
 
+msgid "Delete “{name}”?"
+msgstr "删除“{name}”？"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr "智能文件夹将从侧边栏中移除。它显示的邮件仍保留在原处。"
+
+msgid "Snooze until"
+msgstr "稍后处理至"
+
 msgid "Message Source"
 msgstr "邮件源码"
 
@@ -1665,18 +1677,6 @@ msgstr "下一个匹配项"
 
 msgid "Close find"
 msgstr "关闭查找"
-
-msgid "Delete “{name}”?"
-msgstr "删除“{name}”？"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr "智能文件夹将从侧边栏中移除。它显示的邮件仍保留在原处。"
-
-msgid "Snooze until"
-msgstr "稍后处理至"
 
 msgid "Could not add the event: {e}"
 msgstr "无法添加事件：{e}"
@@ -5220,6 +5220,10 @@ msgstr "来自联系人"
 
 msgid "High Importance"
 msgstr "高重要性"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "已加标签"
 
 msgid "Today"
 msgstr "今天"

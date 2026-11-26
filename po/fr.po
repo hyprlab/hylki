@@ -1774,6 +1774,20 @@ msgstr "Supprimer les tags"
 msgid "Open a message first, then print it."
 msgstr "Ouvrez d’abord un message, puis imprimez-le."
 
+msgid "Delete “{name}”?"
+msgstr "Supprimer « {name} » ?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Le dossier intelligent disparaît de la barre latérale. Les messages qu’il "
+"affiche restent là où ils sont."
+
+msgid "Snooze until"
+msgstr "Mettre en veille jusqu’à"
+
 msgid "Message Source"
 msgstr "Code source du message"
 
@@ -1788,20 +1802,6 @@ msgstr "Résultat suivant"
 
 msgid "Close find"
 msgstr "Fermer la recherche"
-
-msgid "Delete “{name}”?"
-msgstr "Supprimer « {name} » ?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Le dossier intelligent disparaît de la barre latérale. Les messages qu’il "
-"affiche restent là où ils sont."
-
-msgid "Snooze until"
-msgstr "Mettre en veille jusqu’à"
 
 msgid "Could not add the event: {e}"
 msgstr "Impossible d’ajouter l’événement : {e}"
@@ -5663,6 +5663,10 @@ msgstr "De mes contacts"
 
 msgid "High Importance"
 msgstr "Importance haute"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Avec tag"
 
 msgid "Today"
 msgstr "Aujourd’hui"

@@ -1772,6 +1772,20 @@ msgstr "Tags entfernen"
 msgid "Open a message first, then print it."
 msgstr "Zuerst eine Nachricht öffnen, dann drucken."
 
+msgid "Delete “{name}”?"
+msgstr "Lösche »{name}«?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Smart Folder aus der Seitenleiste entfernen. Die angezeigten Nachrichten "
+"bleiben unverändert erhalten."
+
+msgid "Snooze until"
+msgstr "Zurückstellen bis"
+
 msgid "Message Source"
 msgstr "Nachrichtenquelle"
 
@@ -1786,20 +1800,6 @@ msgstr "Nächster Treffer"
 
 msgid "Close find"
 msgstr "Suche schließen"
-
-msgid "Delete “{name}”?"
-msgstr "Lösche »{name}«?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Smart Folder aus der Seitenleiste entfernen. Die angezeigten Nachrichten "
-"bleiben unverändert erhalten."
-
-msgid "Snooze until"
-msgstr "Zurückstellen bis"
 
 msgid "Could not add the event: {e}"
 msgstr "Termin konnte nicht erstellt werden: {e}"
@@ -5675,6 +5675,10 @@ msgstr "Aus Kontakten"
 
 msgid "High Importance"
 msgstr "Wichtigkeit: hoch"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Tagged"
 
 msgid "Today"
 msgstr "Heute"

@@ -1764,6 +1764,20 @@ msgstr "Remover etiquetas"
 msgid "Open a message first, then print it."
 msgstr "Abra primeiro uma mensagem e, em seguida, imprima-a."
 
+msgid "Delete “{name}”?"
+msgstr "Excluir “{name}”?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"A pasta de pesquisa é removida da barra lateral. As mensagens que mostra "
+"permanecem onde estão."
+
+msgid "Snooze until"
+msgstr "Adiar até"
+
 msgid "Message Source"
 msgstr "Código fonte da mensagem"
 
@@ -1778,20 +1792,6 @@ msgstr "Próxima correspondência"
 
 msgid "Close find"
 msgstr "Fechar pesquisa"
-
-msgid "Delete “{name}”?"
-msgstr "Excluir “{name}”?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"A pasta de pesquisa é removida da barra lateral. As mensagens que mostra "
-"permanecem onde estão."
-
-msgid "Snooze until"
-msgstr "Adiar até"
 
 msgid "Could not add the event: {e}"
 msgstr "Não foi possível adicionar o evento: {e}"
@@ -5605,6 +5605,10 @@ msgstr "Dos Contatos"
 
 msgid "High Importance"
 msgstr "Importância alta"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Com etiqueta"
 
 msgid "Today"
 msgstr "Hoje"

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **New: unread counts on the Tags rows, and an Untagged filter** (#717,
+  requested by bstegmaier75). Each tag under Tags, in the unified section
+  and in each account, shows how many unread messages carry it, counted as
+  the tag's view lists them: Trash and Junk left out, and a Gmail message
+  under several labels counted once. Sort and filter → Show only has
+  Untagged beside Tagged, for mail with no tag; turning one on turns the
+  other off.
+
 - **Changed: the interface text, after a review of every string.** About
   190 strings are shorter or plainer: no restated titles, no em dashes, and
   "Hylki" only where the app has to name itself. Apostrophes are curly,

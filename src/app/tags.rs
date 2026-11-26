@@ -8,11 +8,59 @@ use crate::ui::message_list::MessageListInput;
 use crate::ui::message_view::MessageViewInput;
 use crate::ui::message_window::MessageWindowInput;
 use crate::ui::preferences::PrefInput;
+use crate::ui::sidebar::TagUnread;
 use crate::worker::MailRequest;
 
 use super::demo::demo_mode;
 use super::model::AppModel;
 use super::msg::AppMsg;
+
+/// What one pass over the tag rows' unread chips reads (#717), gathered on
+/// the main thread: every tag with the name a Gmail label goes by, and each
+/// account with the folders whose mail a tag view lists (all but Trash and
+/// Junk, which keep their tags but stay out) and whether the unified Tags
+/// rows cover it.
+pub(super) struct TagCountJob {
+    tags: Vec<(String, String)>,
+    accounts: Vec<(u32, std::collections::HashSet<String>, bool)>,
+}
+
+impl TagCountJob {
+    /// Each tag's unread mail per account and for the unified rows, counted
+    /// as its view lists it: a message Gmail files under several labels is
+    /// one.
+    pub(super) fn run(&self, cache: &crate::cache::Cache) -> TagUnread {
+        let mut out = TagUnread::new();
+        for (kw, _) in &self.tags {
+            out.insert((None, kw.clone()), 0);
+        }
+        for (account_id, listed, unified) in &self.accounts {
+            let marks: Vec<crate::cache::TagMarks> = cache
+                .unread_tag_marks(*account_id)
+                .into_iter()
+                .filter(|m| listed.contains(&m.path))
+                .collect();
+            for (kw, name) in &self.tags {
+                let n = count_tagged(&marks, kw, name);
+                out.insert((Some(*account_id), kw.clone()), n);
+                if *unified {
+                    *out.entry((None, kw.clone())).or_default() += n;
+                }
+            }
+        }
+        out
+    }
+}
+
+/// The messages among `marks` carrying the tag, each Message-ID once.
+fn count_tagged(marks: &[crate::cache::TagMarks], keyword: &str, name: &str) -> u32 {
+    let mut seen: std::collections::HashSet<&str> = std::collections::HashSet::new();
+    marks
+        .iter()
+        .filter(|m| m.carries(keyword, name))
+        .filter(|m| m.message_id.is_empty() || seen.insert(m.message_id.as_str()))
+        .count() as u32
+}
 
 /// A running tag-finder scan (see `AppMsg::FindTags`).
 pub(super) struct TagScan {
@@ -68,6 +116,48 @@ impl AppModel {
             || self.in_every_account_view(account_id),
             |id| id == account_id,
         )
+    }
+
+    /// What the next count of the tag rows' unread mail reads.
+    pub(super) fn tag_count_job(&self) -> TagCountJob {
+        let tags = self
+            .tags
+            .iter()
+            .map(|t| (t.keyword.clone(), t.name.clone()))
+            .collect();
+        let accounts = self
+            .accounts
+            .iter()
+            .filter_map(|a| {
+                let folders = self.folders.get(&a.id)?;
+                let listed = folders
+                    .iter()
+                    .filter(|f| !matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
+                    .map(|f| f.path.clone())
+                    .collect();
+                Some((a.id, listed, self.in_tag_scope(None, a.id)))
+            })
+            .collect();
+        TagCountJob { tags, accounts }
+    }
+
+    /// The demo's tag counts, from the views it assembles out of the folders
+    /// loaded so far: its mail never reaches the database.
+    pub(super) fn demo_tag_counts(&self) -> TagUnread {
+        let scopes = std::iter::once(None).chain(self.accounts.iter().map(|a| Some(a.id)));
+        let mut out = TagUnread::new();
+        for scope in scopes {
+            for t in &self.tags {
+                let key = (scope, Some(t.keyword.clone()));
+                let n = self
+                    .assemble_tag_view(&key, Vec::new())
+                    .iter()
+                    .filter(|m| m.unread)
+                    .count() as u32;
+                out.insert((scope, t.keyword.clone()), n);
+            }
+        }
+        out
     }
 
     /// The keywords a tag view answers: one, or — the unified Tags row —
@@ -419,6 +509,7 @@ impl AppModel {
                 // The sidebar lists the tags; a removed one that was the open
                 // view falls back to All Inboxes there (SetContents).
                 self.rebuild_sidebar();
+                self.schedule_smart_counts(&sender);
                 // Rules may name a tag that now exists: tag what already sits
                 // in the inboxes, through the same sweep the filters use.
                 self.sweep_blacklisted();
@@ -440,6 +531,7 @@ impl AppModel {
                 if paths.is_empty() {
                     return;
                 }
+                self.schedule_smart_counts(&sender);
                 // The index changed under the open views: the tag view
                 // re-reads it, and an open folder among the changed ones
                 // re-syncs so its rows' chips follow.

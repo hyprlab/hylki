@@ -309,10 +309,10 @@ impl AppModel {
         out
     }
 
-    /// Count the smart folders' unread mail a few seconds from now, once for
-    /// however many syncs land meanwhile.
+    /// Count the smart folders' and the tag rows' unread mail a few seconds
+    /// from now, once for however many syncs land meanwhile.
     pub(super) fn schedule_smart_counts(&mut self, sender: &ComponentSender<Self>) {
-        if self.smart_folders.is_empty() || self.smart_counts_due {
+        if (self.smart_folders.is_empty() && self.tags.is_empty()) || self.smart_counts_due {
             return;
         }
         self.smart_counts_due = true;
@@ -320,8 +320,8 @@ impl AppModel {
         gtk::glib::timeout_add_seconds_local_once(3, move || s.input(AppMsg::CountSmartFolders));
     }
 
-    /// Each smart folder's unread mail for its sidebar row, read off the
-    /// main thread: only the unread rows are looked at.
+    /// Each smart folder's and each tag row's unread mail for the sidebar,
+    /// read off the main thread: only the unread rows are looked at.
     fn count_smart_folders(&mut self, sender: &ComponentSender<Self>) {
         if self.smart_counts_running {
             // A count in flight answers for what it read; this one comes
@@ -347,14 +347,17 @@ impl AppModel {
                     (f.id.clone(), n)
                 })
                 .collect();
-            sender.input(AppMsg::SmartCounts(counts));
+            sender.input(AppMsg::SmartCounts(counts, self.demo_tag_counts()));
             return;
         }
         self.smart_counts_running = true;
+        let tag_job = self.tag_count_job();
         let s = sender.clone();
         std::thread::spawn(move || {
             let mut counts: HashMap<String, u32> = HashMap::new();
+            let mut tags = crate::ui::sidebar::TagUnread::new();
             if let Ok(cache) = crate::cache::Cache::open() {
+                tags = tag_job.run(&cache);
                 for (folder, scope, ctx) in jobs {
                     let mut pre = folder.prefilter();
                     // Read mail is never counted, so a folder of read mail
@@ -384,7 +387,7 @@ impl AppModel {
                     counts.insert(folder.id, n);
                 }
             }
-            s.input(AppMsg::SmartCounts(counts));
+            s.input(AppMsg::SmartCounts(counts, tags));
         });
     }
 
@@ -461,9 +464,10 @@ impl AppModel {
                 self.count_smart_folders(&sender);
             }
 
-            AppMsg::SmartCounts(counts) => {
+            AppMsg::SmartCounts(counts, tags) => {
                 self.smart_counts_running = false;
                 self.sidebars_emit(SidebarInput::SetSmartUnread(counts));
+                self.sidebars_emit(SidebarInput::SetTagUnread(tags));
             }
 
             AppMsg::SetSmartFolders(folders) => {

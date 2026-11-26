@@ -1295,8 +1295,9 @@ pub(crate) enum AppMsg {
     FlagsSynced { account_id: u32, paths: Vec<String> },
     /// Count every smart folder's unread mail now (the debounce ran out).
     CountSmartFolders,
-    /// The smart folders' unread counts, by id, for the sidebar.
-    SmartCounts(HashMap<String, u32>),
+    /// The smart folders' unread counts, by id, and the tag rows' (#717),
+    /// for the sidebar.
+    SmartCounts(HashMap<String, u32>, crate::ui::sidebar::TagUnread),
     /// The smart folders as Settings left them.
     SetSmartFolders(Vec<config::SmartFolder>),
 
