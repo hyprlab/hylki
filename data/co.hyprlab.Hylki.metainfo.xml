@@ -11,15 +11,14 @@
   <project_license>AGPL-3.0-or-later</project_license>
 
   <name>Hylki</name>
-  <summary>A fast, GNOME-native email client, built with Rust and libadwaita. Open source and private by default.</summary>
+  <summary>A GNOME-native email client built with Rust and libadwaita.</summary>
 
   <description>
     <p>
-      Hylki is a desktop email client for GNOME on Wayland, written in Rust with
-      libadwaita. Your mail and credentials stay on your machine, remote content
-      is blocked until you allow it, and there is no telemetry. It works with
-      IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to
-      Proton Bridge to a Stalwart of your own.
+      Hylki is an email client for the Linux desktop made to fit in with GNOME.
+      It sends no telemetry or analytics. It is free software built to be both
+      feature rich and beautiful. It works with IMAP, POP3, JMAP and Microsoft
+      365 accounts as well as iCloud, Gmail and Proton Bridge.
     </p>
     <p>Accounts and mail:</p>
     <ul>
@@ -32,7 +31,7 @@
     <ul>
       <li>Rich text, Markdown, HTML or plain text, with HTML signatures, inline images, spell check and undo</li>
       <li>Drafts, quote folding, split replies, and forwarding that keeps the attachments</li>
-      <li>Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a Send with Hylki entry in GNOME Files</li>
+      <li>Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a “Send with Hylki” entry in GNOME Files</li>
     </ul>
     <p>Reading:</p>
     <ul>

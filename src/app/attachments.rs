@@ -288,9 +288,9 @@ impl AppModel {
         parent: &gtk::Window,
         sender: &ComponentSender<Self>,
     ) {
-        let heading = i18n("Delete the attachment from the server?");
+        let heading = i18n("Delete the Attachment From the Server?");
         let body = i18n_f(
-            "“{name}” will be removed from the message on the server. The rest of the message stays. This can’t be undone.",
+            "“{name}” will be removed from the message on the server. The rest of the message stays. This cannot be undone.",
             &[("name", &target.name)],
         );
         let s = sender.clone();

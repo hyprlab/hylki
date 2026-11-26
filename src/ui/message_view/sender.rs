@@ -20,10 +20,9 @@ pub(super) fn confirm_trust(
 ) {
     let dialog = crate::ui::dialog::message_dialog(
         parent,
-        Some(&i18n("Trust this key?")),
+        Some(&i18n("Trust This Key?")),
         Some(&i18n_f(
-            "Compare the fingerprint with the one {uid} gives you in person or over another channel. \
-             Trusting a key you have not checked lets an impostor's signature pass as theirs.",
+            "Compare the fingerprint with the one {uid} gives you in person or over another channel. Trusting a key you have not checked lets an impostor’s signature pass as theirs.",
             &[("uid", signer)],
         )),
     );
@@ -62,15 +61,15 @@ pub(super) fn fetch_sender_key(pgp: &crate::models::PgpStatus) -> Result<String,
     if let Some(b64) = &pgp.autocrypt {
         if let Some(bytes) = crate::encoding::base64_decode(b64) {
             if crate::mail::pgp::discovery::take_sender_key(&pgp.sender_addr, &bytes).is_ok() {
-                return Ok(i18n("The sender's key was taken from the message."));
+                return Ok(i18n("The sender’s key was taken from the message."));
             }
         }
     }
     let summary = crate::mail::pgp::fetch_key(&gpg, &pgp.sender_addr, pgp.signing_key_id())?;
     Ok(if summary.imported > 0 {
-        i18n("The sender's key was fetched and imported.")
+        i18n("The sender’s key was fetched and imported.")
     } else {
-        i18n("The sender's key was already in your keyring.")
+        i18n("The sender’s key was already in your keyring.")
     })
 }
 
@@ -179,12 +178,12 @@ impl MessageView {
             // The way out of the two doubts, without a terminal (#133).
             let action = if pgp.key_missing() {
                 Some((
-                    i18n("Fetch the sender's key"),
+                    i18n("Fetch Sender’s Key"),
                     MessageViewInput::PgpFetchKey { account_id, id },
                 ))
             } else if pgp.key_untrusted() {
                 Some((
-                    i18n("Trust this key…"),
+                    i18n("Trust This Key…"),
                     MessageViewInput::PgpTrustKey { account_id, id },
                 ))
             } else {
@@ -228,7 +227,7 @@ impl MessageView {
             content.append(&findings);
         }
         let footnote = gtk::Label::new(Some(
-            i18n("A pass proves the address wasn't forged — not that the message is safe.")
+            i18n("A pass proves the address was not forged, not that the message is safe.")
                 .as_str(),
         ));
         footnote.set_halign(gtk::Align::Start);

@@ -61,10 +61,10 @@ impl SensitivityLabel {
             );
         }
         if self.name.is_empty() {
-            return i18n("The sender's organization labeled this message without naming the label in it. For a Microsoft 365 account, turning on “Show sensitivity label names” in its settings shows the name. Hylki shows the label but does not apply its rules.");
+            return i18n("The sender’s organization labeled this message without naming the label. For a Microsoft 365 account, turn on “Show sensitivity label names” in its settings to see the name. The label’s rules are not applied here.");
         }
         let said = i18n_f(
-            "The sender's organization labeled this message “{label}”. Hylki shows the label but does not apply its rules.",
+            "The sender’s organization labeled this message “{label}”. The label’s rules are not applied here.",
             &[("label", &self.name)],
         );
         // The organization's own words, as Outlook shows them.

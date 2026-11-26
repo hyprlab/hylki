@@ -138,7 +138,7 @@ pub(crate) struct ServerUrl {
 pub(crate) fn parse_url(text: &str) -> Result<ServerUrl, String> {
     let text = text.trim();
     if text.is_empty() {
-        return Err(i18n("Enter the server's address."));
+        return Err(i18n("Enter the server’s address."));
     }
     let url = if text.contains("://") {
         text.to_string()
@@ -150,7 +150,7 @@ pub(crate) fn parse_url(text: &str) -> Result<ServerUrl, String> {
     let tls = match uri.scheme().to_ascii_lowercase().as_str() {
         "https" => true,
         "http" => false,
-        _ => return Err(i18n("The address starts with https:// or http://.")),
+        _ => return Err(i18n("The address must start with https:// or http://.")),
     };
     let host = uri.host().map(|h| h.to_string()).unwrap_or_default();
     if host.is_empty() {
@@ -315,10 +315,10 @@ pub(crate) fn status(account: &Account) -> Status {
         "required" if crate::config::has_eds_password(&account.uid) => Status::Connecting,
         "required" => Status::NeedsPassword,
         "ssl_failed" if message.trim().is_empty() => {
-            Status::Failed(i18n("The server's certificate could not be verified."))
+            Status::Failed(i18n("The server’s certificate could not be verified."))
         }
         "ssl_failed" => Status::Failed(i18n_f(
-            "The server's certificate could not be verified: {error}",
+            "The server’s certificate could not be verified: {error}",
             &[("error", message.trim())],
         )),
         "error" if message.trim().is_empty() => {

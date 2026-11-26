@@ -525,7 +525,7 @@ impl MessageList {
                 .contact_addresses
                 .clone()
                 .filter(|_| self.quick.has(QuickFilter::Contacts)),
-            tags: if self.quick.has(QuickFilter::Tagged) {
+            tags: if self.quick.has(QuickFilter::Tagged) || self.quick.has(QuickFilter::Untagged) {
                 self.shared.tags.borrow().clone()
             } else {
                 Vec::new()

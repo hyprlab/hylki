@@ -91,7 +91,7 @@ impl RecipientRow {
             } else if valid {
                 addr.to_string()
             } else {
-                i18n_f("“{addr}” is not an email address.", &[("addr", addr)])
+                i18n_f("“{address}” is not an email address.", &[("address", addr)])
             }
             .as_str(),
         ));

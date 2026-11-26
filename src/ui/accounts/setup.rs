@@ -16,7 +16,7 @@ impl AccountsWindow {
         let sig_source_btn = gtk::Button::with_label(&i18n("Edit HTML"));
         sig_source_btn.add_css_class("flat");
         sig_source_btn.set_valign(gtk::Align::Center);
-        sig_source_btn.set_tooltip_text(Some(&i18n("Edit the signature's HTML source")));
+        sig_source_btn.set_tooltip_text(Some(&i18n("Edit the signature’s HTML source")));
         {
             let s = sender.input_sender().clone();
             sig_source_btn.connect_clicked(move |_| {

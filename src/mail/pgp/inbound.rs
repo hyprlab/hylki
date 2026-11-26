@@ -416,7 +416,7 @@ fn found_key_note(signature: &PgpSignature, o: &Outcome, notes: &mut Vec<String>
     if let PgpSignature::Good { key_id, .. } = signature {
         notes.pop();
         notes.push(i18n_f(
-            "Signing key {id} came with the sender's mail or from their domain, not from your keyring; check its fingerprint with the sender before trusting it.",
+            "Signing key {id} came with the sender’s mail or from their domain, not from your keyring; check its fingerprint with the sender before trusting it.",
             &[("id", &key_display(o.fingerprint.as_deref().unwrap_or(key_id)))],
         ));
     }

@@ -21,7 +21,7 @@ impl SmartPage {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Smart Folders"),
                     set_description: Some(
-                        i18n("Lists the messages that match its conditions. Shown in the sidebar under the unified rows.").as_str()
+                        i18n("Each lists the messages that match its conditions, in the sidebar under the unified rows.").as_str()
                     ),
                     #[wrap(Some)]
                     set_header_suffix = &gtk::Button {

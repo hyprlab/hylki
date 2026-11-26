@@ -77,6 +77,7 @@ impl AppModel {
         sender: &ComponentSender<Self>,
     ) {
         self.tag_view_cache.retain(|(scope, _), _| scope.is_some());
+        self.schedule_smart_counts(sender);
         if self
             .tag_view
             .as_ref()

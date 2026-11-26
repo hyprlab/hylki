@@ -64,8 +64,10 @@ pub(super) fn scan_text(loading_more: bool, scan_remaining: u32) -> String {
     if scan_remaining > 0 {
         // Deliberately counts messages, not attachments: until a message has
         // been described there is no telling how many files it holds.
-        i18n_f(
+        ni18n_f(
+            "Indexing {n} message…",
             "Indexing {n} messages…",
+            scan_remaining,
             &[("n", &scan_remaining.to_string())],
         )
     } else if loading_more {
@@ -164,7 +166,7 @@ mod tests {
         assert_eq!(scan_text(false, 0), "");
         assert_eq!(scan_text(true, 0), "Loading more…");
         assert_eq!(scan_text(true, 5), "Indexing 5 messages…");
-        assert_eq!(scan_text(false, 1), "Indexing 1 messages…");
+        assert_eq!(scan_text(false, 1), "Indexing 1 message…");
     }
 
     /// The table's date ignores the date-style setting, a known quirk.

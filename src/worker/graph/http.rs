@@ -260,7 +260,7 @@ pub(super) async fn graph_token(
                 )
             } else {
                 i18n_f(
-                    "Microsoft did not accept the saved sign-in for {email}. Open Hylki's Settings → Mail Accounts and sign in to it again.",
+                    "Microsoft did not accept the saved sign-in for {email}. Open Hylki’s Settings → Mail Accounts and sign in to it again.",
                     &email,
                 )
             }));

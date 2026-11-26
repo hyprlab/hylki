@@ -147,7 +147,7 @@ impl EditorRows {
         let cloudflare = adw::SwitchRow::new();
         cloudflare.set_title(&i18n("Server is behind Cloudflare"));
         cloudflare.set_subtitle(&i18n(
-            "For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 MB pieces.",
+            "Files over 100 MB are uploaded in 90 MB pieces.",
         ));
         cloudflare.set_active(account.cloudflare);
         let expire = adw::SpinRow::with_range(0.0, 365.0, 1.0);
@@ -176,7 +176,7 @@ impl EditorRows {
         let defaults = adw::PreferencesGroup::new();
         defaults.set_title(&i18n("Link defaults"));
         defaults.set_description(Some(&i18n(
-            "Used unless you change them in the upload dialog for one email.",
+            "The upload dialog can change them for one message.",
         )));
         defaults.set_margin_top(28);
         defaults.add(&expire);
@@ -184,7 +184,7 @@ impl EditorRows {
 
         let check_box = gtk::Box::new(gtk::Orientation::Horizontal, 8);
         check_box.set_margin_top(8);
-        let check = gtk::Button::with_label(&i18n("Check Connection"));
+        let check = gtk::Button::with_label(&i18n("Test Connection"));
         check.set_valign(gtk::Align::Start);
         let status = gtk::Label::new(None);
         status.set_wrap(true);
@@ -329,7 +329,7 @@ pub(super) fn build_editor(
             }
             goa_row.set_sensitive(!listed.is_empty());
             let mut hint = if listed.is_empty() {
-                i18n("No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings, Online Accounts.")
+                i18n("No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings → Online Accounts.")
             } else {
                 i18n("OneDrive signs in through the online account above. No password needed.")
             };
@@ -415,7 +415,7 @@ pub(super) fn build_editor(
             cloudflare.set_visible(!dropbox && !goa);
             if goa {
                 fill_goa(k);
-                check.set_label(&i18n("Check Connection"));
+                check.set_label(&i18n("Test Connection"));
                 expire.set_subtitle(&i18n(
                     "Days. 0 keeps links forever. Needs Microsoft 365 or OneDrive for Business.",
                 ));
@@ -435,7 +435,7 @@ pub(super) fn build_editor(
             expire.set_subtitle(&i18n("Days. 0 keeps links forever."));
             match k {
                 CloudKind::Nextcloud => {
-                    user.set_title(&i18n("User name"));
+                    user.set_title(&i18n("Username"));
                     pass.set_title(&if editing {
                         i18n("App password (leave empty to keep)")
                     } else {
@@ -444,10 +444,10 @@ pub(super) fn build_editor(
                     protect.set_subtitle(&i18n(
                         "Each file gets its own password, shown to you to pass on.",
                     ));
-                    check.set_label(&i18n("Check Connection"));
+                    check.set_label(&i18n("Test Connection"));
                 }
                 CloudKind::Seafile => {
-                    user.set_title(&i18n("E-mail"));
+                    user.set_title(&i18n("Email"));
                     pass.set_title(&if editing {
                         i18n("Password (leave empty to keep)")
                     } else {
@@ -456,7 +456,7 @@ pub(super) fn build_editor(
                     protect.set_subtitle(&i18n(
                         "Each file gets its own password, shown to you to pass on.",
                     ));
-                    check.set_label(&i18n("Check Connection"));
+                    check.set_label(&i18n("Test Connection"));
                 }
                 // Handled above, before the return.
                 CloudKind::OneDrive => {}
@@ -464,7 +464,7 @@ pub(super) fn build_editor(
                     protect.set_subtitle(&i18n("Each file gets its own password, shown to you to pass on. Paid Dropbox plans only."));
                     check.set_label(&i18n("Connect with Dropbox…"));
                     app_key_hint.set_label(&i18n_f(
-                        "Dropbox needs an app registered to you:\n1. At dropbox.com/developers/apps, press Create app.\n2. Choose Scoped access, then App folder or Full Dropbox.\n3. Give it a name no one else has used and press Create app.\n4. On Permissions, tick account_info.read, files.content.write and sharing.write, then press Submit.\n5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n6. Copy the App key into the field above.\nDevelopment status is enough. Leave the field empty to use this build's own key, if it has one.",
+                        "Dropbox needs an app registered to you:\n1. At dropbox.com/developers/apps, press Create app.\n2. Choose Scoped access, then App folder or Full Dropbox.\n3. Give it a name no one else has used and press Create app.\n4. On Permissions, tick account_info.read, files.content.write and sharing.write, then press Submit.\n5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n6. Copy the App key into the field above.\nDevelopment status is enough. Leave the field empty to use this build’s own key, if it has one.",
                         &[("uri", &format!("http://localhost:{}/", crate::services::oauth::DROPBOX_REDIRECT_PORT))],
                     ));
                 }
@@ -713,7 +713,7 @@ fn connect_check(
             Job::Dropbox(a)
         } else {
             let missing = if a.kind == CloudKind::Seafile {
-                i18n("Fill in the server URL, e-mail and password first.")
+                i18n("Fill in the server URL, email and password first.")
             } else {
                 i18n("Fill in the server URL, user name and app password first.")
             };

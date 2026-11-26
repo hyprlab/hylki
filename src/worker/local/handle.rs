@@ -211,7 +211,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
                 message, ticket, ..
             } => self.refuse_send(&message, ticket),
             MailRequest::SaveDraft { .. } => emit(WorkerEvent::error(i18n(
-                "Mail on this computer is not sent, and has no drafts",
+                "On This Computer does not keep drafts: choose another From address",
             ))),
             MailRequest::LoadOutbox | MailRequest::FlushOutbox { .. } => {
                 emit_outbox(self.cache.as_ref(), account_id, emit)

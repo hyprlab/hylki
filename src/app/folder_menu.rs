@@ -21,7 +21,7 @@ impl AppModel {
             Some(f) if !parent.is_empty() => {
                 i18n_f("Create a folder inside {name}.", &[("name", &f.name)])
             }
-            _ => i18n("Create a new folder for this account."),
+            _ => String::new(),
         };
         let dialog = crate::ui::dialog::message_dialog(
             Some(&self.window),
@@ -194,9 +194,9 @@ impl AppModel {
                 }
                 let Some(path) = h.child(&parent, &leaf) else {
                     return self.notice_error(if parent.is_empty() {
-                        i18n("This account can't have folders at the top level.")
+                        i18n("This account cannot have folders at the top level.")
                     } else {
-                        i18n("Folders on this account can't hold other folders.")
+                        i18n("Folders on this account cannot hold other folders.")
                     });
                 };
                 if self

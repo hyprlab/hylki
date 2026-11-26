@@ -4,7 +4,7 @@
 
 use super::{ensured, After, Emit, ImapSession, ImapWorker};
 use crate::cache::Cache;
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::models::{FolderHierarchy, FolderKind};
 use crate::worker::folders::restore_folders;
 use crate::worker::imap::folders::{cached_folder_kind, refresh_folders};
@@ -161,7 +161,7 @@ impl<E: Emit> ImapWorker<E> {
                 if !*local_tags_noticed {
                     *local_tags_noticed = true;
                     emit(WorkerEvent::Notice(i18n(
-                        "This server does not store tags, so Hylki keeps them on this computer only",
+                        "This server does not store tags, so they are kept on this computer only.",
                     )));
                 }
             }
@@ -347,7 +347,7 @@ impl<E: Emit> ImapWorker<E> {
         // label it is shown in: the original would stay there, file
         // and all, beside the copy.
         if has_gmail_labels(account, &folders) {
-            let why = i18n("Gmail keeps a copy of every message in All Mail, so Hylki cannot remove an attachment there");
+            let why = i18n("Gmail keeps a copy of every message in All Mail, so the attachment cannot be removed there");
             strip_refused(emit, why, message_id, name, size);
             return After::Skip;
         }
@@ -477,8 +477,10 @@ impl<E: Emit> ImapWorker<E> {
                     "move failed: {path:?} -> {dest:?} set={} ({e})",
                     uid_set(&uids)
                 );
-                emit(WorkerEvent::error(i18n_f(
+                emit(WorkerEvent::error(ni18n_f(
+                    "Could not move {len} message: {e}",
                     "Could not move {len} messages: {e}",
+                    uids.len() as u32,
                     &[("len", &(uids.len()).to_string()), ("e", &(e).to_string())],
                 )));
                 lost = true;

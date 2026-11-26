@@ -359,7 +359,7 @@ impl Compose {
             Ok(check) => ask_unvouched(check, checked, widgets, sender),
             Err(problem) => {
                 let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
-                alert(parent.as_ref(), &i18n("Cannot send with OpenPGP"), &problem);
+                alert(parent.as_ref(), &i18n("Cannot Send With OpenPGP"), &problem);
             }
         }
     }
@@ -395,7 +395,7 @@ impl Compose {
             Ok(from) => from,
             Err(why) => {
                 let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
-                alert(parent.as_ref(), &i18n("Check the From address"), &why);
+                alert(parent.as_ref(), &i18n("Check the From Address"), &why);
                 return;
             }
         };
@@ -444,8 +444,8 @@ impl Compose {
         if !missing.is_empty() {
             self.rebuild_attachments(&widgets.attach_box, sender);
             let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
-            alert(parent.as_ref(), &i18n("An attachment is missing"), &i18n_f(
-                "Hylki cannot read {names}. It was moved or deleted after it was attached. Remove it, or attach it again from where it is now.",
+            alert(parent.as_ref(), &i18n("An Attachment Is Missing"), &i18n_f(
+                "{names} cannot be read. It was moved or deleted after it was attached. Remove it, or attach it again from where it is now.",
                 &[("names", &missing.join(", "))],
             ));
             return false;
@@ -881,9 +881,9 @@ fn recipients_ok(widgets: &ComposeWidgets) -> bool {
                 &[("addr", &addr)],
             )
         } else {
-            i18n_f("“{addr}” is not an email address.", &[("addr", &addr)])
+            i18n_f("“{address}” is not an email address.", &[("address", &addr)])
         };
-        alert(parent.as_ref(), &i18n("Check the address"), &why);
+        alert(parent.as_ref(), &i18n("Check the Address"), &why);
         return false;
     }
     true

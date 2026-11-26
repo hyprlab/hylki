@@ -20,13 +20,6 @@ pub(super) fn summary_from_headers(account_id: u32, fetch: &Fetch, folder_id: u3
 
     let uid = fetch.uid.unwrap_or(0);
     let flags: Vec<Flag> = fetch.flags().collect();
-    let unread = !flags.iter().any(|f| matches!(f, Flag::Seen));
-    let starred = flags.iter().any(|f| matches!(f, Flag::Flagged));
-    let answered = flags.iter().any(|f| matches!(f, Flag::Answered));
-    let keywords = custom_flags(&flags);
-    let forwarded = keywords
-        .iter()
-        .any(|k| k.eq_ignore_ascii_case(FORWARDED_KEYWORD));
 
     let raw = fetch.header().unwrap_or(&[]);
     let parsed = MessageParser::default().parse(raw);
@@ -127,11 +120,11 @@ pub(super) fn summary_from_headers(account_id: u32, fetch: &Fetch, folder_id: u3
         body: String::new(),
         date,
         timestamp,
-        unread,
-        starred,
-        answered,
-        forwarded,
-        keywords,
+        unread: true,
+        starred: false,
+        answered: false,
+        forwarded: false,
+        keywords: Vec::new(),
         has_attachment,
         message_id,
         references,
@@ -139,20 +132,27 @@ pub(super) fn summary_from_headers(account_id: u32, fetch: &Fetch, folder_id: u3
         due: 0,
         labels: Vec::new(),
     };
+    apply_flags(&mut msg, &flags);
     msg.scrub_nuls();
     msg
+}
+
+/// Read, starred, answered, forwarded and the keywords, from a message's
+/// FLAGS: the part of a summary that changes after it arrives.
+pub(super) fn apply_flags(msg: &mut Message, flags: &[Flag<'_>]) {
+    msg.unread = !flags.iter().any(|f| matches!(f, Flag::Seen));
+    msg.starred = flags.iter().any(|f| matches!(f, Flag::Flagged));
+    msg.answered = flags.iter().any(|f| matches!(f, Flag::Answered));
+    msg.keywords = custom_flags(flags);
+    msg.forwarded = msg
+        .keywords
+        .iter()
+        .any(|k| k.eq_ignore_ascii_case(FORWARDED_KEYWORD));
 }
 
 pub(super) fn build_summary(account_id: u32, fetch: &Fetch, folder_id: u32) -> Message {
     let uid = fetch.uid.unwrap_or(0);
     let flags: Vec<Flag> = fetch.flags().collect();
-    let unread = !flags.iter().any(|f| matches!(f, Flag::Seen));
-    let starred = flags.iter().any(|f| matches!(f, Flag::Flagged));
-    let answered = flags.iter().any(|f| matches!(f, Flag::Answered));
-    let keywords = custom_flags(&flags);
-    let forwarded = keywords
-        .iter()
-        .any(|k| k.eq_ignore_ascii_case(FORWARDED_KEYWORD));
 
     let env = fetch.envelope();
     let (from_name, from_addr) = env
@@ -228,11 +228,11 @@ pub(super) fn build_summary(account_id: u32, fetch: &Fetch, folder_id: u32) -> M
         body: String::new(),
         date,
         timestamp,
-        unread,
-        starred,
-        answered,
-        forwarded,
-        keywords,
+        unread: true,
+        starred: false,
+        answered: false,
+        forwarded: false,
+        keywords: Vec::new(),
         has_attachment,
         message_id,
         references,
@@ -240,6 +240,7 @@ pub(super) fn build_summary(account_id: u32, fetch: &Fetch, folder_id: u32) -> M
         due: 0,
         labels: Vec::new(),
     };
+    apply_flags(&mut msg, &flags);
     msg.scrub_nuls();
     msg
 }

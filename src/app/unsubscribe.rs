@@ -159,15 +159,15 @@ impl AppModel {
         sender: &ComponentSender<Self>,
     ) {
         let heading = i18n_f(
-            "Unsubscribe from {name}?",
+            "Unsubscribe From {name}?",
             &[("name", &sender_label(&message))],
         );
         let mut body = if info.one_click.is_some() {
-            i18n("Hylki will ask the list to stop sending you mail. A list can take a few days to act on the request.")
+            i18n("An unsubscribe request will be sent to the list. A list can take a few days to update.")
         } else if let Some(t) = Self::unsubscribe_mail_target(&info) {
             let (_, from) = self.unsubscribe_from(&message);
             i18n_f(
-                "An unsubscribe request will be sent to {addr} from {from}. A list can take a few days to act on it.",
+                "An unsubscribe request will be sent to {addr} from {from}. A list can take a few days to update.",
                 &[("addr", &t.to), ("from", &from)],
             )
         } else {
@@ -178,7 +178,7 @@ impl AppModel {
         if !info.in_headers {
             body.push(' ');
             body.push_str(&i18n(
-                "This message carries no unsubscribe header, so Hylki is going by the link in it.",
+                "This message has no unsubscribe header, so the link in it is used instead.",
             ));
         }
         let parent = relm4::main_application()
@@ -332,7 +332,7 @@ impl AppModel {
         let Some(target) = Self::unsubscribe_mail_target(info) else {
             sender.input(AppMsg::UnsubscribeDone {
                 message: Box::new(message),
-                result: Err(i18n("the list's mail address could not be read")),
+                result: Err(i18n("the list’s mail address could not be read")),
             });
             return;
         };
@@ -386,7 +386,7 @@ impl AppModel {
                             ));
                         } else {
                             self.notice(i18n(
-                                "The list's unsubscribe page is open in your browser.",
+                                "The list’s unsubscribe page is open in your browser.",
                             ));
                         }
                         self.push_unsubscribe_state(key, None);

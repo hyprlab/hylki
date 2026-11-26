@@ -47,7 +47,7 @@ impl SystemPage {
                     #[name = "language_row"]
                     adw::ComboRow {
                         set_title: &i18n("Language"),
-                        set_subtitle: &i18n("Applies after a restart."),
+                        set_subtitle: &i18n("Applies after app restarts."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeLanguage(row.selected()));
                         },
@@ -193,7 +193,7 @@ impl SystemPage {
                     #[name = "keep_downloads_row"]
                     adw::ComboRow {
                         set_title: &i18n("Keep downloaded mail"),
-                        set_subtitle: &i18n("Mail inside an account's offline period is kept."),
+                        set_subtitle: &i18n("Mail inside an account’s offline period is kept."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeKeepDownloads(row.selected()));
                         },

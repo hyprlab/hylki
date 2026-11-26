@@ -132,7 +132,7 @@ fn download(archive: &Archive, to: &Path, progress: &Progress) -> Result<(), Str
     let mut buf = vec![0u8; 64 * 1024];
     loop {
         if progress.cancel.load(Ordering::Relaxed) {
-            return Err(i18n("The download was cancelled."));
+            return Err(i18n("The download was canceled."));
         }
         let n = reader
             .read(&mut buf)

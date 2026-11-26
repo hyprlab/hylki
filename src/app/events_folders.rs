@@ -47,6 +47,11 @@ impl AppModel {
                 folder_id,
                 unread,
             } => {
+                // A whole-folder mark is in the cache once its count comes
+                // back: the chips counted from the cache can be recounted.
+                if self.folder_write_settled(account_id, folder_id) {
+                    self.schedule_smart_counts(&sender);
+                }
                 // A count fetched ahead of a read mark still in the worker's
                 // queue: the app's own count (adjusted when the mark was
                 // made) stands until the mark is stored, and the server is
@@ -96,6 +101,9 @@ impl AppModel {
                 if !self.pending_seen.keys().any(|(a, _, _)| *a == account_id) {
                     self.resync_dropped_unread(account_id);
                 }
+                // The index holds the mark now: the smart folders' and tag
+                // rows' chips follow it.
+                self.schedule_smart_counts(&sender);
             }
 
             AppMsg::Answered {
@@ -116,6 +124,7 @@ impl AppModel {
                 uid,
                 keyword,
             } => {
+                self.tag_write_settled(account_id, &path, uid, &keyword);
                 let soon = std::time::Instant::now() + PENDING_TAG_SETTLED;
                 if let Some((_, until, _)) =
                     self.pending_tags
@@ -123,6 +132,7 @@ impl AppModel {
                 {
                     *until = (*until).min(soon);
                 }
+                self.schedule_smart_counts(&sender);
             }
 
             AppMsg::MovesSettled {

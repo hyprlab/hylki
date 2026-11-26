@@ -135,7 +135,7 @@ pub(crate) fn show(
                 .get(row.selected() as usize)
                 .is_some_and(|b| b.groups.is_none());
             row.set_subtitle(&if none {
-                i18n("Keeps no groups: their names stay on each contact.")
+                i18n("This book has no groups. Group names stay on each contact.")
             } else {
                 String::new()
             });

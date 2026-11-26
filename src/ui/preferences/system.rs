@@ -8,10 +8,10 @@ use super::*;
 pub(super) fn link_group_description(browsers: &[crate::ui::launch::Browser]) -> String {
     if browsers.is_empty() {
         i18n(
-            "Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask each time\" picks the browser per link with the option to remember it.",
+            "Inside the Flatpak sandbox, links open through the desktop’s chooser. With “Ask each time”, it asks for a browser per link and can remember the answer.",
         )
     } else {
-        i18n("\"Ask each time\" lets the desktop ask before each link.")
+        i18n("With “Ask each time”, the desktop asks before each link.")
     }
 }
 
@@ -24,7 +24,7 @@ pub(super) fn nautilus_status_text(state: &crate::desktop::nautilus_ext::State) 
         Status::Installed if state.loader == Some(false) => {
             i18n("Installed, but nautilus-python is missing")
         }
-        Status::Installed => i18n("Installed. Restart Files to load it; it needs nautilus-python"),
+        Status::Installed => i18n("Installed. Needs nautilus-python and a restart of Files."),
         Status::Outdated => i18n("Installed, but from another version"),
     };
     let state = state_text;
@@ -96,7 +96,7 @@ impl Preferences {
 
     pub(super) fn on_nautilus_install(&mut self, root: &adw::Window) {
         if let Err(e) = crate::desktop::nautilus_ext::install() {
-            report(root, &i18n("Could not install the extension"), &e);
+            report(root, &i18n("Could Not Install the Extension"), &e);
         }
         self.nautilus = crate::desktop::nautilus_ext::State::read();
     }
@@ -131,7 +131,7 @@ impl Preferences {
         root: &adw::Window,
     ) {
         let dialog = adw::AlertDialog::new(
-            Some(&i18n("Remove downloaded mail?")),
+            Some(&i18n("Remove Downloaded Mail?")),
             Some(&i18n("Mail and attachments on this computer are removed and fetched again when opened. Nothing on the server changes.")),
         );
         dialog.add_response("cancel", &i18n("Cancel"));
@@ -176,7 +176,7 @@ impl Preferences {
 
     pub(super) fn on_nautilus_remove(&mut self, root: &adw::Window) {
         if let Err(e) = crate::desktop::nautilus_ext::remove() {
-            report(root, &i18n("Could not remove the extension"), &e);
+            report(root, &i18n("Could Not Remove the Extension"), &e);
         }
         self.nautilus = crate::desktop::nautilus_ext::State::read();
     }
@@ -246,7 +246,7 @@ impl Preferences {
 
     pub(super) fn on_nautilus_restart_files(&mut self, root: &adw::Window) {
         if let Err(e) = crate::desktop::nautilus_ext::quit_files() {
-            report(root, &i18n("Could not restart Files"), &e);
+            report(root, &i18n("Could Not Restart Files"), &e);
         }
         self.nautilus = crate::desktop::nautilus_ext::State::read();
     }

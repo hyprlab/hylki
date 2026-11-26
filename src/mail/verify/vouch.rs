@@ -96,12 +96,12 @@ impl Vouchers {
         };
         check.trust = SenderTrust::Unverified;
         check.summary = i18n_f(
-            "Nothing here proves this came from {from} — or that it didn't.",
+            "Nothing here proves this came from {from}, or that it did not.",
             &[("from", from)],
         );
         check
             .findings
-            .push(i18n("These checks aren't known to come from your mail provider"));
+            .push(i18n("These checks are not known to come from your mail provider"));
     }
 }
 

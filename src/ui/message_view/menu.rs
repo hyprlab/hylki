@@ -84,7 +84,7 @@ pub(crate) fn hit_menu_entries(
             });
         out.push(
             match address {
-                Some(a) => MenuEntry::new(i18n("Copy Email Address"), copy(a)),
+                Some(a) => MenuEntry::new(i18n("Copy Address"), copy(a)),
                 None => MenuEntry::new(i18n("Copy Link Address"), copy(link_to_open(uri))),
             }
             .icon("edit-copy-symbolic"),

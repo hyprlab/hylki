@@ -2,7 +2,9 @@
 //! syncs, refresh ticks and the mutations that leave the mail they read
 //! alone, and may interrupt an in-flight network read when nothing they
 //! must wait for is queued. A message being sent overtakes and interrupts
-//! the same reads, though no mutation.
+//! the same reads, though no mutation. The count the Empty Trash question
+//! asks for overtakes queued list syncs and refresh ticks, and interrupts
+//! nothing.
 
 use tokio::sync::mpsc;
 
@@ -36,6 +38,20 @@ fn is_send_now(req: &MailRequest) -> bool {
 /// their asking: the reader's loads and a message being sent.
 fn goes_first(req: &MailRequest) -> bool {
     is_reader_load(req) || is_send_now(req)
+}
+
+/// The count the Empty Trash / Empty Junk question waits on (#676): one
+/// EXAMINE, which sat behind every folder sync queued on a slow server. It
+/// never cuts a read short, which costs a reconnect, since the question
+/// shows the cached count meanwhile. Nor does it pass a move, which may be
+/// filling the very folder it counts.
+fn is_empty_count(req: &MailRequest) -> bool {
+    matches!(req, MailRequest::CountFolder { .. })
+}
+
+/// What moves up the queue past the list syncs and refresh ticks before it.
+fn jumps_queue(req: &MailRequest) -> bool {
+    goes_first(req) || is_empty_count(req)
 }
 
 /// A folder list fetch: work the reader's loads may go ahead of.
@@ -125,8 +141,8 @@ fn may_overtake(reader: &MailRequest, ahead: &MailRequest) -> bool {
 }
 
 /// Take everything else already queued behind `first` and move the reader's
-/// loads and sends ahead of the list syncs they sit behind, keeping every
-/// other order.
+/// loads, sends and Empty Trash counts ahead of the list syncs they sit
+/// behind, keeping every other order.
 ///
 /// The worker serves one request at a time, so a message opened right after
 /// a view that loads its folder (a notification click into Inboxes, which
@@ -153,7 +169,7 @@ pub(super) fn reorder_reader_loads(
     if queue.len() > 1 {
         let mut ordered: Vec<MailRequest> = Vec::with_capacity(queue.len());
         for req in queue {
-            if goes_first(&req) {
+            if jumps_queue(&req) {
                 // Slot in ahead of list fetches and deferred refresh ticks.
                 let mut at = ordered.len();
                 while at > 0 && may_overtake(&req, &ordered[at - 1]) {
@@ -191,9 +207,9 @@ pub(super) fn yield_to_queued_reader(
     while let Ok(r) = rx.try_recv() {
         backlog.push_back(r);
     }
-    // Reader loads and sends keep their order among themselves, so only
-    // the first can come to the front.
-    let Some(at) = backlog.iter().position(goes_first) else {
+    // Reader loads, sends and counts keep their order among themselves, so
+    // only the first can come to the front.
+    let Some(at) = backlog.iter().position(jumps_queue) else {
         return Some(req);
     };
     if !backlog
@@ -352,6 +368,85 @@ mod reader_preemption_tests {
         assert!(matches!(
             backlog.pop_front(),
             Some(MailRequest::MoveMessages { .. })
+        ));
+    }
+
+    fn count() -> MailRequest {
+        MailRequest::CountFolder {
+            path: "Trash".into(),
+        }
+    }
+
+    fn sync(path: &str) -> MailRequest {
+        MailRequest::SyncFolder {
+            folder_id: 1,
+            path: path.into(),
+        }
+    }
+
+    /// #676: the Empty Trash count sat behind every folder sync queued on a
+    /// slow server; it goes first, and the syncs keep their order.
+    #[test]
+    fn an_empty_count_overtakes_queued_syncs() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(sync("Archive")).unwrap();
+        tx.send(MailRequest::RefreshUnread).unwrap();
+        tx.send(count()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(sync("INBOX"), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::CountFolder { .. }));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SyncFolder { path, .. }) if path == "INBOX"
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SyncFolder { path, .. }) if path == "Archive"
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::RefreshUnread)
+        ));
+    }
+
+    /// A move may be filling the folder counted, so the count waits for it.
+    #[test]
+    fn an_empty_count_waits_for_a_move() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(sync("Archive")).unwrap();
+        tx.send(count()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let first = reorder_reader_loads(move_of(7), &mut rx, &mut backlog);
+        assert!(matches!(first, MailRequest::MoveMessage { .. }));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::CountFolder { .. })
+        ));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::SyncFolder { .. })
+        ));
+    }
+
+    /// It never cuts a read short: that would cost a reconnect.
+    #[tokio::test]
+    async fn an_empty_count_does_not_interrupt_a_read() {
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        tx.send(count()).unwrap();
+        let mut backlog = std::collections::VecDeque::new();
+        let done = interrupt_read_for_reader(
+            async {
+                tokio::time::sleep(Duration::from_millis(20)).await;
+                7
+            },
+            &mut rx,
+            &mut backlog,
+        )
+        .await;
+        assert_eq!(done, Some(7));
+        assert!(matches!(
+            backlog.pop_front(),
+            Some(MailRequest::CountFolder { .. })
         ));
     }
 

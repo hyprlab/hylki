@@ -273,10 +273,10 @@ impl ContactSources {
         let group = adw::PreferencesGroup::new();
         group.set_title(&i18n("Hylki Address Book"));
         group.set_description(Some(&i18n(
-            "Kept in Hylki's own data folder. Works without GNOME.",
+            "Kept in the app’s own data folder. Works without GNOME.",
         )));
         let count = adw::ActionRow::new();
-        count.set_title(&i18n("Contacts in the Hylki book"));
+        count.set_title(&i18n("Contacts"));
         let n = gtk::Label::new(Some(&self.local_count.to_string()));
         n.add_css_class("dim-label");
         count.add_suffix(&n);
@@ -297,13 +297,13 @@ impl ContactSources {
             };
         group.add(&action(
             i18n("Import vCard or CSV files"),
-            i18n("Adds contacts from .vcf or .csv files. Importing a file again updates existing entries."),
+            i18n("Importing a file again updates its contacts."),
             || ContactSourcesInput::ImportLocal,
             true,
         ));
         group.add(&action(
             i18n("Export as a vCard file"),
-            i18n("Saves every contact in the Hylki book in one .vcf file."),
+            String::new(),
             || ContactSourcesInput::ExportLocal,
             self.local_count > 0,
         ));
@@ -379,7 +379,7 @@ impl ContactSources {
             toggle.set_valign(gtk::Align::Center);
             toggle.set_active(s.on);
             toggle.set_sensitive(s.paused.is_none());
-            toggle.set_tooltip_text(Some(&i18n("Use in Hylki")));
+            toggle.set_tooltip_text(Some(&i18n("Use this address book")));
             let input = sender.input_sender().clone();
             toggle.connect_state_set(move |_, on| {
                 let _ = input.send(ContactSourcesInput::Toggle { index: i, on });

@@ -309,7 +309,7 @@ impl Welcome {
                     .status_lbl
                     .set_css_classes(&["welcome-hint", "success"]);
                 widgets.status_lbl.set_text(&i18n_f(
-                    "✓ {email} — connected and added",
+                    "✓ {email} connected and added",
                     &[("email", &(email).to_string())],
                 ));
                 widgets.pass_row.set_text("");
@@ -323,7 +323,7 @@ impl Welcome {
                     .status_lbl
                     .set_css_classes(&["welcome-hint", "error"]);
                 widgets.status_lbl.set_text(&i18n_f(
-                    "{email} — mail server: {e}",
+                    "{email} (incoming server): {e}",
                     &[("email", &(email).to_string()), ("e", &(e).to_string())],
                 ));
             }
@@ -332,7 +332,7 @@ impl Welcome {
                     .status_lbl
                     .set_css_classes(&["welcome-hint", "error"]);
                 widgets.status_lbl.set_text(&i18n_f(
-                    "{email} — sending (SMTP): {e}",
+                    "{email} (outgoing server): {e}",
                     &[("email", &(email).to_string()), ("e", &(e).to_string())],
                 ));
             }
@@ -373,7 +373,7 @@ impl Welcome {
                     .status_lbl
                     .set_css_classes(&["welcome-hint", "success"]);
                 widgets.status_lbl.set_text(&i18n_f(
-                    "✓ {email} — signed in and added",
+                    "✓ {email} signed in and added",
                     &[("email", &email)],
                 ));
                 widgets.email_row.set_text("");

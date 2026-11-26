@@ -153,7 +153,7 @@ impl GeneralPage {
                     adw::SwitchRow {
                         // Kept current by update_view.
                         set_sensitive: model.notifications && model.sound.enabled,
-                        set_title: &i18n("Also play while Hylki is in front"),
+                        set_title: &i18n("Also play while the window is in front"),
                         connect_active_notify[sender] => move |row| {
                             sender.input(PrefInput::ToggleSoundFocused(row.is_active()));
                         },

@@ -167,7 +167,7 @@ impl AppModel {
                 ),
                 action_entry(
                     sender,
-                    i18n("Send all"),
+                    i18n("Send All"),
                     "mail-send",
                     || AppMsg::RetryAllOutbox,
                     true,

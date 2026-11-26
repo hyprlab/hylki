@@ -57,7 +57,7 @@ The full list. The [README](../README.md) carries a shorter one.
   server has neither; custom colours, drag to reorder, and number-key
   shortcuts. Gmail's labels show beside them.
 - **Quick filters:** unread, starred, attachments, addressed to you, from
-  your contacts, high importance, tagged, today and a range of dates,
+  your contacts, high importance, tagged, untagged, today and a range of dates,
   combined, in one popover above the list with the sort orders. See [Message list layout](DOCUMENTATION.md#message-list-layout).
 - **Browse by the year:** the list's scrollbar spans the whole folder, and
   dragging it names the month and year it is passing.

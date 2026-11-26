@@ -257,9 +257,12 @@ impl AppModel {
     /// the list follows the count. An open inbox (alone or as All Inboxes)
     /// or an open folder is the IDLE folder, whose own resync covers it.
     pub(super) fn sync_background_folder(&self, account_id: u32, folder_id: u32) {
+        // A Gmail label a tag stands for is followed too, or mail labelled
+        // in Gmail itself never reached the tag's view and chip (#717).
         let Some(folder) = self
             .counted_folders(account_id)
             .into_iter()
+            .chain(self.tag_label_folders(account_id).into_iter().map(|(_, f)| f))
             .find(|f| f.id == folder_id)
         else {
             return;
@@ -316,10 +319,12 @@ impl AppModel {
 
     /// Counted folders (#116) whose lists have never been loaded this run:
     /// fetch them quietly, so the tray menu can show their unread mail
-    /// without waiting for their counts to move.
+    /// without waiting for their counts to move. The Gmail labels tags stand
+    /// for go with them, for the tag rows' chips (#717).
     pub(super) fn sync_unloaded_counted_folders(&self) {
         for a in &self.accounts {
-            for f in self.counted_folders(a.id) {
+            let labels = self.tag_label_folders(a.id).into_iter().map(|(_, f)| f);
+            for f in self.counted_folders(a.id).into_iter().chain(labels) {
                 if !self.message_cache.contains_key(&(a.id, f.id)) {
                     self.send_to(
                         a.id,

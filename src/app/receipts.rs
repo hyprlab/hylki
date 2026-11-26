@@ -173,14 +173,14 @@ impl AppModel {
         let body = format!(
             "{}\n\n{}\n",
             i18n_f(
-                "This is a read receipt for the message sent to {to} on {date} with the subject \"{subject}\".",
+                "This is a read receipt for the message sent to {to} on {date} with the subject “{subject}”.",
                 &[
                     ("to", &from),
                     ("date", &crate::datefmt::date_time(m.timestamp)),
                     ("subject", &m.subject),
                 ],
             ),
-            i18n("It means the message was shown on the recipient's screen, not that it was read or understood."),
+            i18n("It means the message was shown on the recipient’s screen, not that it was read or understood."),
         );
         let mut out = machine_message(
             self.sending_account(m),

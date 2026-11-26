@@ -76,7 +76,7 @@ impl SendersPage {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Blocked Senders"),
                     set_description: Some(
-                        i18n("Their mail is moved to Trash on arrival. Enter an address, or a domain like \"example.com\" to apply to all senders from that domain.").as_str()
+                        i18n("Their mail is moved to Trash on arrival. A domain, such as “example.com”, blocks every address in it.").as_str()
                     ),
 
                     #[name = "add_blacklist_row"]

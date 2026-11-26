@@ -43,7 +43,7 @@ impl Encryption {
                 #[name = "hide_subject_row"]
                 adw::SwitchRow {
                     set_title: &i18n("Hide the subject of encrypted mail"),
-                    set_subtitle: &i18n("Only the recipients see the subject. Others see \"...\"."),
+                    set_subtitle: &i18n("Only the recipients see the subject. Others see “…”."),
                 },
                 // Autocrypt Level 1: the key goes out with the mail, and
                 // keys that come in that way are kept apart from the

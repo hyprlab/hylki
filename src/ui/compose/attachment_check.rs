@@ -77,7 +77,7 @@ impl Compose {
         let parent = widgets.to_row.root().and_downcast::<gtk::Window>();
         let dialog = crate::ui::dialog::message_dialog(
             parent.as_ref(),
-            Some(&i18n("Send without an attachment?")),
+            Some(&i18n("Send Without an Attachment?")),
             Some(&i18n_f(
                 "The message mentions “{word}”, but nothing is attached.",
                 &[("word", word)],

@@ -163,7 +163,7 @@ impl<E: Emit> ImapWorker<E> {
                         });
                         emit(WorkerEvent::error(if held {
                             i18n_f(
-                                "Message sent, but saving it to Sent failed: {e}. A copy is kept and saved there when Hylki next connects.",
+                                "Message sent, but saving it to Sent failed: {e}. A copy is kept and saved there at the next connection.",
                                 &[("e", &e)],
                             )
                         } else {

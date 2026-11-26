@@ -330,7 +330,7 @@ impl SimpleComponent for NotificationCenter {
                         gtk::Button {
                             #[watch]
                             set_visible: model.panel_open && !model.ids.is_empty(),
-                            set_label: &i18n("Clear all"),
+                            set_label: &i18n("Clear All"),
                             add_css_class: "flat",
                             connect_clicked => NotifyInput::ClearAll,
                         },

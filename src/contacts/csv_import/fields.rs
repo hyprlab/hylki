@@ -94,7 +94,7 @@ impl Target {
                 Single::Org => i18n("Company"),
                 Single::Dept => i18n("Department"),
                 Single::Title => i18n("Job title"),
-                Single::Note => i18n("Notes"),
+                Single::Note => i18n("Note"),
                 Single::Birthday => i18n("Birthday"),
                 Single::BirthYear => i18n("Birth year"),
                 Single::BirthMonth => i18n("Birth month"),

@@ -186,7 +186,7 @@ impl Compose {
         alert(
             parent.as_ref(),
             &i18n("Not now"),
-            &i18n("Accept or reject the AI agent's suggested changes first."),
+            &i18n("Accept or reject the AI agent’s suggested changes first."),
         );
         true
     }
@@ -534,7 +534,7 @@ impl Compose {
             bar.append(&changes);
         }
         let loss = gtk::Label::new(Some(&i18n(
-            "Accepting removes this text's formatting, links and pictures.",
+            "Accepting removes this text’s formatting, links and pictures.",
         )));
         loss.set_xalign(0.0);
         loss.set_wrap(true);

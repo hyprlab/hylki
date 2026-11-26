@@ -10,7 +10,6 @@ use crate::i18n::{i18n, i18n_f};
 use crate::models::{FolderKind, Message};
 use crate::ui::message_list::{MessageListInput, SearchScope};
 use crate::ui::message_view::MessageViewInput;
-use crate::ui::sidebar::SidebarInput;
 
 use super::demo::demo_mode;
 use super::model::AppModel;
@@ -21,7 +20,7 @@ pub(super) const SMART_VIEW_LIMIT: usize = 5000;
 
 /// What a smart folder's conditions need besides the message itself, made
 /// on the main thread and taken to the one that reads the index.
-struct SmartContext {
+pub(super) struct SmartContext {
     /// The tags' keywords, lower case.
     tags: Vec<String>,
     /// The tags themselves, for the Gmail labels that stand for them (#374).
@@ -163,7 +162,7 @@ impl AppModel {
 
     /// What a smart folder's matcher needs from here, to take to a thread:
     /// the tags' keywords, and the address books when a condition asks.
-    fn smart_context(&self, f: &config::SmartFolder) -> SmartContext {
+    pub(super) fn smart_context(&self, f: &config::SmartFolder) -> SmartContext {
         SmartContext {
             tags: self.tags.iter().map(|t| t.keyword.to_lowercase()).collect(),
             tag_list: self.tags.clone(),
@@ -309,10 +308,10 @@ impl AppModel {
         out
     }
 
-    /// Count the smart folders' unread mail a few seconds from now, once for
-    /// however many syncs land meanwhile.
+    /// Count the smart folders' and the tag rows' unread mail a few seconds
+    /// from now, once for however many syncs land meanwhile.
     pub(super) fn schedule_smart_counts(&mut self, sender: &ComponentSender<Self>) {
-        if self.smart_folders.is_empty() || self.smart_counts_due {
+        if (self.smart_folders.is_empty() && self.tags.is_empty()) || self.smart_counts_due {
             return;
         }
         self.smart_counts_due = true;
@@ -320,8 +319,8 @@ impl AppModel {
         gtk::glib::timeout_add_seconds_local_once(3, move || s.input(AppMsg::CountSmartFolders));
     }
 
-    /// Each smart folder's unread mail for its sidebar row, read off the
-    /// main thread: only the unread rows are looked at.
+    /// Each smart folder's and each tag row's unread mail for the sidebar,
+    /// read off the main thread: only the unread rows are looked at.
     fn count_smart_folders(&mut self, sender: &ComponentSender<Self>) {
         if self.smart_counts_running {
             // A count in flight answers for what it read; this one comes
@@ -347,14 +346,18 @@ impl AppModel {
                     (f.id.clone(), n)
                 })
                 .collect();
-            sender.input(AppMsg::SmartCounts(counts));
+            sender.input(AppMsg::SmartCounts(counts, self.demo_tag_counts()));
             return;
         }
         self.smart_counts_running = true;
+        self.view_recount_started();
+        let tag_job = self.tag_count_job();
         let s = sender.clone();
         std::thread::spawn(move || {
             let mut counts: HashMap<String, u32> = HashMap::new();
+            let mut tags = crate::ui::sidebar::TagUnread::new();
             if let Ok(cache) = crate::cache::Cache::open() {
+                tags = tag_job.run(&cache);
                 for (folder, scope, ctx) in jobs {
                     let mut pre = folder.prefilter();
                     // Read mail is never counted, so a folder of read mail
@@ -384,7 +387,7 @@ impl AppModel {
                     counts.insert(folder.id, n);
                 }
             }
-            s.input(AppMsg::SmartCounts(counts));
+            s.input(AppMsg::SmartCounts(counts, tags));
         });
     }
 
@@ -397,7 +400,7 @@ impl AppModel {
         let dialog = adw::AlertDialog::new(
             Some(&i18n_f("Delete “{name}”?", &[("name", &folder.name)])),
             Some(&i18n(
-                "The smart folder goes from the sidebar. The mail it shows stays where it is.",
+                "The smart folder is removed from the sidebar. The mail it shows stays where it is.",
             )),
         );
         dialog.add_response("cancel", &i18n("Cancel"));
@@ -461,9 +464,9 @@ impl AppModel {
                 self.count_smart_folders(&sender);
             }
 
-            AppMsg::SmartCounts(counts) => {
+            AppMsg::SmartCounts(counts, tags) => {
                 self.smart_counts_running = false;
-                self.sidebars_emit(SidebarInput::SetSmartUnread(counts));
+                self.view_recount_done(counts, tags);
             }
 
             AppMsg::SetSmartFolders(folders) => {

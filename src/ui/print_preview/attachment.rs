@@ -27,7 +27,7 @@ pub(crate) fn print_attachment(name: &str, data: &[u8], parent: Option<gtk::Wind
     };
 
     let dialog = gtk::PrintDialog::new();
-    dialog.set_title(&i18n("Print"));
+    dialog.set_title(&i18n("Print Message…"));
     let settings = gtk::PrintSettings::new();
     // Names the job in the queue, and the file when printing to one.
     let stem = Path::new(name)

@@ -65,11 +65,11 @@ fn cloud_upload_dialog(
     // This upload's terms, starting from the account's own.
     let expire = adw::SpinRow::with_range(0.0, 365.0, 1.0);
     expire.set_title(&i18n("Links expire after"));
-    expire.set_subtitle(&i18n("Days; 0 keeps the link indefinitely"));
+    expire.set_subtitle(&i18n("Days. 0 keeps links forever."));
     let protect = adw::SwitchRow::new();
-    protect.set_title(&i18n("Protect with a password"));
+    protect.set_title(&i18n("Protect links with a password"));
     let password = adw::EntryRow::new();
-    password.set_title(&i18n("Download password (empty: generated)"));
+    password.set_title(&i18n("Download password (leave empty to generate one)"));
     let apply_defaults = {
         let (expire, protect, password) = (expire.clone(), protect.clone(), password.clone());
         let accounts = accounts.to_vec();
@@ -79,7 +79,7 @@ fn cloud_upload_dialog(
                 // does not is greyed out, with the reason.
                 expire.set_sensitive(a.expiry_allowed());
                 expire.set_subtitle(&if a.expiry_allowed() {
-                    i18n("Days; 0 keeps the link indefinitely")
+                    i18n("Days. 0 keeps links forever.")
                 } else {
                     a.link_note.clone()
                 });
@@ -327,7 +327,7 @@ impl Compose {
                 let parent = root.root().and_downcast::<gtk::Window>();
                 alert(
                     parent.as_ref(),
-                    i18n_f("Could not upload {name}", &[("name", &name)]).as_str(),
+                    i18n_f("Could Not Upload {name}", &[("name", &name)]).as_str(),
                     &e,
                 );
             }
@@ -383,5 +383,5 @@ impl Compose {
 /// The cloud account's sign-in is missing from the keyring.
 pub(super) fn not_signed_in(root: &adw::BreakpointBin, name: &str) {
     let parent = root.root().and_downcast::<gtk::Window>();
-    alert(parent.as_ref(), i18n("Not signed in").as_str(), i18n_f("The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, and enter it again.", &[("name", name)]).as_str());
+    alert(parent.as_ref(), i18n("Not Signed In").as_str(), i18n_f("The sign-in for {name} is not in the keyring. Open Settings → Cloud Storage, and enter it again.", &[("name", name)]).as_str());
 }

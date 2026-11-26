@@ -44,7 +44,7 @@ pub(super) fn send_menu(sender: &ComponentSender<Compose>, model: &Compose) -> g
     let at = |time: u32| crate::datefmt::clock_label(time);
 
     item(
-        &i18n("Send now"),
+        &i18n("Send Now"),
         Box::new(|| vec![ComposeInput::ClearSendAt, ComposeInput::Send]),
     );
     list.append(&gtk::Separator::new(gtk::Orientation::Horizontal));

@@ -66,7 +66,7 @@ pub(crate) fn show(parent: &impl IsA<gtk::Window>, from: &'static Predecessor) {
     }
     dialog.set_extra_child(Some(&content));
 
-    dialog.add_response("ok", &i18n("Got it"));
+    dialog.add_response("ok", &i18n("Got It"));
     dialog.set_default_response(Some("ok"));
     dialog.set_close_response("ok");
     dialog.present();

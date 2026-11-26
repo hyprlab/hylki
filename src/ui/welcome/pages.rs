@@ -144,7 +144,7 @@ pub(super) fn build_hero_page(
     let hero = gtk::Box::new(gtk::Orientation::Vertical, 18);
     hero.set_halign(gtk::Align::Center);
     let tag = tagline(&i18n(
-        "A clean, fast home for your mail.\nLet's set things up — it takes about a minute.",
+        "A clean, fast home for your mail.\nSetting up takes about a minute.",
     ));
     tag.set_margin_top(16);
     // The interface language, first of all (#179): System, English and
@@ -300,7 +300,7 @@ pub(super) fn build_privacy_page(carousel: &adw::Carousel) -> PrivacyPage {
     let priv_pg = gtk::Box::new(gtk::Orientation::Vertical, 14);
     priv_pg.append(&title(&i18n("Privacy, your way")));
     priv_pg.append(&tagline(&i18n(
-        "Hylki sends no telemetry, ever. These control what leaves your machine while you read.",
+        "Hylki sends no telemetry. These control what leaves your computer while you read.",
     )));
     let priv_card = card();
     let sw_remote = adw::SwitchRow::new();
@@ -308,11 +308,11 @@ pub(super) fn build_privacy_page(carousel: &adw::Carousel) -> PrivacyPage {
     sw_remote.set_subtitle(&i18n("Stops senders tracking when and where you open mail"));
     sw_remote.set_active(!crate::config::load_privacy().auto_remote_content);
     let sw_gravatar = adw::SwitchRow::new();
-    sw_gravatar.set_title(&i18n("Fetch Gravatar portraits"));
-    sw_gravatar.set_subtitle(&i18n("Asks gravatar.com about each sender's address"));
+    sw_gravatar.set_title(&i18n("Use Gravatar when a contact has no photo"));
+    sw_gravatar.set_subtitle(&i18n("Sends a hash of the sender’s address to Gravatar."));
     sw_gravatar.set_active(crate::config::load_privacy().gravatar);
     let sw_logos = adw::SwitchRow::new();
-    sw_logos.set_title(&i18n("Fetch sender logos"));
+    sw_logos.set_title(&i18n("Show sender logos"));
     sw_logos.set_subtitle(&i18n("Looks up company icons for the message list"));
     sw_logos.set_active(crate::config::load_privacy().sender_logos);
     let sw_notif = adw::SwitchRow::new();
@@ -346,7 +346,7 @@ pub(super) fn build_personalize_page(carousel: &adw::Carousel) -> PersonalizePag
     let pers = gtk::Box::new(gtk::Orientation::Vertical, 14);
     pers.append(&title(&i18n("Make it yours")));
     pers.append(&tagline(&i18n(
-        "A few popular choices — everything can be changed later in Settings.",
+        "A few popular choices. Everything can be changed later in Settings.",
     )));
     let pers_card = card();
     let preview_row = adw::ComboRow::new();
@@ -359,12 +359,11 @@ pub(super) fn build_personalize_page(carousel: &adw::Carousel) -> PersonalizePag
     ])));
     preview_row.set_selected(crate::config::load_preview_lines().min(2));
     let sw_avatars = adw::SwitchRow::new();
-    sw_avatars.set_title(&i18n("Sender avatars"));
+    sw_avatars.set_title(&i18n("Show sender avatars"));
     sw_avatars.set_subtitle(&i18n("Colorful initials beside each message"));
     sw_avatars.set_active(crate::config::load_privacy().avatars);
     let sw_threading = adw::SwitchRow::new();
-    sw_threading.set_title(&i18n("Conversation view"));
-    sw_threading.set_subtitle(&i18n("Group messages into threads"));
+    sw_threading.set_title(&i18n("Group messages by conversation"));
     sw_threading.set_active(crate::config::load_privacy().threading);
     pers_card.append(&preview_row);
     pers_card.append(&sw_avatars);
@@ -422,11 +421,11 @@ pub(super) fn build_done_page(carousel: &adw::Carousel) {
     check.set_pixel_size(72);
     check.add_css_class("welcome-check");
     done.append(&check);
-    done.append(&title(&i18n("You're all set")));
+    done.append(&title(&i18n("You are all set")));
     let done_sub = tagline("");
     done_sub.set_use_markup(true);
     done_sub.set_markup(&i18n_f(
-        "Enjoy! If you encounter an issue or have a feature request,\nplease open an issue on our <a href=\"{url}\">Github</a>.",
+        "To report a problem or ask for a feature,\nopen an issue on <a href=\"{url}\">GitHub</a>.",
         &[("url", "https://github.com/hyprlab/hylki")],
     ));
     done.append(&done_sub);

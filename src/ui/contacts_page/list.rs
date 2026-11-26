@@ -644,7 +644,7 @@ impl ContactsPage {
                 );
             });
             actions.append(&add);
-            let move_btn = pill(&i18n("Move to…"));
+            let move_btn = pill(&i18n("Move To…"));
             move_btn.set_tooltip_text(Some(&i18n("Move to another address book")));
             move_btn.set_sensitive(choices.can_move);
             let (people, s) = (chosen.clone(), sender.input_sender().clone());

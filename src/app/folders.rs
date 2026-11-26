@@ -119,7 +119,7 @@ fn rekey_folder_key(
 
 /// Why a folder can't take another inside it.
 pub(super) fn cannot_hold(name: &str) -> String {
-    i18n_f("{name} can't hold other folders.", &[("name", name)])
+    i18n_f("{name} cannot hold other folders.", &[("name", name)])
 }
 
 pub(super) fn kind_label(kind: FolderKind) -> String {
@@ -326,7 +326,7 @@ impl AppModel {
         let h = self.hierarchy_for_change(account_id)?;
         // Into itself or its own subtree: there is no such place.
         if dest == path || h.is_under(&dest, &path) {
-            complain(self, &i18n("A folder can't be moved into itself."));
+            complain(self, &i18n("A folder cannot be moved into itself."));
             return None;
         }
         let folders = self.folders.get(&account_id).cloned().unwrap_or_default();
@@ -345,7 +345,7 @@ impl AppModel {
         let Some(new_path) = h.child(&dest, &leaf) else {
             complain(
                 self,
-                &i18n("This account can't have folders at the top level."),
+                &i18n("This account cannot have folders at the top level."),
             );
             return None;
         };

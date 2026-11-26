@@ -173,7 +173,7 @@ fn run(program: &std::path::Path, text: &str, dialect: &str) -> Result<Vec<Lint>
         .map_err(|e| i18n_f("Harper could not be started: {e}", &[("e", &e.to_string())]))?;
     // It exits with 1 when it finds something: the answer is what counts.
     let files: Vec<File> = serde_json::from_slice(&output.stdout)
-        .map_err(|_| i18n("Harper's answer could not be read."))?;
+        .map_err(|_| i18n("Harper’s answer could not be read."))?;
     Ok(files.into_iter().flat_map(|f| f.lints).collect())
 }
 

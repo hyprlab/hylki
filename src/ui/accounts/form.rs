@@ -50,8 +50,7 @@ pub(super) const SENT_COPY_HINT: &str =
     i18n_noop("Any folder, the Inbox included. Applies only to mail sent from here, starting now.");
 
 pub(super) const REPLY_COPIES_HINT: &str = i18n_noop(
-    "Uses the original's folder at the time the reply is sent. Replies to mail in Sent, \
-     Drafts, Trash or Junk go with sent mail.",
+    "Uses the original’s folder at the time the reply is sent. Replies to mail in Sent, Drafts, Trash or Junk go with sent mail.",
 );
 
 /// Whether a list row survives the page's search text (#141): matched
@@ -761,7 +760,7 @@ pub(super) fn apply_protocol(widgets: &AccountsWindowWidgets) {
             .set_title(&i18n("Server (host name or URL)"));
         widgets.form.port_row.set_title(&i18n("Port (default 443)"));
     } else {
-        widgets.form.host_row.set_title(&i18n("Incoming Server"));
+        widgets.form.host_row.set_title(&i18n("Incoming server"));
         widgets
             .form
             .port_row

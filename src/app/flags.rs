@@ -20,7 +20,7 @@ pub(super) fn star_label(starred: bool) -> String {
     if starred {
         i18n("Star")
     } else {
-        i18n("Unstar")
+        i18n("Remove Star")
     }
 }
 
@@ -96,10 +96,11 @@ impl AppModel {
                 keyword.to_string(),
             ),
         );
+        self.note_tag_write(m.account_id, &path, m.uid, keyword);
         self.send_to(
             m.account_id,
             MailRequest::SetKeyword {
-                path,
+                path: path.clone(),
                 uid: m.uid,
                 message_id: m.message_id.clone(),
                 keyword: keyword.to_string(),
@@ -117,6 +118,7 @@ impl AppModel {
             Some(t) if !add => patched.drop_tag(t),
             _ => patched.set_keyword(keyword, add),
         }
+        self.nudge_view_counts(&path, m, &patched);
         let (keywords, labels) = (patched.keywords.clone(), patched.labels.clone());
         let (aid, fid, id) = (m.account_id, m.folder_id, m.id);
         let same = |c: &Message| c.account_id == aid && c.id == id;
@@ -235,6 +237,9 @@ impl AppModel {
             (m.account_id, path.clone(), m.uid),
             (read, std::time::Instant::now()),
         );
+        let mut after = m.clone();
+        after.unread = !read;
+        self.nudge_view_counts(&path, m, &after);
         self.send_to(
             m.account_id,
             MailRequest::SetSeen {

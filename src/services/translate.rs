@@ -430,7 +430,7 @@ fn run(
             }
         };
         if texts.len() != batch.len() {
-            return Err(i18n("The service's answer could not be read."));
+            return Err(i18n("The service’s answer could not be read."));
         }
         if from.is_none() {
             from = detected.map(|d| from_service_code(&d));
@@ -461,7 +461,7 @@ pub(crate) fn translate_parts(
         ));
     }
     if parts.iter().map(String::len).sum::<usize>() > LIMIT {
-        return Err(i18n("This is too long to send for translation."));
+        return Err(i18n("This text is too long to send for translation."));
     }
     let (texts, _) = run(settings, key, parts, target)?;
     remember_compose_target(target);

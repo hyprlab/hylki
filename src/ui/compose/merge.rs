@@ -30,8 +30,8 @@ impl Compose {
         if self.encrypt {
             alert(
                 parent.as_ref(),
-                &i18n("Cannot merge an encrypted message"),
-                &i18n("Each message would need its recipient's key. Turn off Encrypt to merge."),
+                &i18n("Cannot Merge an Encrypted Message"),
+                &i18n("Each message would need its recipient’s key. Turn off Encrypt to merge."),
             );
             return;
         }
@@ -41,7 +41,7 @@ impl Compose {
         let from_alias = match self.chosen_from(widgets) {
             Ok(from) => from,
             Err(why) => {
-                alert(parent.as_ref(), &i18n("Check the From address"), &why);
+                alert(parent.as_ref(), &i18n("Check the From Address"), &why);
                 return;
             }
         };

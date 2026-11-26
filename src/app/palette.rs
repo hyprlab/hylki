@@ -86,8 +86,8 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
                 i18n_noop("Delete permanently, without going to Trash"),
             ),
             ("!", i18n_noop("Mark as spam")),
-            ("s", i18n_noop("Star or unstar")),
-            ("m", i18n_noop("Mark read or unread")),
+            ("s", i18n_noop("Star or remove star")),
+            ("m", i18n_noop("Mark as read or unread")),
             ("x", i18n_noop("Select this row (for a bulk action)")),
             (
                 "1 … 9",
@@ -96,7 +96,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("0", i18n_noop("Remove every tag")),
             ("Ctrl+U", i18n_noop("View Source")),
             ("Ctrl+P", i18n_noop("Print the message you are reading")),
-            ("Ctrl+Shift+P", i18n_noop("Preview it as a PDF first")),
+            ("Ctrl+Shift+P", i18n_noop("Preview before printing")),
         ],
     ),
     (
@@ -116,7 +116,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ),
             (
                 "Ctrl+.  or  Ctrl+;",
-                i18n_noop("Emoji chooser, at the cursor"),
+                i18n_noop("Insert an emoji at the cursor"),
             ),
             (
                 "Shift+Return",
@@ -135,9 +135,9 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("Enter", i18n_noop("Open the highlighted attachment")),
             (
                 "←  /  →",
-                i18n_noop("Previous or next in the gallery's preview"),
+                i18n_noop("Previous or next in the gallery’s preview"),
             ),
-            ("Esc", i18n_noop("Close the gallery's preview")),
+            ("Esc", i18n_noop("Close the gallery’s preview")),
         ],
     ),
     (
@@ -150,21 +150,21 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ("Ctrl+Shift+Z", i18n_noop("Redo it (Ctrl+Y does the same)")),
             (
                 "Ctrl+Shift+S",
-                i18n_noop("Reveal the status bar (also: long-press Refresh)"),
+                i18n_noop("Show the status bar (also: long-press Refresh)"),
             ),
             (
                 "Ctrl+Shift+A",
                 i18n_noop("Show or hide the accounts in the sidebar"),
             ),
             ("F5", i18n_noop("Check for new mail")),
-            ("Ctrl+Shift+F", i18n_noop("Focus Mode on or off")),
-            ("F11", i18n_noop("Fullscreen on or off")),
+            ("Ctrl+Shift+F", i18n_noop("Turn Focus Mode on or off")),
+            ("F11", i18n_noop("Turn fullscreen on or off")),
             (
                 "Ctrl+Alt+1  /  2  /  3",
                 i18n_noop("Reading pane right of the list, below it, or off"),
             ),
-            ("Ctrl++  /  Ctrl+-", i18n_noop("Message zoom in or out")),
-            ("Ctrl+0", i18n_noop("Message zoom back to the default")),
+            ("Ctrl++  /  Ctrl+-", i18n_noop("Zoom the message in or out")),
+            ("Ctrl+0", i18n_noop("Reset the message zoom")),
             ("Ctrl+,", i18n_noop("Settings")),
             (
                 "Ctrl+F",
@@ -172,7 +172,7 @@ const SHORTCUT_HELP: &[(&str, &[(&str, &str)])] = &[
             ),
             (
                 "Ctrl+Shift+C",
-                i18n_noop("Console mode (when enabled in Settings)"),
+                i18n_noop("Show the console (when Console mode is on in Settings)"),
             ),
             (
                 "Ctrl+W",
@@ -221,7 +221,7 @@ const GMAIL_HELP: &[(&str, &[(&str, &str)])] = &[
             ("#", i18n_noop("Delete")),
             ("Shift+Delete", i18n_noop("Delete permanently, without going to Trash")),
             ("!", i18n_noop("Mark as spam")),
-            ("s", i18n_noop("Star or unstar")),
+            ("s", i18n_noop("Star or remove star")),
             ("Shift+I", i18n_noop("Mark the conversation as read")),
             ("Shift+U", i18n_noop("Mark the conversation as unread and close it")),
             ("_", i18n_noop("Mark as unread from this message on and close it")),
@@ -285,7 +285,7 @@ impl AppModel {
             add(i18n("View Source"), &action, "Ctrl+U", || {
                 AppMsg::ViewSource
             });
-            add(i18n("Print"), &action, "Ctrl+P", || AppMsg::PrintMessage);
+            add(i18n("Print Message…"), &action, "Ctrl+P", || AppMsg::PrintMessage);
             add(i18n("Print Preview"), &action, "Ctrl+Shift+P", || {
                 AppMsg::PrintPreview
             });
@@ -323,16 +323,16 @@ impl AppModel {
         add(i18n("Search Messages"), &action, "Ctrl+F", || {
             AppMsg::OpenListSearch
         });
-        add(i18n("Show or Hide the Sidebar"), &action, "", || {
+        add(i18n("Expand or Collapse the Sidebar"), &action, "", || {
             AppMsg::ToggleSidebar
         });
-        add(i18n("Reading Pane Right"), &action, "Ctrl+Alt+1", || {
+        add(i18n("Show Reading Pane on the Right"), &action, "Ctrl+Alt+1", || {
             AppMsg::SetReadingPane(crate::config::ReadingPane::Right)
         });
-        add(i18n("Reading Pane Below"), &action, "Ctrl+Alt+2", || {
+        add(i18n("Show Reading Pane Below the List"), &action, "Ctrl+Alt+2", || {
             AppMsg::SetReadingPane(crate::config::ReadingPane::Below)
         });
-        add(i18n("Reading Pane Off"), &action, "Ctrl+Alt+3", || {
+        add(i18n("Hide Reading Pane"), &action, "Ctrl+Alt+3", || {
             AppMsg::SetReadingPane(crate::config::ReadingPane::Off)
         });
         add(i18n("Settings"), &action, "Ctrl+,", || AppMsg::OpenSettings);
@@ -583,7 +583,7 @@ impl AppModel {
         let status_bar = if self.status_bar_shown {
             i18n("Hide Status Bar")
         } else {
-            i18n("Reveal Status Bar")
+            i18n("Show Status Bar")
         };
         self.help_menu
             .append(Some(status_bar.as_str()), Some("win.status-bar"));

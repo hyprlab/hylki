@@ -82,7 +82,7 @@ pub(in crate::ui::preferences) fn group() -> adw::PreferencesGroup {
             engine_row.set_subtitle(&match engine {
                 Engine::Harper => i18n("English only. Nothing leaves this computer."),
                 Engine::Local => {
-                    i18n("Multi-language support. Nothing leaves this computer. Uses 1GB of RAM")
+                    i18n("Many languages. Nothing leaves this computer. Uses 1 GB of memory.")
                 }
                 Engine::Server => i18n("What you write is sent to the server as you type."),
             });

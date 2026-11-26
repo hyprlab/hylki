@@ -210,7 +210,7 @@ async fn connect_inner(
     // nothing a user could act on.
     if account.imap_host.trim().is_empty() {
         return Err(i18n(
-            "This account has no IMAP server. Hylki can't use Exchange accounts from Online Accounts: remove it and add it as an IMAP or Microsoft 365 account.",
+            "This account has no IMAP server. Exchange accounts from Online Accounts cannot be used here: remove it and add it as an IMAP or Microsoft 365 account.",
         )
         .into());
     }

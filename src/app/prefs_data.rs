@@ -251,11 +251,10 @@ impl AppModel {
                 let alert = crate::ui::dialog::message_dialog(
                     Some(&parent),
                     Some(i18n("Settings Imported").as_str()),
-                    Some(&i18n_f(
-                        "{n} mail account(s), the cloud storage accounts and all \
-                                 preferences were imported. Restart Hylki to apply them. \
-                                 Passwords and sign-ins are not part of a backup; re-enter \
-                                 them on first use if this is a new machine.",
+                    Some(&ni18n_f(
+                        "{n} mail account, the cloud storage accounts and all preferences were imported. Restart Hylki to apply them. Passwords and sign-ins are not in a backup: enter them again on a new computer.",
+                        "{n} mail accounts, the cloud storage accounts and all preferences were imported. Restart Hylki to apply them. Passwords and sign-ins are not in a backup: enter them again on a new computer.",
+                        n as u32,
                         &[("n", &n.to_string())],
                     )),
                 );

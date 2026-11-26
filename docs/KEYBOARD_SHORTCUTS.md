@@ -22,8 +22,8 @@ tags in a Tags menu shows its number.
 | <kbd>h</kbd> <kbd>←</kbd> <kbd>u</kbd> | Back to the message list | <kbd>a</kbd> | Archive |
 | <kbd>w</kbd> | Next message in the conversation | <kbd>d</kbd> <kbd>Delete</kbd> | Delete |
 | <kbd>b</kbd> | Previous message in the conversation | <kbd>!</kbd> | Mark as spam |
-| <kbd>/</kbd> | Search | <kbd>s</kbd> | Star or unstar |
-| <kbd>c</kbd> | Compose | <kbd>m</kbd> | Mark read or unread |
+| <kbd>/</kbd> | Search | <kbd>s</kbd> | Star or remove star |
+| <kbd>c</kbd> | Compose | <kbd>m</kbd> | Mark as read or unread |
 | <kbd>?</kbd> | This list | <kbd>x</kbd> | Select the row (for a bulk action) |
 | | | <kbd>1</kbd> … <kbd>9</kbd> | Add or remove a tag (the first nine, in Settings order) |
 | | | <kbd>0</kbd> | Remove every tag |
@@ -52,7 +52,7 @@ followed by another goes somewhere.
 | <kbd>g</kbd> <kbd>i</kbd> | Inbox | <kbd>[</kbd> <kbd>{</kbd> | Archive the conversation and open the newer one |
 | <kbd>g</kbd> <kbd>s</kbd> | Starred | <kbd>#</kbd> | Delete |
 | <kbd>g</kbd> <kbd>t</kbd> | Sent | <kbd>!</kbd> | Mark as spam |
-| <kbd>g</kbd> <kbd>d</kbd> | Drafts | <kbd>s</kbd> | Star or unstar |
+| <kbd>g</kbd> <kbd>d</kbd> | Drafts | <kbd>s</kbd> | Star or remove star |
 | <kbd>g</kbd> <kbd>a</kbd> | Archive | <kbd>Shift+I</kbd> | Mark the conversation as read |
 | <kbd>g</kbd> <kbd>c</kbd> | Contacts | <kbd>Shift+U</kbd> | Mark the conversation as unread and close it |
 | <kbd>/</kbd> | Search | <kbd>_</kbd> | Mark as unread from this message on and close it |
@@ -194,14 +194,14 @@ These work with or without single-key shortcuts too:
 | <kbd>Shift+Delete</kbd> | Delete the selected messages permanently, without going to Trash, after asking |
 | <kbd>Ctrl+F</kbd> | Search the message list, or find in the message when it has the focus; in the message source, find in the source |
 | <kbd>Ctrl+P</kbd> | Print the message you are reading |
-| <kbd>Ctrl+Shift+P</kbd> | Preview it as a PDF first |
+| <kbd>Ctrl+Shift+P</kbd> | Preview before printing |
 | <kbd>Ctrl+Z</kbd> | Undo the last action (a move, a delete, a star) |
 | <kbd>Ctrl+Shift+Z</kbd> <kbd>Ctrl+Y</kbd> | Redo it |
 | <kbd>F5</kbd> | Check for new mail, as Refresh does |
 | <kbd>Ctrl+Shift+S</kbd> | Reveal the status bar (also: long-press Refresh) |
 | <kbd>Ctrl+Shift+A</kbd> | Show or hide the accounts in the sidebar |
 | <kbd>Ctrl+Shift+C</kbd> | Console mode, when it is enabled in Settings |
-| <kbd>F11</kbd> | Fullscreen on or off |
+| <kbd>F11</kbd> | Turn fullscreen on or off |
 | <kbd>Ctrl+Alt+1</kbd> <kbd>Ctrl+Alt+2</kbd> <kbd>Ctrl+Alt+3</kbd> | Reading pane right of the list, below it, or off |
 | <kbd>Ctrl+,</kbd> | Open Settings |
 | <kbd>Ctrl+W</kbd> | Close the window; mail keeps syncing in the background. In Settings, a message window or a composer window, closes that window |

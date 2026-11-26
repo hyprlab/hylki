@@ -106,7 +106,7 @@ impl ToolbarItem {
             ToolbarItem::Tags => crate::i18n::i18n_noop("Tags"),
             ToolbarItem::MoveTo => crate::i18n::i18n_noop("Move To"),
             ToolbarItem::Find => crate::i18n::i18n_noop("Find"),
-            ToolbarItem::Print => crate::i18n::i18n_noop("Print"),
+            ToolbarItem::Print => crate::i18n::i18n_noop("Print Message…"),
         }
     }
 }

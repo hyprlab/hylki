@@ -336,7 +336,7 @@ impl Component for AttachmentsGallery {
 
                         gtk::ToggleButton {
                             set_icon_name: "view-grid-symbolic",
-                            set_tooltip_text: Some(i18n("Thumbnail grid").as_str()),
+                            set_tooltip_text: Some(i18n("Show as thumbnails").as_str()),
                             #[watch]
                             #[block_signal(grid_toggle)]
                             set_active: !model.view_table,
@@ -346,7 +346,7 @@ impl Component for AttachmentsGallery {
                         },
                         gtk::ToggleButton {
                             set_icon_name: "view-list-bullet-symbolic",
-                            set_tooltip_text: Some(i18n("Table").as_str()),
+                            set_tooltip_text: Some(i18n("Show as a list").as_str()),
                             #[watch]
                             #[block_signal(table_toggle)]
                             set_active: model.view_table,

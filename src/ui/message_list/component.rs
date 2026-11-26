@@ -117,11 +117,9 @@ impl SimpleComponent for MessageList {
                     #[watch]
                     set_title: &(if model.quick.is_empty() { i18n("No Messages") } else { i18n("No Matching Messages") }),
                     #[watch]
-                    set_description: Some(if model.quick.is_empty() {
-                        i18n("There's nothing here right now.")
-                    } else {
-                        i18n("No message here passes the filters.")
-                    }.as_str()),
+                    set_description: (!model.quick.is_empty())
+                        .then(|| i18n("No message here passes the filters."))
+                        .as_deref(),
                     #[watch]
                     set_visible: model.is_empty_state(),
                 },

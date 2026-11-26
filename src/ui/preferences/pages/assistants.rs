@@ -79,7 +79,7 @@ fn cap_text(cap: AssistantCap) -> (String, Option<String>) {
         ),
         AssistantCap::OpenDrafts => (
             i18n("Read and edit open drafts"),
-            Some(i18n("Those agents prepared. You accept each edit.")),
+            Some(i18n("Drafts an agent prepared. You accept each edit.")),
         ),
         AssistantCap::OwnDrafts => (
             i18n("Include drafts you started"),
@@ -100,7 +100,7 @@ impl AssistantsPage {
 
         let connection = adw::PreferencesGroup::builder()
             .description(i18n(
-                "Hylki contains no AI agent of its own but you can allow outside agents to access your mail using MCP (Model Context Protocol)",
+                "No AI agent is built in. Outside agents can reach your mail through MCP (Model Context Protocol).",
             ))
             .build();
         let enable = adw::SwitchRow::builder()
@@ -118,7 +118,7 @@ impl AssistantsPage {
         connection.add(&command_row());
 
         let activity_row = adw::ActionRow::builder()
-            .title(i18n("Recent Activity"))
+            .title(i18n("Recent activity"))
             .subtitle(&model.assistant_status)
             .activatable(true)
             .build();
@@ -131,9 +131,9 @@ impl AssistantsPage {
         page.add(&connection);
 
         let accounts = adw::PreferencesGroup::builder()
-            .title(i18n("Accounts"))
+            .title(i18n("Mail Accounts"))
             .description(i18n(
-                "Nothing is shared until you allow it. Agents can't send mail, erase it permanently (moving to Trash is ok) or read encrypted mail.",
+                "Nothing is shared until you allow it. Agents cannot send mail, delete it for good or read encrypted mail. They can move it to Trash.",
             ))
             .build();
         page.add(&accounts);
@@ -276,7 +276,7 @@ fn account_row(
     let full_row = adw::SwitchRow::builder()
         .title(i18n("Full access"))
         .subtitle(i18n(
-            "Grant access to entire account (except Trash and Junk)",
+            "Every folder but Trash and Junk.",
         ))
         .active(grant.full)
         .build();
@@ -310,7 +310,7 @@ fn account_row(
     }
     let folders = adw::ActionRow::builder()
         .title(i18n("Folders"))
-        .subtitle(i18n("Junk and Trash are hidden until you allow them."))
+        .subtitle(i18n("Trash and Junk are hidden until you allow them."))
         .activatable(true)
         .build();
     folders.add_suffix(&gtk::Image::from_icon_name("go-next-symbolic"));
@@ -321,7 +321,7 @@ fn account_row(
     }
     row.add_row(&folders);
     let reset_row = adw::ActionRow::builder()
-        .title(i18n("Reset to Defaults"))
+        .title(i18n("Restore Defaults"))
         .activatable(true)
         .build();
     row.add_row(&reset_row);
@@ -457,9 +457,9 @@ fn account_row(
 /// Ask before an account's choices are lost: nothing brings them back.
 fn confirm_reset(parent: &adw::ActionRow, reset: impl Fn() + 'static) {
     let dialog = adw::AlertDialog::new(
-        Some(&i18n("Reset permissions?")),
+        Some(&i18n("Reset Permissions?")),
         Some(&i18n(
-            "The account stays shared, but only for reading and preparing messages. Junk and Trash are hidden again.",
+            "The account stays shared, but only for reading and preparing messages. Trash and Junk are hidden again.",
         )),
     );
     dialog.add_response("cancel", &i18n("Cancel"));
@@ -527,7 +527,7 @@ fn show_activity(parent: &adw::ActionRow, state: &Rc<PageState>) {
                 .build(),
         );
     }
-    present_list(parent, &i18n("Recent Activity"), group);
+    present_list(parent, &i18n("Recent activity"), group);
 }
 
 /// A dialog holding one group of rows.

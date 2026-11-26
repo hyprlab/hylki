@@ -695,6 +695,38 @@ fn quick_filters_narrow_together() {
     assert!(!ctx(all.with(QuickFilter::Today, true)).passes(&m));
 }
 
+/// Untagged lets through mail with no tag chip (#717), and Tagged and
+/// Untagged never stay on together, which would let nothing through.
+#[test]
+fn untagged_is_the_opposite_of_tagged() {
+    let tag = crate::config::Tag {
+        keyword: "work".into(),
+        name: "Work".into(),
+        color: "#3584e4".into(),
+    };
+    let ctx = |filters: QuickFilters| QuickFilterContext {
+        filters,
+        own: Default::default(),
+        contacts: None,
+        tags: vec![tag.clone()],
+        today: 0,
+        span: filters.span(),
+    };
+    let plain = msg(1, "a", "");
+    let mut tagged = msg(2, "b", "");
+    tagged.keywords = vec!["Work".into()];
+    let untagged = QuickFilters::default().with(QuickFilter::Untagged, true);
+    assert!(ctx(untagged).passes(&plain));
+    assert!(!ctx(untagged).passes(&tagged));
+    let swapped = untagged.with(QuickFilter::Tagged, true);
+    assert!(swapped.has(QuickFilter::Tagged) && !swapped.has(QuickFilter::Untagged));
+    let back = swapped.with(QuickFilter::Untagged, true);
+    assert!(back.has(QuickFilter::Untagged) && !back.has(QuickFilter::Tagged));
+    assert!(back
+        .with(QuickFilter::Tagged, false)
+        .has(QuickFilter::Untagged));
+}
+
 /// The date range takes in the whole of both days it names, on this
 /// computer's clock, whichever way round they were picked.
 #[test]

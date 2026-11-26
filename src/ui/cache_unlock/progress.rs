@@ -228,7 +228,7 @@ impl View {
         let (heading, body) = match step {
             None | Some(Step::Keyring) => (
                 i18n("Waiting for the Keyring"),
-                i18n("Mail stored on this computer is encrypted with a key stored in the keyring. Unlock the keyring if it asks."),
+                i18n("Mail kept on this computer is encrypted with a key stored in the keyring. Unlock the keyring if it asks."),
             ),
             Some(Step::Copying { encrypt, .. } | Step::Checking { encrypt }) => (
                 converting(*encrypt),

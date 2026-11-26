@@ -181,17 +181,17 @@ impl PgpStatus {
                     from_mismatch: true,
                     ..
                 } => i18n_f(
-                    "Encrypted, and signed by {signer}, whose key is not for the sender's address {addr}",
+                    "Encrypted, and signed by {signer}, whose key is not for the sender’s address {addr}",
                     &[("signer", signer), ("addr", &self.sender_addr)],
                 ),
                 S::Good { signer, .. } => {
                     i18n_f("Encrypted, and signed by {signer}", &[("signer", signer)])
                 }
                 S::Bad { .. } => i18n(
-                    "Encrypted; the signature does not match, the message may have been altered",
+                    "Encrypted, but the signature does not match: the message may have been altered",
                 ),
                 S::NoKey { key_id } => i18n_f(
-                    "Encrypted; signed with a key you don't have ({id})",
+                    "Encrypted; signed with a key you do not have ({id})",
                     &[("id", &key(key_id))],
                 ),
                 S::ExpiredKey { signer } => i18n_f(
@@ -215,7 +215,7 @@ impl PgpStatus {
                 from_mismatch: true,
                 ..
             } => i18n_f(
-                "Signed by {signer}, whose key is not for the sender's address {addr}",
+                "Signed by {signer}, whose key is not for the sender’s address {addr}",
                 &[("signer", signer), ("addr", &self.sender_addr)],
             ),
             S::Good { signer, .. } => i18n_f("Signed by {signer}", &[("signer", signer)]),
@@ -223,7 +223,7 @@ impl PgpStatus {
                 i18n("The OpenPGP signature does not match; the message may have been altered")
             }
             S::NoKey { key_id } => i18n_f(
-                "Signed with a key you don't have ({id})",
+                "Signed with a key you do not have ({id})",
                 &[("id", &key(key_id))],
             ),
             S::ExpiredKey { signer } => i18n_f(
@@ -556,7 +556,7 @@ impl Default for SenderCheck {
     fn default() -> Self {
         SenderCheck {
             trust: SenderTrust::Unverified,
-            summary: i18n("This message hasn't been checked."),
+            summary: i18n("This message has not been checked."),
             findings: Vec::new(),
             pgp: None,
             unsubscribe: None,

@@ -1,7 +1,8 @@
-//! Empty Trash / Empty Junk ask first, and say how much will go (#676): the
-//! servers are asked for each folder's count before the question opens. A
-//! busy account answers late (the request queues behind its sync), so the
-//! question opens without the number and takes it in when it arrives.
+//! Empty Trash / Empty Junk ask first, and say how much will go (#676). The
+//! cache gives each folder's count at once; the servers are asked as well,
+//! and their answer replaces it. A busy account answers late (a slow server
+//! can hold the request behind a sync already under way), so the question
+//! opens with the cached number and takes the server's when it arrives.
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -28,9 +29,21 @@ pub(super) struct EmptyTarget {
     path: String,
     /// How the multi-account question names the account.
     account: String,
-    /// `None` while the server has yet to answer; `Some(None)` when it gave
-    /// no number.
-    count: Option<Option<u32>>,
+    /// The best number known: the cache's first, then the server's.
+    count: Option<u32>,
+    /// Whether the server has answered (or cannot be asked).
+    settled: bool,
+}
+
+impl EmptyTarget {
+    /// Take the server's answer. With no number from it, the cached one
+    /// stands.
+    fn settle(&mut self, count: Option<u32>) {
+        self.settled = true;
+        if count.is_some() {
+            self.count = count;
+        }
+    }
 }
 
 /// An empty waiting for its counts before it asks.
@@ -46,7 +59,7 @@ pub(super) struct EmptyAsk {
 
 impl EmptyAsk {
     fn answered(&self) -> bool {
-        self.targets.iter().all(|t| t.count.is_some())
+        self.targets.iter().all(|t| t.settled)
     }
 
     /// The question's heading and body with the counts known so far.
@@ -56,7 +69,7 @@ impl EmptyAsk {
                 let t = &self.targets[0];
                 (
                     i18n_f("Empty “{name}”?", &[("name", &t.name)]),
-                    one_folder_body(t.count.flatten()),
+                    one_folder_body(t.count),
                 )
             }
             Some(kind) => every_account_text(kind, &self.targets),
@@ -84,6 +97,7 @@ impl AppModel {
                 path,
                 account,
                 count: None,
+                settled: false,
             }],
             sender,
         );
@@ -105,6 +119,7 @@ impl AppModel {
                     path: f.path.clone(),
                     account: self.account_label(a.id),
                     count: None,
+                    settled: false,
                 })
             })
             .collect();
@@ -123,6 +138,7 @@ impl AppModel {
             return;
         }
         for t in &mut targets {
+            t.count = self.cached_count(t.account_id, &t.path);
             let asked = self.workers.get(&t.account_id).is_some_and(|w| {
                 w.send(MailRequest::CountFolder {
                     path: t.path.clone(),
@@ -130,7 +146,7 @@ impl AppModel {
                 .is_ok()
             });
             if !asked {
-                t.count = Some(None);
+                t.settled = true;
             }
         }
         self.empty_ask_gen = self.empty_ask_gen.wrapping_add(1);
@@ -152,6 +168,14 @@ impl AppModel {
         );
     }
 
+    /// How many messages the cache holds for a folder. Nothing cached is
+    /// no number at all: a folder never opened has an empty index, not an
+    /// empty server folder.
+    fn cached_count(&self, account_id: u32, path: &str) -> Option<u32> {
+        let n = self.cache.as_ref()?.count_messages(account_id, path);
+        u32::try_from(n).ok().filter(|n| *n > 0)
+    }
+
     /// The messages the router sends here (see `AppModel::route`).
     #[allow(deprecated)] // adw::MessageDialog, see ui::dialog
     pub(super) fn on_empty_count(&mut self, msg: AppMsg, sender: ComponentSender<Self>) {
@@ -167,11 +191,11 @@ impl AppModel {
                 let Some(t) = ask
                     .targets
                     .iter_mut()
-                    .find(|t| t.account_id == account_id && t.path == path && t.count.is_none())
+                    .find(|t| t.account_id == account_id && t.path == path && !t.settled)
                 else {
                     return;
                 };
-                t.count = Some(count);
+                t.settle(count);
                 match &ask.open {
                     // Already asking: give the question the number.
                     Some(open) => match open.upgrade().filter(|d| d.is_visible()) {
@@ -241,12 +265,12 @@ impl AppModel {
 fn one_folder_body(count: Option<u32>) -> String {
     match count {
         Some(n) => ni18n_f(
-            "{count} message will be erased from the server. This can’t be undone.",
-            "{count} messages will be erased from the server. This can’t be undone.",
+            "{count} message will be erased from the server. This cannot be undone.",
+            "{count} messages will be erased from the server. This cannot be undone.",
             n,
             &[("count", &n.to_string())],
         ),
-        None => i18n("Every message in it will be erased from the server. This can’t be undone."),
+        None => i18n("Every message in it will be erased from the server. This cannot be undone."),
     }
 }
 
@@ -258,24 +282,24 @@ fn every_account_text(kind: FolderKind, targets: &[EmptyTarget]) -> (String, Str
     } else {
         i18n("Empty Junk in Every Account?")
     };
-    let counts: Option<Vec<u32>> = targets.iter().map(|t| t.count.flatten()).collect();
+    let counts: Option<Vec<u32>> = targets.iter().map(|t| t.count).collect();
     let lead = match counts {
         Some(counts) => {
             let n = counts.iter().fold(0u32, |sum, c| sum.saturating_add(*c));
             ni18n_f(
-                "{count} message will be erased from the server. This can’t be undone.",
-                "{count} messages will be erased from the server. This can’t be undone.",
+                "{count} message will be erased from the server. This cannot be undone.",
+                "{count} messages will be erased from the server. This cannot be undone.",
                 n,
                 &[("count", &n.to_string())],
             )
         }
         None => {
-            i18n("Every message in them will be erased from the server. This can’t be undone.")
+            i18n("Every message in them will be erased from the server. This cannot be undone.")
         }
     };
     let lines: Vec<String> = targets
         .iter()
-        .map(|t| match t.count.flatten() {
+        .map(|t| match t.count {
             Some(n) => ni18n_f(
                 "{account}: {count} message",
                 "{account}: {count} messages",
@@ -292,7 +316,7 @@ fn every_account_text(kind: FolderKind, targets: &[EmptyTarget]) -> (String, Str
 mod tests {
     use super::*;
 
-    fn target(account: &str, count: Option<Option<u32>>) -> EmptyTarget {
+    fn target(account: &str, count: Option<u32>, settled: bool) -> EmptyTarget {
         EmptyTarget {
             account_id: 1,
             folder_id: 1,
@@ -300,6 +324,7 @@ mod tests {
             path: "Trash".into(),
             account: account.into(),
             count,
+            settled,
         }
     }
 
@@ -314,7 +339,7 @@ mod tests {
     fn every_account_totals_when_all_answered() {
         let (heading, body) = every_account_text(
             FolderKind::Trash,
-            &[target("a@x", Some(Some(40))), target("b@x", Some(Some(7)))],
+            &[target("a@x", Some(40), true), target("b@x", Some(7), true)],
         );
         assert_eq!(heading, "Empty Trash in Every Account?");
         assert!(body.starts_with("47 messages will be erased"));
@@ -325,7 +350,7 @@ mod tests {
     fn every_account_without_a_total_when_one_is_missing() {
         let (_, body) = every_account_text(
             FolderKind::Junk,
-            &[target("a@x", Some(Some(1))), target("b@x", Some(None))],
+            &[target("a@x", Some(1), true), target("b@x", None, true)],
         );
         assert!(body.starts_with("Every message in them"));
         assert!(body.ends_with("a@x: 1 message\nb@x"));
@@ -336,11 +361,11 @@ mod tests {
         let mut ask = EmptyAsk {
             gen: 1,
             every: None,
-            targets: vec![target("a@x", None), target("b@x", Some(None))],
+            targets: vec![target("a@x", Some(3), false), target("b@x", None, true)],
             open: None,
         };
         assert!(!ask.answered());
-        ask.targets[0].count = Some(Some(3));
+        ask.targets[0].settle(Some(3));
         assert!(ask.answered());
     }
 
@@ -349,12 +374,26 @@ mod tests {
         let mut ask = EmptyAsk {
             gen: 1,
             every: None,
-            targets: vec![target("a@x", None)],
+            targets: vec![target("a@x", None, false)],
             open: None,
         };
         assert!(ask.text().1.starts_with("Every message in it"));
-        ask.targets[0].count = Some(Some(47));
+        ask.targets[0].settle(Some(47));
         assert_eq!(ask.text().0, "Empty “Trash”?");
         assert!(ask.text().1.starts_with("47 messages will be erased"));
+    }
+
+    /// The cached number shows at once; the server's replaces it, and a
+    /// server with no number leaves it standing.
+    #[test]
+    fn server_count_replaces_the_cached_one() {
+        let mut t = target("a@x", Some(47), false);
+        assert!(one_folder_body(t.count).starts_with("47 messages"));
+        t.settle(Some(59));
+        assert_eq!(t.count, Some(59));
+        let mut t = target("a@x", Some(47), false);
+        t.settle(None);
+        assert!(t.settled);
+        assert_eq!(t.count, Some(47));
     }
 }

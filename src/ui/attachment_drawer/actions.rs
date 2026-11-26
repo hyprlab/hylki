@@ -212,9 +212,9 @@ impl AttachmentDrawer {
                 let (title, body) = match r {
                     Ok(s) if s.imported > 0 => (
                         i18n("Key imported"),
-                        i18n("The key is in your keyring now. Trust it under Settings, OpenPGP, once you have checked its fingerprint with its owner."),
+                        i18n("The key is in your keyring now. Trust it under Settings → OpenPGP, once you have checked its fingerprint with its owner."),
                     ),
-                    Ok(_) => (i18n("Already in your keyring"), i18n("That key was imported before.")),
+                    Ok(_) => (i18n("Already in your keyring"), String::new()),
                     Err(e) => (i18n("Could not import the key"), e),
                 };
                 crate::ui::dialog::alert(window.as_ref(), &title, &body);

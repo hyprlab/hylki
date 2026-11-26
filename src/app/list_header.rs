@@ -58,12 +58,12 @@ struct NamesRadios {
 /// The orders the list header offers, by their keys in `SortOrder`. The
 /// column headings can set more (#443); none of these is ticked then.
 const SORT_ORDERS: [(&str, &str); 6] = [
-    (i18n_noop("Date (Newest first)"), "date_newest"),
-    (i18n_noop("Date (Oldest first)"), "date_oldest"),
+    (i18n_noop("Date (Newest First)"), "date_newest"),
+    (i18n_noop("Date (Oldest First)"), "date_oldest"),
     (i18n_noop("Sender (A–Z)"), "sender"),
     (i18n_noop("Subject (A–Z)"), "subject"),
-    (i18n_noop("Unread first"), "unread"),
-    (i18n_noop("Starred first"), "flagged"),
+    (i18n_noop("Unread First"), "unread"),
+    (i18n_noop("Starred First"), "flagged"),
 ];
 
 /// The list header's sort and filter button (#441): the sort orders in one

@@ -368,7 +368,7 @@ impl MessageView {
                 .map(|()| i18n("Key trusted."))
                 .map_err(|e| {
                     if e.contains("secret key") || e.contains("default") {
-                        i18n("Generate a key of your own first (Settings, OpenPGP): trusting a key means signing it with yours.")
+                        i18n("Generate a key of your own first (Settings → OpenPGP): trusting a key means signing it with yours.")
                     } else {
                         e
                     }

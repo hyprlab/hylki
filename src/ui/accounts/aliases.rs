@@ -132,7 +132,7 @@ impl AccountsWindow {
             };
             row.set_title(&gtk::glib::markup_escape_text(&title));
             row.set_subtitle(&i18n(
-                "Kept on the server; change it in your provider's webmail.",
+                "Kept on the server; change it in your provider’s webmail.",
             ));
             list.append(&row);
         }
@@ -204,7 +204,7 @@ impl AccountsWindow {
         let smtp_switch = adw::SwitchRow::builder()
             .title(i18n("Own SMTP server"))
             .subtitle(i18n(
-                "Needed when this account's provider, such as Gmail, rewrites the sender.",
+                "Needed when this account’s provider, such as Gmail, rewrites the sender.",
             ))
             .build();
         smtp_switch.set_active(alias.has_own_smtp());
@@ -424,7 +424,7 @@ impl AccountsWindow {
         } else if conflict || (shared && own_smtp) {
             d.addr_row.add_css_class("error");
             d.addr_row.set_tooltip_text(Some(
-                i18n("Names that share an address send through this account's server.").as_str(),
+                i18n("Names that share an address send through this account’s server.").as_str(),
             ));
             bad = true;
         }

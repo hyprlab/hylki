@@ -285,7 +285,7 @@ impl AccountsWindow {
         widgets.form.graph_directory_row.set_sensitive(!from_goa);
         widgets.form.graph_labels_row.set_sensitive(!from_goa);
         widgets.form.graph_group.set_description(Some(&if from_goa {
-            i18n("Only for an account added in Hylki with Microsoft 365 / Outlook as the provider, not from GNOME Online Accounts.")
+            i18n("Only for a Microsoft 365 / Outlook account added here, not one from GNOME Online Accounts.")
         } else {
             i18n("Asks Microsoft for access. Some organizations need an administrator to approve it.")
         }));
@@ -812,7 +812,7 @@ fn show_goa_state(widgets: &AccountsWindowWidgets, acc: &AccountConfig) {
     widgets.form.goa_enabled_row.set_subtitle(&if acc.goa_mail_disabled {
         i18n("Paused: Mail is switched off for this account in GNOME Settings")
     } else {
-        i18n("Switching this off returns the account to the import list. It stays in GNOME Online Accounts.")
+        i18n("Off returns it to the import list. It stays in GNOME Online Accounts.")
     });
 }
 

@@ -77,7 +77,7 @@ fn send(req: ureq::Request, body: Value) -> Result<Value, String> {
     match req.send_json(body) {
         Ok(resp) => resp
             .into_json::<Value>()
-            .map_err(|_| i18n("The service's answer could not be read.")),
+            .map_err(|_| i18n("The service’s answer could not be read.")),
         Err(ureq::Error::Status(code, resp)) => {
             let text = resp.into_string().unwrap_or_default();
             Err(refusal(code, &text))
@@ -109,7 +109,7 @@ pub(super) fn refusal(code: u16, body: &str) -> String {
     let what = match code {
         401 | 403 => i18n("The service did not accept the key."),
         429 => i18n("Too many requests: try again in a moment."),
-        456 => i18n("This month's allowance is used up."),
+        456 => i18n("This month’s allowance is used up."),
         _ => i18n_f(
             "The service refused the request (error {code}).",
             &[("code", &code.to_string())],
@@ -225,7 +225,7 @@ pub(super) fn libre(
     let base = url.trim().trim_end_matches('/');
     if !(base.starts_with("https://") || base.starts_with("http://")) {
         return Err(i18n(
-            "Enter the LibreTranslate server's address in Settings → Translation.",
+            "Enter the LibreTranslate server’s address in Settings → Translation.",
         ));
     }
     let mut out = Vec::new();

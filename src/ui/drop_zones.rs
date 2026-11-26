@@ -351,7 +351,7 @@ impl DropZones {
                         n,
                     )
                 } else {
-                    i18n("Pictures insert where the cursor is placed, other files attach normally")
+                    i18n("Place pictures where the cursor is and attach the other files")
                 });
                 self.cloud.subtitle.set_label(&match names.as_slice() {
                     [one] => i18n_f("Share a download link from {name}", &[("name", one)]),

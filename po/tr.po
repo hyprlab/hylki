@@ -18,10 +18,11 @@ msgstr ""
 msgid "A fast, GNOME-native email client"
 msgstr "Hızlı, GNOME ile bütünleşik bir e-posta istemcisi"
 
+#, fuzzy
 msgid ""
-"This is a beta build for trying upcoming changes early. Expect bugs and "
-"instability — please report anything broken on GitHub. It shares your "
-"accounts and mail with the stable Hylki install."
+"This is a beta build for trying upcoming changes early. Expect bugs, and "
+"report anything broken on GitHub. It shares your accounts and mail with the "
+"stable install."
 msgstr ""
 "Bu, yakında sunulacak yenilikleri erkenden denemeniz için hazırlanmış bir "
 "beta sürümüdür. Hatalar ve kararsızlıklarla karşılaşabilirsiniz. Lütfen "
@@ -33,9 +34,6 @@ msgstr "Sürüm Notları"
 
 msgid "Credits"
 msgstr "Emeği Geçenler"
-
-msgid "Contributors and translators"
-msgstr "Katkıda Bulunanlar ve Çevirmenler"
 
 msgid "Keyring Setup Help"
 msgstr "Anahtarlık Kurulum Yardımı"
@@ -50,7 +48,8 @@ msgstr "Proje"
 msgid "Website"
 msgstr "Web Sitesi"
 
-msgid "Report an issue or feature request"
+#, fuzzy
+msgid "Issues and Feature Requests"
 msgstr "Hata veya özellik isteği bildirin"
 
 msgid "Source Code"
@@ -76,13 +75,58 @@ msgstr "© 2026 Hyprlab"
 msgid "About"
 msgstr "Hakkında"
 
-msgid "Hylki couldn’t save your password"
-msgstr "Hylki parolanızı kaydedemedi"
+#, fuzzy
+msgid "Could Not Save Your Password"
+msgstr "Parola okunamadı"
 
-msgid "Keyring setup on Linux Mint"
+msgid "Keyring Setup on Linux Mint"
 msgstr "Linux Mint'te anahtarlık kurulumu"
 
-msgid "Got it"
+msgid ""
+"Account passwords are kept in the system keyring (the Secret Service), never "
+"on disk. The keyring did not accept the password, so this account will not "
+"stay signed in after you close the app."
+msgstr ""
+
+msgid ""
+"Account passwords are kept in the system keyring (the Secret Service), never "
+"on disk. On Linux Mint with Cinnamon the keyring can need a one-time setup "
+"to keep them, and to stop asking to be unlocked at every login."
+msgstr ""
+
+#. The command stays out of the translation: it is typed as is.
+msgid ""
+"Set it up:\n"
+"1. Install the keyring tools if needed:"
+msgstr ""
+
+msgid ""
+"2. Open Passwords and Keys (Seahorse). Make sure a keyring named “Login” "
+"exists and is the default (right-click → Set as Default).\n"
+"\n"
+"To stop the unlock prompt at each login, choose one:\n"
+"• Give the Login keyring the same password as your user account (right-click "
+"→ Change Password) and log in with a password, not automatic login. The "
+"keyring then unlocks when you log in. This is the safer choice.\n"
+"• With automatic login, give the Login keyring an empty password. Your saved "
+"passwords are then stored unencrypted, so do this only on a computer you "
+"trust."
+msgstr ""
+
+msgid ""
+"Run these steps on the host system, not inside the Flatpak: the app uses "
+"your desktop’s keyring."
+msgstr ""
+
+msgid ""
+"Make sure a Secret Service keyring is installed, running and unlocked. For "
+"example, install gnome-keyring and seahorse (Passwords and Keys), create a "
+"default “Login” keyring and give it your login password so it unlocks when "
+"you log in."
+msgstr ""
+
+#, fuzzy
+msgid "Got It"
 msgstr "Anladım"
 
 msgid "Could not save account: {e}"
@@ -187,12 +231,12 @@ msgstr "Bir taslak için değişiklik önerdi"
 msgid "Refused or failed: {action}"
 msgstr "Reddedildi veya başarısız oldu: {action}"
 
-msgid "Delete the attachment from the server?"
+msgid "Delete the Attachment From the Server?"
 msgstr "Ek sunucudan silinsin mi?"
 
 msgid ""
 "“{name}” will be removed from the message on the server. The rest of the "
-"message stays. This can’t be undone."
+"message stays. This cannot be undone."
 msgstr ""
 "“{name}” sunucudaki iletiden kaldırılacak. İletinin geri kalanı korunacak. "
 "Bu işlem geri alınamaz."
@@ -266,7 +310,7 @@ msgstr "Tüm İletileri Daralt"
 msgid "Back to My Fonts and Colors"
 msgstr "Yazı Tiplerime ve Renklerime Geri Dön"
 
-msgid "Show Sender's Fonts and Colors"
+msgid "Show Sender’s Fonts and Colors"
 msgstr "Gönderenin Yazı Tiplerini ve Renklerini Göster"
 
 msgid "Create Event from Selection…"
@@ -348,14 +392,14 @@ msgid "A group needs a name."
 msgstr "Bir grubun adı olmalıdır."
 
 msgid ""
-"A group in this address book is kept on its people's cards, so it needs at "
+"A group in this address book is kept on its people’s cards, so it needs at "
 "least one person."
 msgstr ""
 "Bu kişi defterindeki bir grup, üyelerinin kişi kartlarında saklanır. Bu "
 "nedenle grupta en az bir kişi bulunmalıdır."
 
-msgid "Hylki cannot change this kind of group"
-msgstr "Hylki bu tür bir grubu değiştiremez"
+msgid "This kind of group cannot be changed here"
+msgstr ""
 
 msgid "Home"
 msgstr "Ev"
@@ -405,8 +449,9 @@ msgstr "Bölüm"
 msgid "Job title"
 msgstr "Unvan"
 
-msgid "Notes"
-msgstr "Notlar"
+#. ---- note ----
+msgid "Note"
+msgstr "Not"
 
 msgid "Birthday"
 msgstr "Doğum günü"
@@ -474,13 +519,14 @@ msgstr "Bu Bilgisayarda"
 msgid "CardDAV Address Book"
 msgstr "CardDAV Kişi Defteri"
 
-msgid "Enter the server's address."
+msgid "Enter the server’s address."
 msgstr "Sunucu adresini girin."
 
 msgid "“{text}” is not a server address."
 msgstr "“{text}” bir sunucu adresi değil."
 
-msgid "The address starts with https:// or http://."
+#, fuzzy
+msgid "The address must start with https:// or http://."
 msgstr "Adres https:// veya http:// ile başlamalıdır."
 
 msgid "Enter the password to sign in."
@@ -489,10 +535,10 @@ msgstr "Oturum açmak için parolayı girin."
 msgid "The server did not accept the user name or password."
 msgstr "Sunucu kullanıcı adını veya parolayı kabul etmedi."
 
-msgid "The server's certificate could not be verified."
+msgid "The server’s certificate could not be verified."
 msgstr "Sunucunun sertifikası doğrulanamadı."
 
-msgid "The server's certificate could not be verified: {error}"
+msgid "The server’s certificate could not be verified: {error}"
 msgstr "Sunucunun sertifikası doğrulanamadı: {error}"
 
 msgid "Could not connect to the server."
@@ -526,20 +572,18 @@ msgstr "Bu kişi defteri Evolution'da devre dışı."
 msgid "Evolution Data Server is not available"
 msgstr "Evolution Veri Sunucusu kullanılamıyor"
 
-msgid ""
-"The directory cannot be searched without signing in. Add a sign-in to it in "
-"Settings → Contacts."
+#, fuzzy
+msgid "The directory needs a sign-in. Add one in Settings → Contacts."
 msgstr ""
-"Oturum açmadan dizinde arama yapılamaz. Ayarlar → Kişiler bölümünden bu "
-"dizin için bir oturum açma bilgisi ekleyin."
+"Dizin için parola gerekiyor. Parolayı Ayarlar → Kişiler bölümünden ekleyin."
 
 msgid "The directory did not accept the password."
 msgstr "Dizin parolayı kabul etmedi."
 
-msgid "The directory's certificate could not be verified."
+msgid "The directory’s certificate could not be verified."
 msgstr "Dizinin sertifikası doğrulanamadı."
 
-msgid "The directory's certificate could not be verified: {error}"
+msgid "The directory’s certificate could not be verified: {error}"
 msgstr "Dizinin sertifikası doğrulanamadı: {error}"
 
 msgid ""
@@ -561,7 +605,7 @@ msgstr ""
 "{server} sunucusuyla StartTLS başlatılamadı: Sunucu bu özelliği sunmuyor "
 "veya sertifikasına güvenilmiyor."
 
-msgid "Could not reach {server}. Check the server's name and the network."
+msgid "Could not reach {server}. Check the server’s name and the network."
 msgstr ""
 "{server} sunucusuna ulaşılamadı. Sunucu adını ve ağ bağlantısını kontrol "
 "edin."
@@ -610,20 +654,18 @@ msgid_plural "{n} people"
 msgstr[0] "{n} kişi"
 msgstr[1] "{n} kişi"
 
-msgid "Enable Console mode in Settings → System & Appearance"
+#, fuzzy
+msgid "Turn on Console mode in Settings → System."
 msgstr "Ayarlar → Sistem ve Görünüm bölümünden Konsol kipini etkinleştirin"
 
 msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+"No templates yet. Save one from the composer’s ⋯ menu with Save as Template."
 msgstr ""
 "Henüz şablon yok. İleti oluşturucunun ⋯ menüsündeki Şablon Olarak Kaydet "
 "seçeneğini kullanarak bir şablon kaydedin."
 
 msgid "New Message from Template"
 msgstr "Şablondan Yeni İleti"
-
-msgid "The new message starts as a copy of the template you pick."
-msgstr "Yeni ileti, seçtiğiniz şablonun bir kopyası olarak oluşturulur."
 
 msgid "Insert Template"
 msgstr "Şablon Ekle"
@@ -661,11 +703,13 @@ msgstr "İleti silindi"
 msgid "Undo"
 msgstr "Geri Al"
 
-msgid "No Drafts folder available for this account"
-msgstr "Bu hesap için kullanılabilir bir Taslaklar klasörü yok"
+#, fuzzy
+msgid "This account has no Drafts folder."
+msgstr "POP3 hesapları klasörleri desteklemez"
 
-msgid "No Templates folder available for this account"
-msgstr "Bu hesap için kullanılabilir bir Şablonlar klasörü yok"
+#, fuzzy
+msgid "This account has no Templates folder."
+msgstr "Bu hesapta en üst düzeyde klasör oluşturulamaz."
 
 msgid "Empty “{name}”?"
 msgstr "“{name}” klasörü boşaltılsın mı?"
@@ -673,14 +717,14 @@ msgstr "“{name}” klasörü boşaltılsın mı?"
 msgid "Empty"
 msgstr "Boşalt"
 
-msgid "{count} message will be erased from the server. This can’t be undone."
+msgid "{count} message will be erased from the server. This cannot be undone."
 msgid_plural ""
-"{count} messages will be erased from the server. This can’t be undone."
+"{count} messages will be erased from the server. This cannot be undone."
 msgstr[0] "{count} ileti sunucudan silinecek. Bu işlem geri alınamaz."
 msgstr[1] "{count} ileti sunucudan silinecek. Bu işlem geri alınamaz."
 
 msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
+"Every message in it will be erased from the server. This cannot be undone."
 msgstr "İçindeki tüm iletiler sunucudan silinecek. Bu işlem geri alınamaz."
 
 msgid "Empty Trash in Every Account?"
@@ -690,7 +734,7 @@ msgid "Empty Junk in Every Account?"
 msgstr "Tüm Hesapların Gereksiz Klasörleri Boşaltılsın mı?"
 
 msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
+"Every message in them will be erased from the server. This cannot be undone."
 msgstr ""
 "Bu klasörlerdeki tüm iletiler sunucudan silinecek. Bu işlem geri alınamaz."
 
@@ -699,9 +743,10 @@ msgid_plural "{account}: {count} messages"
 msgstr[0] "{account}: {count} ileti"
 msgstr[1] "{account}: {count} ileti"
 
+#, fuzzy
 msgid ""
-"The forward of filter {rule} was refused. The message was left where it is "
-"and will be tried again"
+"The forward of filter {rule} was refused. The message stays where it is and "
+"will be tried again."
 msgstr ""
 "{rule} filtresinin iletme işlemi reddedildi. İleti bulunduğu yerde bırakıldı "
 "ve işlem yeniden denenecek"
@@ -806,14 +851,8 @@ msgstr "Filtreler Uygulandı"
 msgid "Close"
 msgstr "Kapat"
 
-msgid "Unstar"
-msgstr "Yıldızı Kaldır"
-
 msgid "Create a folder inside {name}."
 msgstr "{name} içinde bir klasör oluşturun."
-
-msgid "Create a new folder for this account."
-msgstr "Bu hesap için yeni bir klasör oluşturun."
 
 msgid "New Folder"
 msgstr "Yeni Klasör"
@@ -843,16 +882,16 @@ msgstr ""
 "İçindeki iletiler Çöp Kutusu'na taşınacak ve klasör sunucudan kaldırılacak. "
 "Bu işlem geri alınamaz."
 
-msgid "This account can't have folders at the top level."
+msgid "This account cannot have folders at the top level."
 msgstr "Bu hesapta en üst düzeyde klasör oluşturulamaz."
 
-msgid "Folders on this account can't hold other folders."
+msgid "Folders on this account cannot hold other folders."
 msgstr "Bu hesaptaki klasörlerin içinde başka klasörler bulunamaz."
 
 msgid "Create Folder"
 msgstr "Klasör Oluştur"
 
-msgid "{name} can't hold other folders."
+msgid "{name} cannot hold other folders."
 msgstr "{name} klasörünün içinde başka klasörler bulunamaz."
 
 msgid "archive"
@@ -864,7 +903,7 @@ msgstr "çöp kutusu"
 msgid "destination"
 msgstr "hedef"
 
-msgid "A folder can't be moved into itself."
+msgid "A folder cannot be moved into itself."
 msgstr "Bir klasör kendi içine taşınamaz."
 
 msgid "Move Folder"
@@ -881,8 +920,9 @@ msgstr ""
 "Bunu her zaman yap (Ayarlar → Sistem → GNOME Dosyalar bölümünden "
 "değiştirebilirsiniz)"
 
-msgid "Could not attach {names}: Hylki cannot read the file."
-msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
+#, fuzzy
+msgid "Could not read {names}, so it was not attached."
+msgid_plural "Could not read {n} files, so they were not attached: {names}"
 msgstr[0] "{names} eklenemedi: Hylki dosyayı okuyamıyor."
 msgstr[1] "{n} dosya eklenemedi (Hylki bu dosyaları okuyamıyor): {names}"
 
@@ -891,8 +931,8 @@ msgid_plural "Send {n} files with Hylki"
 msgstr[0] "{n} dosyayı Hylki ile gönder"
 msgstr[1] "{n} dosyayı Hylki ile gönder"
 
-msgid "{names} ({size}). What should the files go into?"
-msgstr "{names} ({size}). Dosyalar nereye eklensin?"
+msgid "{names} ({size}). Attach to a new message, a reply or a draft?"
+msgstr ""
 
 msgid "Reply to a Message…"
 msgstr "Bir İletiyi Yanıtla…"
@@ -912,7 +952,7 @@ msgstr "Henüz yanıtlanacak ileti yok."
 msgid "Reply With the Files"
 msgstr "Dosyalarla Birlikte Yanıtla"
 
-msgid "Large files"
+msgid "Large Files"
 msgstr "Büyük dosyalar"
 
 msgid ""
@@ -943,7 +983,8 @@ msgstr ""
 msgid "This message carries no calendar file to open."
 msgstr "Bu iletide açılabilecek bir takvim dosyası yok."
 
-msgid "This invitation names no organiser to answer."
+#, fuzzy
+msgid "This invitation names no organizer to answer."
 msgstr "Bu davette yanıt gönderilebilecek bir düzenleyici belirtilmemiş."
 
 msgid "Accepted: {subject}"
@@ -976,16 +1017,17 @@ msgstr "Yanıtınız gönderildi: Reddedildi."
 msgid "Retry"
 msgstr "Yeniden Dene"
 
-msgid "Waiting for the keyring"
+msgid "Waiting for the Keyring"
 msgstr "Anahtarlık bekleniyor"
 
-msgid "Couldn’t read the password"
+msgid "Could Not Read the Password"
 msgstr "Parola okunamadı"
 
 msgid "The keyring gave an error for {accounts}: {error}"
 msgstr "{accounts} hesapları için anahtarlık bir hata verdi: {error}"
 
-msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgid ""
+"The keyring has not answered for {accounts}. Mail connects once it does."
 msgstr ""
 "{accounts} hesapları için anahtarlıktan henüz yanıt alınamadı. Anahtarlık "
 "yanıt verdiğinde e-posta bağlantısı kurulacak."
@@ -1003,10 +1045,12 @@ msgstr ""
 "Anahtarlığın kilidini açın. Örneğin, Parolalar ve Anahtarlar uygulamasındaki "
 "Oturum Açma anahtarlığının kilidini açtıktan sonra Yeniden Dene'yi seçin."
 
-msgid "Date (Newest first)"
+#, fuzzy
+msgid "Date (Newest First)"
 msgstr "Tarih (En yeniden eskiye)"
 
-msgid "Date (Oldest first)"
+#, fuzzy
+msgid "Date (Oldest First)"
 msgstr "Tarih (En eskiden yeniye)"
 
 msgid "Sender (A–Z)"
@@ -1015,10 +1059,12 @@ msgstr "Gönderen (A–Z)"
 msgid "Subject (A–Z)"
 msgstr "Konu (A–Z)"
 
-msgid "Unread first"
+#, fuzzy
+msgid "Unread First"
 msgstr "Önce okunmamışlar"
 
-msgid "Starred first"
+#, fuzzy
+msgid "Starred First"
 msgstr "Önce yıldızlılar"
 
 msgid "Clear Dates"
@@ -1105,7 +1151,8 @@ msgstr "Giden Kutusu'nu Göster"
 msgid "Actions"
 msgstr "İşlemler"
 
-msgid "Refresh or long-press for Status Bar"
+#, fuzzy
+msgid "Refresh, or long-press for the status bar"
 msgstr "Durum Çubuğu için yenileyin veya uzun basın"
 
 msgid "Copying one message to On This Computer…"
@@ -1158,10 +1205,11 @@ msgstr "Çöp Kutusu'na taşımadan kalıcı olarak sil"
 msgid "Mark as spam"
 msgstr "İstenmeyen olarak işaretle"
 
-msgid "Star or unstar"
-msgstr "Yıldız ekle veya kaldır"
+#, fuzzy
+msgid "Star or remove star"
+msgstr "Yıldız Ekle veya Yıldızı Kaldır"
 
-msgid "Mark read or unread"
+msgid "Mark as read or unread"
 msgstr "Okundu veya okunmadı olarak işaretle"
 
 msgid "Select this row (for a bulk action)"
@@ -1177,8 +1225,8 @@ msgstr "Tüm etiketleri kaldır"
 msgid "Print the message you are reading"
 msgstr "Okuduğun iletiyi yazdır"
 
-msgid "Preview it as a PDF first"
-msgstr "Önce PDF olarak önizle"
+msgid "Preview before printing"
+msgstr ""
 
 msgid "Writing"
 msgstr "Yazma"
@@ -1201,7 +1249,8 @@ msgstr "Kime, Bilgi veya Gizli Bilgi alanına git ve satırı göster"
 msgid "Back out of a reply and return to the list"
 msgstr "Yanıtlamadan çık ve listeye dön"
 
-msgid "Emoji chooser, at the cursor"
+#, fuzzy
+msgid "Insert an emoji at the cursor"
 msgstr "İmlecin bulunduğu yerde emoji seçiciyi aç"
 
 msgid "New paragraph (Return starts a new line, unless Settings swaps them)"
@@ -1217,10 +1266,10 @@ msgstr "Seçili eki önizle"
 msgid "Open the highlighted attachment"
 msgstr "Seçili eki aç"
 
-msgid "Previous or next in the gallery's preview"
+msgid "Previous or next in the gallery’s preview"
 msgstr "Galeri önizlemesinde önceki veya sonraki öğeye git"
 
-msgid "Close the gallery's preview"
+msgid "Close the gallery’s preview"
 msgstr "Galeri önizlemesini kapat"
 
 msgid "Everything else"
@@ -1232,7 +1281,8 @@ msgstr "Son işlemi veya yazarken yaptığınız son düzenlemeyi geri al"
 msgid "Redo it (Ctrl+Y does the same)"
 msgstr "Yinele (Ctrl+Y de aynı işlemi yapar)"
 
-msgid "Reveal the status bar (also: long-press Refresh)"
+#, fuzzy
+msgid "Show the status bar (also: long-press Refresh)"
 msgstr "Durum çubuğunu göster (Yenile düğmesine uzun basarak da açabilirsiniz)"
 
 msgid "Show or hide the accounts in the sidebar"
@@ -1241,25 +1291,30 @@ msgstr "Kenar çubuğundaki hesapları göster veya gizle"
 msgid "Check for new mail"
 msgstr "Yeni e-postaları kontrol et"
 
-msgid "Focus Mode on or off"
+#, fuzzy
+msgid "Turn Focus Mode on or off"
 msgstr "Odak Modu'nu aç veya kapat"
 
-msgid "Fullscreen on or off"
+#, fuzzy
+msgid "Turn fullscreen on or off"
 msgstr "Tam ekranı aç veya kapat"
 
 msgid "Reading pane right of the list, below it, or off"
 msgstr "Okuma bölmesini listenin sağına veya altına yerleştir ya da kapat"
 
-msgid "Message zoom in or out"
+#, fuzzy
+msgid "Zoom the message in or out"
 msgstr "İleti görünümünü yakınlaştır veya uzaklaştır"
 
-msgid "Message zoom back to the default"
-msgstr "İleti yakınlaştırmasını varsayılan düzeye döndür"
+#, fuzzy
+msgid "Reset the message zoom"
+msgstr "İletilerin üstünde"
 
 msgid "Search the Settings window, when it is open"
 msgstr "Açıksa Ayarlar penceresinde ara"
 
-msgid "Console mode (when enabled in Settings)"
+#, fuzzy
+msgid "Show the console (when Console mode is on in Settings)"
 msgstr "Konsol kipi (Ayarlar'da etkinleştirildiğinde)"
 
 msgid "Close the window (background sync keeps running)"
@@ -1365,9 +1420,6 @@ msgstr "İşlem"
 msgid "Reply to All"
 msgstr "Tümünü Yanıtla"
 
-msgid "Print"
-msgstr "Yazdır"
-
 msgid "Find in Message"
 msgstr "İletide Bul"
 
@@ -1395,17 +1447,21 @@ msgstr "Yeni E-postaları Kontrol Et"
 msgid "Search Messages"
 msgstr "İletilerde Ara"
 
-msgid "Show or Hide the Sidebar"
-msgstr "Kenar Çubuğunu Göster veya Gizle"
+#, fuzzy
+msgid "Expand or Collapse the Sidebar"
+msgstr "Kenar çubuğunu daralt"
 
-msgid "Reading Pane Right"
+#, fuzzy
+msgid "Show Reading Pane on the Right"
 msgstr "Okuma Bölmesi Sağda"
 
-msgid "Reading Pane Below"
+#, fuzzy
+msgid "Show Reading Pane Below the List"
 msgstr "Okuma Bölmesi Altta"
 
-msgid "Reading Pane Off"
-msgstr "Okuma Bölmesi Kapalı"
+#, fuzzy
+msgid "Hide Reading Pane"
+msgstr "Okuma Bölmesi"
 
 msgid "Mail Accounts"
 msgstr "E-posta Hesapları"
@@ -1459,8 +1515,9 @@ msgstr "Etiketleriniz"
 msgid "Hide Status Bar"
 msgstr "Durum Çubuğunu Gizle"
 
-msgid "Reveal Status Bar"
-msgstr "Durum Çubuğunu Göster"
+#, fuzzy
+msgid "Show Status Bar"
+msgstr "Durum Çubuğunu Gizle"
 
 msgid "Console"
 msgstr "Konsol"
@@ -1537,11 +1594,21 @@ msgstr "Ayarları İçe Aktar"
 msgid "Settings Imported"
 msgstr "Ayarlar İçe Aktarıldı"
 
+#, fuzzy
 msgid ""
-"{n} mail account(s), the cloud storage accounts and all preferences were "
-"imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
-"of a backup; re-enter them on first use if this is a new machine."
-msgstr ""
+"{n} mail account, the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not in a "
+"backup: enter them again on a new computer."
+msgid_plural ""
+"{n} mail accounts, the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not in a "
+"backup: enter them again on a new computer."
+msgstr[0] ""
+"{n} e-posta hesabı, bulut depolama hesapları ve tüm tercihler içe aktarıldı. "
+"Değişikliklerin uygulanması için Hylki'yi yeniden başlatın. Parolalar ve "
+"oturum açma bilgileri yedeklemeye dahil değildir. Yeni bir bilgisayar "
+"kullanıyorsanız ilk kullanımda bu bilgileri yeniden girmeniz gerekir."
+msgstr[1] ""
 "{n} e-posta hesabı, bulut depolama hesapları ve tüm tercihler içe aktarıldı. "
 "Değişikliklerin uygulanması için Hylki'yi yeniden başlatın. Parolalar ve "
 "oturum açma bilgileri yedeklemeye dahil değildir. Yeni bir bilgisayar "
@@ -1556,11 +1623,13 @@ msgstr "Hylki'yi Yeniden Başlat"
 msgid "Import failed: {e}"
 msgstr "İçe aktarma başarısız oldu: {e}"
 
-msgid "The renderer applies the next time Hylki starts."
+#, fuzzy
+msgid "The new renderer applies after app restarts."
 msgstr "Görüntüleyici ayarı, Hylki bir sonraki başlatıldığında uygulanacak."
 
-msgid "The language applies the next time Hylki starts."
-msgstr "Dil değişikliği, Hylki bir sonraki başlatıldığında uygulanacak."
+#, fuzzy
+msgid "The new language applies after app restarts."
+msgstr "Değişiklikler yeniden başlatmadan sonra uygulanır."
 
 msgid "Edit this message"
 msgstr "Bu iletiyi düzenle"
@@ -1568,7 +1637,8 @@ msgstr "Bu iletiyi düzenle"
 msgid "Try to send this message now"
 msgstr "Bu iletiyi şimdi göndermeyi dene"
 
-msgid "Send all"
+#, fuzzy
+msgid "Send All"
 msgstr "Tümünü Gönder"
 
 msgid "Delete {n} messages"
@@ -1583,15 +1653,16 @@ msgstr "Okundu bilgisi"
 msgid "Read: {subject}"
 msgstr "Okundu: {subject}"
 
+#, fuzzy
 msgid ""
 "This is a read receipt for the message sent to {to} on {date} with the "
-"subject \"{subject}\"."
+"subject “{subject}”."
 msgstr ""
 "Bu, {date} tarihinde {to} adresine \"{subject}\" konusuyla gönderilen "
 "iletiye ait bir okundu bilgisidir."
 
 msgid ""
-"It means the message was shown on the recipient's screen, not that it was "
+"It means the message was shown on the recipient’s screen, not that it was "
 "read or understood."
 msgstr ""
 "Bu bilgi, iletinin alıcının ekranında görüntülendiği anlamına gelir; "
@@ -1603,7 +1674,7 @@ msgstr "{reader} tarafından görüntülendi"
 msgid "Full Release Notes on GitHub"
 msgstr "GitHub'da Tüm Sürüm Notları"
 
-msgid "Delete this conversation?"
+msgid "Delete This Conversation?"
 msgstr "Bu ileti dizisi silinsin mi?"
 
 msgid ""
@@ -1622,13 +1693,13 @@ msgstr[1] ""
 msgid "Delete Conversation"
 msgstr "İleti Dizisini Sil"
 
-msgid "Delete this message permanently?"
-msgid_plural "Delete {n} messages permanently?"
+msgid "Delete This Message Permanently?"
+msgid_plural "Delete {n} Messages Permanently?"
 msgstr[0] "Bu ileti kalıcı olarak silinsin mi?"
 msgstr[1] "{n} ileti kalıcı olarak silinsin mi?"
 
 msgid ""
-"It is already in Trash, so it will be erased from the server. This can’t be "
+"It is already in Trash, so it will be erased from the server. This cannot be "
 "undone."
 msgstr ""
 "İleti zaten Çöp Kutusu'nda. Bu nedenle sunucudan tamamen silinecek. Bu işlem "
@@ -1636,21 +1707,21 @@ msgstr ""
 
 msgid ""
 "They are already in Trash, so they will be erased from the server. This "
-"can’t be undone."
+"cannot be undone."
 msgstr ""
 "İletiler zaten Çöp Kutusu'nda. Bu nedenle sunucudan tamamen silinecekler. Bu "
 "işlem geri alınamaz."
 
 msgid ""
-"It will be erased from the server instead of going to Trash. This can’t be "
+"It will be erased from the server instead of going to Trash. This cannot be "
 "undone."
 msgstr ""
 "İleti Çöp Kutusu'na taşınmak yerine sunucudan tamamen silinecek. Bu işlem "
 "geri alınamaz."
 
 msgid ""
-"They will be erased from the server instead of going to Trash. This can’t be "
-"undone."
+"They will be erased from the server instead of going to Trash. This cannot "
+"be undone."
 msgstr ""
 "İletiler Çöp Kutusu'na taşınmak yerine sunucudan tamamen silinecek. Bu işlem "
 "geri alınamaz."
@@ -1682,6 +1753,20 @@ msgstr "Etiketleri Kaldır"
 msgid "Open a message first, then print it."
 msgstr "Önce bir ileti açın, ardından yazdırın."
 
+msgid "Delete “{name}”?"
+msgstr "“{name}” silinsin mi?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Akıllı klasör kenar çubuğundan kaldırılacak. Gösterdiği e-postalar "
+"bulundukları yerde kalacak."
+
+msgid "Snooze until"
+msgstr "Şu zamana kadar ertele"
+
 msgid "Message Source"
 msgstr "İleti Kaynağı"
 
@@ -1696,18 +1781,6 @@ msgstr "Sonraki eşleşme"
 
 msgid "Close find"
 msgstr "Aramayı kapat"
-
-msgid "Delete “{name}”?"
-msgstr "“{name}” silinsin mi?"
-
-msgid ""
-"The smart folder goes from the sidebar. The mail it shows stays where it is."
-msgstr ""
-"Akıllı klasör kenar çubuğundan kaldırılacak. Gösterdiği e-postalar "
-"bulundukları yerde kalacak."
-
-msgid "Snooze until"
-msgstr "Şu zamana kadar ertele"
 
 msgid "Could not add the event: {e}"
 msgstr "Etkinlik eklenemedi: {e}"
@@ -1735,11 +1808,13 @@ msgid_plural "Moving {n} messages to {account}…"
 msgstr[0] "{account} hesabına bir ileti taşınıyor…"
 msgstr[1] "{account} hesabına {n} ileti taşınıyor…"
 
-msgid "One message stayed put: this account can't take mail from another"
+#, fuzzy
+msgid "One message was not moved: this account cannot take mail from another"
 msgstr "Bir ileti taşınmadı: Bu hesap başka bir hesaptan ileti alamaz"
 
+#, fuzzy
 msgid ""
-"{foreign} messages stayed put: this account can't take mail from another"
+"{foreign} messages were not moved: this account cannot take mail from another"
 msgstr "{foreign} ileti taşınmadı: Bu hesap başka bir hesaptan ileti alamaz"
 
 msgid "Could not save the message: {e}"
@@ -1751,11 +1826,11 @@ msgstr "Taslağın şifresi çözülemedi: {e}"
 msgid "Open Hylki"
 msgstr "Hylki'yi Aç"
 
-msgid "View all {n} unread in Inboxes…"
-msgstr "Gelen Kutularındaki {n} okunmamış iletinin tümünü görüntüle…"
-
-msgid "Accounts"
-msgstr "Hesaplar"
+#, fuzzy
+msgid "View All {n} Unread in Inboxes"
+msgid_plural "View All {n} Unread in Inboxes"
+msgstr[0] "Gelen Kutularındaki {n} okunmamış iletinin tümünü görüntüle…"
+msgstr[1] "Gelen Kutularındaki {n} okunmamış iletinin tümünü görüntüle…"
 
 msgid "No unread mail in Inboxes"
 msgstr "Gelen Kutularında okunmamış e-posta yok"
@@ -1773,11 +1848,11 @@ msgstr ""
 "Yeni uygulama simgeniz uygulanıyor. Hylki kısa süre içinde kapanıp yeniden "
 "açılacak."
 
-msgid "Restart to finish switching icons?"
+msgid "Restart to Finish Switching Icons?"
 msgstr "Simge değişikliğini tamamlamak için yeniden başlatılsın mı?"
 
-msgid ""
-"The dock and Hylki's own windows keep the old icon until Hylki restarts."
+#, fuzzy
+msgid "The dock and the app’s own windows keep the old icon until it restarts."
 msgstr ""
 "Hylki yeniden başlatılana kadar uygulama yuvasında ve Hylki pencerelerinde "
 "eski simge görünmeye devam eder."
@@ -1785,8 +1860,9 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Şimdi Yeniden Başlat"
 
+#, fuzzy
 msgid ""
-"Couldn't restart automatically — quit and reopen Hylki to finish switching "
+"Could not restart automatically. Quit and reopen Hylki to finish switching "
 "the icon."
 msgstr ""
 "Otomatik olarak yeniden başlatılamadı. Simge değişikliğini tamamlamak için "
@@ -1801,19 +1877,21 @@ msgstr "{name} Etiketini Ekle"
 msgid "Remove Tag {name}"
 msgstr "{name} Etiketini Kaldır"
 
-msgid "Unsubscribe from {name}?"
+msgid "Unsubscribe From {name}?"
 msgstr "{name} aboneliğinden çıkılsın mı?"
 
+#, fuzzy
 msgid ""
-"Hylki will ask the list to stop sending you mail. A list can take a few days "
-"to act on the request."
+"An unsubscribe request will be sent to the list. A list can take a few days "
+"to update."
 msgstr ""
-"Hylki, posta listesinden size e-posta göndermeyi durdurmasını isteyecek. "
+"{from} adresinden {addr} adresine bir abonelikten çıkma isteği gönderilecek. "
 "Listenin bu isteği işleme alması birkaç gün sürebilir."
 
+#, fuzzy
 msgid ""
 "An unsubscribe request will be sent to {addr} from {from}. A list can take a "
-"few days to act on it."
+"few days to update."
 msgstr ""
 "{from} adresinden {addr} adresine bir abonelikten çıkma isteği gönderilecek. "
 "Listenin bu isteği işleme alması birkaç gün sürebilir."
@@ -1825,9 +1903,9 @@ msgstr ""
 "Bu posta listesi doğrudan abonelikten çıkma seçeneği sunmuyor. Abonelikten "
 "çıkma sayfası tarayıcınızda açılacak."
 
+#, fuzzy
 msgid ""
-"This message carries no unsubscribe header, so Hylki is going by the link in "
-"it."
+"This message has no unsubscribe header, so the link in it is used instead."
 msgstr ""
 "Bu iletide abonelikten çıkma başlığı bulunmuyor. Bu nedenle Hylki, iletideki "
 "bağlantıyı kullanacak."
@@ -1843,13 +1921,13 @@ msgstr[1] "{addr} adresinden gelen {n} iletiyi de sil"
 msgid "the message offers no way to unsubscribe"
 msgstr "ileti abonelikten çıkmak için herhangi bir yöntem sunmuyor"
 
-msgid "the list's mail address could not be read"
+msgid "the list’s mail address could not be read"
 msgstr "listenin e-posta adresi okunamadı"
 
 msgid "Unsubscribed from {name}."
 msgstr "{name} aboneliğinden çıkıldı."
 
-msgid "The list's unsubscribe page is open in your browser."
+msgid "The list’s unsubscribe page is open in your browser."
 msgstr "Listenin abonelikten çıkma sayfası tarayıcınızda açık."
 
 msgid "Save Message"
@@ -2106,7 +2184,7 @@ msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Şifrelenmiş blok bozuk veya OpenPGP verisi değil."
 
 msgid ""
-"Signing key {id} came with the sender's mail or from their domain, not from "
+"Signing key {id} came with the sender’s mail or from their domain, not from "
 "your keyring; check its fingerprint with the sender before trusting it."
 msgstr ""
 "{id} imzalama anahtarı, gönderenin e-postasıyla veya etki alanından geldi; "
@@ -2179,7 +2257,7 @@ msgstr ""
 msgid "Signed with key {id}."
 msgstr "{id} anahtarıyla imzalandı."
 
-msgid "Import the sender's public key to verify it."
+msgid "Import the sender’s public key to verify it."
 msgstr "Doğrulamak için gönderenin açık anahtarını içe aktarın."
 
 msgid "Labeled"
@@ -2197,20 +2275,21 @@ msgstr "Gizli"
 msgid "The sender marked this message “{label}”."
 msgstr "Gönderen bu iletiyi “{label}” olarak işaretledi."
 
+#, fuzzy
 msgid ""
-"The sender's organization labeled this message without naming the label in "
-"it. For a Microsoft 365 account, turning on “Show sensitivity label names” "
-"in its settings shows the name. Hylki shows the label but does not apply its "
-"rules."
+"The sender’s organization labeled this message without naming the label. For "
+"a Microsoft 365 account, turn on “Show sensitivity label names” in its "
+"settings to see the name. The label’s rules are not applied here."
 msgstr ""
 "Gönderenin kuruluşu bu iletiye bir hassasiyet etiketi atamış ancak etiketin "
 "adını iletide belirtmemiş. Microsoft 365 hesabında, ayarlardaki “Hassasiyet "
 "etiketi adlarını göster” seçeneğini etkinleştirerek etiketi görebilirsiniz. "
 "Hylki etiketi gösterir ancak etiketin kurallarını uygulamaz."
 
+#, fuzzy
 msgid ""
-"The sender's organization labeled this message “{label}”. Hylki shows the "
-"label but does not apply its rules."
+"The sender’s organization labeled this message “{label}”. The label’s rules "
+"are not applied here."
 msgstr ""
 "Gönderenin kuruluşu bu iletiyi “{label}” olarak etiketledi. Hylki etiketi "
 "gösterir ancak etiketin kurallarını uygulamaz."
@@ -2218,17 +2297,18 @@ msgstr ""
 msgid "gpgsm did not sign the message."
 msgstr ""
 
-msgid "Nothing here proves this came from {from} — or that it didn't."
+#, fuzzy
+msgid "Nothing here proves this came from {from}, or that it did not."
 msgstr ""
 "Buradaki hiçbir bilgi, iletinin {from} adresinden geldiğini veya gelmediğini "
 "kanıtlamıyor."
 
-msgid "These checks aren't known to come from your mail provider"
+msgid "These checks are not known to come from your mail provider"
 msgstr ""
 "Bu denetimlerin e-posta sağlayıcınız tarafından yapıldığı doğrulanamıyor"
 
 msgid ""
-"{from} checks out, but the addressing doesn't match the name on the message."
+"{from} checks out, but the addressing does not match the name on the message."
 msgstr ""
 "{from} adresi doğrulandı ancak adres bilgileri iletideki adla eşleşmiyor."
 
@@ -2248,13 +2328,13 @@ msgid "This message carries a valid signature from {from}."
 msgstr "Bu ileti {from} adresinden gelen geçerli bir imza taşıyor."
 
 msgid ""
-"This message couldn't be confirmed as coming from {from}, and the checks "
+"This message could not be confirmed as coming from {from}, and the checks "
 "that ran on it failed."
 msgstr ""
 "Bu iletinin {from} adresinden geldiği doğrulanamadı ve ileti üzerinde "
 "yapılan denetimler başarısız oldu."
 
-msgid "Your mail provider didn't report any sender checks for this message."
+msgid "Your mail provider did not report any sender checks for this message."
 msgstr ""
 "E-posta sağlayıcınız bu ileti için herhangi bir gönderen doğrulama sonucu "
 "bildirmedi."
@@ -2289,7 +2369,8 @@ msgstr "Yanıtlar {from} yerine {reply} adresine gönderilecek"
 msgid "Bounces would go to {rp}"
 msgstr "Teslim edilemeyen iletiler {rp} adresine gönderilecek"
 
-msgid "The sender's name says \"{claimed}\" but the address is {from}"
+#, fuzzy
+msgid "The sender’s name says “{claimed}” but the address is {from}"
 msgstr "Gönderenin adı \"{claimed}\" olarak görünüyor ancak adresi {from}"
 
 msgid "{used} of {limit} used"
@@ -2301,7 +2382,7 @@ msgstr "{free} boş (%{pct})"
 msgid "A folder needs a name."
 msgstr "Bir klasörün adı olmalıdır."
 
-msgid "A folder name can't contain “{c}” on this account."
+msgid "A folder name cannot contain “{c}” on this account."
 msgstr "Bu hesapta klasör adı “{c}” karakterini içeremez."
 
 msgid "Encrypted message"
@@ -2313,23 +2394,36 @@ msgstr "Bugün, {time}"
 msgid "just now"
 msgstr "şimdi"
 
-msgid "{n} minutes ago"
-msgstr "{n} dakika önce"
+#, fuzzy
+msgid "{n} minute ago"
+msgid_plural "{n} minutes ago"
+msgstr[0] "{n} dakika önce"
+msgstr[1] "{n} dakika önce"
 
 msgid "an hour ago"
 msgstr "bir saat önce"
 
-msgid "{n} hours ago"
-msgstr "{n} saat önce"
+#, fuzzy
+msgid "{n} hour ago"
+msgid_plural "{n} hours ago"
+msgstr[0] "{n} saat önce"
+msgstr[1] "{n} saat önce"
 
 msgid "yesterday"
 msgstr "dün"
 
-msgid "{n} days ago"
-msgstr "{n} gün önce"
+#, fuzzy
+msgid "{n} day ago"
+msgid_plural "{n} days ago"
+msgstr[0] "{n} gün önce"
+msgstr[1] "{n} gün önce"
 
-msgid "Waiting since {ago}"
-msgstr "{ago} süredir bekliyor"
+msgid "Queued {ago}"
+msgstr ""
+
+#, fuzzy
+msgid "(no recipients)"
+msgstr "Alıcıları göster"
 
 msgid "Scheduled for {when}"
 msgstr "{when} için zamanlandı"
@@ -2362,7 +2456,7 @@ msgid "Encrypted with OpenPGP"
 msgstr "OpenPGP ile şifrelenmiş"
 
 msgid ""
-"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"Encrypted, and signed by {signer}, whose key is not for the sender’s address "
 "{addr}"
 msgstr ""
 "Şifrelenmiş ve anahtarı gönderenin {addr} adresine ait olmayan {signer} "
@@ -2371,11 +2465,13 @@ msgstr ""
 msgid "Encrypted, and signed by {signer}"
 msgstr "Şifrelenmiş ve {signer} tarafından imzalanmış"
 
+#, fuzzy
 msgid ""
-"Encrypted; the signature does not match, the message may have been altered"
+"Encrypted, but the signature does not match: the message may have been "
+"altered"
 msgstr "Şifrelenmiş; imza eşleşmiyor, ileti değiştirilmiş olabilir"
 
-msgid "Encrypted; signed with a key you don't have ({id})"
+msgid "Encrypted; signed with a key you do not have ({id})"
 msgstr "Şifrelenmiş; sahip olmadığınız bir anahtarla imzalanmış ({id})"
 
 msgid "Encrypted, and signed by {signer} with an expired key"
@@ -2392,7 +2488,7 @@ msgstr "Şifrelenmiş ve {signer} tarafından imzalanmış; imzanın süresi dol
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "OpenPGP ile imzalanmış; imza doğrulanamadı"
 
-msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgid "Signed by {signer}, whose key is not for the sender’s address {addr}"
 msgstr ""
 "{signer} tarafından imzalanmış ancak anahtarı gönderenin {addr} adresine ait "
 "değil"
@@ -2403,7 +2499,7 @@ msgstr "{signer} tarafından imzalanmış"
 msgid "The OpenPGP signature does not match; the message may have been altered"
 msgstr "OpenPGP imzası eşleşmiyor; ileti değiştirilmiş olabilir"
 
-msgid "Signed with a key you don't have ({id})"
+msgid "Signed with a key you do not have ({id})"
 msgstr "Sahip olmadığınız bir anahtarla imzalanmış ({id})"
 
 msgid "Signed by {signer} with an expired key"
@@ -2451,7 +2547,7 @@ msgstr "İmzalanmış, anahtar iptal edilmiş"
 msgid "Signature expired"
 msgstr "İmzanın süresi dolmuş"
 
-msgid "This message hasn't been checked."
+msgid "This message has not been checked."
 msgstr "Bu ileti henüz denetlenmedi."
 
 msgid "Harper is not available for this computer."
@@ -2464,7 +2560,7 @@ msgstr ""
 msgid "Harper could not be started: {e}"
 msgstr "Harper başlatılamadı: {e}"
 
-msgid "Harper's answer could not be read."
+msgid "Harper’s answer could not be read."
 msgstr "Harper'ın yanıtı okunamadı."
 
 msgid "There is no folder to install to."
@@ -2476,7 +2572,8 @@ msgstr "Yeterli boş alan yok: {size} alan gerekiyor."
 msgid "The download could not start: {e}"
 msgstr "İndirme başlatılamadı: {e}"
 
-msgid "The download was cancelled."
+#, fuzzy
+msgid "The download was canceled."
 msgstr "İndirme iptal edildi."
 
 msgid "The download stopped: {e}"
@@ -2494,17 +2591,17 @@ msgstr "Dosyalar yazılamadı: {e}"
 msgid "{n} MB"
 msgstr "{n} MB"
 
-msgid "The server's answer could not be read."
+msgid "The server’s answer could not be read."
 msgstr "Sunucunun yanıtı okunamadı."
 
 msgid "Nothing answers at that address. Check that the server is running."
 msgstr ""
 "Bu adreste yanıt veren bir sunucu yok. Sunucunun çalıştığını kontrol edin."
 
-msgid "The server's name could not be found."
+msgid "The server’s name could not be found."
 msgstr "Sunucunun adı bulunamadı."
 
-msgid "The server's address is not valid."
+msgid "The server’s address is not valid."
 msgstr "Sunucu adresi geçerli değil."
 
 msgid "The server could not be reached: {e}"
@@ -2541,11 +2638,11 @@ msgstr "LanguageTool başlatılamadı."
 msgid "LanguageTool took too long to start."
 msgstr "LanguageTool'un başlatılması çok uzun sürdü."
 
-msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgid "Enter the LanguageTool server’s address in Settings → Composing."
 msgstr ""
 "LanguageTool sunucusunun adresini Ayarlar → İleti Oluşturma bölümüne girin."
 
-msgid "Enter the server's address first."
+msgid "Enter the server’s address first."
 msgstr "Önce sunucu adresini girin."
 
 msgid ""
@@ -2575,7 +2672,7 @@ msgstr ""
 "{reason} Hesabınız kuruluşunuz tarafından yönetiliyorsa bir yönetici, {link} "
 "adresinden Hylki'yi herkes için onaylayabilir."
 
-msgid "The service's answer could not be read."
+msgid "The service’s answer could not be read."
 msgstr "Hizmetin yanıtı okunamadı."
 
 msgid "The service could not be reached: {e}"
@@ -2584,13 +2681,13 @@ msgstr "Hizmete ulaşılamadı: {e}"
 msgid "The service did not accept the key."
 msgstr "Hizmet anahtarı kabul etmedi."
 
-msgid "This month's allowance is used up."
+msgid "This month’s allowance is used up."
 msgstr "Bu ay için tanınan kullanım hakkı tükendi."
 
 msgid "The service refused the request (error {code})."
 msgstr "Hizmet isteği reddetti (hata {code})."
 
-msgid "Enter the LibreTranslate server's address in Settings → Translation."
+msgid "Enter the LibreTranslate server’s address in Settings → Translation."
 msgstr "LibreTranslate sunucusunun adresini Ayarlar → Çeviri bölümüne girin."
 
 msgid "Choose a translation service in Settings → Translation first."
@@ -2606,14 +2703,16 @@ msgstr "Çevrilecek metin yok."
 msgid "This message is too long to send for translation."
 msgstr "Bu ileti çeviri için gönderilemeyecek kadar uzun."
 
-msgid "This is too long to send for translation."
+#, fuzzy
+msgid "This text is too long to send for translation."
 msgstr "Bu metin çeviri için gönderilemeyecek kadar uzun."
 
 msgid "Mail"
 msgstr "Posta"
 
-msgid "Use this account in Hylki"
-msgstr "Bu hesabı Hylki'de kullan"
+#, fuzzy
+msgid "Use this account"
+msgstr "Bu hesabı etkinleştir"
 
 msgid "GOA"
 msgstr "GOA"
@@ -2666,7 +2765,8 @@ msgstr "Virgülle ayrılmış adresler"
 msgid "Folder"
 msgstr "Klasör"
 
-msgid "Permanently deletes the message"
+#, fuzzy
+msgid "Permanently deletes the message."
 msgstr "İletiyi kalıcı olarak siler"
 
 msgid "Bring this folder back to the sidebar"
@@ -2678,7 +2778,7 @@ msgstr "{host} üzerinden gönderir"
 msgid "Remove this alias"
 msgstr "Bu takma adı kaldır"
 
-msgid "Kept on the server; change it in your provider's webmail."
+msgid "Kept on the server; change it in your provider’s webmail."
 msgstr ""
 "Sunucuda tutulur; e-posta sağlayıcınızın web postası üzerinden değiştirin."
 
@@ -2707,7 +2807,7 @@ msgid "Own SMTP server"
 msgstr "Kendi SMTP sunucum"
 
 msgid ""
-"Needed when this account's provider, such as Gmail, rewrites the sender."
+"Needed when this account’s provider, such as Gmail, rewrites the sender."
 msgstr ""
 "Bu hesabın Gmail gibi sağlayıcısı gönderen adresini değiştiriyorsa "
 "gereklidir."
@@ -2734,7 +2834,7 @@ msgstr ""
 msgid "Test SMTP"
 msgstr "SMTP'yi Sına"
 
-msgid "Names that share an address send through this account's server."
+msgid "Names that share an address send through this account’s server."
 msgstr ""
 "Aynı adresi paylaşan adlar bu hesabın sunucusu üzerinden gönderim yapar."
 
@@ -2802,9 +2902,10 @@ msgid "POP3 accounts have no server folders to save a copy in."
 msgstr ""
 "POP3 hesaplarında kopyanın kaydedilebileceği sunucu klasörleri bulunmaz."
 
+#, fuzzy
 msgid ""
-"Only for an account added in Hylki with Microsoft 365 / Outlook as the "
-"provider, not from GNOME Online Accounts."
+"Only for a Microsoft 365 / Outlook account added here, not one from GNOME "
+"Online Accounts."
 msgstr ""
 "Yalnızca sağlayıcı olarak Microsoft 365 / Outlook seçilerek doğrudan "
 "Hylki'ye eklenen hesaplar içindir; GNOME Çevrimiçi Hesapları üzerinden "
@@ -2817,12 +2918,10 @@ msgstr ""
 "Microsoft'tan erişim izni ister. Bazı kuruluşlarda bu iznin bir yönetici "
 "tarafından onaylanması gerekir."
 
-msgid ""
-"Switching this off returns the account to the import list. It stays in GNOME "
-"Online Accounts."
+msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
 msgstr ""
-"Bunu kapatmak hesabı içe aktarma listesine geri taşır. Hesap GNOME Çevrimiçi "
-"Hesapları'nda kalmaya devam eder."
+"Kapatmak içe aktarma listesine geri döndürür. GNOME Çevrimiçi Hesaplarda "
+"kalır."
 
 msgid "Choose a Picture"
 msgstr "Bir Resim Seçin"
@@ -2900,13 +2999,15 @@ msgstr "Süzgeç Ekle"
 msgid "Name (optional)"
 msgstr "Ad (isteğe bağlı)"
 
-msgid "Searched on the server; nothing is downloaded"
+#, fuzzy
+msgid "Searched on the server; nothing is downloaded."
 msgstr "Sunucuda arandı; hiçbir şey indirilmedi"
 
 msgid "From address when no Reply-To is set"
 msgstr "Yanıt adresi belirtilmediğinde kullanılan gönderen adresi"
 
-msgid "Looks in the system address books and the Hylki book"
+#, fuzzy
+msgid "Looks in the system address books and the Hylki Address Book."
 msgstr "Sistem adres defterlerinde ve Hylki adres defterinde arar"
 
 msgid "Tag with"
@@ -2918,7 +3019,8 @@ msgstr "Hiçbiri"
 msgid "Count unread mail"
 msgstr "Okunmamış postaları say"
 
-msgid "Include the folder's unread mail in the tray icon's unread count"
+#, fuzzy
+msgid "Adds the folder’s unread mail to the tray icon’s count."
 msgstr ""
 "Klasördeki okunmamış postaları tepsi simgesinin okunmamış ileti sayısına "
 "dahil et"
@@ -2931,7 +3033,7 @@ msgstr ""
 "gönderilecek postalar için geçerlidir."
 
 msgid ""
-"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Uses the original’s folder at the time the reply is sent. Replies to mail in "
 "Sent, Drafts, Trash or Junk go with sent mail."
 msgstr ""
 "Yanıt gönderildiği sırada özgün iletinin bulunduğu klasörü kullanır. "
@@ -2958,7 +3060,8 @@ msgstr "Sunucu (ana bilgisayar adı veya URL)"
 msgid "Port (default 443)"
 msgstr "Bağlantı noktası (varsayılan 443)"
 
-msgid "Incoming Server"
+#, fuzzy
+msgid "Incoming server"
 msgstr "Gelen Posta Sunucusu"
 
 msgid "Port (IMAP 993 / POP3 995)"
@@ -2973,7 +3076,8 @@ msgstr "Maildir Klasörlerini İçe Aktar"
 msgid "Signed in as {address}, not {email}."
 msgstr "{email} yerine {address} olarak oturum açıldı."
 
-msgid "Enter a client ID (and endpoints for a custom provider) first"
+#, fuzzy
+msgid "Enter a client ID first, and the endpoints for a custom provider."
 msgstr ""
 "Önce bir istemci kimliği girin (özel sağlayıcı için uç noktaları da girin)"
 
@@ -3025,12 +3129,8 @@ msgstr "Yeni hesaplar için GNOME Çevrimiçi Hesapları'nı denetle"
 msgid "Add Account…"
 msgstr "Hesap Ekle…"
 
-msgid ""
-"Store mail in folders that live on this computer. Move or copy mail from any "
-"account to here."
+msgid "Move or copy mail here from any account."
 msgstr ""
-"Postaları bu bilgisayarda bulunan klasörlerde saklayın. Herhangi bir "
-"hesaptaki postaları buraya taşıyabilir veya kopyalayabilirsiniz."
 
 msgid "Add"
 msgstr "Ekle"
@@ -3058,8 +3158,9 @@ msgstr ""
 msgid "Smart Folders"
 msgstr "Akıllı Klasörler"
 
+#, fuzzy
 msgid ""
-"Lists the messages that match its conditions. Shown in the sidebar under the "
+"Each lists the messages that match its conditions, in the sidebar under the "
 "unified rows."
 msgstr ""
 "Koşullarıyla eşleşen iletileri listeler. Kenar çubuğunda birleştirilmiş "
@@ -3086,8 +3187,12 @@ msgstr "Tamam"
 msgid "Tags Found"
 msgstr "Bulunan Etiketler"
 
-msgid "{n} tags are in use in your mailboxes but not set up here."
-msgstr ""
+#, fuzzy
+msgid "{n} tag is in use in your mailboxes but not set up here."
+msgid_plural "{n} tags are in use in your mailboxes but not set up here."
+msgstr[0] ""
+"Posta kutularınızda {n} etiket kullanılıyor ancak burada tanımlanmamış."
+msgstr[1] ""
 "Posta kutularınızda {n} etiket kullanılıyor ancak burada tanımlanmamış."
 
 msgid "Import Selected"
@@ -3096,8 +3201,10 @@ msgstr "Seçilenleri İçe Aktar"
 msgid "Import All"
 msgstr "Tümünü İçe Aktar"
 
-msgid "{n} messages"
-msgstr "{n} ileti"
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} ileti"
+msgstr[1] "{n} ileti"
 
 msgid "Toggles the tag on a message (with single-key shortcuts on)"
 msgstr ""
@@ -3116,7 +3223,7 @@ msgid "Keyword"
 msgstr "Anahtar Sözcük"
 
 msgid ""
-"How the server stores the tag, without spaces. Thunderbird's built-in tags "
+"How the server stores the tag, without spaces. Thunderbird’s built-in tags "
 "are $label1 to $label5."
 msgstr ""
 "Sunucunun etiketi boşluk içermeden nasıl sakladığı. Thunderbird'ün yerleşik "
@@ -3137,10 +3244,10 @@ msgstr "Oturum açma parolanız değil, uygulama parolası gerekir."
 msgid "Enter your server details manually."
 msgstr "Sunucu bilgilerinizi elle girin."
 
-msgid "Enter your provider's OAuth endpoints, then sign in."
+msgid "Enter your provider’s OAuth endpoints, then sign in."
 msgstr "Sağlayıcınızın OAuth uç noktalarını girin, ardından oturum açın."
 
-msgid "Your JMAP server's address or session URL. No SMTP settings needed."
+msgid "Your JMAP server’s address or session URL. No SMTP settings needed."
 msgstr "JMAP sunucunuzun adresi veya oturum URL'si. SMTP ayarları gerekmez."
 
 msgid "Signs in through your browser. No password needed."
@@ -3156,7 +3263,7 @@ msgstr ""
 "Fastmail'de Gizlilik ve Güvenlik bölümünden oluşturulan, postaya ve "
 "gönderime erişim yetkisi bulunan bir API belirteciyle oturum açar."
 
-msgid "Your Stalwart server's address. No SMTP settings needed."
+msgid "Your Stalwart server’s address. No SMTP settings needed."
 msgstr "Stalwart sunucunuzun adresi. SMTP ayarları gerekmez."
 
 msgid "Enable POP/IMAP access in GMX settings first."
@@ -3186,12 +3293,14 @@ msgstr "{host} üzerindeki IMAP/POP3 hesabı"
 msgid "Mail account"
 msgstr "Posta hesabı"
 
-msgid "Enter a client ID and sign in before saving"
+#, fuzzy
+msgid "Enter a client ID and sign in before saving."
 msgstr "Kaydetmeden önce bir istemci kimliği girin ve oturum açın"
 
+#, fuzzy
 msgid ""
-"Remove {name} from Hylki? Its folders and the mail in them stay on this "
-"computer, in {dir}, and come back if it is added again."
+"Remove {name}? Its folders and the mail in them stay on this computer, in "
+"{dir}, and come back if it is added again."
 msgstr ""
 "{name} Hylki'den kaldırılsın mı? Klasörleri ve içlerindeki postalar bu "
 "bilgisayarda {dir} konumunda kalır ve hesap yeniden eklendiğinde geri gelir."
@@ -3206,7 +3315,7 @@ msgstr ""
 msgid "Edit HTML"
 msgstr "HTML'yi Düzenle"
 
-msgid "Edit the signature's HTML source"
+msgid "Edit the signature’s HTML source"
 msgstr "İmzanın HTML kaynak kodunu düzenle"
 
 msgid "Follow Settings"
@@ -3316,8 +3425,8 @@ msgstr "Akıllı Klasörü Düzenle"
 msgid "Add Smart Folder"
 msgstr "Akıllı Klasör Ekle"
 
-msgid "Those in the unified section."
-msgstr "Birleştirilmiş bölümdekiler."
+msgid "“All accounts” means those in All Inboxes."
+msgstr ""
 
 msgid "Folders"
 msgstr "Klasörler"
@@ -3349,8 +3458,9 @@ msgstr "Sunucudan Sil…"
 msgid "Key imported"
 msgstr "Anahtar içe aktarıldı"
 
+#, fuzzy
 msgid ""
-"The key is in your keyring now. Trust it under Settings, OpenPGP, once you "
+"The key is in your keyring now. Trust it under Settings → OpenPGP, once you "
 "have checked its fingerprint with its owner."
 msgstr ""
 "Anahtar artık anahtarlığınızda. Parmak izini sahibiyle doğruladıktan sonra "
@@ -3358,9 +3468,6 @@ msgstr ""
 
 msgid "Already in your keyring"
 msgstr "Zaten anahtarlığınızda"
-
-msgid "That key was imported before."
-msgstr "Bu anahtar daha önce içe aktarılmış."
 
 msgid "Could not import the key"
 msgstr "Anahtar içe aktarılamadı"
@@ -3385,11 +3492,11 @@ msgstr[1] "{n} ek"
 msgid "Thumbnail size"
 msgstr "Küçük resim boyutu"
 
-msgid "Sorted Z to A — switch to A to Z"
-msgstr "Z'den A'ya sıralandı — A'dan Z'ye sıralamak için değiştir"
+msgid "Sort A to Z"
+msgstr ""
 
-msgid "Sorted A to Z — switch to Z to A"
-msgstr "A'dan Z'ye sıralandı — Z'den A'ya sıralamak için değiştir"
+msgid "Sort Z to A"
+msgstr ""
 
 msgid "Show as thumbnails"
 msgstr "Küçük resimler olarak göster"
@@ -3399,9 +3506,6 @@ msgstr "Liste olarak göster"
 
 msgid "Save All…"
 msgstr "Tümünü Kaydet…"
-
-msgid "Save every attachment to a folder"
-msgstr "Tüm ekleri bir klasöre kaydet"
 
 msgid "Save Attachment"
 msgstr "Eki Kaydet"
@@ -3449,8 +3553,11 @@ msgstr "Bilinmiyor"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
-msgid "Indexing {n} messages…"
-msgstr "{n} ileti dizine ekleniyor…"
+#, fuzzy
+msgid "Indexing {n} message…"
+msgid_plural "Indexing {n} messages…"
+msgstr[0] "{n} ileti dizine ekleniyor…"
+msgstr[1] "{n} ileti dizine ekleniyor…"
 
 msgid "Loading more…"
 msgstr "Daha fazlası yükleniyor…"
@@ -3485,12 +3592,6 @@ msgstr "Tür"
 
 msgid "Size"
 msgstr "Boyut"
-
-msgid "Thumbnail grid"
-msgstr "Küçük resim ızgarası"
-
-msgid "Table"
-msgstr "Tablo"
 
 msgid "Show only this account"
 msgstr "Yalnızca bu hesabı göster"
@@ -3570,11 +3671,9 @@ msgstr "Sonraki"
 msgid "Open in the default app"
 msgstr "Varsayılan uygulamada aç"
 
-msgid "Waiting for the Keyring"
-msgstr "Anahtarlık bekleniyor"
-
+#, fuzzy
 msgid ""
-"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Mail kept on this computer is encrypted with a key stored in the keyring. "
 "Unlock the keyring if it asks."
 msgstr ""
 "Bu bilgisayarda saklanan postalar, anahtarlıkta tutulan bir anahtarla "
@@ -3663,7 +3762,7 @@ msgstr ""
 "postalarınızı tekrar indirmek için önbelleği sıfırlayın."
 
 msgid ""
-"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"Mail that exists only on this computer is lost: a POP3 account’s mail, and "
 "unsent mail in the Outbox."
 msgstr ""
 "Yalnızca bu bilgisayarda bulunan postalar kaybolacak: POP3 hesabındaki "
@@ -3825,12 +3924,8 @@ msgstr "Yükleme klasörü"
 msgid "Server is behind Cloudflare"
 msgstr "Sunucu Cloudflare arkasında"
 
-msgid ""
-"For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 MB "
-"pieces."
+msgid "Files over 100 MB are uploaded in 90 MB pieces."
 msgstr ""
-"Cloudflare arkasındaki kendi barındırdığınız sunucular için: 100 MB'tan "
-"büyük dosyalar 90 MB'lık parçalar hâlinde yüklenir."
 
 msgid "Links expire after"
 msgstr "Bağlantıların geçerlilik süresi"
@@ -3847,19 +3942,19 @@ msgstr "Her dosyaya ayrı bir parola atanır ve bu parola size gösterilir."
 msgid "Link defaults"
 msgstr "Varsayılan bağlantı ayarları"
 
-msgid "Used unless you change them in the upload dialog for one email."
-msgstr ""
-"Bir e-posta için yükleme penceresinde değiştirmediğiniz sürece bu ayarlar "
-"kullanılır."
+#, fuzzy
+msgid "The upload dialog can change them for one message."
+msgstr "Başlıktaki anahtar açık iletiyi değiştirmeye devam eder."
 
-msgid "Check Connection"
-msgstr "Bağlantıyı Denetle"
+msgid "Test Connection"
+msgstr "Bağlantıyı Sına"
 
 msgid "{email} (Files is off)"
 msgstr "{email} (Dosyalar devre dışı)"
 
+#, fuzzy
 msgid ""
-"No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings, "
+"No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings → "
 "Online Accounts."
 msgstr ""
 "GNOME Çevrimiçi Hesaplar'da henüz bir Microsoft 365 hesabı yok. Ayarlar → "
@@ -3890,7 +3985,7 @@ msgstr ""
 "Her dosyaya ayrı bir parola atanır ve bu parola size gösterilir. Microsoft "
 "365 veya OneDrive İş gerektirir."
 
-msgid "User name"
+msgid "Username"
 msgstr "Kullanıcı adı"
 
 msgid "App password (leave empty to keep)"
@@ -3898,9 +3993,6 @@ msgstr "Uygulama parolası (değiştirmemek için boş bırakın)"
 
 msgid "App password"
 msgstr "Uygulama parolası"
-
-msgid "E-mail"
-msgstr "E-posta"
 
 msgid "Password (leave empty to keep)"
 msgstr "Parola (değiştirmemek için boş bırakın)"
@@ -3924,7 +4016,7 @@ msgid ""
 "sharing.write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
-"Development status is enough. Leave the field empty to use this build's own "
+"Development status is enough. Leave the field empty to use this build’s own "
 "key, if it has one."
 msgstr ""
 "Dropbox için size ait bir uygulama kaydetmeniz gerekir:\n"
@@ -3955,7 +4047,8 @@ msgstr "Önce bir Dropbox uygulamasının anahtarını girin."
 msgid "Waiting for the sign-in in your browser…"
 msgstr "Tarayıcınızda oturum açmanız bekleniyor…"
 
-msgid "Fill in the server URL, e-mail and password first."
+#, fuzzy
+msgid "Fill in the server URL, email and password first."
 msgstr "Önce sunucu adresini, e-posta adresini ve parolayı girin."
 
 msgid "Fill in the server URL, user name and app password first."
@@ -4018,7 +4111,7 @@ msgid "Remove {name}?"
 msgstr "{name} kaldırılsın mı?"
 
 msgid ""
-"Files already uploaded and links sent stay active on the provider's service."
+"Files already uploaded and links sent stay active on the provider’s service."
 msgstr ""
 "Daha önce yüklenen dosyalar ve gönderilen bağlantılar, hizmet sağlayıcısında "
 "etkin kalmaya devam eder."
@@ -4035,8 +4128,11 @@ msgstr "Bulut Hesabını Düzenle"
 msgid "Add Cloud Account"
 msgstr "Bulut Hesabı Ekle"
 
-msgid "links expire after {n} days"
-msgstr "bağlantıların süresi {n} gün sonra dolar"
+#, fuzzy
+msgid "links expire after {n} day"
+msgid_plural "links expire after {n} days"
+msgstr[0] "bağlantıların süresi {n} gün sonra dolar"
+msgstr[1] "bağlantıların süresi {n} gün sonra dolar"
 
 msgid "password-protected"
 msgstr "parola korumalı"
@@ -4078,7 +4174,7 @@ msgstr "Kendi alan adlarınızın dışında"
 msgid "Not now"
 msgstr "Şimdi değil"
 
-msgid "Accept or reject the AI agent's suggested changes first."
+msgid "Accept or reject the AI agent’s suggested changes first."
 msgstr ""
 "Önce yapay zekâ aracısının önerdiği değişiklikleri kabul edin veya reddedin."
 
@@ -4106,7 +4202,7 @@ msgstr "Bilgi:"
 msgid "Subject:"
 msgstr "Konu:"
 
-msgid "Accepting removes this text's formatting, links and pictures."
+msgid "Accepting removes this text’s formatting, links and pictures."
 msgstr ""
 "Kabul etmek bu metnin biçimlendirmesini, bağlantılarını ve görsellerini "
 "kaldırır."
@@ -4123,7 +4219,7 @@ msgstr "Eklendi, kendi alan adlarınızın dışında"
 msgid "Added"
 msgstr "Eklendi"
 
-msgid "Send without an attachment?"
+msgid "Send Without an Attachment?"
 msgstr "Ek olmadan gönderilsin mi?"
 
 msgid "The message mentions “{word}”, but nothing is attached."
@@ -4162,26 +4258,22 @@ msgstr[1] "{n} dosyayı yükle ve paylaşım bağlantılarını iletiye ekle."
 msgid "Upload"
 msgstr "Yükle"
 
-msgid "Days; 0 keeps the link indefinitely"
-msgstr "Gün; 0, bağlantıyı süresiz olarak saklar"
-
-msgid "Protect with a password"
-msgstr "Parola ile koru"
-
-msgid "Download password (empty: generated)"
+#, fuzzy
+msgid "Download password (leave empty to generate one)"
 msgstr "İndirme parolası (boş bırakılırsa otomatik oluşturulur)"
 
 msgid "link expires {date}"
 msgstr "bağlantının süresi {date} tarihinde doluyor"
 
-msgid "Could not upload {name}"
+msgid "Could Not Upload {name}"
 msgstr "{name} yüklenemedi"
 
-msgid "Not signed in"
+msgid "Not Signed In"
 msgstr "Oturum açılmamış"
 
+#, fuzzy
 msgid ""
-"The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, "
+"The sign-in for {name} is not in the keyring. Open Settings → Cloud Storage, "
 "and enter it again."
 msgstr ""
 "{name} için oturum açma bilgileri anahtarlıkta bulunamadı. Ayarlar > Bulut "
@@ -4205,7 +4297,7 @@ msgstr "Yazarken biçimlendir; ileti HTML olarak gönderilir"
 msgid "Write Markdown; it is sent as formatted mail"
 msgstr "Markdown ile yaz; ileti biçimlendirilmiş e-posta olarak gönderilir"
 
-msgid "Write the message's HTML by hand"
+msgid "Write the message’s HTML by hand"
 msgstr "İletinin HTML kodunu elle yaz"
 
 msgid "No formatting at all"
@@ -4230,7 +4322,7 @@ msgstr "Açık / Koyu Mod"
 msgid "Writing in {format}"
 msgstr "{format} biçiminde yazılıyor"
 
-msgid "Switch to plain text?"
+msgid "Switch to Plain Text?"
 msgstr "Düz metne geçilsin mi?"
 
 msgid "Formatting, images and links are removed."
@@ -4248,7 +4340,7 @@ msgstr "Okuyucuya küçült"
 msgid "Open in window"
 msgstr "Pencerede aç"
 
-msgid "Save the template?"
+msgid "Save the Template?"
 msgstr "Şablon kaydedilsin mi?"
 
 msgid ""
@@ -4260,7 +4352,7 @@ msgstr ""
 msgid "Save Template"
 msgstr "Şablonu Kaydet"
 
-msgid "Save the message?"
+msgid "Save the Message?"
 msgstr "İleti kaydedilsin mi?"
 
 msgid "It has not been sent. Save it to Drafts to finish later, or discard it."
@@ -4283,7 +4375,7 @@ msgstr "Kişileri Aç"
 msgid "Sign with your OpenPGP key"
 msgstr "OpenPGP anahtarınızla imzala"
 
-msgid "Encrypt with OpenPGP to every recipient's key"
+msgid "Encrypt with OpenPGP to every recipient’s key"
 msgstr "Her alıcının anahtarını kullanarak OpenPGP ile şifrele"
 
 msgid "Show Cc, Bcc and Reply-To"
@@ -4308,7 +4400,7 @@ msgstr "Anahtarlığınızdaki OpenPGP anahtarı."
 msgid "OpenPGP key sent with their mail (Autocrypt)."
 msgstr "E-postalarıyla birlikte gönderilen OpenPGP anahtarı (Autocrypt)."
 
-msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgid "OpenPGP key passed on in someone else’s encrypted mail."
 msgstr ""
 "Başka birinin şifrelenmiş e-postası aracılığıyla iletilen OpenPGP anahtarı."
 
@@ -4318,18 +4410,19 @@ msgstr "E-posta alan adları tarafından yayımlanan OpenPGP anahtarı (WKD)."
 msgid "OpenPGP key from the keyserver keys.openpgp.org."
 msgstr "keys.openpgp.org anahtar sunucusundan alınan OpenPGP anahtarı."
 
-msgid "Cannot merge an encrypted message"
+msgid "Cannot Merge an Encrypted Message"
 msgstr "Şifrelenmiş bir ileti birleştirilemez"
 
-msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgid "Each message would need its recipient’s key. Turn off Encrypt to merge."
 msgstr ""
 "Her ileti için alıcının anahtarı gerekir. Birleştirmek için Şifrele "
 "seçeneğini devre dışı bırakın."
 
-msgid "Check the From address"
+msgid "Check the From Address"
 msgstr "Kimden adresini kontrol edin"
 
-msgid "Insert Merge Field"
+#, fuzzy
+msgid "Insert merge field"
 msgstr "Birleştirme Alanı Ekle"
 
 msgid "Contact Groups"
@@ -4338,29 +4431,32 @@ msgstr "Kişi Grupları"
 msgid "Choose a CSV File…"
 msgstr "Bir CSV Dosyası Seç…"
 
+#, fuzzy
 msgid ""
-"There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
-"OpenPGP, or choose a key in the account's settings."
+"There is no OpenPGP key of your own for {addr}. Generate one under Settings "
+"→ OpenPGP, or choose a key in the account’s settings."
 msgstr ""
 "{addr} adresi için size ait bir OpenPGP anahtarı bulunmuyor. Ayarlar > "
 "OpenPGP bölümünden bir anahtar oluşturun veya hesap ayarlarından bir anahtar "
 "seçin."
 
+#, fuzzy
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
-"it under Settings, OpenPGP."
+"it under Settings → OpenPGP."
 msgstr ""
 "{addr} adresi için bir OpenPGP anahtarı bulunmuyor. Karşı taraftan açık "
 "anahtarını isteyin veya Ayarlar > OpenPGP bölümünden anahtarı alın."
 
-msgid "Encrypt to keys you have not checked?"
+msgid "Encrypt to Keys You Have Not Checked?"
 msgstr "Kontrol etmediğiniz anahtarlarla şifrelensin mi?"
 
+#, fuzzy
 msgid ""
 "Nothing confirms that the keys for {addresses} belong to them. If one is "
-"someone else's, that person can read this message and the recipient cannot. "
+"someone else’s, that person can read this message and the recipient cannot. "
 "To check a key, compare its fingerprint with its owner and trust it under "
-"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+"Settings → OpenPGP. Send Anyway does not ask about these keys again."
 msgstr ""
 "{addresses} adresleri için kullanılan anahtarların gerçekten bu kişilere ait "
 "olduğunu doğrulayan bir bilgi yok. Anahtarlardan biri başka birine aitse bu "
@@ -4383,14 +4479,15 @@ msgstr ""
 msgid "“{address}” is not an email address."
 msgstr "“{address}” geçerli bir e-posta adresi değil."
 
-msgid "Cannot send with OpenPGP"
+msgid "Cannot Send With OpenPGP"
 msgstr "OpenPGP ile gönderilemiyor"
 
-msgid "An attachment is missing"
+msgid "An Attachment Is Missing"
 msgstr "Bir ek dosya eksik"
 
+#, fuzzy
 msgid ""
-"Hylki cannot read {names}. It was moved or deleted after it was attached. "
+"{names} cannot be read. It was moved or deleted after it was attached. "
 "Remove it, or attach it again from where it is now."
 msgstr ""
 "Hylki, {names} dosyalarını okuyamıyor. Dosya eklendikten sonra taşınmış veya "
@@ -4409,13 +4506,11 @@ msgstr ""
 "“{addr}” bir e-posta birleştirme alanıdır. Gönder düğmesinin yanındaki "
 "menüden E-posta Birleştirme… seçeneğini kullanın."
 
-msgid "“{addr}” is not an email address."
-msgstr "“{addr}” geçerli bir e-posta adresi değil."
-
-msgid "Check the address"
+msgid "Check the Address"
 msgstr "Adresi kontrol edin"
 
-msgid "Send now"
+#, fuzzy
+msgid "Send Now"
 msgstr "Şimdi Gönder"
 
 msgid "Tomorrow morning ({time})"
@@ -4457,7 +4552,8 @@ msgstr "İletiyi gönderileceği biçimde göster"
 msgid "Translate what you wrote"
 msgstr "Yazdıklarını çevir"
 
-msgid "Insert Signature"
+#, fuzzy
+msgid "Insert signature"
 msgstr "İmza Ekle"
 
 msgid "No Signature"
@@ -4487,7 +4583,7 @@ msgstr "Diğer Diller"
 msgid "Translate into"
 msgstr "Şu dile çevir"
 
-msgid "Not translated"
+msgid "Not Translated"
 msgstr "Çevrilmedi"
 
 msgid ""
@@ -4495,13 +4591,13 @@ msgid ""
 msgstr ""
 "Bu ileti şifrelenmek üzere ayarlandığından metni çeviri için gönderilmez."
 
-msgid "Nothing to translate yet"
+msgid "Nothing to Translate Yet"
 msgstr "Henüz çevrilecek bir şey yok"
 
 msgid "Write something first, or select the text to translate."
 msgstr "Önce bir şeyler yazın veya çevirmek istediğiniz metni seçin."
 
-msgid "Could not translate"
+msgid "Could Not Translate"
 msgstr "Çeviri yapılamadı"
 
 msgid "Save to Templates"
@@ -4533,9 +4629,6 @@ msgstr "Gönderme seçenekleri"
 
 msgid "Show From, To and Subject"
 msgstr "Kimden, Kime ve Konu alanlarını göster"
-
-msgid "Send now instead"
-msgstr "Bunun yerine şimdi gönder"
 
 msgid "Download password for {name}: {password}"
 msgstr "{name} için indirme parolası: {password}"
@@ -4572,11 +4665,6 @@ msgid_plural "{n} selected"
 msgstr[0] "{n} öğe seçildi"
 msgstr[1] "{n} öğe seçildi"
 
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} ileti"
-msgstr[1] "{n} ileti"
-
 msgid "Reading your mail…"
 msgstr "Postalarınız okunuyor…"
 
@@ -4595,7 +4683,8 @@ msgstr "Bir sütunu ad, e-posta adresi veya telefon numarasıyla eşleştirin."
 msgid "Import Contacts"
 msgstr "Kişileri İçe Aktar"
 
-msgid "Keeps no groups: their names stay on each contact."
+#, fuzzy
+msgid "This book has no groups. Group names stay on each contact."
 msgstr "Gruplar korunmaz; grup adları her kişinin üzerinde kalır."
 
 msgid "Not imported"
@@ -4619,13 +4708,15 @@ msgstr ""
 msgid "Address books"
 msgstr "Adres Defterleri"
 
-msgid "Rename a book for Hylki, or switch it off to leave it out."
+#, fuzzy
+msgid "Rename a book here, or switch it off to leave it out."
 msgstr ""
 "Hylki'de kullanmak için bir adres defterini yeniden adlandırın veya "
 "kullanımdan kaldırmak için devre dışı bırakın."
 
-msgid "Use in Hylki"
-msgstr "Hylki'de Kullan"
+#, fuzzy
+msgid "Use this address book"
+msgstr "{n} kişi defteri"
 
 msgid "Address book"
 msgstr "Adres Defteri"
@@ -4635,9 +4726,6 @@ msgstr "Sunucu"
 
 msgid "Sign-in"
 msgstr "Oturum Açma"
-
-msgid "Password (saved; type to replace it)"
-msgstr "Parola (kaydedildi; değiştirmek için yeni parolayı yazın)"
 
 msgid "Enter the user name."
 msgstr "Kullanıcı adını girin."
@@ -4678,7 +4766,7 @@ msgstr "Oturum açma gerektirmeyen bir dizin için boş bırakın."
 msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
 msgstr "Şu biçimde oturum açın: cn=jane,ou=people,dc=example,dc=com"
 
-msgid "Enter the directory's server."
+msgid "Enter the directory’s server."
 msgstr "Dizinin sunucu adresini girin."
 
 msgid "The server took too long to answer."
@@ -4718,27 +4806,18 @@ msgstr ""
 "Hesaplar üzerinden yapılır. Hesabınızı oradan ekleyip Kişiler seçeneğini "
 "etkinleştirdiğinizde burada listelenir."
 
-msgid "Kept in Hylki's own data folder. Works without GNOME."
+#, fuzzy
+msgid "Kept in the app’s own data folder. Works without GNOME."
 msgstr "Hylki'nin kendi veri klasöründe saklanır. GNOME olmadan da çalışır."
-
-msgid "Contacts in the Hylki book"
-msgstr "Hylki adres defterindeki kişiler"
 
 msgid "Import vCard or CSV files"
 msgstr "vCard veya CSV dosyalarını içe aktar"
 
-msgid ""
-"Adds contacts from .vcf or .csv files. Importing a file again updates "
-"existing entries."
+msgid "Importing a file again updates its contacts."
 msgstr ""
-".vcf veya .csv dosyalarındaki kişileri ekler. Bir dosyayı yeniden içe "
-"aktarmak mevcut kayıtları günceller."
 
 msgid "Export as a vCard file"
 msgstr "vCard dosyası olarak dışa aktar"
-
-msgid "Saves every contact in the Hylki book in one .vcf file."
-msgstr "Hylki adres defterindeki tüm kişileri tek bir .vcf dosyasına kaydeder."
 
 msgid "Delete all contacts"
 msgstr "Tüm Kişileri Sil"
@@ -4786,22 +4865,21 @@ msgstr[1] "{name} üzerinde {n} adres defteri bulundu"
 msgid "Connected to {name}"
 msgstr "{name} bağlantısı kuruldu"
 
-msgid "Use an app-specific password, not your usual one."
-msgstr "Normal parolanız yerine uygulamaya özel bir parola kullanın."
-
 msgid "CardDAV Server"
 msgstr "CardDAV Sunucusu"
 
+#, fuzzy
 msgid ""
-"The server's address is usually enough. Two-step sign-in needs an app "
+"The server’s address is usually enough. Two-step verification needs an app "
 "password."
 msgstr ""
 "Genellikle sunucu adresini girmek yeterlidir. İki adımlı oturum açma için "
 "uygulamaya özel bir parola gerekir."
 
+#, fuzzy
 msgid ""
-"Such as cloud.example.org. With two-factor sign-in, make an app password in "
-"Nextcloud under Settings → Security."
+"Such as cloud.example.org. With two-step verification, make an app password "
+"in Nextcloud under Settings → Security."
 msgstr ""
 "Örneğin cloud.example.org. İki faktörlü oturum açma kullanıyorsanız "
 "Nextcloud'da Ayarlar → Güvenlik bölümünden uygulama parolası oluşturun."
@@ -4815,17 +4893,6 @@ msgstr ""
 
 msgid "LDAP Directory"
 msgstr "LDAP Dizini"
-
-msgid "Address Books"
-msgstr "Adres Defterleri"
-
-msgid ""
-"Where contacts come from for Contacts, suggestions, sender pictures and "
-"filters. Switching one off leaves it out of Hylki."
-msgstr ""
-"Kişiler, öneriler, gönderen fotoğrafları ve filtreler için kullanılacak "
-"kişilerin alındığı kaynaklar. Bir kaynağı devre dışı bırakmak, onu Hylki'nin "
-"dışında tutar."
 
 msgid "Look again for address books"
 msgstr "Adres defterlerini yeniden ara"
@@ -4857,7 +4924,7 @@ msgstr "E-postada"
 msgid "Show names from Contacts"
 msgstr "Kişiler'deki adları göster"
 
-msgid "Saved addresses show the contact's name, not the mail's."
+msgid "Saved addresses show the contact’s name, not the mail’s."
 msgstr "Kaydedilmiş adreslerde e-posta adresi yerine kişinin adı gösterilir."
 
 msgid "Show the Reply-To sender"
@@ -4872,10 +4939,8 @@ msgstr "Yerleşim"
 msgid "Contacts placement"
 msgstr "Kişilerin konumu"
 
-msgid "'In the footer' disables expand/collapse."
+msgid "“In the footer” cannot be folded."
 msgstr ""
-"'Alt bilgi alanında' seçeneği genişletme/daraltma özelliğini devre dışı "
-"bırakır."
 
 msgid "Keep the search field open"
 msgstr "Arama alanını açık tut"
@@ -4885,9 +4950,6 @@ msgstr "Adres Defteri"
 
 msgid "Looking for address books on {name}…"
 msgstr "{name} üzerinde adres defterleri aranıyor…"
-
-msgid "Hylki, on this computer"
-msgstr "Hylki, bu bilgisayarda"
 
 msgid "Edit Group"
 msgstr "Grubu Düzenle"
@@ -4919,9 +4981,9 @@ msgstr "Burada görüntülemek için Kişiler görünümünden kişi ekleyin."
 msgid "Rename Address Book"
 msgstr "Adres Defterini Yeniden Adlandır"
 
+#, fuzzy
 msgid ""
-"The name is used in Hylki only; GNOME Contacts and Evolution keep the book's "
-"own."
+"The name is used here only. GNOME Contacts and Evolution keep the book’s own."
 msgstr ""
 "Bu ad yalnızca Hylki'de kullanılır; GNOME Kişiler ve Evolution adres "
 "defterinin kendi adını kullanmaya devam eder."
@@ -4935,35 +4997,32 @@ msgstr "Tüm Adres Defterleri"
 msgid "Move Contact?"
 msgstr "Kişi Taşınsın mı?"
 
+#, fuzzy
 msgid ""
-"This will move {name} out of {from} and into {to}, locally and on the "
-"server. A group in {from} that holds the contact will no longer have it."
+"{name} moves from {from} to {to}, locally and on the server, and leaves any "
+"group in {from}."
 msgstr ""
-"{name} kişisi hem yerel olarak hem de sunucuda {from} adres defterinden {to} "
-"adres defterine taşınacak. {from} içerisindeki bu kişiyi içeren gruplarda "
-"artık bu kişi bulunmayacak."
+"{name} kişisi hem yerel olarak hem de sunucuda {from} adres defterinden ve "
+"bu kişiyi içeren tüm gruplardan kaldırılacak."
 
 msgid "Move {n} Contact?"
 msgid_plural "Move {n} Contacts?"
 msgstr[0] "{n} kişi taşınsın mı?"
 msgstr[1] "{n} kişi taşınsın mı?"
 
+#, fuzzy
 msgid ""
-"This will move {n} contact out of the address book it is in and into {to}, "
-"locally and on the server. A group there that holds it will no longer have "
-"it."
+"{n} contact moves to {to}, locally and on the server, and leaves any group "
+"in its old address book."
 msgid_plural ""
-"This will move {n} contacts out of the address books they are in and into "
-"{to}, locally and on the server. Groups there that hold them will no longer "
-"have them."
+"{n} contacts move to {to}, locally and on the server, and leave any group in "
+"their old address books."
 msgstr[0] ""
-"{n} kişi, hem yerel olarak hem de sunucuda bulunduğu adres defterinden {to} "
-"adres defterine taşınacak. Bu kişiyi içeren gruplarda artık bu kişi "
-"bulunmayacak."
+"{n} kişi hem yerel olarak hem de sunucuda bulunduğu adres defterinden ve bu "
+"kişiyi içeren tüm gruplardan kaldırılacak."
 msgstr[1] ""
-"{n} kişi, hem yerel olarak hem de sunucuda bulundukları adres defterlerinden "
-"{to} adres defterine taşınacak. Bu kişileri içeren gruplarda artık bu "
-"kişiler bulunmayacak."
+"{n} kişi hem yerel olarak hem de sunucuda bulundukları adres defterlerinden "
+"ve bu kişileri içeren tüm gruplardan kaldırılacak."
 
 msgid "Move"
 msgstr "Taşı"
@@ -4973,10 +5032,6 @@ msgstr "Fotoğrafı görüntüle"
 
 msgid "Add to Contacts"
 msgstr "Kişilere Ekle"
-
-#. ---- note ----
-msgid "Note"
-msgstr "Not"
 
 msgid "Directory"
 msgstr "Dizin"
@@ -4996,9 +5051,8 @@ msgstr "Bu grupta henüz kimse yok."
 msgid "Changed in the app it came from"
 msgstr "Kaynak uygulamada değiştirildi"
 
-msgid "This group names its members by contact, which Hylki does not edit."
+msgid "Its members are listed by contact, which cannot be edited here."
 msgstr ""
-"Bu grup üyelerini kişilere göre tanımlar; Hylki bu bilgiyi düzenleyemez."
 
 msgid ""
 "Saving moves the group to this address book, with its people, and removes it "
@@ -5019,7 +5073,7 @@ msgstr "Grup"
 msgid "Send as Bcc"
 msgstr "Gizli Bilgi olarak gönder"
 
-msgid "Members do not see each other's addresses."
+msgid "Members do not see each other’s addresses."
 msgstr "Üyeler birbirlerinin adreslerini göremez."
 
 #. An Apple group (iCloud's) or a category (Nextcloud's) holds
@@ -5113,9 +5167,6 @@ msgid "{n} Contact Selected"
 msgid_plural "{n} Contacts Selected"
 msgstr[0] "{n} kişi seçildi"
 msgstr[1] "{n} kişi seçildi"
-
-msgid "Move to…"
-msgstr "Şuraya Taşı…"
 
 msgid "Move to another address book"
 msgstr "Başka bir adres defterine taşı"
@@ -5281,10 +5332,10 @@ msgstr "Yeni kişi veya grup"
 msgid "Loading Contacts…"
 msgstr "Kişiler Yükleniyor…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard or CSV files. Contacts are "
-"kept in Hylki's own address book, and the address books of GNOME Contacts "
-"are listed here too."
+"Add a contact with the + button, or import vCard or CSV files. The address "
+"books of GNOME Contacts are listed here too."
 msgstr ""
 "+ düğmesiyle kişi ekleyin veya vCard ya da CSV dosyalarını içe aktarın. "
 "Kişiler Hylki'nin kendi adres defterinde saklanır. GNOME Kişiler'in adres "
@@ -5331,10 +5382,9 @@ msgid_plural "Place the pictures where the cursor is"
 msgstr[0] "Resmi imlecin bulunduğu yere yerleştir"
 msgstr[1] "Resimleri imlecin bulunduğu yere yerleştir"
 
-msgid "Pictures insert where the cursor is placed, other files attach normally"
-msgstr ""
-"Resimler imlecin bulunduğu yere eklenir, diğer dosyalar normal şekilde "
-"eklenir"
+#, fuzzy
+msgid "Place pictures where the cursor is and attach the other files"
+msgstr "Resmi imlecin bulunduğu yere yerleştir"
 
 msgid "Share a download link from {name}"
 msgstr "{name} üzerinden bir indirme bağlantısı paylaş"
@@ -5383,7 +5433,7 @@ msgstr "Cumartesi sabahı ({time})"
 msgid "Unsnooze"
 msgstr "Ertelemeyi Kaldır"
 
-msgid "That time has passed"
+msgid "That Time Has Passed"
 msgstr "Bu zaman geçti"
 
 msgid "Choose a time later than now."
@@ -5508,9 +5558,6 @@ msgstr "İleti Yok"
 msgid "No Matching Messages"
 msgstr "Eşleşen İleti Yok"
 
-msgid "There's nothing here right now."
-msgstr "Şu anda burada hiçbir şey yok."
-
 msgid "No message here passes the filters."
 msgstr "Burada filtrelerle eşleşen ileti yok."
 
@@ -5538,6 +5585,10 @@ msgstr "Kişilerden"
 
 msgid "High Importance"
 msgstr "Yüksek Önem"
+
+#, fuzzy
+msgid "Untagged"
+msgstr "Etiketli"
 
 msgid "Today"
 msgstr "Bugün"
@@ -5673,7 +5724,8 @@ msgstr ""
 msgid "Load"
 msgstr "Yükle"
 
-msgid "Always allow sender"
+#, fuzzy
+msgid "Always Allow Sender"
 msgstr "Bu gönderene her zaman izin ver"
 
 msgid "No matches"
@@ -5682,26 +5734,22 @@ msgstr "Eşleşme Yok"
 msgid "{cur} of {total}"
 msgstr "{cur} / {total}"
 
-msgid ""
-"Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
-"click here, or Ctrl+0, puts it back to the default from Settings."
-msgstr ""
-"İleti yakınlaştırması. Ctrl++ ve Ctrl+- tuşlarıyla veya Ctrl tuşunu basılı "
-"tutup fare tekerleğini kullanarak yakınlaştırmayı değiştirebilirsiniz. "
-"Buraya tıklamak veya Ctrl+0 tuşlarına basmak, yakınlaştırmayı Ayarlar'daki "
-"varsayılan değere döndürür."
+#, fuzzy
+msgid "Message zoom. Click or press Ctrl+0 to go back to the default."
+msgstr "İleti yakınlaştırmasını varsayılan düzeye döndür"
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
 msgstr ""
 "Bu iletiyi açık veya koyu modda göster. Diğer iletiler bu ayardan etkilenmez."
 
+#, fuzzy
 msgid ""
-"Reader View shows a message as its text alone, in one plain format, without "
-"the sender's layout, colors and fonts."
+"Reader View shows the text alone, without the sender’s layout, colors and "
+"fonts."
 msgstr ""
-"Okuyucu Görünümü, iletiyi gönderenin düzenini, renklerini ve yazı tiplerini "
-"kullanmadan yalnızca metin olarak, sade bir biçimde görüntüler."
+"Gönderenin yerleşimi, renkleri ve yazı tipleri olmadan yalnızca iletinin "
+"metni."
 
 msgid "Reader View"
 msgstr "Okuyucu Görünümü"
@@ -5741,26 +5789,38 @@ msgstr "Bu iletiyi açmak için tıklayın"
 msgid "Repeats daily"
 msgstr "Her gün tekrarlanır"
 
-msgid "Repeats every {n} days"
-msgstr "{n} günde bir tekrarlanır"
+#, fuzzy
+msgid "Repeats every {n} day"
+msgid_plural "Repeats every {n} days"
+msgstr[0] "{n} günde bir tekrarlanır"
+msgstr[1] "{n} günde bir tekrarlanır"
 
 msgid "Repeats weekly"
 msgstr "Her hafta tekrarlanır"
 
-msgid "Repeats every {n} weeks"
-msgstr "{n} haftada bir tekrarlanır"
+#, fuzzy
+msgid "Repeats every {n} week"
+msgid_plural "Repeats every {n} weeks"
+msgstr[0] "{n} haftada bir tekrarlanır"
+msgstr[1] "{n} haftada bir tekrarlanır"
 
 msgid "Repeats monthly"
 msgstr "Her ay tekrarlanır"
 
-msgid "Repeats every {n} months"
-msgstr "{n} ayda bir tekrarlanır"
+#, fuzzy
+msgid "Repeats every {n} month"
+msgid_plural "Repeats every {n} months"
+msgstr[0] "{n} ayda bir tekrarlanır"
+msgstr[1] "{n} ayda bir tekrarlanır"
 
 msgid "Repeats yearly"
 msgstr "Her yıl tekrarlanır"
 
-msgid "Repeats every {n} years"
-msgstr "{n} yılda bir tekrarlanır"
+#, fuzzy
+msgid "Repeats every {n} year"
+msgid_plural "Repeats every {n} years"
+msgstr[0] "{n} yılda bir tekrarlanır"
+msgstr[1] "{n} yılda bir tekrarlanır"
 
 msgid "Repeats"
 msgstr "Tekrarlanma"
@@ -5780,7 +5840,8 @@ msgstr "{name} bu daveti reddetti."
 msgid "Meeting"
 msgstr "Toplantı"
 
-msgid "Cancelled"
+#, fuzzy
+msgid "Canceled"
 msgstr "İptal Edildi"
 
 msgid "Updated invitation"
@@ -5789,7 +5850,8 @@ msgstr "Güncellenmiş Davet"
 msgid "Invitation"
 msgstr "Davet"
 
-msgid "Organised by {name}"
+#, fuzzy
+msgid "Organized by {name}"
 msgstr "{name} tarafından düzenlendi"
 
 msgid "{n} guest"
@@ -5818,19 +5880,22 @@ msgstr "Bu daveti reddettiniz."
 msgid "You declined this invitation on {date}."
 msgstr "Bu daveti {date} tarihinde reddettiniz."
 
-msgid "Tells the organiser you will be there"
+#, fuzzy
+msgid "Tells the organizer you will be there"
 msgstr "Düzenleyiciye katılacağınızı bildirir"
 
 msgid "Maybe"
 msgstr "Belki"
 
-msgid "Tells the organiser you might be there"
+#, fuzzy
+msgid "Tells the organizer you might be there"
 msgstr "Düzenleyiciye katılma ihtimaliniz olduğunu bildirir"
 
 msgid "Decline"
 msgstr "Reddet"
 
-msgid "Tells the organiser you will not be there"
+#, fuzzy
+msgid "Tells the organizer you will not be there"
 msgstr "Düzenleyiciye katılmayacağınızı bildirir"
 
 msgid "Opens the meeting in your calendar application"
@@ -5841,9 +5906,6 @@ msgstr "Takvime Ekle"
 
 msgid "Open Link"
 msgstr "Bağlantıyı Aç"
-
-msgid "Copy Email Address"
-msgstr "E-posta Adresini Kopyala"
 
 msgid "Copy Link Address"
 msgstr "Bağlantı Adresini Kopyala"
@@ -5875,8 +5937,9 @@ msgstr "Bu anahtar artık anahtarlığınızda bulunmuyor."
 msgid "Key trusted."
 msgstr "Anahtara güvenildi."
 
+#, fuzzy
 msgid ""
-"Generate a key of your own first (Settings, OpenPGP): trusting a key means "
+"Generate a key of your own first (Settings → OpenPGP): trusting a key means "
 "signing it with yours."
 msgstr ""
 "Önce kendinize ait bir anahtar oluşturun (Ayarlar, OpenPGP). Bir anahtara "
@@ -5915,12 +5978,12 @@ msgstr "Hiçbir şey göndermez ve tekrar sormaz"
 msgid "Copied"
 msgstr "Kopyalandı"
 
-msgid "Trust this key?"
+msgid "Trust This Key?"
 msgstr "Bu anahtara güvenilsin mi?"
 
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or over "
-"another channel. Trusting a key you have not checked lets an impostor's "
+"another channel. Trusting a key you have not checked lets an impostor’s "
 "signature pass as theirs."
 msgstr ""
 "Parmak izini, {uid} tarafından yüz yüze veya başka bir iletişim kanalı "
@@ -5931,25 +5994,28 @@ msgstr ""
 msgid "Trust"
 msgstr "Güven"
 
-msgid "The sender's key was taken from the message."
+msgid "The sender’s key was taken from the message."
 msgstr "Gönderenin anahtarı iletiden alındı."
 
-msgid "The sender's key was fetched and imported."
+msgid "The sender’s key was fetched and imported."
 msgstr "Gönderenin anahtarı alındı ve içe aktarıldı."
 
-msgid "The sender's key was already in your keyring."
+msgid "The sender’s key was already in your keyring."
 msgstr "Gönderenin anahtarı zaten anahtarlığınızda bulunuyordu."
 
 msgid "OpenPGP"
 msgstr "OpenPGP"
 
-msgid "Fetch the sender's key"
+#, fuzzy
+msgid "Fetch Sender’s Key"
 msgstr "Gönderenin anahtarını al"
 
-msgid "Trust this key…"
+#, fuzzy
+msgid "Trust This Key…"
 msgstr "Bu anahtara güven…"
 
-msgid "A pass proves the address wasn't forged — not that the message is safe."
+#, fuzzy
+msgid "A pass proves the address was not forged, not that the message is safe."
 msgstr ""
 "Doğrulamanın başarılı olması adresin taklit edilmediğini gösterir; iletinin "
 "güvenli olduğunu değil."
@@ -5992,8 +6058,9 @@ msgstr "Bu ileti {language} dilinde."
 msgid "Unsubscribing…"
 msgstr "Abonelikten çıkılıyor…"
 
-msgid "Unsubscribing didn't work: {why}"
-msgstr "Abonelikten çıkma işlemi başarısız oldu: {why}"
+#, fuzzy
+msgid "Could not unsubscribe: {why}"
+msgstr "Çeviri yapılamadı: {why}"
 
 #. Mail sent well after the request means the list did not
 #. act on it, or that the List-Id covers more than the one
@@ -6023,10 +6090,11 @@ msgstr "E-posta yoluyla abonelikten çıkma isteği gönderir"
 msgid "Unsubscribe…"
 msgstr "Abonelikten çık…"
 
-msgid "Opens the list's unsubscribe page in your browser"
+msgid "Opens the list’s unsubscribe page in your browser"
 msgstr "Listenin abonelikten çıkma sayfasını tarayıcınızda açar"
 
-msgid "Clear all"
+#, fuzzy
+msgid "Clear All"
 msgstr "Tümünü temizle"
 
 msgid "Export log"
@@ -6100,20 +6168,16 @@ msgstr "5 yıl"
 msgid "GnuPG"
 msgstr "GnuPG"
 
-msgid "The same keyring the gpg command and other mail apps use."
-msgstr ""
-"gpg komutunun ve diğer e-posta uygulamalarının kullandığı aynı anahtarlık."
-
 msgid "Finding keys"
 msgstr "Anahtarları bulma"
 
 msgid "Keys found here are kept apart from your keyring."
 msgstr "Burada bulunan anahtarlar anahtarlığınızdan ayrı tutulur."
 
-msgid "Look up recipients' keys"
+msgid "Look up recipients’ keys"
 msgstr "Alıcıların anahtarlarını ara"
 
-msgid "Each recipient's domain (WKD) learns that you write to them."
+msgid "Each recipient’s domain (WKD) learns that you write to them."
 msgstr "Her alıcının etki alanı (WKD), kendisine e-posta yazdığınızı öğrenir."
 
 msgid "Also ask a keyserver"
@@ -6138,7 +6202,7 @@ msgstr "İçe Aktar…"
 msgid "Generate…"
 msgstr "Oluştur…"
 
-msgid "Other people's keys"
+msgid "Other people’s keys"
 msgstr "Başkalarının anahtarları"
 
 msgid ""
@@ -6209,7 +6273,7 @@ msgstr "Parola"
 msgid "Confirm passphrase"
 msgstr "Parolayı doğrula"
 
-msgid "The passphrases differ"
+msgid "The Passphrases Differ"
 msgstr "Parolalar birbiriyle eşleşmiyor"
 
 msgid "Type the same passphrase twice."
@@ -6230,7 +6294,7 @@ msgstr "İçe aktarılamadı: {e}"
 msgid "Export Public Key"
 msgstr "Genel Anahtarı Dışa Aktar"
 
-msgid "Delete your key?"
+msgid "Delete Your Key?"
 msgstr "Anahtarınız silinsin mi?"
 
 msgid ""
@@ -6240,7 +6304,7 @@ msgstr ""
 "{uid} ve gizli anahtar bölümü silinecek. Anahtarın yedeğine sahip değilseniz "
 "bu anahtarla şifrelenmiş e-postalar bir daha okunamayacak."
 
-msgid "Remove this key?"
+msgid "Remove This Key?"
 msgstr "Bu anahtar kaldırılsın mı?"
 
 msgid ""
@@ -6277,7 +6341,7 @@ msgstr ""
 
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or another "
-"way. Trusting an unchecked key lets an impostor's signature pass."
+"way. Trusting an unchecked key lets an impostor’s signature pass."
 msgstr ""
 "Parmak izini, {uid} tarafından yüz yüze veya başka bir yolla size verilen "
 "parmak iziyle karşılaştırın. Kontrol edilmemiş bir anahtara güvenmek, bir "
@@ -6454,7 +6518,8 @@ msgstr "LanguageTool sunucusu"
 msgid "English only. Nothing leaves this computer."
 msgstr "Yalnızca İngilizce. Hiçbir veri bu bilgisayardan dışarı gönderilmez."
 
-msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+#, fuzzy
+msgid "Many languages. Nothing leaves this computer. Uses 1 GB of memory."
 msgstr ""
 "Çoklu dil desteği. Hiçbir veri bu bilgisayardan dışarı gönderilmez. 1 GB RAM "
 "kullanır."
@@ -6599,7 +6664,7 @@ msgstr "Ağaç biçemi"
 msgid "All Inboxes"
 msgstr "Tüm Gelen Kutuları"
 
-msgid "The last account's inbox"
+msgid "The last account’s inbox"
 msgstr "Son hesabın gelen kutusu"
 
 msgid "The last folder"
@@ -6706,22 +6771,22 @@ msgstr "Tarih ve Saat"
 msgid "Backup"
 msgstr "Yedekleme"
 
-msgid "Save the filter?"
+msgid "Save the Filter?"
 msgstr "Süzgeç kaydedilsin mi?"
 
 msgid "Your changes are lost if you discard them."
 msgstr "Değişiklikleri atarsanız kaybolurlar."
 
-msgid "Save the smart folder?"
+msgid "Save the Smart Folder?"
 msgstr "Akıllı klasör kaydedilsin mi?"
 
 msgid "Save the tag?"
 msgstr "Etiket kaydedilsin mi?"
 
-msgid "Save the address book?"
+msgid "Save the Address Book?"
 msgstr "Adres defteri kaydedilsin mi?"
 
-msgid "Save the account?"
+msgid "Save the Account?"
 msgstr "Hesap kaydedilsin mi?"
 
 msgid "See message lists"
@@ -6748,9 +6813,6 @@ msgstr "İletileri hazırla"
 msgid "Each opens in a window for you to check and send."
 msgstr "Her biri kontrol edip göndermeniz için bir pencerede açılır."
 
-msgid "Mark as read or unread"
-msgstr "Okundu veya okunmadı olarak işaretle"
-
 msgid "Add and remove stars"
 msgstr "Yıldız ekle ve kaldır"
 
@@ -6772,7 +6834,8 @@ msgstr "Okuduğunuz konuşmayı, okurken görür."
 msgid "Read and edit open drafts"
 msgstr "Açık taslakları oku ve düzenle"
 
-msgid "Those agents prepared. You accept each edit."
+#, fuzzy
+msgid "Drafts an agent prepared. You accept each edit."
 msgstr "Aracıların hazırladıkları. Her düzenlemeyi siz onaylarsınız."
 
 msgid "Include drafts you started"
@@ -6781,9 +6844,10 @@ msgstr "Başlattığınız taslakları dahil et"
 msgid "What you are writing, unsaved text too."
 msgstr "Yazdıklarınız, kaydedilmemiş metinler de dahil."
 
+#, fuzzy
 msgid ""
-"Hylki contains no AI agent of its own but you can allow outside agents to "
-"access your mail using MCP (Model Context Protocol)"
+"No AI agent is built in. Outside agents can reach your mail through MCP "
+"(Model Context Protocol)."
 msgstr ""
 "Hylki kendi başına bir yapay zeka aracısı barındırmaz; ancak MCP (Model "
 "Context Protocol) kullanarak dış ajanların postalarınıza erişmesine izin "
@@ -6792,12 +6856,14 @@ msgstr ""
 msgid "Allow AI agent access"
 msgstr "Yapay zeka aracısı erişimine izin ver"
 
-msgid "Recent Activity"
+#, fuzzy
+msgid "Recent activity"
 msgstr "Son Etkinlik"
 
+#, fuzzy
 msgid ""
-"Nothing is shared until you allow it. Agents can't send mail, erase it "
-"permanently (moving to Trash is ok) or read encrypted mail."
+"Nothing is shared until you allow it. Agents cannot send mail, delete it for "
+"good or read encrypted mail. They can move it to Trash."
 msgstr ""
 "Siz izin verene kadar hiçbir şey paylaşılmaz. Aracılar posta gönderemez, "
 "kalıcı olarak silemez (Çöp Kutusuna taşımak sorun değildir) veya şifreli "
@@ -6818,21 +6884,24 @@ msgstr "Paylaşılsın veya paylaşılmasın her hesaptan."
 msgid "Full access"
 msgstr "Tam erişim"
 
-msgid "Grant access to entire account (except Trash and Junk)"
-msgstr "Tüm hesaba erişim ver (Çöp Kutusu ve Gereksizler hariç)"
+#, fuzzy
+msgid "Every folder but Trash and Junk."
+msgstr "Çöp Kutusu ve Gereksiz dışındaki tümü"
 
-msgid "Junk and Trash are hidden until you allow them."
+#, fuzzy
+msgid "Trash and Junk are hidden until you allow them."
 msgstr "Siz izin verene kadar Gereksizler ve Çöp Kutusu gizlidir."
 
-msgid "Reset to Defaults"
-msgstr "Varsayılanlara Sıfırla"
+msgid "Restore Defaults"
+msgstr "Varsayılanları Geri Yükle"
 
-msgid "Reset permissions?"
+msgid "Reset Permissions?"
 msgstr "İzinler sıfırlansın mı?"
 
+#, fuzzy
 msgid ""
-"The account stays shared, but only for reading and preparing messages. Junk "
-"and Trash are hidden again."
+"The account stays shared, but only for reading and preparing messages. Trash "
+"and Junk are hidden again."
 msgstr ""
 "Hesap paylaşılmaya devam eder, ancak yalnızca iletileri okuma ve hazırlama "
 "için. Gereksizler ve Çöp Kutusu yeniden gizlenir."
@@ -6852,7 +6921,7 @@ msgid "Import settings"
 msgstr "Ayarları içe aktar"
 
 msgid ""
-"Replaces everything in place. Don't remove accounts first: that deletes "
+"Replaces everything in place. Do not remove accounts first: that deletes "
 "their passwords."
 msgstr ""
 "Her şeyin yerine geçer. Önce hesapları kaldırmayın; bu parolalarını siler."
@@ -6863,7 +6932,7 @@ msgstr "İletileri konuşmaya göre grupla"
 msgid "Expandable conversations"
 msgstr "Genişletilebilir konuşmalar"
 
-msgid "Off, a conversation's messages show only in the reading pane."
+msgid "Off, a conversation’s messages show only in the reading pane."
 msgstr "Kapalıyken konuşma iletileri yalnızca okuma bölmesinde görünür."
 
 msgid "Expand conversations by default"
@@ -6972,7 +7041,7 @@ msgstr "Sütun başlıklarını göster"
 msgid "Preview lines"
 msgstr "Önizleme satırları"
 
-msgid "Fold the message list's header"
+msgid "Fold the message list’s header"
 msgstr "İleti listesinin başlığını katla"
 
 msgid "Everything but the sidebar toggle goes into ⋯."
@@ -6996,7 +7065,7 @@ msgstr "Yıldızları gizle"
 msgid "Hide attachment icons"
 msgstr "Ek simgelerini gizle"
 
-msgid "Fold the reading pane's toolbar"
+msgid "Fold the reading pane’s toolbar"
 msgstr "Okuma bölmesinin araç çubuğunu katla"
 
 msgid "Every button goes into its ⋯ menu."
@@ -7047,7 +7116,8 @@ msgstr "Çal"
 msgid "Sound file"
 msgstr "Ses dosyası"
 
-msgid "Also play while Hylki is in front"
+#, fuzzy
+msgid "Also play while the window is in front"
 msgstr "Hylki öndeyken de çal"
 
 msgid "Notification Buttons"
@@ -7062,7 +7132,7 @@ msgstr "Gönderen avatarlarını göster"
 msgid "Sent mail uses your account circle"
 msgstr "Gönderilen postalar hesap çemberinizi kullanır"
 
-msgid "The account's picture or emoji, as in the sidebar."
+msgid "The account’s picture or emoji, as in the sidebar."
 msgstr "Kenar çubuğundaki gibi hesabın resmi veya emojisi."
 
 msgid "Automatic uses single lines in wide windows."
@@ -7121,9 +7191,6 @@ msgstr "Üzerine Gelme İşlemleri"
 msgid "Show actions on hover"
 msgstr "Üzerine gelindiğinde işlemleri göster"
 
-msgid "Restore Defaults"
-msgstr "Varsayılanları Geri Yükle"
-
 msgid "Columns"
 msgstr "Sütunlar"
 
@@ -7141,8 +7208,8 @@ msgstr "Sütunları listeye sığdır"
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Kapalıyken dar bir liste yatay kaydırılır."
 
-msgid "Hylki collects no telemetry and sends no analytics."
-msgstr "Hylki telemetri toplamaz ve analitik veri göndermez."
+msgid "No telemetry is collected and no analytics are sent."
+msgstr ""
 
 msgid "Always load remote content"
 msgstr "Uzak içeriği her zaman yükle"
@@ -7159,13 +7226,13 @@ msgstr "Uzak içerik engellendiğinde uyar"
 msgid "Off hides the banner. Remote content stays blocked."
 msgstr "Kapalıyken başlık gizlenir. Uzak içerik engelli kalır."
 
-msgid "Warn when the addressing doesn't match"
+msgid "Warn when the addressing does not match"
 msgstr "Adresleme eşleşmediğinde uyar"
 
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Kişinin fotoğrafı yoksa Gravatar kullan"
 
-msgid "Sends a hash of the sender's address to Gravatar."
+msgid "Sends a hash of the sender’s address to Gravatar."
 msgstr "Gönderenin adresinin özetini (hash) Gravatar'a gönderir."
 
 msgid "Show sender logos"
@@ -7184,10 +7251,11 @@ msgstr "Depolanan postayı şifrele"
 msgid "Encrypt Stored Mail?"
 msgstr "Depolanan Postalar Şifrelensin mi?"
 
+#, fuzzy
 msgid ""
-"Mail stored on this computer will be encrypted at the next start which can "
-"take a few minutes. Earlier versions of the app cannot open it. Turn this "
-"setting off and restart before going back to an older version."
+"Mail on this computer is encrypted at the next start, which can take a few "
+"minutes. Earlier versions cannot open it: turn this off and restart before "
+"going back to one."
 msgstr ""
 "Bu bilgisayarda depolanan postalar bir sonraki başlatmada şifrelenecek ve bu "
 "birkaç dakika sürebilir. Uygulamanın önceki sürümleri bunu açamaz. Daha eski "
@@ -7218,14 +7286,16 @@ msgstr "Bir klasörü sürüklemek Özel Sıraya geçer."
 msgid "Chevron placement"
 msgstr "Açılır ok yerleşimi"
 
-msgid "When off, only its chevron or a double click activates the fold."
+#, fuzzy
+msgid "Off, only the chevron or a double click folds an account."
 msgstr ""
 "Kapalıyken katlamayı yalnızca açılır oku veya çift tıklama etkinleştirir."
 
 msgid "Show Attachments Browser"
 msgstr "Ek Tarayıcısını Göster"
 
-msgid "Browse every account's attachments in one place."
+#, fuzzy
+msgid "Every account’s attachments in one place."
 msgstr "Her hesabın eklerine tek bir yerden göz atın."
 
 msgid "Hovering the icon rail floats the full sidebar out."
@@ -7243,7 +7313,8 @@ msgstr "Simge şeridi durumunu hatırla"
 msgid "Highlight only new unread mail"
 msgstr "Yalnızca yeni okunmamış postaları vurgula"
 
-msgid "A count turns grey once you have looked at the folder."
+#, fuzzy
+msgid "A count turns gray once you have looked at the folder."
 msgstr "Klasöre baktığınızda sayı griye döner."
 
 msgid "Shown only with more than one account."
@@ -7279,14 +7350,16 @@ msgstr "Genişletilmiş öğeleri yukarı katla"
 msgid "The items below start folded up in the rail. Long-press to open one."
 msgstr "Aşağıdaki öğeler şeritte katlanmış başlar. Açmak için uzun basın."
 
+#, fuzzy
 msgid ""
-"Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask "
-"each time\" picks the browser per link with the option to remember it."
+"Inside the Flatpak sandbox, links open through the desktop’s chooser. With "
+"“Ask each time”, it asks for a browser per link and can remember the answer."
 msgstr ""
 "Flatpak korumalı alanında bağlantılar masaüstü seçicisi üzerinden açılır. "
 "\"Her seferinde sor\" her bağlantı için hatırlama seçeneğiyle tarayıcı seçer."
 
-msgid "\"Ask each time\" lets the desktop ask before each link."
+#, fuzzy
+msgid "With “Ask each time”, the desktop asks before each link."
 msgstr ""
 "\"Her seferinde sor\" her bağlantıdan önce masaüstünün sormasını sağlar."
 
@@ -7299,9 +7372,9 @@ msgstr "Kurulu ve Dosyalar tarafından yüklendi"
 msgid "Installed, but nautilus-python is missing"
 msgstr "Kurulu, ancak nautilus-python eksik"
 
-msgid "Installed. Restart Files to load it; it needs nautilus-python"
-msgstr ""
-"Kurulu. Yüklemek için Dosyaları yeniden başlatın; nautilus-python gerekiyor"
+#, fuzzy
+msgid "Installed. Needs nautilus-python and a restart of Files."
+msgstr "Kurulu, ancak nautilus-python eksik"
 
 msgid "Installed, but from another version"
 msgstr "Kurulu, ancak başka bir sürümden"
@@ -7315,10 +7388,10 @@ msgid ""
 msgstr ""
 "İletiler {bodies}, ekler {files}. İleti listesiyle birlikte toplam {total}."
 
-msgid "Could not install the extension"
+msgid "Could Not Install the Extension"
 msgstr "Eklenti kurulamadı"
 
-msgid "Remove downloaded mail?"
+msgid "Remove Downloaded Mail?"
 msgstr "İndirilen postalar kaldırılsın mı?"
 
 msgid ""
@@ -7328,10 +7401,10 @@ msgstr ""
 "Bu bilgisayardaki postalar ve ekler kaldırılır, açıldığında yeniden alınır. "
 "Sunucudaki hiçbir şey değişmez."
 
-msgid "Could not remove the extension"
+msgid "Could Not Remove the Extension"
 msgstr "Eklenti kaldırılamadı"
 
-msgid "Could not restart Files"
+msgid "Could Not Restart Files"
 msgstr "Dosyalar yeniden başlatılamadı"
 
 msgid "Other Font…"
@@ -7355,7 +7428,8 @@ msgstr ""
 "adres defterleri CardDAV LDAP dizin dizinler Çevrimiçi Hesaplar Nextcloud "
 "iCloud Google Microsoft vCard"
 
-msgid "System language — {language}"
+#, fuzzy
+msgid "System language ({language})"
 msgstr "Sistem dili — {language}"
 
 msgid "Forget this word"
@@ -7614,7 +7688,7 @@ msgid "Delete Smart Folder…"
 msgstr "Akıllı Klasörü Sil…"
 
 msgid ""
-"Uses a translation service under your own key. A message's text is sent only "
+"Uses a translation service under your own key. A message’s text is sent only "
 "when you translate it."
 msgstr ""
 "Kendi anahtarınızla bir çeviri hizmeti kullanır. İleti metni yalnızca siz "
@@ -7629,7 +7703,8 @@ msgstr "Bölge (küresel kaynak için boş bırakın)"
 msgid "Translates a greeting to test the service."
 msgstr "Hizmeti sınamak için bir selamlama çevirir."
 
-msgid "Hylki's language ({language})"
+#, fuzzy
+msgid "App language ({language})"
 msgstr "Hylki'nin dili ({language})"
 
 msgid "Offer to translate"
@@ -7654,7 +7729,8 @@ msgstr "Oturum Aç"
 msgid "The sign-in window was closed."
 msgstr "Oturum açma penceresi kapatıldı."
 
-msgid "✓ {email} — added"
+#, fuzzy
+msgid "✓ {email} added"
 msgstr "✓ {email} — eklendi"
 
 msgid "Add another email account"
@@ -7682,21 +7758,26 @@ msgstr "Önce e-posta adresinizi ve parolanızı girin."
 msgid "Checking the connection…"
 msgstr "Bağlantı denetleniyor…"
 
-msgid "✓ {email} — connected and added"
+#, fuzzy
+msgid "✓ {email} connected and added"
 msgstr "✓ {email} — bağlanıldı ve eklendi"
 
-msgid "{email} — mail server: {e}"
+#, fuzzy
+msgid "{email} (incoming server): {e}"
 msgstr "{email} — posta sunucusu: {e}"
 
-msgid "{email} — sending (SMTP): {e}"
-msgstr "{email} — gönderim (SMTP): {e}"
+#, fuzzy
+msgid "{email} (outgoing server): {e}"
+msgstr "{email} — posta sunucusu: {e}"
 
-msgid "✓ {email} — signed in and added"
+#, fuzzy
+msgid "✓ {email} signed in and added"
 msgstr "✓ {email} — oturum açıldı ve eklendi"
 
+#, fuzzy
 msgid ""
 "A clean, fast home for your mail.\n"
-"Let's set things up — it takes about a minute."
+"Setting up takes about a minute."
 msgstr ""
 "Postalarınız için sade ve hızlı bir yuva.\n"
 "Ayarları yapalım — yaklaşık bir dakika sürer."
@@ -7738,9 +7819,10 @@ msgstr "Yeniden Tara"
 msgid "Privacy, your way"
 msgstr "Gizlilik, sizin tercihinizle"
 
+#, fuzzy
 msgid ""
-"Hylki sends no telemetry, ever. These control what leaves your machine while "
-"you read."
+"Hylki sends no telemetry. These control what leaves your computer while you "
+"read."
 msgstr ""
 "Hylki asla telemetri göndermez. Bunlar, okuma sırasında makinenizden çıkacak "
 "verileri denetler."
@@ -7750,15 +7832,6 @@ msgstr "Uzak resimleri engelle"
 
 msgid "Stops senders tracking when and where you open mail"
 msgstr "Gönderenlerin postayı ne zaman ve nerede açtığınızı izlemesini önler"
-
-msgid "Fetch Gravatar portraits"
-msgstr "Gravatar portrelerini getir"
-
-msgid "Asks gravatar.com about each sender's address"
-msgstr "Her gönderenin adresi için gravatar.com'a sorar"
-
-msgid "Fetch sender logos"
-msgstr "Gönderen logolarını getir"
 
 msgid "Looks up company icons for the message list"
 msgstr "İleti listesi için şirket simgelerini arar"
@@ -7772,36 +7845,29 @@ msgstr "Kapalıyken gönderenleri ve konuları kilit ekranında göstermez"
 msgid "Make it yours"
 msgstr "Size özel hale getirin"
 
-msgid "A few popular choices — everything can be changed later in Settings."
+#, fuzzy
+msgid "A few popular choices. Everything can be changed later in Settings."
 msgstr ""
 "Birkaç popüler seçenek — her şey daha sonra Ayarlar'dan değiştirilebilir."
 
 msgid "Message text shown under each subject"
 msgstr "Her konunun altında gösterilen ileti metni"
 
-msgid "Sender avatars"
-msgstr "Gönderen avatarları"
-
 msgid "Colorful initials beside each message"
 msgstr "Her iletinin yanında renkli baş harfler"
-
-msgid "Conversation view"
-msgstr "Konuşma görünümü"
-
-msgid "Group messages into threads"
-msgstr "İletileri konu dizilerinde grupla"
 
 #. The app icon: the whole set as one sideways-scrolling row on its
 #. own card, the default ringed.
 msgid "Pick your app icon"
 msgstr "Uygulama simgenizi seçin"
 
-msgid "You're all set"
+msgid "You are all set"
 msgstr "Her şey hazır"
 
+#, fuzzy
 msgid ""
-"Enjoy! If you encounter an issue or have a feature request,\n"
-"please open an issue on our <a href=\"{url}\">Github</a>."
+"To report a problem or ask for a feature,\n"
+"open an issue on <a href=\"{url}\">GitHub</a>."
 msgstr ""
 "Keyfini çıkarın! Bir sorunla karşılaşırsanız veya özellik isteğiniz varsa,\n"
 "lütfen <a href=\"{url}\">Github</a> sayfamızda bir sorun kaydı açın."
@@ -7848,15 +7914,17 @@ msgstr "Bitir"
 msgid "Skip"
 msgstr "Atla"
 
+#, fuzzy
 msgid ""
 "Offline: there is no network connection. Mail syncs again once the network "
-"is back. Click to try now, or long-press for Status Bar"
+"is back. Click to try now, or long-press for the status bar."
 msgstr ""
 "Çevrimdışı: ağ bağlantısı yok. Ağ geri geldiğinde postalar yeniden "
 "eşitlenir. Şimdi denemek için tıklayın veya Durum Çubuğu için uzun basın"
 
+#, fuzzy
 msgid ""
-"Could not read the password for {email} from the keyring ({e}). Hylki tries "
+"Could not read the password for {email} from the keyring ({e}). It is tried "
 "again at the next connection."
 msgstr ""
 "{email} için parola anahtarlıktan okunamadı ({e}). Hylki sonraki bağlantıda "
@@ -7871,8 +7939,9 @@ msgstr "Taslağın şifresi çözülemedi."
 msgid "no OpenPGP key for {addr}"
 msgstr "{addr} için OpenPGP anahtarı yok"
 
+#, fuzzy
 msgid ""
-"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+"no OpenPGP key of your own for {addr}; generate one in Settings → OpenPGP"
 msgstr ""
 "{addr} için size ait OpenPGP anahtarı yok; Ayarlar, OpenPGP altında bir tane "
 "oluşturun"
@@ -7890,7 +7959,7 @@ msgstr ""
 
 msgid ""
 "The S/MIME certificate for {address} is not trusted. Add its root "
-"certificate to gpgsm's trustlist.txt."
+"certificate to gpgsm’s trustlist.txt."
 msgstr ""
 
 msgid "Could not save template: {e}"
@@ -7935,8 +8004,11 @@ msgstr "İstenmeyen olarak işaretlenemedi: {e}"
 msgid "Could not mark as not spam: {e}"
 msgstr "İstenmeyen değil olarak işaretlenemedi: {e}"
 
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr "{len} ileti istenmeyen değil olarak işaretlenemedi: {e}"
+#, fuzzy
+msgid "Could not mark {len} message as not spam: {e}"
+msgid_plural "Could not mark {len} messages as not spam: {e}"
+msgstr[0] "{len} ileti istenmeyen değil olarak işaretlenemedi: {e}"
+msgstr[1] "{len} ileti istenmeyen değil olarak işaretlenemedi: {e}"
 
 msgid "Could not move messages: {e}"
 msgstr "İletiler taşınamadı: {e}"
@@ -7969,7 +8041,7 @@ msgid "Could not remove the attachment: {e}"
 msgstr "Ek kaldırılamadı: {e}"
 
 msgid ""
-"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki’s "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 "Microsoft, {email} için kaydedilmiş oturumu kabul etmedi. Hylki'nin Ayarlar "
@@ -7991,7 +8063,7 @@ msgstr "“{subject}” yine de gönderilemedi: {e}"
 msgid "Could not load source: {e}"
 msgstr "Kaynak yüklenemedi: {e}"
 
-msgid "A Microsoft account can't receive mail from another account"
+msgid "A Microsoft account cannot receive mail from another account"
 msgstr "Bir Microsoft hesabı başka bir hesaptan posta alamaz"
 
 msgid "“{folder}” is left out of search: {reason}"
@@ -8006,9 +8078,11 @@ msgstr "Klasörler listelenemedi: {e}"
 msgid "Connection failed: {e}"
 msgstr "Bağlantı başarısız: {e}"
 
+#, fuzzy
 msgid ""
-"This account has no IMAP server. Hylki can't use Exchange accounts from "
-"Online Accounts: remove it and add it as an IMAP or Microsoft 365 account."
+"This account has no IMAP server. Exchange accounts from Online Accounts "
+"cannot be used here: remove it and add it as an IMAP or Microsoft 365 "
+"account."
 msgstr ""
 "Bu hesabın IMAP sunucusu yok. Hylki, Çevrimiçi Hesaplardaki Exchange "
 "hesaplarını kullanamaz: kaldırın ve IMAP veya Microsoft 365 hesabı olarak "
@@ -8017,7 +8091,7 @@ msgstr ""
 msgid "could not reach the server"
 msgstr "sunucuya ulaşılamadı"
 
-msgid "the server's reply could not be read (it began: {reply})"
+msgid "the server’s reply could not be read (it began: {reply})"
 msgstr "sunucunun yanıtı okunamadı (şöyle başlıyordu: {reply})"
 
 msgid "Could not load {path}: {e}"
@@ -8029,9 +8103,10 @@ msgstr "Bu ileti sunucuda taşındı veya silindi."
 msgid "Could not load conversation: {e}"
 msgstr "Konuşma yüklenemedi: {e}"
 
+#, fuzzy
 msgid ""
 "Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
-"there when Hylki next connects."
+"there at the next connection."
 msgstr ""
 "İleti gönderildi, ancak Gönderilenler'e kaydedilemedi: {e}. Bir kopyası "
 "saklanır ve Hylki bir sonraki bağlanışta oraya kaydedilir."
@@ -8045,8 +8120,9 @@ msgstr "İleti güncellenemedi: {e}"
 msgid "Could not change the star: {e}"
 msgstr "Yıldız değiştirilemedi: {e}"
 
+#, fuzzy
 msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
+"This server does not store tags, so they are kept on this computer only."
 msgstr ""
 "Bu sunucu etiketleri saklamaz, bu nedenle Hylki bunları yalnızca bu "
 "bilgisayarda tutar"
@@ -8057,15 +8133,22 @@ msgstr "İleti etiketlenemedi: {e}"
 msgid "Could not mark folder read: {e}"
 msgstr "Klasör okundu olarak işaretlenemedi: {e}"
 
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "{len} ileti istenmeyen değil olarak işaretlenemedi: {e}"
+
+#, fuzzy
 msgid ""
-"Gmail keeps a copy of every message in All Mail, so Hylki cannot remove an "
-"attachment there"
+"Gmail keeps a copy of every message in All Mail, so the attachment cannot be "
+"removed there"
 msgstr ""
 "Gmail her iletinin bir kopyasını Tüm Postalar içinde tutar, bu nedenle Hylki "
 "orada bir eki kaldıramaz"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "{len} ileti taşınamadı: {e}"
+#, fuzzy
+msgid "Could not move {len} message: {e}"
+msgid_plural "Could not move {len} messages: {e}"
+msgstr[0] "{len} ileti taşınamadı: {e}"
+msgstr[1] "{len} ileti taşınamadı: {e}"
 
 msgid "Could not delete permanently: {e}"
 msgstr "Kalıcı olarak silinemedi: {e}"
@@ -8087,8 +8170,10 @@ msgstr "Bu klasör sunucuda yok"
 msgid "Could not reach the JMAP server: {e}"
 msgstr "JMAP sunucusuna ulaşılamadı: {e}"
 
-msgid "Mail on this computer is not sent, and has no drafts"
-msgstr "Bu bilgisayardaki postalar gönderilmez ve taslakları yoktur"
+#, fuzzy
+msgid "On This Computer does not keep drafts: choose another From address"
+msgstr ""
+"Postalar Bu Bilgisayarda'dan gönderilmez: başka bir Gönderen adresi seçin"
 
 msgid "Mail is not sent from On This Computer: choose another From address"
 msgstr ""
@@ -8118,8 +8203,11 @@ msgstr "İleti gönderildi, ancak Bu Bilgisayarda'ya kaydedilemedi: {e}"
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Bu bilgisayardaki klasörler açılamadı: {e}"
 
-msgid "Reading {n} messages…"
-msgstr "{n} ileti okunuyor…"
+#, fuzzy
+msgid "Reading {n} message…"
+msgid_plural "Reading {n} messages…"
+msgstr[0] "{n} ileti okunuyor…"
+msgstr[1] "{n} ileti okunuyor…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -8157,10 +8245,10 @@ msgstr "Bağlantı iç hata nedeniyle durdu."
 msgid "Could not delete message: {e}"
 msgstr "İleti silinemedi: {e}"
 
-msgid "POP3 accounts don't support folders"
+msgid "POP3 accounts do not support folders"
 msgstr "POP3 hesapları klasörleri desteklemez"
 
-msgid "A POP3 account can't receive mail from another account"
+msgid "A POP3 account cannot receive mail from another account"
 msgstr "Bir POP3 hesabı başka bir hesaptan posta alamaz"
 
 msgid ""
@@ -8169,7 +8257,8 @@ msgstr "POP3 sunucudaki bir iletiyi değiştiremez, bu nedenle ek kaldırılmad�
 
 #. What a crash leaves in the Outbox says why it is there; a failure
 #. that is reported replaces it.
-msgid "Hylki closed before the message was sent."
+#, fuzzy
+msgid "The app closed before the message was sent."
 msgstr "İleti gönderilmeden önce Hylki kapandı"
 
 msgid "The message is signed or encrypted, and removing a file would break it"
@@ -8202,8 +8291,8 @@ msgstr ""
 msgid "Contacts imported: {added} new, {updated} updated"
 msgstr "İçe aktarılan kişiler: {added} yeni, {updated} güncellenmiş"
 
-msgid "No address book available to add contacts"
-msgstr "Kişi eklenecek adres defteri yok"
+msgid "No address book available"
+msgstr "Kullanılabilir adres defteri yok"
 
 msgid "Added to Contacts"
 msgstr "Kişilere Eklendi"
@@ -8216,9 +8305,6 @@ msgstr "Zaten Kişilerde var ({name})"
 
 msgid "Could not add contact: {e}"
 msgstr "Kişi eklenemedi: {e}"
-
-msgid "No address book available"
-msgstr "Kullanılabilir adres defteri yok"
 
 msgid "Could not rename the address book: {e}"
 msgstr "Adres defteri yeniden adlandırılamadı: {e}"
@@ -8236,7 +8322,7 @@ msgstr[1] "{n} kişi taşınamadı: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Kişi güncellenemedi: {e}"
 
-msgid "Choose Thunderbird's Profile Folder"
+msgid "Choose Thunderbird’s Profile Folder"
 msgstr "Thunderbird Profil Klasörünü Seç"
 
 msgid "Could not import contacts: {e}"
@@ -8262,7 +8348,8 @@ msgstr ""
 msgid "Add Filter…"
 msgstr "Süzgeç Ekle…"
 
-msgid "Run every rule over the mail already in your inboxes"
+#, fuzzy
+msgid "Run every filter over the mail already in your inboxes"
 msgstr "Her kuralı gelen kutularınızdaki mevcut postalar üzerinde çalıştır"
 
 msgid "Keys are managed under OpenPGP in the sidebar."
@@ -8277,7 +8364,8 @@ msgstr "İletileri varsayılan olarak imzala"
 msgid "Hide the subject of encrypted mail"
 msgstr "Şifreli postaların konusunu gizle"
 
-msgid "Only the recipients see the subject. Others see \"...\"."
+#, fuzzy
+msgid "Only the recipients see the subject. Others see “…”."
 msgstr "Konuyu yalnızca alıcılar görür. Diğerleri \"...\" görür."
 
 msgid "Send your key with your mail"
@@ -8304,14 +8392,6 @@ msgstr ""
 msgid "GNOME Online Account"
 msgstr "GNOME Çevrimiçi Hesabı"
 
-msgid "Show in Hylki"
-msgstr "Hylki'de göster"
-
-msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
-msgstr ""
-"Kapatmak içe aktarma listesine geri döndürür. GNOME Çevrimiçi Hesaplarda "
-"kalır."
-
 msgid ""
 "Managed by GNOME Online Accounts. Its address, servers and password are "
 "changed in Settings → Online Accounts."
@@ -8325,23 +8405,21 @@ msgstr "Depolama"
 msgid "Mail Account"
 msgstr "Posta Hesabı"
 
-msgid "Display Name"
+#, fuzzy
+msgid "Display name"
 msgstr "Görünen Ad"
 
-msgid "Email Address"
-msgstr "E-posta Adresi"
-
-msgid "Incoming Protocol"
+#, fuzzy
+msgid "Incoming protocol"
 msgstr "Gelen Protokolü"
 
-msgid "SMTP Server (optional)"
+#, fuzzy
+msgid "SMTP server (optional)"
 msgstr "SMTP Sunucusu (isteğe bağlı)"
 
-msgid "SMTP Port (default 587)"
+#, fuzzy
+msgid "SMTP port (default 587)"
 msgstr "SMTP Bağlantı Noktası (varsayılan 587)"
-
-msgid "Username"
-msgstr "Kullanıcı adı"
 
 msgid "Sign in with an API token"
 msgstr "API belirteciyle oturum aç"
@@ -8382,12 +8460,6 @@ msgstr "Ayrı SMTP kimlik bilgileri"
 msgid "Off uses the credentials above."
 msgstr "Kapalıyken yukarıdaki kimlik bilgileri kullanılır."
 
-msgid "SMTP Username"
-msgstr "SMTP Kullanıcı Adı"
-
-msgid "SMTP Password"
-msgstr "SMTP Parolası"
-
 msgid "Accept a certificate for another name"
 msgstr "Başka bir ad için olan sertifikayı kabul et"
 
@@ -8405,9 +8477,6 @@ msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
 msgstr ""
 "Birleşik Yıldızlı, Gönderilenler, Taslaklar, Arşiv, Süzgeçler ve "
 "Etiketler'de de gösterilir."
-
-msgid "Test Connection"
-msgstr "Bağlantıyı Sına"
 
 msgid "Account accent color"
 msgstr "Hesap vurgu rengi"
@@ -8451,13 +8520,14 @@ msgstr "İmza Ekle"
 msgid "Import File…"
 msgstr "Dosya İçe Aktar…"
 
-msgid "Delete Signature"
+#, fuzzy
+msgid "Delete signature"
 msgstr "İmzayı Sil"
 
 msgid "Sender name"
 msgstr "Gönderen adı"
 
-msgid "Replaces the account's name in From. Aliases keep their own."
+msgid "Replaces the account’s name in From. Aliases keep their own."
 msgstr ""
 "Kimden alanındaki hesap adının yerini alır. Takma adlar kendininkini korur."
 
@@ -8480,8 +8550,8 @@ msgid "Move list mail to Trash"
 msgstr "Liste postalarını Çöp Kutusuna taşı"
 
 msgid ""
-"Inbox mail with an unsubscribe link older than this gets trashed unless it's "
-"starred."
+"Inbox mail with an unsubscribe link older than this gets trashed unless it "
+"is starred."
 msgstr ""
 "Abonelikten çıkma bağlantısı içeren ve bundan eski olan gelen kutusu "
 "postaları, yıldızlı değillerse çöpe atılır."
@@ -8501,28 +8571,20 @@ msgstr "Çok fazla sabit disk alanı tüketebilir."
 msgid "Copy mail to On This Computer"
 msgstr "Postaları Bu Bilgisayarda konumuna kopyala"
 
-msgid ""
-"Downloads copies of every message from every folder of this account to this "
-"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
-msgstr ""
-"Bu hesabın her klasöründeki tüm iletilerin birer kopyasını bu bilgisayara "
-"indirir (Çöp Kutusu, Gereksizler ve Taslaklar hariç) ve Bu Bilgisayarda "
-"altında depolar."
-
 msgid "Mail already here is not imported again."
 msgstr "Zaten burada olan postalar yeniden içe aktarılmaz."
 
 msgid "Maildir folders"
 msgstr "Maildir klasörleri"
 
-msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgid "Evolution’s On This Computer, Dovecot and other Maildir trees."
 msgstr ""
 "Evolution'ın Bu Bilgisayarda konumu, Dovecot ve diğer Maildir ağaçları."
 
 msgid "Mbox files"
 msgstr "Mbox dosyaları"
 
-msgid "Thunderbird's folders and other mbox files."
+msgid "Thunderbird’s folders and other mbox files."
 msgstr "Thunderbird klasörleri ve diğer mbox dosyaları."
 
 msgid "Microsoft 365"
@@ -8537,17 +8599,14 @@ msgstr "Siz yazarken kuruluşunuzdaki kişileri önerir."
 msgid "Suggest only from this account"
 msgstr "Yalnızca bu hesaptan öner"
 
-msgid "Suggestions come from the directory and this account's mail only."
+msgid "Suggestions come from the directory and this account’s mail only."
 msgstr "Öneriler yalnızca dizinden ve bu hesabın postalarından gelir."
 
 msgid "Show sensitivity label names"
 msgstr "Duyarlılık etiketi adlarını göster"
 
-msgid "Shows a label's name when a message gives only its ID."
+msgid "Shows a label’s name when a message gives only its ID."
 msgstr "Bir ileti yalnızca kimliğini verdiğinde etiketin adını gösterir."
-
-msgid "Folder Order"
-msgstr "Klasör Sırası"
 
 msgid "Also in the right-click menu of its Folders heading."
 msgstr "Klasörler başlığının sağ tık menüsünde de bulunur."
@@ -8556,7 +8615,7 @@ msgid "Special Folders"
 msgstr "Özel Klasörler"
 
 msgid ""
-"Follows the server's own markings unless you pick a folder. Nothing already "
+"Follows the server’s own markings unless you pick a folder. Nothing already "
 "on the server moves."
 msgstr ""
 "Bir klasör seçmedikçe sunucunun kendi işaretlemelerini izler. Sunucuda "
@@ -8603,9 +8662,10 @@ msgstr "Bu gönderene izin ver"
 msgid "Blocked Senders"
 msgstr "Engellenen Gönderenler"
 
+#, fuzzy
 msgid ""
-"Their mail is moved to Trash on arrival. Enter an address, or a domain like "
-"\"example.com\" to apply to all senders from that domain."
+"Their mail is moved to Trash on arrival. A domain, such as “example.com”, "
+"blocks every address in it."
 msgstr ""
 "Bu kişilerin postaları geldiğinde Çöp Kutusuna taşınır. Bir adres veya o "
 "alandaki tüm gönderenlere uygulamak için \"ornek.com\" gibi bir alan adı "
@@ -8647,7 +8707,7 @@ msgstr "Metin boyutu"
 msgid "Adjusts the interface and message text size."
 msgstr "Arayüz ve ileti metni boyutunu ayarlar."
 
-msgid "Use your desktop environment's icon set"
+msgid "Use your desktop environment’s icon set"
 msgstr "Masaüstü ortamınızın simge kümesini kullanın"
 
 msgid "This window opens to"
@@ -8656,12 +8716,8 @@ msgstr "Bu pencerenin açılacağı sekme"
 msgid "Toolbar"
 msgstr "Araç Çubuğu"
 
-msgid ""
-"Drag buttons between the groups. The right group folds into ⋯ when the pane "
-"is narrow."
+msgid "Drag buttons between the groups."
 msgstr ""
-"Düğmeleri gruplar arasında sürükleyin. Bölme daraldığında sağ grup ⋯ "
-"menüsüne katlanır."
 
 msgid "Always fold the right group into ⋯"
 msgstr "Sağ grubu her zaman ⋯ menüsüne katla"
@@ -8702,7 +8758,7 @@ msgstr "Shift+Enter diğerini yapar."
 msgid "Formatting toolbar"
 msgstr "Biçimlendirme araç çubuğu"
 
-msgid "For new messages. The toolbar's chevron toggles it."
+msgid "For new messages. The toolbar’s chevron toggles it."
 msgstr "Yeni iletiler için. Araç çubuğunun açılır oku açıp kapatır."
 
 msgid "Always collapsed"
@@ -8714,7 +8770,7 @@ msgstr "Her zaman genişletilmiş"
 msgid "Start new messages in"
 msgstr "Yeni iletilere şu biçimde başla"
 
-msgid "Reply in the original's format"
+msgid "Reply in the original’s format"
 msgstr "Özgün biçiminde yanıtla"
 
 msgid "Ask before switching to plain text"
@@ -8723,7 +8779,7 @@ msgstr "Düz metne geçmeden önce sor"
 msgid "Only when formatting, images or links would be removed."
 msgstr "Yalnızca biçimlendirme, resimler veya bağlantılar kaldırılacaksa."
 
-msgid "For rich text. Default leaves it to the recipient's own font."
+msgid "For rich text. Default leaves it to the recipient’s own font."
 msgstr "Zengin metin için. Varsayılan, alıcının kendi yazı tipine bırakır."
 
 msgid "For rich text, in points."
@@ -8813,8 +8869,9 @@ msgstr "Diller"
 msgid "Added words"
 msgstr "Eklenen sözcükler"
 
-msgid "Changes apply after a restart."
-msgstr "Değişiklikler yeniden başlatmadan sonra uygulanır."
+#, fuzzy
+msgid "Applies after app restarts."
+msgstr "Yeniden başlatmadan sonra uygulanır."
 
 msgid "Mark as read"
 msgstr "Okundu olarak işaretle"
@@ -8825,7 +8882,8 @@ msgstr "Konuşmalar, görünüme giren her iletiyi okundu olarak işaretler."
 msgid "Message appearance"
 msgstr "İleti görünümü"
 
-msgid "Light / Dark Mode switch"
+#, fuzzy
+msgid "Show Light / Dark Mode switch"
 msgstr "Açık / Koyu Kip anahtarı"
 
 msgid "Shown in the message header and the composer."
@@ -8841,13 +8899,13 @@ msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 varsayılana döndürür."
 
 #, fuzzy
-msgid "Scale message width to fit reader"
+msgid "Scale wide messages to fit the reading pane"
 msgstr "İletilere bu imzayla başla"
 
 msgid "Use my own font"
 msgstr "Kendi yazı tipimi kullan"
 
-msgid "The font below replaces the sender's."
+msgid "The font below replaces the sender’s."
 msgstr "Aşağıdaki yazı tipi göndereninkinin yerini alır."
 
 msgid "Message font"
@@ -8859,7 +8917,7 @@ msgstr "Başka biri seçilmedikçe arayüz yazı tipi kullanılır."
 msgid "Use my own colors"
 msgstr "Kendi renklerimi kullan"
 
-msgid "Ignores the sender's colors. Pictures stay; links use the accent color."
+msgid "Ignores the sender’s colors. Pictures stay; links use the accent color."
 msgstr ""
 "Gönderenin renklerini yok sayar. Resimler kalır; bağlantılar vurgu rengini "
 "kullanır."
@@ -8873,7 +8931,7 @@ msgstr "Biçimlendirilmiş iletiler etkilenmez."
 msgid "Monospace font"
 msgstr "Eş aralıklı yazı tipi"
 
-msgid "The system's monospace font unless another is chosen."
+msgid "The system’s monospace font unless another is chosen."
 msgstr "Başka biri seçilmedikçe sistemin eş aralıklı yazı tipi kullanılır."
 
 msgid "Single messages as cards"
@@ -8897,7 +8955,7 @@ msgstr "Bul çubuğu konumu"
 msgid "Space shows pictures and PDFs in Sushi"
 msgstr "Boşluk tuşu resimleri ve PDF'leri Sushi'de gösterir"
 
-msgid "A message's text alone, without the sender's layout, colors and fonts."
+msgid "A message’s text alone, without the sender’s layout, colors and fonts."
 msgstr ""
 "Gönderenin yerleşimi, renkleri ve yazı tipleri olmadan yalnızca iletinin "
 "metni."
@@ -8908,7 +8966,7 @@ msgstr "İleti başlığında Okuyucu Görünümü anahtarını göster"
 msgid "When a message is opened"
 msgstr "Bir ileti açıldığında"
 
-msgid "The header's switch still changes the open message."
+msgid "The header’s switch still changes the open message."
 msgstr "Başlıktaki anahtar açık iletiyi değiştirmeye devam eder."
 
 msgid "Printing"
@@ -8925,9 +8983,6 @@ msgstr "Daha geniş sol kenar boşluğu"
 
 msgid "25 mm, so punched holes miss the text."
 msgstr "25 mm, böylece delgeç delikleri metne denk gelmez."
-
-msgid "Applies after a restart."
-msgstr "Yeniden başlatmadan sonra uygulanır."
 
 msgid "Renderer"
 msgstr "Oluşturucu"
@@ -9009,7 +9064,7 @@ msgstr "Kaldır…"
 msgid "Keep downloaded mail"
 msgstr "İndirilen postaları sakla"
 
-msgid "Mail inside an account's offline period is kept."
+msgid "Mail inside an account’s offline period is kept."
 msgstr "Hesabın çevrimdışı süresi içindeki postalar saklanır."
 
 msgid "GNOME Files Integration"
@@ -9100,9 +9155,8 @@ msgstr "Emoji Ekle"
 msgid "Email Client"
 msgstr "E-posta İstemcisi"
 
-msgid ""
-"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
-"source and private by default."
+#, fuzzy
+msgid "A GNOME-native email client built with Rust and libadwaita."
 msgstr ""
 "Rust ve libadwaita ile geliştirilmiş hızlı, GNOME uyumlu bir e-posta "
 "istemcisi. Açık kaynaklı ve varsayılan olarak gizlilik odaklı."
@@ -9111,17 +9165,11 @@ msgid "Email;Mail;IMAP;"
 msgstr "E-posta;Posta;IMAP;Email;Mail;"
 
 msgid ""
-"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
-"libadwaita. Your mail and credentials stay on your machine, remote content "
-"is blocked until you allow it, and there is no telemetry. It works with "
-"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
-"Proton Bridge to a Stalwart of your own."
+"Hylki is an email client for the Linux desktop made to fit in with GNOME. It "
+"sends no telemetry or analytics. It is free software built to be both "
+"feature rich and beautiful. It works with IMAP, POP3, JMAP and Microsoft 365 "
+"accounts as well as iCloud, Gmail and Proton Bridge."
 msgstr ""
-"Hylki, Wayland üzerindeki GNOME için Rust ve libadwaita ile yazılmış bir "
-"masaüstü e-posta istemcisidir. Postalarınız ve kimlik bilgileriniz "
-"makinenizde kalır, uzak içerik siz izin verene kadar engellenir ve telemetri "
-"bulunmaz. IMAP, POP3, JMAP ve Microsoft 365 ile; ayrıca iCloud'dan Proton "
-"Bridge'e ve kendi Stalwart sunucunuza kadar her sunucuyla çalışır."
 
 msgid "Accounts and mail:"
 msgstr "Hesaplar ve postalar:"
@@ -9169,9 +9217,10 @@ msgstr ""
 "Taslaklar, alıntı katlama, bölünmüş yanıtlar ve ekleri koruyan iletme "
 "özelliği"
 
+#, fuzzy
 msgid ""
 "Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
-"Send with Hylki entry in GNOME Files"
+"“Send with Hylki” entry in GNOME Files"
 msgstr ""
 "Kendi Nextcloud, OneDrive, Dropbox veya Seafile hesabınıza yüklenen büyük "
 "dosyalar; GNOME Dosyalar'da Hylki ile Gönder girdisi"
@@ -9229,3 +9278,349 @@ msgstr "Açık kipte birleşik gelen kutusu"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Contributors and translators"
+#~ msgstr "Katkıda Bulunanlar ve Çevirmenler"
+
+#~ msgid "Hylki couldn’t save your password"
+#~ msgstr "Hylki parolanızı kaydedemedi"
+
+#~ msgid "Hylki cannot change this kind of group"
+#~ msgstr "Hylki bu tür bir grubu değiştiremez"
+
+#~ msgid "Notes"
+#~ msgstr "Notlar"
+
+#~ msgid ""
+#~ "The directory cannot be searched without signing in. Add a sign-in to it "
+#~ "in Settings → Contacts."
+#~ msgstr ""
+#~ "Oturum açmadan dizinde arama yapılamaz. Ayarlar → Kişiler bölümünden bu "
+#~ "dizin için bir oturum açma bilgisi ekleyin."
+
+#~ msgid "The new message starts as a copy of the template you pick."
+#~ msgstr "Yeni ileti, seçtiğiniz şablonun bir kopyası olarak oluşturulur."
+
+#~ msgid "No Drafts folder available for this account"
+#~ msgstr "Bu hesap için kullanılabilir bir Taslaklar klasörü yok"
+
+#~ msgid "No Templates folder available for this account"
+#~ msgstr "Bu hesap için kullanılabilir bir Şablonlar klasörü yok"
+
+#~ msgid "Unstar"
+#~ msgstr "Yıldızı Kaldır"
+
+#~ msgid "Create a new folder for this account."
+#~ msgstr "Bu hesap için yeni bir klasör oluşturun."
+
+#~ msgid "{names} ({size}). What should the files go into?"
+#~ msgstr "{names} ({size}). Dosyalar nereye eklensin?"
+
+#~ msgid "Waiting for the keyring"
+#~ msgstr "Anahtarlık bekleniyor"
+
+#~ msgid "Star or unstar"
+#~ msgstr "Yıldız ekle veya kaldır"
+
+#~ msgid "Mark read or unread"
+#~ msgstr "Okundu veya okunmadı olarak işaretle"
+
+#~ msgid "Preview it as a PDF first"
+#~ msgstr "Önce PDF olarak önizle"
+
+#~ msgid "Print"
+#~ msgstr "Yazdır"
+
+#~ msgid "Show or Hide the Sidebar"
+#~ msgstr "Kenar Çubuğunu Göster veya Gizle"
+
+#~ msgid "Reading Pane Off"
+#~ msgstr "Okuma Bölmesi Kapalı"
+
+#~ msgid "Reveal Status Bar"
+#~ msgstr "Durum Çubuğunu Göster"
+
+#~ msgid "The language applies the next time Hylki starts."
+#~ msgstr "Dil değişikliği, Hylki bir sonraki başlatıldığında uygulanacak."
+
+#~ msgid "Accounts"
+#~ msgstr "Hesaplar"
+
+#~ msgid ""
+#~ "Hylki will ask the list to stop sending you mail. A list can take a few "
+#~ "days to act on the request."
+#~ msgstr ""
+#~ "Hylki, posta listesinden size e-posta göndermeyi durdurmasını isteyecek. "
+#~ "Listenin bu isteği işleme alması birkaç gün sürebilir."
+
+#~ msgid "Waiting since {ago}"
+#~ msgstr "{ago} süredir bekliyor"
+
+#~ msgid "Use this account in Hylki"
+#~ msgstr "Bu hesabı Hylki'de kullan"
+
+#~ msgid ""
+#~ "Switching this off returns the account to the import list. It stays in "
+#~ "GNOME Online Accounts."
+#~ msgstr ""
+#~ "Bunu kapatmak hesabı içe aktarma listesine geri taşır. Hesap GNOME "
+#~ "Çevrimiçi Hesapları'nda kalmaya devam eder."
+
+#~ msgid ""
+#~ "Store mail in folders that live on this computer. Move or copy mail from "
+#~ "any account to here."
+#~ msgstr ""
+#~ "Postaları bu bilgisayarda bulunan klasörlerde saklayın. Herhangi bir "
+#~ "hesaptaki postaları buraya taşıyabilir veya kopyalayabilirsiniz."
+
+#~ msgid "{n} messages"
+#~ msgstr "{n} ileti"
+
+#~ msgid "Those in the unified section."
+#~ msgstr "Birleştirilmiş bölümdekiler."
+
+#~ msgid "That key was imported before."
+#~ msgstr "Bu anahtar daha önce içe aktarılmış."
+
+#~ msgid "Sorted Z to A — switch to A to Z"
+#~ msgstr "Z'den A'ya sıralandı — A'dan Z'ye sıralamak için değiştir"
+
+#~ msgid "Sorted A to Z — switch to Z to A"
+#~ msgstr "A'dan Z'ye sıralandı — Z'den A'ya sıralamak için değiştir"
+
+#~ msgid "Save every attachment to a folder"
+#~ msgstr "Tüm ekleri bir klasöre kaydet"
+
+#~ msgid "Thumbnail grid"
+#~ msgstr "Küçük resim ızgarası"
+
+#~ msgid "Table"
+#~ msgstr "Tablo"
+
+#~ msgid ""
+#~ "For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 "
+#~ "MB pieces."
+#~ msgstr ""
+#~ "Cloudflare arkasındaki kendi barındırdığınız sunucular için: 100 MB'tan "
+#~ "büyük dosyalar 90 MB'lık parçalar hâlinde yüklenir."
+
+#~ msgid "Used unless you change them in the upload dialog for one email."
+#~ msgstr ""
+#~ "Bir e-posta için yükleme penceresinde değiştirmediğiniz sürece bu ayarlar "
+#~ "kullanılır."
+
+#~ msgid "Check Connection"
+#~ msgstr "Bağlantıyı Denetle"
+
+#~ msgid "User name"
+#~ msgstr "Kullanıcı adı"
+
+#~ msgid "E-mail"
+#~ msgstr "E-posta"
+
+#~ msgid "Days; 0 keeps the link indefinitely"
+#~ msgstr "Gün; 0, bağlantıyı süresiz olarak saklar"
+
+#~ msgid "Protect with a password"
+#~ msgstr "Parola ile koru"
+
+#~ msgid "“{addr}” is not an email address."
+#~ msgstr "“{addr}” geçerli bir e-posta adresi değil."
+
+#~ msgid "Send now instead"
+#~ msgstr "Bunun yerine şimdi gönder"
+
+#~ msgid "Use in Hylki"
+#~ msgstr "Hylki'de Kullan"
+
+#~ msgid "Password (saved; type to replace it)"
+#~ msgstr "Parola (kaydedildi; değiştirmek için yeni parolayı yazın)"
+
+#~ msgid "Contacts in the Hylki book"
+#~ msgstr "Hylki adres defterindeki kişiler"
+
+#~ msgid ""
+#~ "Adds contacts from .vcf or .csv files. Importing a file again updates "
+#~ "existing entries."
+#~ msgstr ""
+#~ ".vcf veya .csv dosyalarındaki kişileri ekler. Bir dosyayı yeniden içe "
+#~ "aktarmak mevcut kayıtları günceller."
+
+#~ msgid "Saves every contact in the Hylki book in one .vcf file."
+#~ msgstr ""
+#~ "Hylki adres defterindeki tüm kişileri tek bir .vcf dosyasına kaydeder."
+
+#~ msgid "Use an app-specific password, not your usual one."
+#~ msgstr "Normal parolanız yerine uygulamaya özel bir parola kullanın."
+
+#~ msgid "Address Books"
+#~ msgstr "Adres Defterleri"
+
+#~ msgid "'In the footer' disables expand/collapse."
+#~ msgstr ""
+#~ "'Alt bilgi alanında' seçeneği genişletme/daraltma özelliğini devre dışı "
+#~ "bırakır."
+
+#~ msgid "Hylki, on this computer"
+#~ msgstr "Hylki, bu bilgisayarda"
+
+#~ msgid ""
+#~ "This will move {name} out of {from} and into {to}, locally and on the "
+#~ "server. A group in {from} that holds the contact will no longer have it."
+#~ msgstr ""
+#~ "{name} kişisi hem yerel olarak hem de sunucuda {from} adres defterinden "
+#~ "{to} adres defterine taşınacak. {from} içerisindeki bu kişiyi içeren "
+#~ "gruplarda artık bu kişi bulunmayacak."
+
+#~ msgid ""
+#~ "This will move {n} contact out of the address book it is in and into "
+#~ "{to}, locally and on the server. A group there that holds it will no "
+#~ "longer have it."
+#~ msgid_plural ""
+#~ "This will move {n} contacts out of the address books they are in and into "
+#~ "{to}, locally and on the server. Groups there that hold them will no "
+#~ "longer have them."
+#~ msgstr[0] ""
+#~ "{n} kişi, hem yerel olarak hem de sunucuda bulunduğu adres defterinden "
+#~ "{to} adres defterine taşınacak. Bu kişiyi içeren gruplarda artık bu kişi "
+#~ "bulunmayacak."
+#~ msgstr[1] ""
+#~ "{n} kişi, hem yerel olarak hem de sunucuda bulundukları adres "
+#~ "defterlerinden {to} adres defterine taşınacak. Bu kişileri içeren "
+#~ "gruplarda artık bu kişiler bulunmayacak."
+
+#~ msgid "This group names its members by contact, which Hylki does not edit."
+#~ msgstr ""
+#~ "Bu grup üyelerini kişilere göre tanımlar; Hylki bu bilgiyi düzenleyemez."
+
+#~ msgid "Move to…"
+#~ msgstr "Şuraya Taşı…"
+
+#~ msgid ""
+#~ "Pictures insert where the cursor is placed, other files attach normally"
+#~ msgstr ""
+#~ "Resimler imlecin bulunduğu yere eklenir, diğer dosyalar normal şekilde "
+#~ "eklenir"
+
+#~ msgid "There's nothing here right now."
+#~ msgstr "Şu anda burada hiçbir şey yok."
+
+#~ msgid ""
+#~ "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
+#~ "click here, or Ctrl+0, puts it back to the default from Settings."
+#~ msgstr ""
+#~ "İleti yakınlaştırması. Ctrl++ ve Ctrl+- tuşlarıyla veya Ctrl tuşunu "
+#~ "basılı tutup fare tekerleğini kullanarak yakınlaştırmayı "
+#~ "değiştirebilirsiniz. Buraya tıklamak veya Ctrl+0 tuşlarına basmak, "
+#~ "yakınlaştırmayı Ayarlar'daki varsayılan değere döndürür."
+
+#~ msgid ""
+#~ "Reader View shows a message as its text alone, in one plain format, "
+#~ "without the sender's layout, colors and fonts."
+#~ msgstr ""
+#~ "Okuyucu Görünümü, iletiyi gönderenin düzenini, renklerini ve yazı "
+#~ "tiplerini kullanmadan yalnızca metin olarak, sade bir biçimde görüntüler."
+
+#~ msgid "Copy Email Address"
+#~ msgstr "E-posta Adresini Kopyala"
+
+#~ msgid "Unsubscribing didn't work: {why}"
+#~ msgstr "Abonelikten çıkma işlemi başarısız oldu: {why}"
+
+#~ msgid "The same keyring the gpg command and other mail apps use."
+#~ msgstr ""
+#~ "gpg komutunun ve diğer e-posta uygulamalarının kullandığı aynı anahtarlık."
+
+#~ msgid "Grant access to entire account (except Trash and Junk)"
+#~ msgstr "Tüm hesaba erişim ver (Çöp Kutusu ve Gereksizler hariç)"
+
+#~ msgid "Reset to Defaults"
+#~ msgstr "Varsayılanlara Sıfırla"
+
+#~ msgid "Hylki collects no telemetry and sends no analytics."
+#~ msgstr "Hylki telemetri toplamaz ve analitik veri göndermez."
+
+#~ msgid "Installed. Restart Files to load it; it needs nautilus-python"
+#~ msgstr ""
+#~ "Kurulu. Yüklemek için Dosyaları yeniden başlatın; nautilus-python "
+#~ "gerekiyor"
+
+#~ msgid "{email} — sending (SMTP): {e}"
+#~ msgstr "{email} — gönderim (SMTP): {e}"
+
+#~ msgid "Fetch Gravatar portraits"
+#~ msgstr "Gravatar portrelerini getir"
+
+#~ msgid "Asks gravatar.com about each sender's address"
+#~ msgstr "Her gönderenin adresi için gravatar.com'a sorar"
+
+#~ msgid "Fetch sender logos"
+#~ msgstr "Gönderen logolarını getir"
+
+#~ msgid "Sender avatars"
+#~ msgstr "Gönderen avatarları"
+
+#~ msgid "Conversation view"
+#~ msgstr "Konuşma görünümü"
+
+#~ msgid "Group messages into threads"
+#~ msgstr "İletileri konu dizilerinde grupla"
+
+#~ msgid "Mail on this computer is not sent, and has no drafts"
+#~ msgstr "Bu bilgisayardaki postalar gönderilmez ve taslakları yoktur"
+
+#~ msgid "No address book available to add contacts"
+#~ msgstr "Kişi eklenecek adres defteri yok"
+
+#~ msgid "Show in Hylki"
+#~ msgstr "Hylki'de göster"
+
+#~ msgid "Email Address"
+#~ msgstr "E-posta Adresi"
+
+#~ msgid "SMTP Username"
+#~ msgstr "SMTP Kullanıcı Adı"
+
+#~ msgid "SMTP Password"
+#~ msgstr "SMTP Parolası"
+
+#~ msgid ""
+#~ "Downloads copies of every message from every folder of this account to "
+#~ "this computer (except Trash, Junk and Drafts) and stores them in On This "
+#~ "Computer."
+#~ msgstr ""
+#~ "Bu hesabın her klasöründeki tüm iletilerin birer kopyasını bu bilgisayara "
+#~ "indirir (Çöp Kutusu, Gereksizler ve Taslaklar hariç) ve Bu Bilgisayarda "
+#~ "altında depolar."
+
+#~ msgid "Folder Order"
+#~ msgstr "Klasör Sırası"
+
+#~ msgid ""
+#~ "Drag buttons between the groups. The right group folds into ⋯ when the "
+#~ "pane is narrow."
+#~ msgstr ""
+#~ "Düğmeleri gruplar arasında sürükleyin. Bölme daraldığında sağ grup ⋯ "
+#~ "menüsüne katlanır."
+
+#~ msgid ""
+#~ "Hylki is a desktop email client for GNOME on Wayland, written in Rust "
+#~ "with libadwaita. Your mail and credentials stay on your machine, remote "
+#~ "content is blocked until you allow it, and there is no telemetry. It "
+#~ "works with IMAP, POP3, JMAP and Microsoft 365, and with any server from "
+#~ "iCloud to Proton Bridge to a Stalwart of your own."
+#~ msgstr ""
+#~ "Hylki, Wayland üzerindeki GNOME için Rust ve libadwaita ile yazılmış bir "
+#~ "masaüstü e-posta istemcisidir. Postalarınız ve kimlik bilgileriniz "
+#~ "makinenizde kalır, uzak içerik siz izin verene kadar engellenir ve "
+#~ "telemetri bulunmaz. IMAP, POP3, JMAP ve Microsoft 365 ile; ayrıca "
+#~ "iCloud'dan Proton Bridge'e ve kendi Stalwart sunucunuza kadar her "
+#~ "sunucuyla çalışır."
+
+#~ msgid ""
+#~ "Where contacts come from for Contacts, suggestions, sender pictures and "
+#~ "filters. Switching one off leaves it out of Hylki."
+#~ msgstr ""
+#~ "Kişiler, öneriler, gönderen fotoğrafları ve filtreler için kullanılacak "
+#~ "kişilerin alındığı kaynaklar. Bir kaynağı devre dışı bırakmak, onu "
+#~ "Hylki'nin dışında tutar."

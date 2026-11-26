@@ -12,6 +12,7 @@ use crate::worker::imap::preview_fetch::{
     PREVIEW_REDECODE_ROWS,
 };
 use crate::worker::imap::summary::{build_summary, summary_from_headers};
+use crate::worker::imap::sync_stamp::{self, Stamp};
 use crate::worker::imap::wire::{logged_fetch, search_uids, sel};
 use crate::worker::imap::{ImapSession, FIRST_PAGE, PAGE_SIZE, REFS_FETCH_ITEM};
 
@@ -33,7 +34,9 @@ pub(in crate::worker) async fn load_messages(
     let mailbox = sel(session, path).await?;
     note_synced_uid_next(account_id, path, mailbox.uid_next);
     let total = mailbox.exists;
+    let previews = inline_previews_wanted(account_id);
     if total == 0 {
+        sync_stamp::record(account_id, path, None);
         // Folder emptied on the server — drop any cached copies so they don't linger.
         if let Some(c) = cache {
             for uid in c.cached_uids(account_id, path) {
@@ -59,17 +62,34 @@ pub(in crate::worker) async fn load_messages(
         let uids: Vec<u32> = messages.iter().map(|m| m.uid).collect();
         read_gmail_labels(account_id, session, path, &uids, &mut messages).await?;
         reconcile_attachment_flags(cache, account_id, path, &mut messages);
+        sync_stamp::record(account_id, path, Stamp::new(&mailbox, previews, &messages));
         Ok(messages)
     } else {
-        let recent = fetch_window(
-            account_id,
-            session,
-            folder_id,
-            total,
-            PAGE_SIZE,
-            use_envelope,
-        )
-        .await?;
+        let unchanged =
+            sync_stamp::unchanged(account_id, path, Stamp::new(&mailbox, previews, &cached));
+        let quick = if unchanged {
+            sync_stamp::window_flags(session, &cached, total, PAGE_SIZE).await?
+        } else {
+            None
+        };
+        let quiet = quick.is_some();
+        if quiet {
+            tracing::debug!("sync: {path} unchanged since its last load, flags only");
+        }
+        let recent = match quick {
+            Some(recent) => recent,
+            None => {
+                fetch_window(
+                    account_id,
+                    session,
+                    folder_id,
+                    total,
+                    PAGE_SIZE,
+                    use_envelope,
+                )
+                .await?
+            }
+        };
         let window: Vec<u32> = recent.iter().map(|m| m.uid).collect();
         let mut merged = merge_index(cached, recent);
         read_gmail_labels(account_id, session, path, &window, &mut merged).await?;
@@ -77,16 +97,22 @@ pub(in crate::worker) async fn load_messages(
         // Reconcile deletions/moves made on the server or another device: drop any
         // message whose UID the server no longer lists (a plain merge would keep it
         // forever), and prune it from the cache so it doesn't come back. The full
-        // UID set is a cheap server-side search even for large mailboxes.
-        let server: std::collections::HashSet<u32> = search_uids(session, "ALL").await?;
-        if let Some(c) = cache {
-            for m in merged.iter().filter(|m| !server.contains(&m.uid)) {
-                c.delete_message(account_id, path, m.uid);
+        // UID set is a cheap server-side search even for large mailboxes, but
+        // an unchanged folder holds the set the last load pruned to already.
+        if !quiet {
+            let server: std::collections::HashSet<u32> = search_uids(session, "ALL").await?;
+            if let Some(c) = cache {
+                for m in merged.iter().filter(|m| !server.contains(&m.uid)) {
+                    c.delete_message(account_id, path, m.uid);
+                }
             }
+            merged.retain(|m| server.contains(&m.uid));
         }
-        merged.retain(|m| server.contains(&m.uid));
         reconcile_older_flags(session, &window, &mut merged).await?;
         reconcile_attachment_flags(cache, account_id, path, &mut merged);
+        if !quiet {
+            sync_stamp::record(account_id, path, Stamp::new(&mailbox, previews, &merged));
+        }
         Ok(merged)
     }
 }

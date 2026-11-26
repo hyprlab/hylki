@@ -298,7 +298,7 @@ impl Preferences {
             .start_view_row
             .set_model(Some(&gtk::StringList::new(&[
                 i18n("All Inboxes").as_str(),
-                i18n("The last account's inbox").as_str(),
+                i18n("The last account’s inbox").as_str(),
                 i18n("The last folder").as_str(),
             ])));
         widgets
@@ -876,7 +876,7 @@ impl Preferences {
             .settings_open_row
             .set_model(Some(&gtk::StringList::new(&[
                 i18n("Settings").as_str(),
-                i18n("Accounts").as_str(),
+                i18n("Mail Accounts").as_str(),
             ])));
         widgets
             .appearance

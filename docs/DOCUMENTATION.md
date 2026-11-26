@@ -157,7 +157,7 @@ order**, for every account:
 - **Full Path**: by the whole path on the server, the way Gmail on the web
   lists labels.
 
-An account can have its own: **Folder Order → Sort by** in the account's
+An account can have its own: **Folder order → Sort by** in the account's
 settings (Settings → Mail Accounts → the account), or the right-click menu
 of the account's **Folders** heading in the sidebar. **Follow Settings** goes back
 to the choice in Settings → Sidebar.
@@ -226,6 +226,13 @@ unified section's, with a chevron that opens their list. **Section style**
 set to **Tree style** draws all four as a tree instead: the caret that
 opens and closes the list stands where the icon was, and the row has no
 chevron at its end. Clicking the name opens the combined view either way.
+
+Each tag under Tags, in the unified section and in each account, shows how
+many unread messages carry it. The count covers what the tag's view lists:
+mail in Trash and Junk is left out, and a Gmail message under several labels
+counts once. On Gmail, mail under the label named like the tag counts too,
+including mail labelled in Gmail itself, which Hylki fetches when the
+label's unread count changes.
 
 ### Favorites
 
@@ -788,7 +795,7 @@ from the same row, which then names the one it is in: saving asks first,
 and moves it with its changes. A contact's right-click menu has **Move to
 Address Book…** too, which lists the books it can go to; one picked and
 **Move** pressed, the contact moves. It needs no address books in the
-sidebar to drag onto. Several selected together move with **Move to…** (see
+sidebar to drag onto. Several selected together move with **Move To…** (see
 below). A move takes the contact out of its book and puts it in the other,
 locally and on the server; a group in the old book that held the contact no
 longer has it. A contact in a book Hylki cannot write to stays where it
@@ -992,7 +999,7 @@ fill in their server, and Nextcloud asks for yours. The form asks for:
   CardDAV address works too. A name without `https://` is taken as HTTPS;
   write `http://` for a server without TLS, such as one on your own network.
   For iCloud, use `contacts.icloud.com`.
-- **User name** and **Password**. A service that signs in with two steps
+- **Username** and **Password**. A service that signs in with two steps
   wants an app password made for Hylki: iCloud, Fastmail, and Nextcloud with
   two-factor sign-in among them.
 
@@ -1159,7 +1166,7 @@ with this signature** marks the one new messages, replies and forwards open
 with; with it off for all of them, a message opens without one. A signature
 left empty is not saved.
 
-With more than one, the composer's **Insert Signature** button lists them
+With more than one, the composer's **Insert signature** button lists them
 by name, with **No Signature** at the end. The one picked replaces the
 signature in the message, in the same place; with none in the message, it
 goes where a signature goes. Changing **From** to another account puts in
@@ -1187,7 +1194,7 @@ Evolution and Mutt use that line to show the signature dimmed and to leave it
 out when they quote your message; Gmail, Apple Mail and Outlook ignore it.
 
 **Edit as New** leaves the signature out, since the copied message already
-has one. **Insert Signature**, the button beside Translate at the end of the
+has one. **Insert signature**, the button beside Translate at the end of the
 formatting row, puts the From account's signature where the cursor is, on a
 line of its own; with several it lists them, as above. Right-click the
 button for **Insert Before the Text** or **Insert After the Text**, the top
@@ -1795,7 +1802,7 @@ An agent can suggest a change to one draft once every ten seconds. A draft that 
 encrypted, or that replies to or forwards encrypted mail, shows an agent only that it
 is there, and takes no suggestions.
 
-**Reset to Defaults**, at the end of an account's list, puts its switches and
+**Restore Defaults**, at the end of an account's list, puts its switches and
 folders back to the table above and turns Full access off. The account stays shared.
 
 Everything but starting a new message and working on an open draft needs **See
@@ -1826,7 +1833,7 @@ shared or not, because the addresses in your mail are kept together.
   after you have opened it. Hylki never asks GnuPG on an agent's behalf.
 - Reading or attaching files from your disk.
 
-**Keeping an eye on it.** **Recent Activity** lists what agents did, refused
+**Keeping an eye on it.** **Recent activity** lists what agents did, refused
 calls included, with the program's name as it gives it. The list stays in memory
 and is gone when Hylki quits. What an agent changes is in **Undo**, as if you
 had done it. A switch you turn off holds from the agent's next call.
@@ -1837,7 +1844,7 @@ styles before an agent sees it and tells the agent to treat mail as data,
 but this does not catch everything, such as text colored like its background.
 What you allow an agent to read can reach anything else that agent is
 allowed to do, which Hylki has no say over. Any program running as your user can
-use the connection while it is on: the name in Recent Activity is its own word.
+use the connection while it is on: the name in Recent activity is its own word.
 
 ### OpenPGP (encrypted and signed mail)
 
@@ -1880,7 +1887,7 @@ Hylki needs a person's public key to encrypt to them and to check their
 signature. There are four ways to get one, none of which need a terminal:
 
 - A signed message from someone whose key you don't have shows an amber shield
-  beside their name. Click it and choose **Fetch the sender's key**. Hylki
+  beside their name. Click it and choose **Fetch Sender's Key**. Hylki
   looks in the message itself first (many clients attach the key in an
   Autocrypt header), then asks the sender's provider (WKD), then the keyserver
   gpg is set up with. When none of them has the key, Hylki asks the provider
@@ -2306,7 +2313,8 @@ draws the message opposite the theme. A message keeps the scheme chosen for
 it when the theme changes afterwards, and the switch then reads off if the
 message matches the new theme. In a conversation the choice follows the
 message the conversation was opened on. It works in a message's own window
-too. **Light / Dark Mode switch**, in the same group, hides the switch.
+too. Turning off **Show Light / Dark Mode switch**, in the same group, hides
+the switch.
 
 ### The account in the message header
 
@@ -2321,7 +2329,7 @@ A message laid out wider than the reader, a 600-pixel newsletter or
 signature in a reader on half a screen, is scaled down to fit it, however
 narrow the reader, so nothing in it scrolls sideways. The narrower the
 reader, the smaller its text. A wider window gives the message back its own
-size. **Settings → Reading → Scale message width to fit reader**, on by
+size. **Settings → Reading → Scale wide messages to fit the reading pane**, on by
 default, turns this off, and a message wider than the reader then keeps its
 own size and scrolls sideways. It is stored as `fit_wide_mail` in `privacy.toml`.
 
@@ -2619,6 +2627,8 @@ others kept. **Show only** holds the quick filters:
 - **From Contacts**: the sender is in your Contacts, as for filter rules
 - **High Importance**
 - **Tagged**: the message has a tag or a Gmail label
+- **Untagged**: the message has neither; turning on Tagged or Untagged turns
+  the other off
 - **Today**: it arrived since midnight on this computer's clock
 
 In **Dates**, the list shows only the mail that arrived from the start of

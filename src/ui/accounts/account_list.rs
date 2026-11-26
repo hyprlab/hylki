@@ -151,7 +151,7 @@ impl AccountsWindow {
             let toggle = gtk::Switch::new();
             toggle.set_valign(gtk::Align::Center);
             toggle.set_active(false);
-            toggle.set_tooltip_text(Some(i18n("Use this account in Hylki").as_str()));
+            toggle.set_tooltip_text(Some(i18n("Use this account").as_str()));
             let ti = sender.input_sender().clone();
             let tpos = pos;
             toggle.connect_state_set(move |_, state| {

@@ -141,7 +141,7 @@ impl EditorForm {
 
                     #[name = "goa_enabled_row"]
                     adw::SwitchRow {
-                        set_title: &i18n("Show in Hylki"),
+                        set_title: &i18n("Use this account"),
                         set_subtitle: &i18n("Off returns it to the import list. It stays in GNOME Online Accounts."),
                         connect_active_notify[sender] => move |row| {
                             sender.input_sender().emit(AccountsInput::ToggleCurrentEnabled(row.is_active()));
@@ -214,29 +214,29 @@ impl EditorForm {
                         connect_selected_notify => AccountsInput::ProviderChanged,
                     },
                     #[name = "name_row"]
-                    adw::EntryRow { set_title: &i18n("Display Name") },
+                    adw::EntryRow { set_title: &i18n("Display name") },
                     #[name = "email_row"]
                     adw::EntryRow {
-                        set_title: &i18n("Email Address"),
+                        set_title: &i18n("Email address"),
                         set_input_purpose: gtk::InputPurpose::Email,
                     },
                     #[name = "protocol_row"]
                     adw::ComboRow {
-                        set_title: &i18n("Incoming Protocol"),
+                        set_title: &i18n("Incoming protocol"),
                         connect_selected_notify => AccountsInput::ProtocolChanged,
                     },
                     #[name = "host_row"]
-                    adw::EntryRow { set_title: &i18n("Incoming Server") },
+                    adw::EntryRow { set_title: &i18n("Incoming server") },
                     #[name = "port_row"]
                     adw::EntryRow {
                         set_title: &i18n("Port (IMAP 993 / POP3 995)"),
                         set_input_purpose: gtk::InputPurpose::Digits,
                     },
                     #[name = "smtp_row"]
-                    adw::EntryRow { set_title: &i18n("SMTP Server (optional)") },
+                    adw::EntryRow { set_title: &i18n("SMTP server (optional)") },
                     #[name = "smtp_port_row"]
                     adw::EntryRow {
-                        set_title: &i18n("SMTP Port (default 587)"),
+                        set_title: &i18n("SMTP port (default 587)"),
                         set_input_purpose: gtk::InputPurpose::Digits,
                     },
                     #[name = "user_row"]
@@ -356,9 +356,9 @@ impl EditorForm {
                         set_subtitle: &i18n("Off uses the credentials above."),
                     },
                     #[name = "smtp_user_row"]
-                    adw::EntryRow { set_title: &i18n("SMTP Username") },
+                    adw::EntryRow { set_title: &i18n("SMTP username") },
                     #[name = "smtp_pass_row"]
-                    adw::PasswordEntryRow { set_title: &i18n("SMTP Password") },
+                    adw::PasswordEntryRow { set_title: &i18n("SMTP password") },
                     #[name = "tls_mismatch_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Accept a certificate for another name"),
@@ -610,7 +610,7 @@ impl EditorForm {
                         add_suffix = &gtk::Button {
                             set_icon_name: "user-trash-symbolic",
                             set_valign: gtk::Align::Center,
-                            set_tooltip_text: Some(&i18n("Delete Signature")),
+                            set_tooltip_text: Some(&i18n("Delete signature")),
                             add_css_class: "flat",
                             connect_clicked => AccountsInput::SigDelete,
                         },
@@ -619,7 +619,7 @@ impl EditorForm {
                     adw::EntryRow {
                         set_title: &i18n("Sender name"),
                         set_tooltip_text: Some(
-                            i18n("Replaces the account's name in From. Aliases keep their own.").as_str()
+                            i18n("Replaces the account’s name in From. Aliases keep their own.").as_str()
                         ),
                         connect_changed => AccountsInput::SigSenderRename,
                     },
@@ -664,7 +664,7 @@ impl EditorForm {
                     #[name = "clean_lists_row"]
                     adw::ComboRow {
                         set_title: &i18n("Move list mail to Trash"),
-                        set_subtitle: &i18n("Inbox mail with an unsubscribe link older than this gets trashed unless it's starred."),
+                        set_subtitle: &i18n("Inbox mail with an unsubscribe link older than this gets trashed unless it is starred."),
                     },
                     // Mail downloaded ahead of being opened (#536).
                     #[name = "offline_mail_row"]
@@ -681,7 +681,7 @@ impl EditorForm {
                     #[name = "copy_local_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Copy mail to On This Computer"),
-                        set_subtitle: &i18n("Downloads copies of every message from every folder of this account to this computer (except Trash, Junk and Drafts) and stores them in On This Computer."),
+                        set_subtitle: &i18n("Leaves out Trash, Junk and Drafts."),
                     },
                 },
 
@@ -695,7 +695,7 @@ impl EditorForm {
 
                     adw::ActionRow {
                         set_title: &i18n("Maildir folders"),
-                        set_subtitle: &i18n("Evolution's On This Computer, Dovecot and other Maildir trees."),
+                        set_subtitle: &i18n("Evolution’s On This Computer, Dovecot and other Maildir trees."),
                         add_suffix = &gtk::Button {
                             set_label: &i18n("Choose…"),
                             set_valign: gtk::Align::Center,
@@ -704,7 +704,7 @@ impl EditorForm {
                     },
                     adw::ActionRow {
                         set_title: &i18n("Mbox files"),
-                        set_subtitle: &i18n("Thunderbird's folders and other mbox files."),
+                        set_subtitle: &i18n("Thunderbird’s folders and other mbox files."),
                         add_suffix = &gtk::Button {
                             set_label: &i18n("Choose…"),
                             set_valign: gtk::Align::Center,
@@ -734,12 +734,12 @@ impl EditorForm {
                     #[name = "directory_only_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Suggest only from this account"),
-                        set_subtitle: &i18n("Suggestions come from the directory and this account's mail only."),
+                        set_subtitle: &i18n("Suggestions come from the directory and this account’s mail only."),
                     },
                     #[name = "graph_labels_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Show sensitivity label names"),
-                        set_subtitle: &i18n("Shows a label's name when a message gives only its ID."),
+                        set_subtitle: &i18n("Shows a label’s name when a message gives only its ID."),
                         connect_active_notify[sender] => move |row| {
                             sender.input_sender().emit(AccountsInput::SetGraphLabels(row.is_active()));
                         },
@@ -758,7 +758,7 @@ impl EditorForm {
 
                 // Its own folder order, or Settings → Sidebar's.
                 add = &adw::PreferencesGroup {
-                    set_title: &i18n("Folder Order"),
+                    set_title: &i18n("Folder order"),
                     set_description: Some(
                         i18n("Also in the right-click menu of its Folders heading.").as_str()
                     ),
@@ -781,7 +781,7 @@ impl EditorForm {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Special Folders"),
                     set_description: Some(
-                        i18n("Follows the server's own markings unless you pick a folder. Nothing already on the server moves.").as_str()
+                        i18n("Follows the server’s own markings unless you pick a folder. Nothing already on the server moves.").as_str()
                     ),
 
                     #[name = "folder_sent_row"]

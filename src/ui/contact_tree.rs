@@ -187,7 +187,7 @@ impl Ctx<'_> {
         } else if !book.account.is_empty() {
             book.account.clone()
         } else if book.uid == crate::contacts::local::LOCAL_BOOK_UID {
-            i18n("Hylki, on this computer")
+            i18n("Hylki Address Book")
         } else {
             String::new()
         };

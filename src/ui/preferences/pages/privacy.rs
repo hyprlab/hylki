@@ -26,7 +26,7 @@ impl PrivacyPage {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Privacy"),
                     set_description: Some(
-                        i18n("Hylki collects no telemetry and sends no analytics.").as_str()
+                        i18n("No telemetry is collected and no analytics are sent.").as_str()
                     ),
 
                     #[name = "auto_remote_content_row"]
@@ -64,7 +64,7 @@ impl PrivacyPage {
 
                     #[name = "show_spoof_banner_row"]
                     adw::SwitchRow {
-                        set_title: &i18n("Warn when the addressing doesn't match"),
+                        set_title: &i18n("Warn when the addressing does not match"),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetShowSpoofBanner(row.is_active()));
                         },
@@ -73,7 +73,7 @@ impl PrivacyPage {
                     #[name = "gravatar_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Use Gravatar when a contact has no photo"),
-                        set_subtitle: &i18n("Sends a hash of the sender's address to Gravatar."),
+                        set_subtitle: &i18n("Sends a hash of the sender’s address to Gravatar."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetGravatar(row.is_active()));
                         },
@@ -144,7 +144,7 @@ impl PrivacyPage {
 fn confirm_encrypted(row: &adw::SwitchRow) {
     let dialog = adw::AlertDialog::new(
         Some(&i18n("Encrypt Stored Mail?")),
-        Some(&i18n("Mail stored on this computer will be encrypted at the next start which can take a few minutes. Earlier versions of the app cannot open it. Turn this setting off and restart before going back to an older version.")),
+        Some(&i18n("Mail on this computer is encrypted at the next start, which can take a few minutes. Earlier versions cannot open it: turn this off and restart before going back to one.")),
     );
     dialog.add_response("cancel", &i18n("Cancel"));
     dialog.add_response("encrypt", &i18n("Encrypt"));

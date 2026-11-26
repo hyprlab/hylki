@@ -33,7 +33,7 @@ use ksni::{Category, Icon, Status, ToolTip, Tray};
 
 use crate::app::AppMsg;
 use crate::config::TrayIcon;
-use crate::i18n::{i18n, i18n_f, ni18n_f};
+use crate::i18n::{i18n, ni18n_f};
 
 /// One unread message as the tray menu shows it (issue #116): a card-like
 /// row with the sender's picture, which opens it in the reader. A DBusMenu
@@ -348,8 +348,10 @@ impl Tray for HylkiTray {
             if mail.unread as usize > mail.items.len() {
                 items.push(
                     StandardItem {
-                        label: i18n_f(
-                            "View all {n} unread in Inboxes…",
+                        label: ni18n_f(
+                            "View All {n} Unread in Inboxes",
+                            "View All {n} Unread in Inboxes",
+                            mail.unread,
                             &[("n", &mail.unread.to_string())],
                         ),
                         activate: Box::new(|t: &mut Self| {
@@ -367,7 +369,7 @@ impl Tray for HylkiTray {
             // The settings window sits on the main window, so that comes
             // back first when it was hidden.
             StandardItem {
-                label: i18n("Accounts"),
+                label: i18n("Mail Accounts"),
                 activate: Box::new(|t: &mut Self| {
                     let _ = t.sender.send(AppMsg::PresentWindow);
                     let _ = t.sender.send(AppMsg::OpenAccounts);

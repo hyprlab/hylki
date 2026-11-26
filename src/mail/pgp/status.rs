@@ -120,7 +120,7 @@ pub(super) fn signature_verdict(o: &Outcome, notes: &mut Vec<String>) -> PgpSign
         };
     }
     if let Some(k) = &o.missing_key {
-        notes.push(i18n("Import the sender's public key to verify it."));
+        notes.push(i18n("Import the sender’s public key to verify it."));
         return PgpSignature::NoKey { key_id: k.clone() };
     }
     PgpSignature::None
