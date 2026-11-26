@@ -211,6 +211,13 @@
   Empty Trash count waited behind it. A folder with no mail added or removed
   since its last load now has only its flags read, about a second.
 
+- **Fixed: a move or delete waited behind folder fetches** (#676, reported
+  by DarkStarCrashes123). Yahoo took 20 to 60 seconds to fetch a folder's
+  newest 50 messages, and a delete queued behind a few of those fetches
+  reached Trash minutes later. Moves, deletes, Spam and Not Spam, Undo and
+  Empty Trash now go ahead of queued folder fetches and refresh ticks. They
+  never pass another change, and never cut a fetch short.
+
 - **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
   (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
