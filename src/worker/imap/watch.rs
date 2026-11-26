@@ -169,6 +169,16 @@ pub(in crate::worker) async fn watch_folder(
             tracing::info!("unwatching {path}: the connection is metered");
             return;
         }
+        // Each watcher is a login; on a provider that limits them, the main
+        // session's next reconnect is what gets refused (#676).
+        if let Some(wait) = super::login_pace::watcher_wait(&account) {
+            tracing::debug!(
+                "watcher for {path}: waiting {} s for the account's logins to ease",
+                wait.as_secs()
+            );
+            backoff = wait;
+            continue;
+        }
         let Ok(mut sess) = connect(&account).await else {
             // Offline, or the server's connection cap is spent (the main
             // session always connects first and is never contended by this).

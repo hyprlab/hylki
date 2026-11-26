@@ -47,6 +47,7 @@ mod live_hierarchy_tests;
 mod live_receipt_tests;
 #[cfg(test)]
 mod live_tests;
+mod login_pace;
 mod mutate;
 mod namespace;
 mod offline;
