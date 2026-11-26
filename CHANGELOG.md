@@ -1,5 +1,53 @@
 # Changelog
 
+## 1.50.0-beta.5 — 2026-11-26
+
+- **New: unread counts on the Tags rows, and an Untagged filter** (#717,
+  requested by bstegmaier75). Each tag under Tags, in the unified section
+  and in each account, shows how many unread messages carry it, counted as
+  the tag's view lists them: Trash and Junk left out, and a Gmail message
+  under several labels counted once. On Gmail, mail under the label named
+  like the tag counts too, and the tag's view lists it, including mail
+  labelled in Gmail itself. Sort and filter → Show only has
+  Untagged beside Tagged, for mail with no tag; turning one on turns the
+  other off.
+
+- **Changed: the interface text, after a review of every string.** About
+  190 strings are shorter or plainer: no restated titles, no em dashes, and
+  "Hylki" only where the app has to name itself. Apostrophes are curly,
+  contractions are written out ("cannot", "could not"), dialog headings use
+  header capitals, and Settings paths are written `Settings → OpenPGP`.
+  Things with two names now have one (Copy Address, Restore Defaults, Trash
+  and Junk, Hylki Address Book). Counts take a plural form, so the Outbox no
+  longer says "1 minutes ago" and the gallery no longer says "Indexing 1
+  messages…". The Outbox's "(no recipients)" and "(no subject)" and the
+  Linux Mint keyring help can now be translated. The template has 2,590
+  strings, down from 2,629. Strings that changed only in punctuation or
+  capitals keep their translations; about 164 per language need a look.
+
+- **Changed: the Empty Trash count shows at once** (#676, requested by
+  DarkStarCrashes123). The question takes the number from the cache at once,
+  and the server's count replaces it when it answers. The count goes ahead of
+  folder syncs already queued for the account, so a slow server answers it
+  sooner.
+
+- **Fixed: smart folder and tag counts changed seconds after a mark.**
+  Marking mail read or unread, tagging it or marking a folder read now moves
+  the counts on the Smart Folders and Tags rows at once, as the folder counts
+  already did. They used to wait for the server to take the mark and for a
+  recount of the cache, and a recount that ran before the mark reached the
+  cache put the old number back for a moment.
+
+- **Fixed: opening a folder held a slow server for seconds** (#676,
+  reported by DarkStarCrashes123). Each open of a folder and each refresh
+  fetched the newest 50 messages' headers and previews again and listed
+  every message in the folder, 6 to 7 seconds on Yahoo, and a move or an
+  Empty Trash count waited behind it. A folder with no mail added or removed
+  since its last load now has only its flags read, about a second.
+
+- **Translations:** German (PRs #718 and #719 by Samuel Edlmeier) caught up
+  with the text review, complete.
+
 ## 1.50.0-beta.4 — 2026-11-25
 
 - **New: a picture in a message opens in the lightbox** (#713, by
