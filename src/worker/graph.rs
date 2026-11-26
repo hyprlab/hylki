@@ -408,7 +408,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
             MailRequest::ImportRaw { token, .. } => emit(WorkerEvent::RawImported {
                 token,
                 result: Err(i18n(
-                    "A Microsoft account can't receive mail from another account",
+                    "A Microsoft account cannot receive mail from another account",
                 )),
             }),
             MailRequest::DeleteAttachment {

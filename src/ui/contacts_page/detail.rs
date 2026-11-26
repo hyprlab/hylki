@@ -293,7 +293,7 @@ fn render_group_card(
         let row = adw::ActionRow::new();
         row.set_title(&i18n("Changed in the app it came from"));
         row.set_subtitle(&i18n(
-            "This group names its members by contact, which Hylki does not edit.",
+            "Its members are listed by contact, which cannot be edited here.",
         ));
         row.add_css_class("property");
         details.append(&row);
@@ -509,7 +509,7 @@ impl ContactsPage {
         identity.append(&name);
         let hide = adw::SwitchRow::new();
         hide.set_title(&i18n("Send as Bcc"));
-        hide.set_subtitle(&i18n("Members do not see each other's addresses."));
+        hide.set_subtitle(&i18n("Members do not see each other’s addresses."));
         hide.set_active(c.hide_addresses);
         identity.append(&hide);
 

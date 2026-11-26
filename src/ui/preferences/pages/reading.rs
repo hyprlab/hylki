@@ -60,7 +60,7 @@ impl ReadingPage {
 
                     #[name = "theme_switch_row"]
                     adw::SwitchRow {
-                        set_title: &i18n("Light / Dark Mode switch"),
+                        set_title: &i18n("Show Light / Dark Mode switch"),
                         set_subtitle: &i18n("Shown in the message header and the composer."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetThemeSwitch(row.is_active()));
@@ -87,7 +87,7 @@ impl ReadingPage {
 
                     #[name = "fit_wide_row"]
                     adw::SwitchRow {
-                        set_title: &i18n("Scale message width to fit reader"),
+                        set_title: &i18n("Scale wide messages to fit the reading pane"),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetFitWideMail(row.is_active()));
                         },
@@ -96,7 +96,7 @@ impl ReadingPage {
                     #[name = "override_fonts_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Use my own font"),
-                        set_subtitle: &i18n("The font below replaces the sender's."),
+                        set_subtitle: &i18n("The font below replaces the sender’s."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetOverrideFonts(row.is_active()));
                         },
@@ -125,7 +125,7 @@ impl ReadingPage {
                     #[name = "override_colors_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Use my own colors"),
-                        set_subtitle: &i18n("Ignores the sender's colors. Pictures stay; links use the accent color."),
+                        set_subtitle: &i18n("Ignores the sender’s colors. Pictures stay; links use the accent color."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetOverrideColors(row.is_active()));
                         },
@@ -143,7 +143,7 @@ impl ReadingPage {
                     #[name = "plain_font_row"]
                     adw::ActionRow {
                         set_title: &i18n("Monospace font"),
-                        set_subtitle: &i18n("The system's monospace font unless another is chosen."),
+                        set_subtitle: &i18n("The system’s monospace font unless another is chosen."),
                         #[name = "plain_font_button"]
                         add_suffix = &gtk::FontDialogButton {
                             set_valign: gtk::Align::Center,
@@ -208,7 +208,7 @@ impl ReadingPage {
 
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Reader View"),
-                    set_description: Some(&i18n("A message's text alone, without the sender's layout, colors and fonts.")),
+                    set_description: Some(&i18n("A message’s text alone, without the sender’s layout, colors and fonts.")),
 
                     #[name = "reader_switch_row"]
                     adw::SwitchRow {
@@ -221,7 +221,7 @@ impl ReadingPage {
                     #[name = "reader_default_row"]
                     adw::ComboRow {
                         set_title: &i18n("When a message is opened"),
-                        set_subtitle: &i18n("The header's switch still changes the open message."),
+                        set_subtitle: &i18n("The header’s switch still changes the open message."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeReaderDefault(row.selected()));
                         },

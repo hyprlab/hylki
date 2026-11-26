@@ -19,7 +19,7 @@ pub(super) fn build() -> adw::PreferencesPage {
     let service_group = adw::PreferencesGroup::new();
     service_group.set_title(&i18n("Translation"));
     service_group.set_description(Some(&i18n(
-        "Uses a translation service under your own key. A message's text is sent only when you translate it.",
+        "Uses a translation service under your own key. A message’s text is sent only when you translate it.",
     )));
 
     let names: Vec<String> = Service::ALL.iter().map(|s| s.name()).collect();
@@ -58,7 +58,7 @@ pub(super) fn build() -> adw::PreferencesPage {
     let reading_group = adw::PreferencesGroup::new();
     reading_group.set_title(&i18n("Messages"));
     let mut targets = vec![i18n_f(
-        "Hylki's language ({language})",
+        "App language ({language})",
         &[(
             "language",
             &translate::language_name(&translate::ui_language()),

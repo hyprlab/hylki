@@ -265,12 +265,12 @@ impl AppModel {
 fn one_folder_body(count: Option<u32>) -> String {
     match count {
         Some(n) => ni18n_f(
-            "{count} message will be erased from the server. This can’t be undone.",
-            "{count} messages will be erased from the server. This can’t be undone.",
+            "{count} message will be erased from the server. This cannot be undone.",
+            "{count} messages will be erased from the server. This cannot be undone.",
             n,
             &[("count", &n.to_string())],
         ),
-        None => i18n("Every message in it will be erased from the server. This can’t be undone."),
+        None => i18n("Every message in it will be erased from the server. This cannot be undone."),
     }
 }
 
@@ -287,14 +287,14 @@ fn every_account_text(kind: FolderKind, targets: &[EmptyTarget]) -> (String, Str
         Some(counts) => {
             let n = counts.iter().fold(0u32, |sum, c| sum.saturating_add(*c));
             ni18n_f(
-                "{count} message will be erased from the server. This can’t be undone.",
-                "{count} messages will be erased from the server. This can’t be undone.",
+                "{count} message will be erased from the server. This cannot be undone.",
+                "{count} messages will be erased from the server. This cannot be undone.",
                 n,
                 &[("count", &n.to_string())],
             )
         }
         None => {
-            i18n("Every message in them will be erased from the server. This can’t be undone.")
+            i18n("Every message in them will be erased from the server. This cannot be undone.")
         }
     };
     let lines: Vec<String> = targets

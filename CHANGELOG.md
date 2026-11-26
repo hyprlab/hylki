@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Changed: the interface text, after a review of every string.** About
+  190 strings are shorter or plainer: no restated titles, no em dashes, and
+  "Hylki" only where the app has to name itself. Apostrophes are curly,
+  contractions are written out ("cannot", "could not"), dialog headings use
+  header capitals, and Settings paths are written `Settings → OpenPGP`.
+  Things with two names now have one (Copy Address, Restore Defaults, Trash
+  and Junk, Hylki Address Book). Counts take a plural form, so the Outbox no
+  longer says "1 minutes ago" and the gallery no longer says "Indexing 1
+  messages…". The Outbox's "(no recipients)" and "(no subject)" and the
+  Linux Mint keyring help can now be translated. The template has 2,590
+  strings, down from 2,629. Strings that changed only in punctuation or
+  capitals keep their translations; about 164 per language need a look.
+
 - **New: a picture in a message opens in the lightbox** (#713, by
   adriadam10). A click on a picture in a message body shows it over the
   whole window, as an attached one shows, to zoom in on, save or print. A

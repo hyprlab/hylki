@@ -2,7 +2,7 @@
 //! moves, deleting for good, folders, and attachment removal.
 
 use super::{name_labels, GraphWorker};
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::models::slashed_name;
 use crate::worker::folders::restore_folders;
 use crate::worker::graph::folders::{
@@ -235,8 +235,10 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
         )
         .await
         {
-            emit(WorkerEvent::error(i18n_f(
+            emit(WorkerEvent::error(ni18n_f(
+                "Could not mark {len} message as not spam: {e}",
                 "Could not mark {len} messages as not spam: {e}",
+                uids.len() as u32,
                 &[("len", &(uids.len()).to_string()), ("e", &(e).to_string())],
             )));
         }

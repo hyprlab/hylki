@@ -232,7 +232,7 @@ pub(super) fn pgp_wrap(
     let key = signing_key(account, from_addr);
     let no_key = || {
         i18n_f(
-            "no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP",
+            "no OpenPGP key of your own for {addr}; generate one in Settings → OpenPGP",
             &[("addr", from_addr)],
         )
     };

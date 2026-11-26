@@ -213,7 +213,7 @@ impl Compose {
             let parent = root.root().and_downcast::<gtk::Window>();
             alert(
                 parent.as_ref(),
-                &i18n("Not translated"),
+                &i18n("Not Translated"),
                 &i18n(
                     "This message is set to be encrypted, so its text is not sent for translation.",
                 ),
@@ -231,7 +231,7 @@ impl Compose {
             alert(
                 parent.as_ref(),
                 &i18n("Not now"),
-                &i18n("Accept or reject the AI agent's suggested changes first."),
+                &i18n("Accept or reject the AI agent’s suggested changes first."),
             );
             return;
         }
@@ -283,7 +283,7 @@ impl Compose {
                 let parent = root.root().and_downcast::<gtk::Window>();
                 alert(
                     parent.as_ref(),
-                    &i18n("Nothing to translate yet"),
+                    &i18n("Nothing to Translate Yet"),
                     &i18n("Write something first, or select the text to translate."),
                 );
             }
@@ -377,7 +377,7 @@ impl Compose {
             Err(why) => {
                 self.editor.run_js(TR_CANCEL);
                 let parent = root.root().and_downcast::<gtk::Window>();
-                alert(parent.as_ref(), &i18n("Could not translate"), &why);
+                alert(parent.as_ref(), &i18n("Could Not Translate"), &why);
             }
         }
     }

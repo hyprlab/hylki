@@ -42,13 +42,13 @@ pub(super) fn repeat_text(rrule: &str) -> Option<String> {
     let n = &interval.to_string();
     Some(match (freq.to_ascii_uppercase().as_str(), interval) {
         ("DAILY", 1) => i18n("Repeats daily"),
-        ("DAILY", _) => i18n_f("Repeats every {n} days", &[("n", n)]),
+        ("DAILY", _) => ni18n_f("Repeats every {n} day", "Repeats every {n} days", interval, &[("n", n)]),
         ("WEEKLY", 1) => i18n("Repeats weekly"),
-        ("WEEKLY", _) => i18n_f("Repeats every {n} weeks", &[("n", n)]),
+        ("WEEKLY", _) => ni18n_f("Repeats every {n} week", "Repeats every {n} weeks", interval, &[("n", n)]),
         ("MONTHLY", 1) => i18n("Repeats monthly"),
-        ("MONTHLY", _) => i18n_f("Repeats every {n} months", &[("n", n)]),
+        ("MONTHLY", _) => ni18n_f("Repeats every {n} month", "Repeats every {n} months", interval, &[("n", n)]),
         ("YEARLY", 1) => i18n("Repeats yearly"),
-        ("YEARLY", _) => i18n_f("Repeats every {n} years", &[("n", n)]),
+        ("YEARLY", _) => ni18n_f("Repeats every {n} year", "Repeats every {n} years", interval, &[("n", n)]),
         _ => i18n("Repeats"),
     })
 }
@@ -207,7 +207,7 @@ impl MessageView {
 /// What this message does to the meeting, for the banner's heading.
 fn invite_kind(inv: &crate::models::Invite) -> String {
     if inv.cancelled || inv.method == "CANCEL" {
-        i18n("Cancelled")
+        i18n("Canceled")
     } else if inv.method == "REPLY" {
         i18n("Reply")
     } else if inv.sequence > 0 {
@@ -238,10 +238,10 @@ fn invite_who(inv: &crate::models::Invite) -> String {
     // attendee list are not people and are not counted.
     let guests = inv.guests().count() as u32;
     match (&inv.organizer, guests) {
-        (Some(o), 0) => i18n_f("Organised by {name}", &[("name", o.label())]),
+        (Some(o), 0) => i18n_f("Organized by {name}", &[("name", o.label())]),
         (Some(o), n) => format!(
             "{} · {}",
-            i18n_f("Organised by {name}", &[("name", o.label())]),
+            i18n_f("Organized by {name}", &[("name", o.label())]),
             ni18n_f("{n} guest", "{n} guests", n, &[("n", &n.to_string())]),
         ),
         (None, 0) => String::new(),
@@ -322,19 +322,19 @@ fn invite_buttons(
             Rsvp::Accepted,
             "yes",
             i18n("Accept"),
-            i18n("Tells the organiser you will be there"),
+            i18n("Tells the organizer you will be there"),
         ));
         buttons.push_str(&answer(
             Rsvp::Tentative,
             "maybe",
             i18n("Maybe"),
-            i18n("Tells the organiser you might be there"),
+            i18n("Tells the organizer you might be there"),
         ));
         buttons.push_str(&answer(
             Rsvp::Declined,
             "no",
             i18n("Decline"),
-            i18n("Tells the organiser you will not be there"),
+            i18n("Tells the organizer you will not be there"),
         ));
     }
     // Handing the event to a calendar is worth offering for anything

@@ -38,7 +38,7 @@ impl MessageView {
         let (text, btn) = match self.unsub_state.get(&key) {
             Some(UnsubState::Working) => (i18n("Unsubscribing…"), String::new()),
             Some(UnsubState::Failed(why)) => (
-                i18n_f("Unsubscribing didn't work: {why}", &[("why", why)]),
+                i18n_f("Could not unsubscribe: {why}", &[("why", why)]),
                 button(&i18n("Try Again"), ""),
             ),
             None => {
@@ -74,7 +74,7 @@ impl MessageView {
                     // Nothing but a web page on offer: the button says so.
                     button(
                         &i18n("Unsubscribe…"),
-                        &i18n("Opens the list's unsubscribe page in your browser"),
+                        &i18n("Opens the list’s unsubscribe page in your browser"),
                     )
                 };
                 (text, btn)

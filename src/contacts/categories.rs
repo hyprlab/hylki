@@ -185,11 +185,11 @@ pub(super) fn save_category_group(
         .collect();
     if original.is_none() && wanted.is_empty() {
         return Err(i18n(
-            "A group in this address book is kept on its people's cards, so it needs at least one person.",
+            "A group in this address book is kept on its people’s cards, so it needs at least one person.",
         ));
     }
     let BookCards::Eds { conn, bus, path } = &cards else {
-        return Err(i18n("Hylki cannot change this kind of group"));
+        return Err(i18n("This kind of group cannot be changed here"));
     };
     // The cards that may change: the members, and whoever has the name or
     // the old one now.

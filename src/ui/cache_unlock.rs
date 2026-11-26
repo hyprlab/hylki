@@ -165,7 +165,7 @@ fn explain(problem: &Problem) -> (String, String) {
 
 /// What is lost with the cache, said before anything is deleted.
 fn loss_warning() -> String {
-    i18n("Mail that exists only on this computer is lost: a POP3 account's mail, and unsent mail in the Outbox.")
+    i18n("Mail that exists only on this computer is lost: a POP3 account’s mail, and unsent mail in the Outbox.")
 }
 
 fn confirm_reset() -> bool {

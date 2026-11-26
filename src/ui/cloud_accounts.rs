@@ -9,7 +9,7 @@ use std::rc::Rc;
 use adw::prelude::*;
 use relm4::prelude::*;
 
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::services::cloud::{self, CloudAccount, CloudKind};
 
 mod editor;
@@ -309,7 +309,7 @@ impl SimpleComponent for CloudAccounts {
                 crate::ui::dialog::confirm_destructive(
                     parent.as_ref(),
                     &i18n_f("Remove {name}?", &[("name", &name)]),
-                    &i18n("Files already uploaded and links sent stay active on the provider's service."),
+                    &i18n("Files already uploaded and links sent stay active on the provider’s service."),
                     "remove",
                     &i18n("Remove"),
                     move || {
@@ -484,8 +484,10 @@ impl CloudAccounts {
             if a.expire_days > 0 {
                 sub.push_str(&format!(
                     " · {}",
-                    i18n_f(
+                    ni18n_f(
+                        "links expire after {n} day",
                         "links expire after {n} days",
+                        a.expire_days,
                         &[("n", &a.expire_days.to_string())]
                     )
                 ));

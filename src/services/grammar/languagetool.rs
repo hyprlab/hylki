@@ -173,7 +173,7 @@ fn post<T: serde::de::DeserializeOwned>(
     match agent.post(&format!("{base}/check")).send_form(form) {
         Ok(resp) => resp
             .into_json::<T>()
-            .map_err(|_| i18n("The server's answer could not be read.")),
+            .map_err(|_| i18n("The server’s answer could not be read.")),
         Err(ureq::Error::Status(code, resp)) => {
             Err(refusal(code, &resp.into_string().unwrap_or_default()))
         }
@@ -188,9 +188,9 @@ fn unreachable(kind: ureq::ErrorKind, detail: &str) -> String {
         ureq::ErrorKind::ConnectionFailed => {
             i18n("Nothing answers at that address. Check that the server is running.")
         }
-        ureq::ErrorKind::Dns => i18n("The server's name could not be found."),
+        ureq::ErrorKind::Dns => i18n("The server’s name could not be found."),
         ureq::ErrorKind::InvalidUrl | ureq::ErrorKind::UnknownScheme => {
-            i18n("The server's address is not valid.")
+            i18n("The server’s address is not valid.")
         }
         _ => i18n_f("The server could not be reached: {e}", &[("e", detail)]),
     }

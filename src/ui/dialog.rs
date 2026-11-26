@@ -27,6 +27,8 @@ pub(crate) fn message_dialog(
     heading: Option<&str>,
     body: Option<&str>,
 ) -> adw::MessageDialog {
+    // An empty body would still leave its gap under the heading.
+    let body = body.filter(|b| !b.is_empty());
     let dialog = adw::MessageDialog::new(parent, heading, body);
     // The template's large heading is the one label with this class; the
     // small one beside it, for narrow parents, already wraps.

@@ -69,7 +69,7 @@ impl AccountsPage {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("On This Computer"),
                     set_description: Some(
-                        i18n("Store mail in folders that live on this computer. Move or copy mail from any account to here.").as_str()
+                        i18n("Move or copy mail here from any account.").as_str()
                     ),
                     set_visible: false,
                     #[wrap(Some)]

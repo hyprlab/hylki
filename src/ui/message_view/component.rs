@@ -133,7 +133,7 @@ impl Component for MessageView {
                             connect_clicked => MessageViewInput::LoadRemoteOnce,
                         },
                         gtk::Button {
-                            set_label: &i18n("Always allow sender"),
+                            set_label: &i18n("Always Allow Sender"),
                             set_valign: gtk::Align::Center,
                             #[watch]
                             set_tooltip_text: model.current.as_ref().map(|m| m.from_addr.as_str()),
@@ -275,7 +275,7 @@ impl Component for MessageView {
                             add_css_class: "caption",
                             add_css_class: "hylki-zoom-chip",
                             set_cursor_from_name: Some("pointer"),
-                            set_tooltip_text: Some(i18n("Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a click here, or Ctrl+0, puts it back to the default from Settings.").as_str()),
+                            set_tooltip_text: Some(i18n("Message zoom. Click or press Ctrl+0 to go back to the default.").as_str()),
                             add_controller = gtk::GestureClick {
                                 connect_released[sender] => move |_, _, _, _| {
                                     let _ = sender.output(MessageViewOutput::Zoom(0));
@@ -324,7 +324,7 @@ impl Component for MessageView {
                             set_halign: gtk::Align::End,
                             set_valign: gtk::Align::Center,
                             add_css_class: "reader-toggle",
-                            set_tooltip_text: Some(i18n("Reader View shows a message as its text alone, in one plain format, without the sender's layout, colors and fonts.").as_str()),
+                            set_tooltip_text: Some(i18n("Reader View shows the text alone, without the sender’s layout, colors and fonts.").as_str()),
                             #[watch]
                             set_visible: model.current.is_some() && model.reader_switch_shown,
 

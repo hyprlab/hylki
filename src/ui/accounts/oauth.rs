@@ -210,7 +210,7 @@ impl AccountsWindow {
             widgets.form.oauth_status.set_visible(true);
             widgets.form.oauth_status.set_css_classes(&["error"]);
             widgets.form.oauth_status.set_label(&i18n(
-                "Enter a client ID (and endpoints for a custom provider) first",
+                "Enter a client ID first, and the endpoints for a custom provider.",
             ));
             return;
         }

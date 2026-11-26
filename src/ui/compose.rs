@@ -190,7 +190,7 @@ impl Component for Compose {
                             set_icon_name: "channel-secure-symbolic",
                             add_css_class: "pgp-toggle",
                             #[watch]
-                            set_tooltip_text: Some(&pgp_tooltip(&i18n("Encrypt with OpenPGP to every recipient's key"), model.encrypt)),
+                            set_tooltip_text: Some(&pgp_tooltip(&i18n("Encrypt with OpenPGP to every recipient’s key"), model.encrypt)),
                             #[watch]
                             set_visible: crate::mail::pgp::available() && !model.narrow,
                             connect_toggled[sender] => move |b| {
@@ -278,7 +278,7 @@ impl Component for Compose {
                         },
                         gtk::Button {
                             add_css_class: "flat",
-                            set_label: &i18n("Send now instead"),
+                            set_label: &i18n("Send Now"),
                             connect_clicked => ComposeInput::ClearSendAt,
                         },
                     },

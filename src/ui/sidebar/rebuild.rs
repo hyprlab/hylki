@@ -323,7 +323,7 @@ impl Sidebar {
                 // Refresh, showing a spinner while any account syncs.
                 let refresh = gtk::Button::new();
                 refresh
-                    .set_tooltip_text(Some(i18n("Refresh or long-press for Status Bar").as_str()));
+                    .set_tooltip_text(Some(i18n("Refresh, or long-press for the status bar").as_str()));
                 refresh.add_css_class("flat");
                 refresh.set_valign(gtk::Align::Center);
                 refresh.set_halign(gtk::Align::Center);

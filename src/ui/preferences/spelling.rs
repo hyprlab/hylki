@@ -43,7 +43,7 @@ impl SpellLangRows {
         self.syncing.set(false);
         let subtitle = if chosen.is_empty() {
             i18n_f(
-                "System language — {language}",
+                "System language ({language})",
                 &[(
                     "language",
                     &crate::desktop::spell::spell_language_names(

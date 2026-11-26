@@ -55,7 +55,7 @@ impl ListPage {
                         // Kept current by update_view.
                         set_sensitive: model.avatars,
                         set_title: &i18n("Sent mail uses your account circle"),
-                        set_subtitle: &i18n("The account's picture or emoji, as in the sidebar."),
+                        set_subtitle: &i18n("The account’s picture or emoji, as in the sidebar."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetOwnMailboxFace(row.is_active()));
                         },

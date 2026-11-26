@@ -15,7 +15,7 @@ pub(super) struct SidePage {
 /// The sidebar, section by section.
 pub(super) const SIDE_PAGES: &[(&str, &[SidePage])] = &[
     (
-        i18n_noop("Accounts"),
+        i18n_noop("Mail Accounts"),
         &[
             SidePage {
                 id: "accounts",
@@ -187,11 +187,11 @@ impl Preferences {
         let parent = relm4::main_application().active_window();
         let (heading, body) = match self.editor_page {
             "filters" => (
-                i18n("Save the filter?"),
+                i18n("Save the Filter?"),
                 i18n("Your changes are lost if you discard them."),
             ),
             "smart" => (
-                i18n("Save the smart folder?"),
+                i18n("Save the Smart Folder?"),
                 i18n("Your changes are lost if you discard them."),
             ),
             "tags" => (
@@ -199,11 +199,11 @@ impl Preferences {
                 i18n("Your changes are lost if you discard them."),
             ),
             "contacts" => (
-                i18n("Save the address book?"),
+                i18n("Save the Address Book?"),
                 i18n("Your changes are lost if you discard them."),
             ),
             _ => (
-                i18n("Save the account?"),
+                i18n("Save the Account?"),
                 i18n("Your changes are lost if you discard them."),
             ),
         };

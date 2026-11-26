@@ -32,7 +32,7 @@ impl BackupPage {
 
                     adw::ActionRow {
                         set_title: &i18n("Import settings"),
-                        set_subtitle: &i18n("Replaces everything in place. Don't remove accounts first: that deletes their passwords."),
+                        set_subtitle: &i18n("Replaces everything in place. Do not remove accounts first: that deletes their passwords."),
                         set_activatable: true,
                         connect_activated => PrefInput::ImportSettings,
                         add_suffix = &gtk::Image {

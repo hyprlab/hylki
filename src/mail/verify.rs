@@ -343,7 +343,7 @@ fn judge(ev: &Evidence) -> SenderCheck {
     // "couldn't confirm" verdict already carries the right sentence.
     let summary = if trust == SenderTrust::Suspicious && downgraded_by_addressing {
         i18n_f(
-            "{from} checks out, but the addressing doesn't match the name on the message.",
+            "{from} checks out, but the addressing does not match the name on the message.",
             &[("from", from)],
         )
     } else {
@@ -408,15 +408,15 @@ fn authentication_verdict(ev: &Evidence, from: &str) -> (SenderTrust, String) {
         // the badge, which is worse than not having one.
         _ if failed_and_nothing_passed(dkim, spf) => (
             SenderTrust::Suspicious,
-            i18n_f("This message couldn't be confirmed as coming from {from}, and the checks that ran on it failed.", &[("from", from)]),
+            i18n_f("This message could not be confirmed as coming from {from}, and the checks that ran on it failed.", &[("from", from)]),
         ),
         _ if !ev.checked => (
             SenderTrust::Unverified,
-            i18n("Your mail provider didn't report any sender checks for this message."),
+            i18n("Your mail provider did not report any sender checks for this message."),
         ),
         _ => (
             SenderTrust::Unverified,
-            i18n_f("Nothing here proves this came from {from} — or that it didn't.", &[("from", from)]),
+            i18n_f("Nothing here proves this came from {from}, or that it did not.", &[("from", from)]),
         ),
     }
 }
@@ -486,7 +486,7 @@ fn check_addressing(
     if let Some(claimed) = domain_in_display_name(&ev.from_name) {
         if !same_site(&claimed, &ev.from_domain) {
             findings.push(i18n_f(
-                "The sender's name says \"{claimed}\" but the address is {from}",
+                "The sender’s name says “{claimed}” but the address is {from}",
                 &[("claimed", &claimed), ("from", from)],
             ));
             if *trust == SenderTrust::Pass {

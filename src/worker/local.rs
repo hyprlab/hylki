@@ -16,7 +16,7 @@ use tokio::sync::mpsc;
 
 use crate::cache::Cache;
 use crate::config::{AccountConfig, OfflineMail};
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::{i18n, i18n_f, ni18n_f};
 use crate::models::{Folder, FolderKind, Message};
 use crate::worker::chores::{auto_empty_due, auto_empty_roles, role_folder_path};
 use crate::worker::folders::{
@@ -285,8 +285,10 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
             .filter(|e| !known.contains_key(&e.uid))
             .count();
         if fresh > QUIET_READ {
-            (self.emit)(WorkerEvent::Status(i18n_f(
+            (self.emit)(WorkerEvent::Status(ni18n_f(
+                "Reading {n} message…",
                 "Reading {n} messages…",
+                fresh as u32,
                 &[("n", &fresh.to_string())],
             )));
         }

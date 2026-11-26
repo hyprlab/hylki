@@ -54,7 +54,7 @@ fn badge_for(status: &KeyStatus, encrypting: bool) -> KeyBadge {
         ),
         Some(KeySource::Gossip) => found(
             "key-weak",
-            i18n("OpenPGP key passed on in someone else's encrypted mail."),
+            i18n("OpenPGP key passed on in someone else’s encrypted mail."),
         ),
         Some(KeySource::Wkd) => found(
             "key-found",

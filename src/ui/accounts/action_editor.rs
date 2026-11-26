@@ -203,7 +203,7 @@ impl ActionList {
                 forward.set_visible(chosen == ActionKind::Forward);
                 dest.set_visible(chosen == ActionKind::Move);
                 kind.set_subtitle(&if chosen == ActionKind::Delete {
-                    i18n("Permanently deletes the message")
+                    i18n("Permanently deletes the message.")
                 } else {
                     String::new()
                 });

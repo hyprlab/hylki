@@ -68,12 +68,12 @@ impl AppModel {
     fn show_template_picker(&self, into: Option<u32>, sender: &ComponentSender<Self>) {
         let s = sender.clone();
         let empty =
-            i18n("No templates yet. Save one from the composer's ⋯ menu with Save as Template.");
+            i18n("No templates yet. Save one from the composer’s ⋯ menu with Save as Template.");
         match into {
             None => show_message_picker(
                 self.window.upcast_ref(),
                 &i18n("New Message from Template"),
-                &i18n("The new message starts as a copy of the template you pick."),
+                "",
                 &empty,
                 &i18n("Use Template"),
                 self.template_choices(),
@@ -339,7 +339,7 @@ impl AppModel {
             AppMsg::SaveDraftMessage(out) => {
                 let account_id = out.from_account_id;
                 let Some((folder_id, path)) = self.drafts_target(account_id) else {
-                    self.notice_error(i18n("No Drafts folder available for this account"));
+                    self.notice_error(i18n("This account has no Drafts folder."));
                     return;
                 };
                 self.send_to(
@@ -366,7 +366,7 @@ impl AppModel {
                     .map(|o| (o.folder_id, o.path.clone()))
                     .or_else(|| self.templates_target(account_id));
                 let Some((folder_id, path)) = target else {
-                    self.notice_error(i18n("No Templates folder available for this account"));
+                    self.notice_error(i18n("This account has no Templates folder."));
                     return;
                 };
                 self.send_to(

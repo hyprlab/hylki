@@ -206,7 +206,7 @@ impl AccountsWindow {
             widgets
                 .form
                 .oauth_status
-                .set_label(&i18n("Enter a client ID and sign in before saving"));
+                .set_label(&i18n("Enter a client ID and sign in before saving."));
         }
         has_client && signed_in
     }
@@ -224,7 +224,7 @@ impl AccountsWindow {
         };
         let body = if account.is_local() {
             i18n_f(
-                "Remove {name} from Hylki? Its folders and the mail in them stay on this computer, in {dir}, and come back if it is added again.",
+                "Remove {name}? Its folders and the mail in them stay on this computer, in {dir}, and come back if it is added again.",
                 &[("name", &name), ("dir", &super::local::shown_dir())],
             )
         } else if account.shared_mailbox {

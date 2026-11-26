@@ -97,9 +97,9 @@ impl AppModel {
 
 fn heading(failed: &[(String, String)]) -> String {
     if failed.is_empty() {
-        i18n("Waiting for the keyring")
+        i18n("Waiting for the Keyring")
     } else {
-        i18n("Couldn’t read the password")
+        i18n("Could Not Read the Password")
     }
 }
 
@@ -123,7 +123,7 @@ fn body(silent: &[String], failed: &[(String, String)]) -> String {
         .collect();
     if !silent.is_empty() {
         lines.push(i18n_f(
-            "The keyring hasn’t answered for {accounts}. Mail connects once it does.",
+            "The keyring has not answered for {accounts}. Mail connects once it does.",
             &[("accounts", &silent.join(", "))],
         ));
     }

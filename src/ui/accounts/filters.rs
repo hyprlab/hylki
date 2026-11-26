@@ -243,13 +243,13 @@ impl AccountsWindow {
                         value.set_visible(!contacts);
                         field.set_subtitle(&match chosen {
                             Some(FilterField::Body) => {
-                                i18n("Searched on the server; nothing is downloaded")
+                                i18n("Searched on the server; nothing is downloaded.")
                             }
                             Some(FilterField::ReplyTo) => {
                                 i18n("From address when no Reply-To is set")
                             }
                             Some(f) if f.is_contact_check() => {
-                                i18n("Looks in the system address books and the Hylki book")
+                                i18n("Looks in the system address books and the Hylki Address Book.")
                             }
                             _ => String::new(),
                         });
@@ -343,7 +343,7 @@ impl AccountsWindow {
         let count_row = adw::SwitchRow::new();
         count_row.set_title(&i18n("Count unread mail"));
         count_row.set_subtitle(&i18n(
-            "Include the folder's unread mail in the tray icon's unread count",
+            "Adds the folder’s unread mail to the tray icon’s count.",
         ));
         count_row.set_active(true);
         action_group.add(&tag_row);

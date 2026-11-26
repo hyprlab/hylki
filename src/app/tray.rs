@@ -197,9 +197,9 @@ impl AppModel {
     pub(super) fn offer_restart_for_icon(&self, sender: &ComponentSender<Self>) {
         let dialog = crate::ui::dialog::message_dialog(
             Some(&self.icon_dialog_parent()),
-            Some(i18n("Restart to finish switching icons?").as_str()),
+            Some(i18n("Restart to Finish Switching Icons?").as_str()),
             Some(
-                i18n("The dock and Hylki's own windows keep the old icon until Hylki restarts.")
+                i18n("The dock and the app’s own windows keep the old icon until it restarts.")
                     .as_str(),
             ),
         );
@@ -358,8 +358,7 @@ impl AppModel {
                     tracing::warn!("restart helper failed: {e}");
                     self.restart_pending = false;
                     self.notice_error(i18n(
-                        "Couldn't restart automatically — quit and reopen Hylki \
-                               to finish switching the icon.",
+                        "Could not restart automatically. Quit and reopen Hylki to finish switching the icon.",
                     ));
                 }
             },

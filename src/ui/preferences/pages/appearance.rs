@@ -68,7 +68,7 @@ impl AppearancePage {
 
                     #[name = "desktop_icons_row"]
                     adw::SwitchRow {
-                        set_title: &i18n("Use your desktop environment's icon set"),
+                        set_title: &i18n("Use your desktop environment’s icon set"),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetDesktopIcons(row.is_active()));
                         },
@@ -91,7 +91,7 @@ impl AppearancePage {
                 add = &adw::PreferencesGroup {
                     set_title: &i18n("Toolbar"),
                     set_description: Some(
-                        &i18n("Drag buttons between the groups. The right group folds into ⋯ when the pane is narrow."),
+                        &i18n("Drag buttons between the groups."),
                     ),
                     #[name = "toolbar_editor_box"]
                     gtk::Box {

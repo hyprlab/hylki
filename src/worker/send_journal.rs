@@ -59,7 +59,7 @@ pub(super) fn write_to(
     let built = build_for_outbox(account, &msg)?;
     // What a crash leaves in the Outbox says why it is there; a failure
     // that is reported replaces it.
-    let note = i18n("Hylki closed before the message was sent.");
+    let note = i18n("The app closed before the message was sent.");
     let id = {
         // Held while the row is written, so a flush that reads the Outbox
         // meanwhile cannot see the row before it is in hand.

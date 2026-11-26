@@ -168,7 +168,7 @@ impl ContactsPage {
         let dialog = adw::AlertDialog::new(
             Some(&i18n("Rename Address Book")),
             Some(&i18n(
-                "The name is used in Hylki only; GNOME Contacts and Evolution keep the book's own.",
+                "The name is used here only. GNOME Contacts and Evolution keep the book’s own.",
             )),
         );
         dialog.set_extra_child(Some(&entry));
@@ -461,7 +461,7 @@ impl ContactsPage {
             Some(c) => (
                 i18n("Move Contact?"),
                 i18n_f(
-                    "This will move {name} out of {from} and into {to}, locally and on the server. A group in {from} that holds the contact will no longer have it.",
+                    "{name} moves from {from} to {to}, locally and on the server, and leaves any group in {from}.",
                     &[("name", &c.name), ("from", &c.book_name), ("to", &book.name)],
                 ),
             ),
@@ -471,8 +471,8 @@ impl ContactsPage {
                 (
                     ni18n_f("Move {n} Contact?", "Move {n} Contacts?", n, &[("n", &count)]),
                     ni18n_f(
-                        "This will move {n} contact out of the address book it is in and into {to}, locally and on the server. A group there that holds it will no longer have it.",
-                        "This will move {n} contacts out of the address books they are in and into {to}, locally and on the server. Groups there that hold them will no longer have them.",
+                        "{n} contact moves to {to}, locally and on the server, and leaves any group in its old address book.",
+                        "{n} contacts move to {to}, locally and on the server, and leave any group in their old address books.",
                         n,
                         &[("n", &count), ("to", &book.name)],
                     ),

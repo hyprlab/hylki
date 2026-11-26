@@ -239,7 +239,7 @@ impl SimpleComponent for AppModel {
                                 add_css_class: "app-title",
                             },
                             pack_start = &gtk::Button {
-                                set_tooltip_text: Some(i18n("Refresh or long-press for Status Bar").as_str()),
+                                set_tooltip_text: Some(i18n("Refresh, or long-press for the status bar").as_str()),
                                 add_css_class: "flat",
                                 set_valign: gtk::Align::Center,
                                 set_child: Some(&model.peek_refresh_stack),
@@ -552,7 +552,7 @@ impl SimpleComponent for AppModel {
                                     set_transition_duration: FOCUS_ANIM_MS,
                                     add_css_class: "focus-fade",
                                     gtk::Button {
-                                        set_label: &i18n("Send all"),
+                                        set_label: &i18n("Send All"),
                                         add_css_class: "flat",
                                         #[watch]
                                         set_visible: model.showing_outbox

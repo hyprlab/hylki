@@ -135,7 +135,7 @@ fn sender_style_entry(hit: &crate::ui::message_view::MenuHit, m: &Message) -> Op
     let label = if showing {
         i18n("Back to My Fonts and Colors")
     } else {
-        i18n("Show Sender's Fonts and Colors")
+        i18n("Show Sender’s Fonts and Colors")
     };
     Some(
         MenuEntry::new(label, move || {

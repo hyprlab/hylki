@@ -74,7 +74,7 @@ impl AppModel {
         sender: &ComponentSender<Self>,
     ) {
         let n = messages.len();
-        let heading = i18n("Delete this conversation?");
+        let heading = i18n("Delete This Conversation?");
         let body = ni18n_f(
             "The message in this conversation will be deleted. You can turn this warning off in Settings.",
             "All {n} messages in this conversation will be deleted. You can turn this warning off in Settings.",
@@ -100,18 +100,17 @@ impl AppModel {
             return;
         }
         let heading = ni18n_f(
-            "Delete this message permanently?",
-            "Delete {n} messages permanently?",
+            "Delete This Message Permanently?",
+            "Delete {n} Messages Permanently?",
             n as u32,
             &[("n", &n.to_string())],
         );
         let binned = messages.iter().all(|m| self.in_trash(m));
         let body = match (binned, n == 1) {
-            (true, true) => i18n("It is already in Trash, so it will be erased from the server. This can’t be undone."),
-            (true, false) => i18n("They are already in Trash, so they will be erased from the server. \
-             This can’t be undone."),
-            (false, true) => i18n("It will be erased from the server instead of going to Trash. This can’t be undone."),
-            (false, false) => i18n("They will be erased from the server instead of going to Trash. This can’t be undone."),
+            (true, true) => i18n("It is already in Trash, so it will be erased from the server. This cannot be undone."),
+            (true, false) => i18n("They are already in Trash, so they will be erased from the server. This cannot be undone."),
+            (false, true) => i18n("It will be erased from the server instead of going to Trash. This cannot be undone."),
+            (false, false) => i18n("They will be erased from the server instead of going to Trash. This cannot be undone."),
         };
         let s = sender.clone();
         confirm_destructive(

@@ -92,7 +92,7 @@ pub(super) fn books_group(
     let group = adw::PreferencesGroup::new();
     group.set_title(&i18n("Address books"));
     group.set_description(Some(&i18n(
-        "Rename a book for Hylki, or switch it off to leave it out.",
+        "Rename a book here, or switch it off to leave it out.",
     )));
     for book in &source.books {
         let row = adw::EntryRow::new();
@@ -109,7 +109,7 @@ pub(super) fn books_group(
         let switch = gtk::Switch::new();
         switch.set_valign(gtk::Align::Center);
         switch.set_active(book.on);
-        switch.set_tooltip_text(Some(&i18n("Use in Hylki")));
+        switch.set_tooltip_text(Some(&i18n("Use this address book")));
         // The account's own switch decides first.
         switch.set_sensitive(source.on);
         let (s, uid) = (sender.clone(), book.uid.clone());
@@ -183,7 +183,7 @@ pub(super) fn carddav_form(
     let signin = adw::PreferencesGroup::new();
     signin.set_title(&i18n("Sign-in"));
     let user = adw::EntryRow::new();
-    user.set_title(&i18n("User name"));
+    user.set_title(&i18n("Username"));
     user.set_text(&account.user);
     let pass = adw::PasswordEntryRow::new();
     pass.set_title(&i18n("Password"));
@@ -194,7 +194,7 @@ pub(super) fn carddav_form(
             move || carddav::has_password(&a),
             move |saved| {
                 if saved {
-                    pass.set_title(&i18n("Password (saved; type to replace it)"));
+                    pass.set_title(&i18n("Password (leave empty to keep)"));
                 }
             },
         );
@@ -356,7 +356,7 @@ pub(super) fn ldap_form(
             move || directory::has_password(&dir),
             move |saved| {
                 if saved {
-                    pass.set_title(&i18n("Password (saved; type to replace it)"));
+                    pass.set_title(&i18n("Password (leave empty to keep)"));
                 }
             },
         );
@@ -379,7 +379,7 @@ pub(super) fn ldap_form(
         // A server pasted as a URL names its encryption and port too.
         let (host_text, typed_security, typed_port) = directory::parse_server(&host.text());
         if host_text.is_empty() {
-            error.set_label(&i18n("Enter the directory's server."));
+            error.set_label(&i18n("Enter the directory’s server."));
             error.set_visible(true);
             host.grab_focus();
             return false;

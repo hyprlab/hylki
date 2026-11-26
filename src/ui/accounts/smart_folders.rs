@@ -142,7 +142,7 @@ impl AccountsWindow {
             names.extend(emails.iter().map(|e| e.as_str()));
             account_row.set_model(Some(&gtk::StringList::new(&names)));
         }
-        account_row.set_subtitle(&i18n("Those in the unified section."));
+        account_row.set_subtitle(&i18n("“All accounts” means those in All Inboxes."));
         where_group.add(&account_row);
         let folder_row = adw::ComboRow::new();
         folder_row.set_title(&i18n("Folders"));
@@ -244,7 +244,7 @@ impl AccountsWindow {
                                 i18n("From address when no Reply-To is set")
                             }
                             Some(SmartField::FromInContacts | SmartField::FromNotInContacts) => {
-                                i18n("Looks in the system address books and the Hylki book")
+                                i18n("Looks in the system address books and the Hylki Address Book.")
                             }
                             _ => String::new(),
                         });

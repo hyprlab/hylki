@@ -74,10 +74,10 @@ pub(crate) fn show_refresh_offline(button: &gtk::Button, offline: bool) {
     use gtk::prelude::*;
     let tip = if offline {
         crate::i18n::i18n(
-            "Offline: there is no network connection. Mail syncs again once the network is back. Click to try now, or long-press for Status Bar",
+            "Offline: there is no network connection. Mail syncs again once the network is back. Click to try now, or long-press for the status bar.",
         )
     } else {
-        crate::i18n::i18n("Refresh or long-press for Status Bar")
+        crate::i18n::i18n("Refresh, or long-press for the status bar")
     };
     button.set_tooltip_text(Some(tip.as_str()));
     if offline {

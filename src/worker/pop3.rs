@@ -303,7 +303,7 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
             // busy indicator stops.
             MailRequest::UndoMove { .. } => {
                 emit(WorkerEvent::error(i18n(
-                    "POP3 accounts don't support folders",
+                    "POP3 accounts do not support folders",
                 )));
                 emit(WorkerEvent::BulkComplete);
             }
@@ -322,7 +322,7 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
             | MailRequest::SetHiddenFolders { .. }
             | MailRequest::SaveDraft { .. } => {
                 emit(WorkerEvent::error(i18n(
-                    "POP3 accounts don't support folders",
+                    "POP3 accounts do not support folders",
                 )));
             }
 
@@ -356,7 +356,7 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
             MailRequest::ImportRaw { token, .. } => emit(WorkerEvent::RawImported {
                 token,
                 result: Err(i18n(
-                    "A POP3 account can't receive mail from another account",
+                    "A POP3 account cannot receive mail from another account",
                 )),
             }),
             MailRequest::DeleteAttachment {

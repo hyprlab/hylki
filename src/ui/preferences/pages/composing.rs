@@ -111,7 +111,7 @@ impl ComposingPage {
                     #[name = "toolbar_row"]
                     adw::ComboRow {
                         set_title: &i18n("Formatting toolbar"),
-                        set_subtitle: &i18n("For new messages. The toolbar's chevron toggles it."),
+                        set_subtitle: &i18n("For new messages. The toolbar’s chevron toggles it."),
                         set_model: Some(&gtk::StringList::new(&[
                             &i18n("Always collapsed"),
                             &i18n("Always expanded"),
@@ -131,7 +131,7 @@ impl ComposingPage {
 
                     #[name = "follow_plain_row"]
                     adw::SwitchRow {
-                        set_title: &i18n("Reply in the original's format"),
+                        set_title: &i18n("Reply in the original’s format"),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetFollowPlain(row.is_active()));
                         },
@@ -152,7 +152,7 @@ impl ComposingPage {
                     #[name = "compose_font_row"]
                     adw::ComboRow {
                         set_title: &i18n("Font"),
-                        set_subtitle: &i18n("For rich text. Default leaves it to the recipient's own font."),
+                        set_subtitle: &i18n("For rich text. Default leaves it to the recipient’s own font."),
                     },
 
                     #[name = "compose_size_row"]
@@ -305,7 +305,7 @@ impl ComposingPage {
                     #[name = "spell_words_row"]
                     adw::ExpanderRow {
                         set_title: &i18n("Added words"),
-                        set_subtitle: &i18n("Changes apply after a restart."),
+                        set_subtitle: &i18n("Applies after app restarts."),
                     },
                 },
             }

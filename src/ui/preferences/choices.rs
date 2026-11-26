@@ -557,7 +557,7 @@ mod tests {
         assert_eq!(link_browser_index(&browsers, "gone.desktop"), 0);
         assert_eq!(link_browser_index(&[], "firefox.desktop"), 0);
         assert!(link_group_description(&[]).starts_with("Inside the Flatpak sandbox"));
-        assert!(link_group_description(&browsers).starts_with("\"Ask each time\""));
+        assert!(link_group_description(&browsers).starts_with("With “Ask each time”"));
     }
 
     #[test]

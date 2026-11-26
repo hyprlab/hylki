@@ -41,7 +41,7 @@ impl ConversationsPage {
                         // Kept current by update_view.
                         set_sensitive: model.threading,
                         set_title: &i18n("Expandable conversations"),
-                        set_subtitle: &i18n("Off, a conversation's messages show only in the reading pane."),
+                        set_subtitle: &i18n("Off, a conversation’s messages show only in the reading pane."),
                         connect_active_notify[sender] => move |row| {
                             sender.input(PrefInput::ToggleThreadExpansion(row.is_active()));
                         },

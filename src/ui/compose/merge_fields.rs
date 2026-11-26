@@ -32,7 +32,7 @@ const TO_BUTTON: &str = "hylki-merge-field-to";
 pub(super) fn add_to_button(widgets: &ComposeWidgets, sender: &ComponentSender<Compose>) {
     let button = gtk::Button::from_icon_name("hylki-merge-field-symbolic");
     button.set_widget_name(TO_BUTTON);
-    button.set_tooltip_text(Some(i18n("Insert Merge Field").as_str()));
+    button.set_tooltip_text(Some(i18n("Insert merge field").as_str()));
     button.add_css_class("flat");
     button.set_valign(gtk::Align::Center);
     button.set_can_focus(false);

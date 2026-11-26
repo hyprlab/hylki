@@ -32,8 +32,7 @@ pub(super) fn pgp_send_check(
         .or_else(|| crate::mail::pgp::secret_key_for(gpg, from));
     if own.is_none() {
         return Err(crate::i18n::i18n_f(
-            "There is no OpenPGP key of your own for {addr}. Generate one under Settings, OpenPGP, \
-             or choose a key in the account's settings.",
+            "There is no OpenPGP key of your own for {addr}. Generate one under Settings → OpenPGP, or choose a key in the account’s settings.",
             &[("addr", from)],
         ));
     }
@@ -61,8 +60,7 @@ pub(super) fn pgp_send_check(
     for s in statuses {
         let no_key = || {
             crate::i18n::i18n_f(
-                "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch it \
-                 under Settings, OpenPGP.",
+                "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch it under Settings → OpenPGP.",
                 &[("addr", &s.addr)],
             )
         };
@@ -115,9 +113,9 @@ pub(super) fn ask_unvouched(
     let addresses: Vec<&str> = check.unvouched.iter().map(|k| k.addr.as_str()).collect();
     let dialog = crate::ui::dialog::message_dialog(
         parent.as_ref(),
-        Some(&i18n("Encrypt to keys you have not checked?")),
+        Some(&i18n("Encrypt to Keys You Have Not Checked?")),
         Some(&i18n_f(
-            "Nothing confirms that the keys for {addresses} belong to them. If one is someone else's, that person can read this message and the recipient cannot. To check a key, compare its fingerprint with its owner and trust it under Settings, OpenPGP. Send Anyway does not ask about these keys again.",
+            "Nothing confirms that the keys for {addresses} belong to them. If one is someone else’s, that person can read this message and the recipient cannot. To check a key, compare its fingerprint with its owner and trust it under Settings → OpenPGP. Send Anyway does not ask about these keys again.",
             &[("addresses", &addresses.join(", "))],
         )),
     );

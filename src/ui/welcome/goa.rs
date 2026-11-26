@@ -55,7 +55,7 @@ impl Welcome {
                 .goa_status
                 .set_css_classes(&["welcome-hint", "success"]);
             widgets.goa_status.set_text(&i18n_f(
-                "✓ {email} — added",
+                "✓ {email} added",
                 &[("email", &(account.email).to_string())],
             ));
             let _ = sender.output(WelcomeOutput::ImportGoa(Box::new(account)));

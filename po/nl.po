@@ -18,10 +18,11 @@ msgstr ""
 msgid "A fast, GNOME-native email client"
 msgstr "Een snelle mailapp voor GNOME"
 
+#, fuzzy
 msgid ""
-"This is a beta build for trying upcoming changes early. Expect bugs and "
-"instability — please report anything broken on GitHub. It shares your "
-"accounts and mail with the stable Hylki install."
+"This is a beta build for trying upcoming changes early. Expect bugs, and "
+"report anything broken on GitHub. It shares your accounts and mail with the "
+"stable install."
 msgstr ""
 "Dit is een bètaversie waarmee je aanstaande wijzigingen vroegtijdig kunt "
 "uitproberen. Verwacht bugs en instabiliteit. Meld alles wat kapot is op "
@@ -32,9 +33,6 @@ msgstr "Wat is er nieuw?"
 
 msgid "Credits"
 msgstr "Met dank aan"
-
-msgid "Contributors and translators"
-msgstr "Bijdragers en vertalers"
 
 msgid "Keyring Setup Help"
 msgstr "Hulp bij het instellen van de sleutelhanger"
@@ -49,7 +47,8 @@ msgstr "Project"
 msgid "Website"
 msgstr "Website"
 
-msgid "Report an issue or feature request"
+#, fuzzy
+msgid "Issues and Feature Requests"
 msgstr "Rapporteer een probleem of functieverzoek"
 
 msgid "Source Code"
@@ -75,13 +74,58 @@ msgstr "© 2026 Hyprlab"
 msgid "About"
 msgstr "Over Hylki"
 
-msgid "Hylki couldn’t save your password"
-msgstr "Hylki kan je wachtwoord niet opslaan"
+#, fuzzy
+msgid "Could Not Save Your Password"
+msgstr "Kan het wachtwoord niet lezen"
 
-msgid "Keyring setup on Linux Mint"
+msgid "Keyring Setup on Linux Mint"
 msgstr "Sleutelringconfiguratie op Linux Mint"
 
-msgid "Got it"
+msgid ""
+"Account passwords are kept in the system keyring (the Secret Service), never "
+"on disk. The keyring did not accept the password, so this account will not "
+"stay signed in after you close the app."
+msgstr ""
+
+msgid ""
+"Account passwords are kept in the system keyring (the Secret Service), never "
+"on disk. On Linux Mint with Cinnamon the keyring can need a one-time setup "
+"to keep them, and to stop asking to be unlocked at every login."
+msgstr ""
+
+#. The command stays out of the translation: it is typed as is.
+msgid ""
+"Set it up:\n"
+"1. Install the keyring tools if needed:"
+msgstr ""
+
+msgid ""
+"2. Open Passwords and Keys (Seahorse). Make sure a keyring named “Login” "
+"exists and is the default (right-click → Set as Default).\n"
+"\n"
+"To stop the unlock prompt at each login, choose one:\n"
+"• Give the Login keyring the same password as your user account (right-click "
+"→ Change Password) and log in with a password, not automatic login. The "
+"keyring then unlocks when you log in. This is the safer choice.\n"
+"• With automatic login, give the Login keyring an empty password. Your saved "
+"passwords are then stored unencrypted, so do this only on a computer you "
+"trust."
+msgstr ""
+
+msgid ""
+"Run these steps on the host system, not inside the Flatpak: the app uses "
+"your desktop’s keyring."
+msgstr ""
+
+msgid ""
+"Make sure a Secret Service keyring is installed, running and unlocked. For "
+"example, install gnome-keyring and seahorse (Passwords and Keys), create a "
+"default “Login” keyring and give it your login password so it unlocks when "
+"you log in."
+msgstr ""
+
+#, fuzzy
+msgid "Got It"
 msgstr "Begrepen"
 
 msgid "Could not save account: {e}"
@@ -186,12 +230,12 @@ msgstr "Voorgestelde wijzigingen in een concept"
 msgid "Refused or failed: {action}"
 msgstr "Geweigerd of mislukt: {action}"
 
-msgid "Delete the attachment from the server?"
+msgid "Delete the Attachment From the Server?"
 msgstr "De bijlage van de server verwijderen?"
 
 msgid ""
 "“{name}” will be removed from the message on the server. The rest of the "
-"message stays. This can’t be undone."
+"message stays. This cannot be undone."
 msgstr ""
 "“{name}” wordt verwijderd uit het bericht op de server. De rest van het "
 "bericht blijft staan. Dit kan niet ongedaan worden gemaakt."
@@ -265,7 +309,7 @@ msgstr "Alle berichten inklappen"
 msgid "Back to My Fonts and Colors"
 msgstr "Terug naar Mijn lettertypen en kleuren"
 
-msgid "Show Sender's Fonts and Colors"
+msgid "Show Sender’s Fonts and Colors"
 msgstr "Toon de lettertypen en kleuren van de afzender"
 
 msgid "Create Event from Selection…"
@@ -347,14 +391,14 @@ msgid "A group needs a name."
 msgstr "Een groep heeft een naam nodig."
 
 msgid ""
-"A group in this address book is kept on its people's cards, so it needs at "
+"A group in this address book is kept on its people’s cards, so it needs at "
 "least one person."
 msgstr ""
 "Een groep in dit adresboek wordt bijgehouden op de mensenkaarten, dus er is "
 "minimaal één persoon nodig."
 
-msgid "Hylki cannot change this kind of group"
-msgstr "Hylki kan dit soort groep niet veranderen"
+msgid "This kind of group cannot be changed here"
+msgstr ""
 
 msgid "Home"
 msgstr "Thuis"
@@ -404,8 +448,9 @@ msgstr "Afdeling"
 msgid "Job title"
 msgstr "Functietitel"
 
-msgid "Notes"
-msgstr "Opmerkingen"
+#. ---- note ----
+msgid "Note"
+msgstr "Let op"
 
 msgid "Birthday"
 msgstr "Verjaardag"
@@ -473,13 +518,14 @@ msgstr "Op deze computer"
 msgid "CardDAV Address Book"
 msgstr "CardDAV-adresboek"
 
-msgid "Enter the server's address."
+msgid "Enter the server’s address."
 msgstr "Voer het adres van de server in."
 
 msgid "“{text}” is not a server address."
 msgstr "“{text}” is geen serveradres."
 
-msgid "The address starts with https:// or http://."
+#, fuzzy
+msgid "The address must start with https:// or http://."
 msgstr "Het adres begint met https:// of http://."
 
 msgid "Enter the password to sign in."
@@ -488,10 +534,10 @@ msgstr "Voer het wachtwoord in om in te loggen."
 msgid "The server did not accept the user name or password."
 msgstr "De server heeft de gebruikersnaam of het wachtwoord niet geaccepteerd."
 
-msgid "The server's certificate could not be verified."
+msgid "The server’s certificate could not be verified."
 msgstr "Het certificaat van de server kon niet worden geverifieerd."
 
-msgid "The server's certificate could not be verified: {error}"
+msgid "The server’s certificate could not be verified: {error}"
 msgstr "Het certificaat van de server kan niet worden geverifieerd: {error}"
 
 msgid "Could not connect to the server."
@@ -526,20 +572,18 @@ msgstr "Dit adresboek is uitgeschakeld in Evolution."
 msgid "Evolution Data Server is not available"
 msgstr "Evolution Data Server is niet beschikbaar"
 
-msgid ""
-"The directory cannot be searched without signing in. Add a sign-in to it in "
-"Settings → Contacts."
+#, fuzzy
+msgid "The directory needs a sign-in. Add one in Settings → Contacts."
 msgstr ""
-"De map kan niet worden doorzocht zonder dat je je hebt aangemeld. Voeg een "
-"aanmelding toe in Instellingen → Contacten."
+"De map heeft een wachtwoord nodig. Voeg het toe via Instellingen → Contacten."
 
 msgid "The directory did not accept the password."
 msgstr "De map heeft het wachtwoord niet geaccepteerd."
 
-msgid "The directory's certificate could not be verified."
+msgid "The directory’s certificate could not be verified."
 msgstr "Het certificaat van de directory kan niet worden geverifieerd."
 
-msgid "The directory's certificate could not be verified: {error}"
+msgid "The directory’s certificate could not be verified: {error}"
 msgstr "Het certificaat van de map kan niet worden geverifieerd: {error}"
 
 msgid ""
@@ -560,7 +604,7 @@ msgstr ""
 "Kan StartTLS niet starten met {server}: de server biedt dit niet aan of het "
 "certificaat wordt niet vertrouwd."
 
-msgid "Could not reach {server}. Check the server's name and the network."
+msgid "Could not reach {server}. Check the server’s name and the network."
 msgstr ""
 "Kan {server} niet bereiken. Controleer de naam van de server en het netwerk."
 
@@ -610,20 +654,18 @@ msgid_plural "{n} people"
 msgstr[0] "{n} persoon"
 msgstr[1] "{n} personen"
 
-msgid "Enable Console mode in Settings → System & Appearance"
+#, fuzzy
+msgid "Turn on Console mode in Settings → System."
 msgstr "Schakel de consolemodus in via Instellingen → Systeem en uiterlijk"
 
 msgid ""
-"No templates yet. Save one from the composer's ⋯ menu with Save as Template."
+"No templates yet. Save one from the composer’s ⋯ menu with Save as Template."
 msgstr ""
 "Nog geen sjablonen. Kies ‘Opslaan als sjabloon’ in het ⋯-menu van het "
 "opstelvenster."
 
 msgid "New Message from Template"
 msgstr "Nieuw bericht van sjabloon"
-
-msgid "The new message starts as a copy of the template you pick."
-msgstr "Het nieuwe bericht begint als een kopie van de sjabloon die je kiest."
 
 msgid "Insert Template"
 msgstr "Sjabloon invoegen"
@@ -661,11 +703,13 @@ msgstr "Bericht weggegooid"
 msgid "Undo"
 msgstr "Ongedaan maken"
 
-msgid "No Drafts folder available for this account"
-msgstr "Er is geen map Concepten beschikbaar voor dit account"
+#, fuzzy
+msgid "This account has no Drafts folder."
+msgstr "POP3-accounts ondersteunen geen mappen"
 
-msgid "No Templates folder available for this account"
-msgstr "Er is geen map Sjablonen beschikbaar voor dit account"
+#, fuzzy
+msgid "This account has no Templates folder."
+msgstr "Dit account mag geen mappen op het hoogste niveau hebben."
 
 msgid "Empty “{name}”?"
 msgstr "Leeg “{name}”?"
@@ -673,9 +717,9 @@ msgstr "Leeg “{name}”?"
 msgid "Empty"
 msgstr "Legen"
 
-msgid "{count} message will be erased from the server. This can’t be undone."
+msgid "{count} message will be erased from the server. This cannot be undone."
 msgid_plural ""
-"{count} messages will be erased from the server. This can’t be undone."
+"{count} messages will be erased from the server. This cannot be undone."
 msgstr[0] ""
 "Het {count} bericht wordt van de server verwijderd. Dit kan niet ongedaan "
 "worden gemaakt."
@@ -684,7 +728,7 @@ msgstr[1] ""
 "worden gemaakt."
 
 msgid ""
-"Every message in it will be erased from the server. This can’t be undone."
+"Every message in it will be erased from the server. This cannot be undone."
 msgstr ""
 "Elk bericht daarin wordt van de server verwijderd. Dit kan niet ongedaan "
 "worden gemaakt."
@@ -696,7 +740,7 @@ msgid "Empty Junk in Every Account?"
 msgstr "Junk in elk account legen?"
 
 msgid ""
-"Every message in them will be erased from the server. This can’t be undone."
+"Every message in them will be erased from the server. This cannot be undone."
 msgstr ""
 "Elk bericht daarin wordt van de server verwijderd. Dit kan niet ongedaan "
 "worden gemaakt."
@@ -706,9 +750,10 @@ msgid_plural "{account}: {count} messages"
 msgstr[0] "{account}: {count} bericht"
 msgstr[1] "{account}: {count} berichten"
 
+#, fuzzy
 msgid ""
-"The forward of filter {rule} was refused. The message was left where it is "
-"and will be tried again"
+"The forward of filter {rule} was refused. The message stays where it is and "
+"will be tried again."
 msgstr ""
 "Het doorsturen door filter {rule} is geweigerd. Het bericht blijft staan en "
 "Hylki probeert het opnieuw."
@@ -815,14 +860,8 @@ msgstr "Filters toegepast"
 msgid "Close"
 msgstr "Sluiten"
 
-msgid "Unstar"
-msgstr "Ster weghalen"
-
 msgid "Create a folder inside {name}."
 msgstr "Maak een map binnen {name}."
-
-msgid "Create a new folder for this account."
-msgstr "Maak een nieuwe map voor dit account."
 
 msgid "New Folder"
 msgstr "Nieuwe map"
@@ -852,16 +891,16 @@ msgstr ""
 "De berichten worden naar de prullenbak verplaatst en de map wordt van de "
 "server verwijderd. Dit kan niet ongedaan worden gemaakt."
 
-msgid "This account can't have folders at the top level."
+msgid "This account cannot have folders at the top level."
 msgstr "Dit account mag geen mappen op het hoogste niveau hebben."
 
-msgid "Folders on this account can't hold other folders."
+msgid "Folders on this account cannot hold other folders."
 msgstr "Mappen in dit account kunnen geen andere mappen bevatten."
 
 msgid "Create Folder"
 msgstr "Map maken"
 
-msgid "{name} can't hold other folders."
+msgid "{name} cannot hold other folders."
 msgstr "{name} kan geen andere mappen bevatten."
 
 msgid "archive"
@@ -873,7 +912,7 @@ msgstr "afval"
 msgid "destination"
 msgstr "bestemming"
 
-msgid "A folder can't be moved into itself."
+msgid "A folder cannot be moved into itself."
 msgstr "Een map kan niet naar zichzelf worden verplaatst."
 
 msgid "Move Folder"
@@ -889,8 +928,9 @@ msgid "Always do this (change it in Settings → System → GNOME Files)"
 msgstr ""
 "Doe dit altijd (wijzig dit in Instellingen → Systeem → GNOME-bestanden)"
 
-msgid "Could not attach {names}: Hylki cannot read the file."
-msgid_plural "Could not attach {n} files (Hylki cannot read them): {names}"
+#, fuzzy
+msgid "Could not read {names}, so it was not attached."
+msgid_plural "Could not read {n} files, so they were not attached: {names}"
 msgstr[0] "Kon {names} niet bijvoegen: Hylki kan het bestand niet lezen."
 msgstr[1] "Kan {n} bestanden niet bijvoegen (Hylki kan ze niet lezen): {names}"
 
@@ -899,8 +939,8 @@ msgid_plural "Send {n} files with Hylki"
 msgstr[0] "{n} bestand versturen met Hylki"
 msgstr[1] "{n} bestanden versturen met Hylki"
 
-msgid "{names} ({size}). What should the files go into?"
-msgstr "{names} ({size}). Waar moeten de bestanden in staan?"
+msgid "{names} ({size}). Attach to a new message, a reply or a draft?"
+msgstr ""
 
 msgid "Reply to a Message…"
 msgstr "Een bericht beantwoorden…"
@@ -921,7 +961,7 @@ msgstr "Nog geen berichten om op te reageren."
 msgid "Reply With the Files"
 msgstr "Reageer met de bestanden"
 
-msgid "Large files"
+msgid "Large Files"
 msgstr "Grote bestanden"
 
 msgid ""
@@ -950,7 +990,8 @@ msgstr ""
 msgid "This message carries no calendar file to open."
 msgstr "Dit bericht bevat geen agendabestand om te openen."
 
-msgid "This invitation names no organiser to answer."
+#, fuzzy
+msgid "This invitation names no organizer to answer."
 msgstr ""
 "Op deze uitnodiging wordt geen organisator genoemd die moet antwoorden."
 
@@ -984,16 +1025,17 @@ msgstr "Je antwoord is verzonden: geweigerd."
 msgid "Retry"
 msgstr "Opnieuw proberen"
 
-msgid "Waiting for the keyring"
+msgid "Waiting for the Keyring"
 msgstr "Wachten op de sleutelhanger"
 
-msgid "Couldn’t read the password"
+msgid "Could Not Read the Password"
 msgstr "Kan het wachtwoord niet lezen"
 
 msgid "The keyring gave an error for {accounts}: {error}"
 msgstr "De sleutelhanger gaf een foutmelding voor {accounts}: {error}"
 
-msgid "The keyring hasn’t answered for {accounts}. Mail connects once it does."
+msgid ""
+"The keyring has not answered for {accounts}. Mail connects once it does."
 msgstr ""
 "De sleutelhanger heeft niet geantwoord voor {accounts}. Mail maakt "
 "verbinding zodra dit het geval is."
@@ -1011,10 +1053,12 @@ msgstr ""
 "Ontgrendel de sleutelhanger, bijvoorbeeld de login-sleutelhanger in "
 "Wachtwoorden en sleutels, en kies vervolgens Opnieuw proberen."
 
-msgid "Date (Newest first)"
+#, fuzzy
+msgid "Date (Newest First)"
 msgstr "Datum (nieuwste eerst)"
 
-msgid "Date (Oldest first)"
+#, fuzzy
+msgid "Date (Oldest First)"
 msgstr "Datum (oudste eerst)"
 
 msgid "Sender (A–Z)"
@@ -1023,10 +1067,12 @@ msgstr "Afzender (A-Z)"
 msgid "Subject (A–Z)"
 msgstr "Onderwerp (A–Z)"
 
-msgid "Unread first"
+#, fuzzy
+msgid "Unread First"
 msgstr "Ongelezen eerst"
 
-msgid "Starred first"
+#, fuzzy
+msgid "Starred First"
 msgstr "Met ster eerst"
 
 msgid "Clear Dates"
@@ -1113,7 +1159,8 @@ msgstr "Toon Postvak UIT"
 msgid "Actions"
 msgstr "Acties"
 
-msgid "Refresh or long-press for Status Bar"
+#, fuzzy
+msgid "Refresh, or long-press for the status bar"
 msgstr "Vernieuwen of lang indrukken voor statusbalk"
 
 msgid "Copying one message to On This Computer…"
@@ -1166,10 +1213,11 @@ msgstr "Verwijder permanent, zonder naar de prullenbak te gaan"
 msgid "Mark as spam"
 msgstr "Markeren als spam"
 
-msgid "Star or unstar"
-msgstr "Ster of ster verwijderen"
+#, fuzzy
+msgid "Star or remove star"
+msgstr "Ster geven of weghalen"
 
-msgid "Mark read or unread"
+msgid "Mark as read or unread"
 msgstr "Markeer als gelezen of ongelezen"
 
 msgid "Select this row (for a bulk action)"
@@ -1186,8 +1234,8 @@ msgstr "Verwijder elke tag"
 msgid "Print the message you are reading"
 msgstr "Druk het bericht af dat je aan het lezen bent"
 
-msgid "Preview it as a PDF first"
-msgstr "Bekijk het eerst als pdf"
+msgid "Preview before printing"
+msgstr ""
 
 msgid "Writing"
 msgstr "Schrijven"
@@ -1210,7 +1258,8 @@ msgstr "Ga naar Aan, Cc of Bcc en laat de rij zien"
 msgid "Back out of a reply and return to the list"
 msgstr "Ga terug uit een antwoord en ga terug naar de lijst"
 
-msgid "Emoji chooser, at the cursor"
+#, fuzzy
+msgid "Insert an emoji at the cursor"
 msgstr "Emoji-kiezer, bij de cursor"
 
 msgid "New paragraph (Return starts a new line, unless Settings swaps them)"
@@ -1227,10 +1276,10 @@ msgstr "Bekijk een voorbeeld van de gemarkeerde bijlage"
 msgid "Open the highlighted attachment"
 msgstr "Open de gemarkeerde bijlage"
 
-msgid "Previous or next in the gallery's preview"
+msgid "Previous or next in the gallery’s preview"
 msgstr "Vorige of volgende in het voorbeeld van de galerij"
 
-msgid "Close the gallery's preview"
+msgid "Close the gallery’s preview"
 msgstr "Sluit het voorbeeld van de galerij"
 
 msgid "Everything else"
@@ -1243,7 +1292,8 @@ msgstr ""
 msgid "Redo it (Ctrl+Y does the same)"
 msgstr "Opnieuw uitvoeren (Ctrl+Y doet hetzelfde)"
 
-msgid "Reveal the status bar (also: long-press Refresh)"
+#, fuzzy
+msgid "Show the status bar (also: long-press Refresh)"
 msgstr "Geef de statusbalk weer (ook: houd Vernieuwen lang ingedrukt)"
 
 msgid "Show or hide the accounts in the sidebar"
@@ -1252,25 +1302,30 @@ msgstr "Toon of verberg de accounts in de zijbalk"
 msgid "Check for new mail"
 msgstr "Controleren op nieuwe mail"
 
-msgid "Focus Mode on or off"
+#, fuzzy
+msgid "Turn Focus Mode on or off"
 msgstr "Focusmodus aan of uit"
 
-msgid "Fullscreen on or off"
+#, fuzzy
+msgid "Turn fullscreen on or off"
 msgstr "Volledig scherm aan of uit"
 
 msgid "Reading pane right of the list, below it, or off"
 msgstr "Leesvenster rechts van de lijst, eronder of uitgeschakeld"
 
-msgid "Message zoom in or out"
+#, fuzzy
+msgid "Zoom the message in or out"
 msgstr "Bericht in- of uitzoomen"
 
-msgid "Message zoom back to the default"
-msgstr "Berichtzoom terug naar de standaardwaarde"
+#, fuzzy
+msgid "Reset the message zoom"
+msgstr "Boven de berichten"
 
 msgid "Search the Settings window, when it is open"
 msgstr "Zoek in het venster Instellingen wanneer dit geopend is"
 
-msgid "Console mode (when enabled in Settings)"
+#, fuzzy
+msgid "Show the console (when Console mode is on in Settings)"
 msgstr "Consolemodus (indien ingeschakeld in Instellingen)"
 
 msgid "Close the window (background sync keeps running)"
@@ -1376,9 +1431,6 @@ msgstr "Actie"
 msgid "Reply to All"
 msgstr "Allen beantwoorden"
 
-msgid "Print"
-msgstr "Afdrukken"
-
 msgid "Find in Message"
 msgstr "Zoeken in bericht"
 
@@ -1406,17 +1458,21 @@ msgstr "Controleren op nieuwe mail"
 msgid "Search Messages"
 msgstr "Berichten zoeken"
 
-msgid "Show or Hide the Sidebar"
-msgstr "Toon of verberg de zijbalk"
+#, fuzzy
+msgid "Expand or Collapse the Sidebar"
+msgstr "Zijbalk samenvouwen"
 
-msgid "Reading Pane Right"
+#, fuzzy
+msgid "Show Reading Pane on the Right"
 msgstr "Leesvenster rechts"
 
-msgid "Reading Pane Below"
+#, fuzzy
+msgid "Show Reading Pane Below the List"
 msgstr "Leesvenster hieronder"
 
-msgid "Reading Pane Off"
-msgstr "Leesvenster uitgeschakeld"
+#, fuzzy
+msgid "Hide Reading Pane"
+msgstr "Leesvenster"
 
 msgid "Mail Accounts"
 msgstr "Mailaccounts"
@@ -1470,8 +1526,9 @@ msgstr "Jouw tags"
 msgid "Hide Status Bar"
 msgstr "Statusbalk verbergen"
 
-msgid "Reveal Status Bar"
-msgstr "Statusbalk onthullen"
+#, fuzzy
+msgid "Show Status Bar"
+msgstr "Statusbalk verbergen"
 
 msgid "Console"
 msgstr "Console"
@@ -1548,11 +1605,21 @@ msgstr "Instellingen importeren"
 msgid "Settings Imported"
 msgstr "Instellingen geïmporteerd"
 
+#, fuzzy
 msgid ""
-"{n} mail account(s), the cloud storage accounts and all preferences were "
-"imported. Restart Hylki to apply them. Passwords and sign-ins are not part "
-"of a backup; re-enter them on first use if this is a new machine."
-msgstr ""
+"{n} mail account, the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not in a "
+"backup: enter them again on a new computer."
+msgid_plural ""
+"{n} mail accounts, the cloud storage accounts and all preferences were "
+"imported. Restart Hylki to apply them. Passwords and sign-ins are not in a "
+"backup: enter them again on a new computer."
+msgstr[0] ""
+"{n} mailaccount(s), de cloudopslagaccounts en alle voorkeuren zijn "
+"geïmporteerd. Start Hylki opnieuw om ze toe te passen. Wachtwoorden en "
+"aanmeldingen maken geen deel uit van een back-up; voer ze bij het eerste "
+"gebruik opnieuw in als dit een nieuwe machine is."
+msgstr[1] ""
 "{n} mailaccount(s), de cloudopslagaccounts en alle voorkeuren zijn "
 "geïmporteerd. Start Hylki opnieuw om ze toe te passen. Wachtwoorden en "
 "aanmeldingen maken geen deel uit van een back-up; voer ze bij het eerste "
@@ -1567,11 +1634,13 @@ msgstr "Start Hylki opnieuw"
 msgid "Import failed: {e}"
 msgstr "Importeren mislukt: {e}"
 
-msgid "The renderer applies the next time Hylki starts."
+#, fuzzy
+msgid "The new renderer applies after app restarts."
 msgstr "De renderer wordt toegepast de volgende keer dat Hylki start."
 
-msgid "The language applies the next time Hylki starts."
-msgstr "De taal is van toepassing de volgende keer dat Hylki start."
+#, fuzzy
+msgid "The new language applies after app restarts."
+msgstr "Wijzigingen zijn van toepassing na een herstart."
 
 msgid "Edit this message"
 msgstr "Bewerk dit bericht"
@@ -1579,7 +1648,8 @@ msgstr "Bewerk dit bericht"
 msgid "Try to send this message now"
 msgstr "Probeer dit bericht nu te verzenden"
 
-msgid "Send all"
+#, fuzzy
+msgid "Send All"
 msgstr "Alles versturen"
 
 msgid "Delete {n} messages"
@@ -1594,15 +1664,16 @@ msgstr "Leesbevestiging"
 msgid "Read: {subject}"
 msgstr "Lees: {subject}"
 
+#, fuzzy
 msgid ""
 "This is a read receipt for the message sent to {to} on {date} with the "
-"subject \"{subject}\"."
+"subject “{subject}”."
 msgstr ""
 "Dit is een leesbevestiging voor het bericht dat naar {to} is verzonden op "
 "{date} met als onderwerp \"{subject}\"."
 
 msgid ""
-"It means the message was shown on the recipient's screen, not that it was "
+"It means the message was shown on the recipient’s screen, not that it was "
 "read or understood."
 msgstr ""
 "Het betekent dat het bericht op het scherm van de ontvanger werd "
@@ -1614,7 +1685,7 @@ msgstr "Gelezen door {reader}"
 msgid "Full Release Notes on GitHub"
 msgstr "Volledige releaseopmerkingen op GitHub"
 
-msgid "Delete this conversation?"
+msgid "Delete This Conversation?"
 msgstr "Dit gesprek verwijderen?"
 
 msgid ""
@@ -1633,13 +1704,13 @@ msgstr[1] ""
 msgid "Delete Conversation"
 msgstr "Gesprek verwijderen"
 
-msgid "Delete this message permanently?"
-msgid_plural "Delete {n} messages permanently?"
+msgid "Delete This Message Permanently?"
+msgid_plural "Delete {n} Messages Permanently?"
 msgstr[0] "Dit bericht definitief verwijderen?"
 msgstr[1] "{n} berichten definitief verwijderen?"
 
 msgid ""
-"It is already in Trash, so it will be erased from the server. This can’t be "
+"It is already in Trash, so it will be erased from the server. This cannot be "
 "undone."
 msgstr ""
 "Het bevindt zich al in de prullenbak, dus het wordt van de server "
@@ -1647,21 +1718,21 @@ msgstr ""
 
 msgid ""
 "They are already in Trash, so they will be erased from the server. This "
-"can’t be undone."
+"cannot be undone."
 msgstr ""
 "Ze staan al in de prullenbak, dus ze worden van de server verwijderd. Dit "
 "kan niet ongedaan worden gemaakt."
 
 msgid ""
-"It will be erased from the server instead of going to Trash. This can’t be "
+"It will be erased from the server instead of going to Trash. This cannot be "
 "undone."
 msgstr ""
 "Het wordt van de server verwijderd in plaats van naar de prullenbak te gaan. "
 "Dit kan niet ongedaan worden gemaakt."
 
 msgid ""
-"They will be erased from the server instead of going to Trash. This can’t be "
-"undone."
+"They will be erased from the server instead of going to Trash. This cannot "
+"be undone."
 msgstr ""
 "Ze worden van de server gewist in plaats van naar de prullenbak te gaan. Dit "
 "kan niet ongedaan worden gemaakt."
@@ -1711,8 +1782,10 @@ msgstr "Zoekbalk sluiten"
 msgid "Delete “{name}”?"
 msgstr "“{name}” verwijderen?"
 
+#, fuzzy
 msgid ""
-"The smart folder goes from the sidebar. The mail it shows stays where it is."
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
 msgstr ""
 "De slimme map komt uit de zijbalk. De getoonde e-mail blijft waar hij is."
 
@@ -1745,13 +1818,15 @@ msgid_plural "Moving {n} messages to {account}…"
 msgstr[0] "Eén bericht verplaatsen naar {account}…"
 msgstr[1] "{n} berichten verplaatsen naar {account}…"
 
-msgid "One message stayed put: this account can't take mail from another"
+#, fuzzy
+msgid "One message was not moved: this account cannot take mail from another"
 msgstr ""
 "Eén bericht bleef staan: dit account kan geen e-mail van een ander account "
 "ontvangen"
 
+#, fuzzy
 msgid ""
-"{foreign} messages stayed put: this account can't take mail from another"
+"{foreign} messages were not moved: this account cannot take mail from another"
 msgstr ""
 "{foreign}-berichten bleven staan: dit account kan geen e-mail van een ander "
 "account aannemen"
@@ -1765,11 +1840,11 @@ msgstr "Kon het concept niet ontsleutelen: {e}"
 msgid "Open Hylki"
 msgstr "Open Hylki"
 
-msgid "View all {n} unread in Inboxes…"
-msgstr "Alle {n} ongelezen bekijken in Postvak IN…"
-
-msgid "Accounts"
-msgstr "Accounts"
+#, fuzzy
+msgid "View All {n} Unread in Inboxes"
+msgid_plural "View All {n} Unread in Inboxes"
+msgstr[0] "Alle {n} ongelezen bekijken in Postvak IN…"
+msgstr[1] "Alle {n} ongelezen bekijken in Postvak IN…"
 
 msgid "No unread mail in Inboxes"
 msgstr "Geen ongelezen e-mail in Postvak IN"
@@ -1787,11 +1862,11 @@ msgstr ""
 "Je nieuwe app-pictogram toepassen. Hylki sluit en gaat over een ogenblik "
 "weer open."
 
-msgid "Restart to finish switching icons?"
+msgid "Restart to Finish Switching Icons?"
 msgstr "Opnieuw opstarten om het wisselen van iconen te voltooien?"
 
-msgid ""
-"The dock and Hylki's own windows keep the old icon until Hylki restarts."
+#, fuzzy
+msgid "The dock and the app’s own windows keep the old icon until it restarts."
 msgstr ""
 "Het dock en de eigen vensters van Hylki behouden het oude pictogram totdat "
 "Hylki opnieuw opstart."
@@ -1799,8 +1874,9 @@ msgstr ""
 msgid "Restart Now"
 msgstr "Start nu opnieuw op"
 
+#, fuzzy
 msgid ""
-"Couldn't restart automatically — quit and reopen Hylki to finish switching "
+"Could not restart automatically. Quit and reopen Hylki to finish switching "
 "the icon."
 msgstr ""
 "Kan niet automatisch opnieuw opstarten. Sluit Hylki af en open het opnieuw "
@@ -1815,19 +1891,21 @@ msgstr "Tag {name} toevoegen"
 msgid "Remove Tag {name}"
 msgstr "Verwijder tag {name}"
 
-msgid "Unsubscribe from {name}?"
+msgid "Unsubscribe From {name}?"
 msgstr "Afmelden voor {name}?"
 
+#, fuzzy
 msgid ""
-"Hylki will ask the list to stop sending you mail. A list can take a few days "
-"to act on the request."
+"An unsubscribe request will be sent to the list. A list can take a few days "
+"to update."
 msgstr ""
-"Hylki zal de lijst vragen om je geen e-mail meer te sturen. Het kan enkele "
-"dagen duren voordat een lijst op het verzoek reageert."
+"Er wordt vanuit {from} een uitschrijfverzoek verzonden naar {addr}. Het kan "
+"een paar dagen duren voordat er op een lijst actie wordt ondernomen."
 
+#, fuzzy
 msgid ""
 "An unsubscribe request will be sent to {addr} from {from}. A list can take a "
-"few days to act on it."
+"few days to update."
 msgstr ""
 "Er wordt vanuit {from} een uitschrijfverzoek verzonden naar {addr}. Het kan "
 "een paar dagen duren voordat er op een lijst actie wordt ondernomen."
@@ -1839,9 +1917,9 @@ msgstr ""
 "Deze lijst biedt geen directe manier om je af te melden. De afmeldpagina "
 "wordt geopend in je browser."
 
+#, fuzzy
 msgid ""
-"This message carries no unsubscribe header, so Hylki is going by the link in "
-"it."
+"This message has no unsubscribe header, so the link in it is used instead."
 msgstr "Dit bericht bevat geen uitschrijfkop, dus Hylki gebruikt de link erin."
 
 msgid "Unsubscribe"
@@ -1855,13 +1933,13 @@ msgstr[1] "Ook de {n} berichten van {addr} verwijderen"
 msgid "the message offers no way to unsubscribe"
 msgstr "het bericht biedt geen mogelijkheid om je af te melden"
 
-msgid "the list's mail address could not be read"
+msgid "the list’s mail address could not be read"
 msgstr "het e-mailadres van de lijst kon niet worden gelezen"
 
 msgid "Unsubscribed from {name}."
 msgstr "Afgemeld bij {name}."
 
-msgid "The list's unsubscribe page is open in your browser."
+msgid "The list’s unsubscribe page is open in your browser."
 msgstr "De afmeldpagina van de lijst is geopend in je browser."
 
 msgid "Save Message"
@@ -2119,7 +2197,7 @@ msgid "The encrypted block is damaged or not OpenPGP data."
 msgstr "Het gecodeerde blok is beschadigd of er zijn geen OpenPGP-gegevens."
 
 msgid ""
-"Signing key {id} came with the sender's mail or from their domain, not from "
+"Signing key {id} came with the sender’s mail or from their domain, not from "
 "your keyring; check its fingerprint with the sender before trusting it."
 msgstr ""
 "De ondertekeningssleutel {id} is meegeleverd met de e-mail van de afzender "
@@ -2192,7 +2270,7 @@ msgstr ""
 msgid "Signed with key {id}."
 msgstr "Gesigneerd met sleutel {id}."
 
-msgid "Import the sender's public key to verify it."
+msgid "Import the sender’s public key to verify it."
 msgstr "Importeer de openbare sleutel van de afzender om deze te verifiëren."
 
 msgid "Labeled"
@@ -2210,20 +2288,21 @@ msgstr "Vertrouwelijk"
 msgid "The sender marked this message “{label}”."
 msgstr "De afzender heeft dit bericht gemarkeerd met “{label}”."
 
+#, fuzzy
 msgid ""
-"The sender's organization labeled this message without naming the label in "
-"it. For a Microsoft 365 account, turning on “Show sensitivity label names” "
-"in its settings shows the name. Hylki shows the label but does not apply its "
-"rules."
+"The sender’s organization labeled this message without naming the label. For "
+"a Microsoft 365 account, turn on “Show sensitivity label names” in its "
+"settings to see the name. The label’s rules are not applied here."
 msgstr ""
 "De organisatie van de afzender heeft dit bericht gelabeld zonder het label "
 "erin te benoemen. Als je voor een Microsoft 365-account 'Namen van "
 "gevoeligheidslabels weergeven' in de instellingen inschakelt, wordt de naam "
 "weergegeven. Hylki toont het label, maar past de regels niet toe."
 
+#, fuzzy
 msgid ""
-"The sender's organization labeled this message “{label}”. Hylki shows the "
-"label but does not apply its rules."
+"The sender’s organization labeled this message “{label}”. The label’s rules "
+"are not applied here."
 msgstr ""
 "De organisatie van de afzender heeft dit bericht '{label}' genoemd. Hylki "
 "toont het label, maar past de regels niet toe."
@@ -2232,17 +2311,18 @@ msgstr ""
 msgid "gpgsm did not sign the message."
 msgstr "gpg heeft het bericht niet ondertekend."
 
-msgid "Nothing here proves this came from {from} — or that it didn't."
+#, fuzzy
+msgid "Nothing here proves this came from {from}, or that it did not."
 msgstr ""
 "Niets hier bewijst dat dit afkomstig was van {from} – of dat dit niet het "
 "geval was."
 
-msgid "These checks aren't known to come from your mail provider"
+msgid "These checks are not known to come from your mail provider"
 msgstr ""
 "Het is niet bekend of deze controles afkomstig zijn van je e-mailprovider"
 
 msgid ""
-"{from} checks out, but the addressing doesn't match the name on the message."
+"{from} checks out, but the addressing does not match the name on the message."
 msgstr ""
 "{from} klopt, maar de adressering komt niet overeen met de naam in het "
 "bericht."
@@ -2261,13 +2341,13 @@ msgid "This message carries a valid signature from {from}."
 msgstr "Dit bericht bevat een geldige handtekening van {from}."
 
 msgid ""
-"This message couldn't be confirmed as coming from {from}, and the checks "
+"This message could not be confirmed as coming from {from}, and the checks "
 "that ran on it failed."
 msgstr ""
 "Er kon niet worden bevestigd dat dit bericht afkomstig was van {from} en de "
 "controles daarop mislukten."
 
-msgid "Your mail provider didn't report any sender checks for this message."
+msgid "Your mail provider did not report any sender checks for this message."
 msgstr ""
 "Je e-mailprovider heeft geen afzendercontroles voor dit bericht "
 "gerapporteerd."
@@ -2302,7 +2382,8 @@ msgstr "Antwoorden gaan naar {reply}, niet naar {from}"
 msgid "Bounces would go to {rp}"
 msgstr "Bounces zouden naar {rp} gaan"
 
-msgid "The sender's name says \"{claimed}\" but the address is {from}"
+#, fuzzy
+msgid "The sender’s name says “{claimed}” but the address is {from}"
 msgstr "De naam van de afzender zegt \"{claimed}\", maar het adres is {from}"
 
 msgid "{used} of {limit} used"
@@ -2314,7 +2395,7 @@ msgstr "{free} gratis ({pct}%)"
 msgid "A folder needs a name."
 msgstr "Een map heeft een naam nodig."
 
-msgid "A folder name can't contain “{c}” on this account."
+msgid "A folder name cannot contain “{c}” on this account."
 msgstr "Een mapnaam voor dit account mag niet '{c}' bevatten."
 
 msgid "Encrypted message"
@@ -2326,23 +2407,36 @@ msgstr "Vandaag {time}"
 msgid "just now"
 msgstr "zojuist"
 
-msgid "{n} minutes ago"
-msgstr "{n} minuten geleden"
+#, fuzzy
+msgid "{n} minute ago"
+msgid_plural "{n} minutes ago"
+msgstr[0] "{n} minuten geleden"
+msgstr[1] "{n} minuten geleden"
 
 msgid "an hour ago"
 msgstr "een uur geleden"
 
-msgid "{n} hours ago"
-msgstr "{n} uur geleden"
+#, fuzzy
+msgid "{n} hour ago"
+msgid_plural "{n} hours ago"
+msgstr[0] "{n} uur geleden"
+msgstr[1] "{n} uur geleden"
 
 msgid "yesterday"
 msgstr "gisteren"
 
-msgid "{n} days ago"
-msgstr "{n} dagen geleden"
+#, fuzzy
+msgid "{n} day ago"
+msgid_plural "{n} days ago"
+msgstr[0] "{n} dagen geleden"
+msgstr[1] "{n} dagen geleden"
 
-msgid "Waiting since {ago}"
-msgstr "Wachten sinds {ago}"
+msgid "Queued {ago}"
+msgstr ""
+
+#, fuzzy
+msgid "(no recipients)"
+msgstr "Ontvangers tonen"
 
 msgid "Scheduled for {when}"
 msgstr "Gepland voor {when}"
@@ -2375,7 +2469,7 @@ msgid "Encrypted with OpenPGP"
 msgstr "Versleuteld met OpenPGP"
 
 msgid ""
-"Encrypted, and signed by {signer}, whose key is not for the sender's address "
+"Encrypted, and signed by {signer}, whose key is not for the sender’s address "
 "{addr}"
 msgstr ""
 "Gecodeerd en ondertekend door {signer}, waarvan de sleutel niet voor het "
@@ -2384,13 +2478,15 @@ msgstr ""
 msgid "Encrypted, and signed by {signer}"
 msgstr "Gecodeerd en ondertekend door {signer}"
 
+#, fuzzy
 msgid ""
-"Encrypted; the signature does not match, the message may have been altered"
+"Encrypted, but the signature does not match: the message may have been "
+"altered"
 msgstr ""
 "Gecodeerd; de handtekening komt niet overeen, het bericht is mogelijk "
 "gewijzigd"
 
-msgid "Encrypted; signed with a key you don't have ({id})"
+msgid "Encrypted; signed with a key you do not have ({id})"
 msgstr "Gecodeerd; ondertekend met een sleutel die je niet hebt ({id})"
 
 msgid "Encrypted, and signed by {signer} with an expired key"
@@ -2405,7 +2501,7 @@ msgstr "Gecodeerd en ondertekend door {signer}; de handtekening is verlopen"
 msgid "OpenPGP-signed; the signature could not be checked"
 msgstr "OpenPGP-ondertekend; de handtekening kon niet worden gecontroleerd"
 
-msgid "Signed by {signer}, whose key is not for the sender's address {addr}"
+msgid "Signed by {signer}, whose key is not for the sender’s address {addr}"
 msgstr ""
 "Ondertekend door {signer}, wiens sleutel niet het adres van de afzender is "
 "{addr}"
@@ -2417,7 +2513,7 @@ msgid "The OpenPGP signature does not match; the message may have been altered"
 msgstr ""
 "De OpenPGP-handtekening komt niet overeen; Het bericht is mogelijk gewijzigd"
 
-msgid "Signed with a key you don't have ({id})"
+msgid "Signed with a key you do not have ({id})"
 msgstr "Ondertekend met een sleutel die je niet hebt ({id})"
 
 msgid "Signed by {signer} with an expired key"
@@ -2465,7 +2561,7 @@ msgstr "Ondertekend, sleutel ingetrokken"
 msgid "Signature expired"
 msgstr "Handtekening verlopen"
 
-msgid "This message hasn't been checked."
+msgid "This message has not been checked."
 msgstr "Dit bericht is niet gecontroleerd."
 
 msgid "Harper is not available for this computer."
@@ -2477,7 +2573,7 @@ msgstr "Harper is niet gedownload. Download het via Instellingen → Componeren.
 msgid "Harper could not be started: {e}"
 msgstr "Harper kan niet worden gestart: {e}"
 
-msgid "Harper's answer could not be read."
+msgid "Harper’s answer could not be read."
 msgstr "Het antwoord van Harper kon niet worden gelezen."
 
 msgid "There is no folder to install to."
@@ -2489,7 +2585,8 @@ msgstr "Er is niet genoeg vrije ruimte: {size} is nodig."
 msgid "The download could not start: {e}"
 msgstr "De download kon niet starten: {e}"
 
-msgid "The download was cancelled."
+#, fuzzy
+msgid "The download was canceled."
 msgstr "Het downloaden is geannuleerd."
 
 msgid "The download stopped: {e}"
@@ -2509,16 +2606,16 @@ msgstr "De bestanden konden niet worden geschreven: {e}"
 msgid "{n} MB"
 msgstr "{n}MB"
 
-msgid "The server's answer could not be read."
+msgid "The server’s answer could not be read."
 msgstr "Het antwoord van de server kon niet worden gelezen."
 
 msgid "Nothing answers at that address. Check that the server is running."
 msgstr "Er antwoordt niets op dat adres. Controleer of de server actief is."
 
-msgid "The server's name could not be found."
+msgid "The server’s name could not be found."
 msgstr "De naam van de server kan niet worden gevonden."
 
-msgid "The server's address is not valid."
+msgid "The server’s address is not valid."
 msgstr "Het adres van de server is niet geldig."
 
 msgid "The server could not be reached: {e}"
@@ -2555,11 +2652,11 @@ msgstr "LanguageTool kan niet worden gestart."
 msgid "LanguageTool took too long to start."
 msgstr "Het starten van LanguageTool duurde te lang."
 
-msgid "Enter the LanguageTool server's address in Settings → Composing."
+msgid "Enter the LanguageTool server’s address in Settings → Composing."
 msgstr ""
 "Voer het adres van de LanguageTool-server in Instellingen → Componeren."
 
-msgid "Enter the server's address first."
+msgid "Enter the server’s address first."
 msgstr "Voer eerst het adres van de server in."
 
 msgid ""
@@ -2587,7 +2684,7 @@ msgstr ""
 "{reason} Als je organisatie je account beheert, kan een beheerder Hylki voor "
 "iedereen goedkeuren op {link}"
 
-msgid "The service's answer could not be read."
+msgid "The service’s answer could not be read."
 msgstr "Het antwoord van de dienst kon niet worden gelezen."
 
 msgid "The service could not be reached: {e}"
@@ -2596,13 +2693,13 @@ msgstr "De dienst was niet bereikbaar: {e}"
 msgid "The service did not accept the key."
 msgstr "De service heeft de sleutel niet geaccepteerd."
 
-msgid "This month's allowance is used up."
+msgid "This month’s allowance is used up."
 msgstr "Je hebt de limiet voor deze maand bereikt."
 
 msgid "The service refused the request (error {code})."
 msgstr "De dienst heeft het verzoek geweigerd (fout {code})."
 
-msgid "Enter the LibreTranslate server's address in Settings → Translation."
+msgid "Enter the LibreTranslate server’s address in Settings → Translation."
 msgstr ""
 "Voer het adres van de LibreTranslate-server in Instellingen → Vertaling in."
 
@@ -2619,14 +2716,16 @@ msgstr "Er is geen tekst om te vertalen."
 msgid "This message is too long to send for translation."
 msgstr "Dit bericht is te lang om ter vertaling te verzenden."
 
-msgid "This is too long to send for translation."
+#, fuzzy
+msgid "This text is too long to send for translation."
 msgstr "Dit is te lang om ter vertaling op te sturen."
 
 msgid "Mail"
 msgstr "E-mail"
 
-msgid "Use this account in Hylki"
-msgstr "Gebruik dit account in Hylki"
+#, fuzzy
+msgid "Use this account"
+msgstr "Schakel dit account in"
 
 msgid "GOA"
 msgstr "GOA"
@@ -2680,7 +2779,8 @@ msgstr "Adressen, gescheiden door komma's"
 msgid "Folder"
 msgstr "Map"
 
-msgid "Permanently deletes the message"
+#, fuzzy
+msgid "Permanently deletes the message."
 msgstr "Verwijdert het bericht definitief"
 
 msgid "Bring this folder back to the sidebar"
@@ -2692,7 +2792,7 @@ msgstr "Verzendt via {host}"
 msgid "Remove this alias"
 msgstr "Verwijder deze alias"
 
-msgid "Kept on the server; change it in your provider's webmail."
+msgid "Kept on the server; change it in your provider’s webmail."
 msgstr "Op de server bewaard; wijzig dit in de webmail van je provider."
 
 msgid "Edit Alias"
@@ -2720,7 +2820,7 @@ msgid "Own SMTP server"
 msgstr "Eigen SMTP-server"
 
 msgid ""
-"Needed when this account's provider, such as Gmail, rewrites the sender."
+"Needed when this account’s provider, such as Gmail, rewrites the sender."
 msgstr ""
 "Nodig wanneer de provider van dit account, zoals Gmail, de afzender "
 "herschrijft."
@@ -2746,7 +2846,7 @@ msgstr "Alleen wanneer deze server verzonden e-mail in dit account opslaat."
 msgid "Test SMTP"
 msgstr "SMTP testen"
 
-msgid "Names that share an address send through this account's server."
+msgid "Names that share an address send through this account’s server."
 msgstr ""
 "Namen die een adres delen, worden verzonden via de server van dit account."
 
@@ -2815,9 +2915,10 @@ msgstr ""
 "POP3-accounts hebben geen servermappen waarin een kopie kan worden "
 "opgeslagen."
 
+#, fuzzy
 msgid ""
-"Only for an account added in Hylki with Microsoft 365 / Outlook as the "
-"provider, not from GNOME Online Accounts."
+"Only for a Microsoft 365 / Outlook account added here, not one from GNOME "
+"Online Accounts."
 msgstr ""
 "Alleen voor een account toegevoegd in Hylki met Microsoft 365/Outlook als "
 "provider, niet vanuit GNOME Online Accounts."
@@ -2829,12 +2930,9 @@ msgstr ""
 "Vraagt Microsoft om toegang. Sommige organisaties hebben een beheerder nodig "
 "om dit goed te keuren."
 
-msgid ""
-"Switching this off returns the account to the import list. It stays in GNOME "
-"Online Accounts."
+msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
 msgstr ""
-"Als je dit uitschakelt, keert het account terug naar de importlijst. Het "
-"blijft in GNOME Online Accounts."
+"Uit zet het terug naar de importlijst. Het blijft in GNOME Online Accounts."
 
 msgid "Choose a Picture"
 msgstr "Kies een afbeelding"
@@ -2912,13 +3010,15 @@ msgstr "Filter toevoegen"
 msgid "Name (optional)"
 msgstr "Naam (optioneel)"
 
-msgid "Searched on the server; nothing is downloaded"
+#, fuzzy
+msgid "Searched on the server; nothing is downloaded."
 msgstr "Gezocht op de server; er wordt niets gedownload"
 
 msgid "From address when no Reply-To is set"
 msgstr "Van adres als er geen Reply-To is ingesteld"
 
-msgid "Looks in the system address books and the Hylki book"
+#, fuzzy
+msgid "Looks in the system address books and the Hylki Address Book."
 msgstr "Kijkt in de systeemadresboeken en het Hylki-boek"
 
 msgid "Tag with"
@@ -2930,7 +3030,8 @@ msgstr "Geen"
 msgid "Count unread mail"
 msgstr "Tel ongelezen e-mail"
 
-msgid "Include the folder's unread mail in the tray icon's unread count"
+#, fuzzy
+msgid "Adds the folder’s unread mail to the tray icon’s count."
 msgstr ""
 "Neem de ongelezen e-mail van de map op in het aantal ongelezen berichten in "
 "het systeemvakpictogram"
@@ -2943,7 +3044,7 @@ msgstr ""
 "vanaf hier wordt verzonden."
 
 msgid ""
-"Uses the original's folder at the time the reply is sent. Replies to mail in "
+"Uses the original’s folder at the time the reply is sent. Replies to mail in "
 "Sent, Drafts, Trash or Junk go with sent mail."
 msgstr ""
 "Gebruikt de map van het origineel op het moment dat het antwoord wordt "
@@ -2970,7 +3071,8 @@ msgstr "Server (hostnaam of URL)"
 msgid "Port (default 443)"
 msgstr "Poort (standaard 443)"
 
-msgid "Incoming Server"
+#, fuzzy
+msgid "Incoming server"
 msgstr "Inkomende server"
 
 msgid "Port (IMAP 993 / POP3 995)"
@@ -2985,7 +3087,8 @@ msgstr "Maildir-mappen importeren"
 msgid "Signed in as {address}, not {email}."
 msgstr "Aangemeld als {address}, niet als {email}."
 
-msgid "Enter a client ID (and endpoints for a custom provider) first"
+#, fuzzy
+msgid "Enter a client ID first, and the endpoints for a custom provider."
 msgstr ""
 "Voer eerst een client-ID (en eindpunten voor een aangepaste provider) in"
 
@@ -3038,12 +3141,8 @@ msgstr "Controleer GNOME Online Accounts op nieuwe accounts"
 msgid "Add Account…"
 msgstr "Account toevoegen…"
 
-msgid ""
-"Store mail in folders that live on this computer. Move or copy mail from any "
-"account to here."
+msgid "Move or copy mail here from any account."
 msgstr ""
-"Bewaar e-mail in mappen die op deze computer staan. Verplaats of kopieer e-"
-"mail van elk account naar hier."
 
 msgid "Add"
 msgstr "Toevoegen"
@@ -3069,8 +3168,9 @@ msgstr ""
 msgid "Smart Folders"
 msgstr "Slimme mappen"
 
+#, fuzzy
 msgid ""
-"Lists the messages that match its conditions. Shown in the sidebar under the "
+"Each lists the messages that match its conditions, in the sidebar under the "
 "unified rows."
 msgstr ""
 "Geeft een overzicht van de berichten die aan de voorwaarden voldoen. Getoond "
@@ -3097,8 +3197,12 @@ msgstr "Oké"
 msgid "Tags Found"
 msgstr "Labels gevonden"
 
-msgid "{n} tags are in use in your mailboxes but not set up here."
-msgstr ""
+#, fuzzy
+msgid "{n} tag is in use in your mailboxes but not set up here."
+msgid_plural "{n} tags are in use in your mailboxes but not set up here."
+msgstr[0] ""
+"{n} tags worden in je mailboxen gebruikt, maar zijn hier niet ingesteld."
+msgstr[1] ""
 "{n} tags worden in je mailboxen gebruikt, maar zijn hier niet ingesteld."
 
 msgid "Import Selected"
@@ -3107,8 +3211,10 @@ msgstr "Geselecteerd importeren"
 msgid "Import All"
 msgstr "Alles importeren"
 
-msgid "{n} messages"
-msgstr "{n} berichten"
+msgid "{n} message"
+msgid_plural "{n} messages"
+msgstr[0] "{n} bericht"
+msgstr[1] "{n} berichten"
 
 msgid "Toggles the tag on a message (with single-key shortcuts on)"
 msgstr ""
@@ -3128,7 +3234,7 @@ msgid "Keyword"
 msgstr "Trefwoord"
 
 msgid ""
-"How the server stores the tag, without spaces. Thunderbird's built-in tags "
+"How the server stores the tag, without spaces. Thunderbird’s built-in tags "
 "are $label1 to $label5."
 msgstr ""
 "Hoe de server de tag opslaat, zonder spaties. De ingebouwde tags van "
@@ -3149,10 +3255,10 @@ msgstr "Heeft een app-wachtwoord nodig, niet je inlogwachtwoord."
 msgid "Enter your server details manually."
 msgstr "Voer je servergegevens handmatig in."
 
-msgid "Enter your provider's OAuth endpoints, then sign in."
+msgid "Enter your provider’s OAuth endpoints, then sign in."
 msgstr "Voer de OAuth-eindpunten van je provider in en log vervolgens in."
 
-msgid "Your JMAP server's address or session URL. No SMTP settings needed."
+msgid "Your JMAP server’s address or session URL. No SMTP settings needed."
 msgstr ""
 "Het adres of de sessie-URL van je JMAP-server. Geen SMTP-instellingen nodig."
 
@@ -3169,7 +3275,7 @@ msgstr ""
 "Meld je aan met een API-token gemaakt in Fastmail onder Privacy & "
 "Beveiliging, met toegang tot mail en verzenden."
 
-msgid "Your Stalwart server's address. No SMTP settings needed."
+msgid "Your Stalwart server’s address. No SMTP settings needed."
 msgstr "Het adres van je Stalwart-server. Geen SMTP-instellingen nodig."
 
 msgid "Enable POP/IMAP access in GMX settings first."
@@ -3199,12 +3305,14 @@ msgstr "IMAP/POP3-account op {host}"
 msgid "Mail account"
 msgstr "Mail-account"
 
-msgid "Enter a client ID and sign in before saving"
+#, fuzzy
+msgid "Enter a client ID and sign in before saving."
 msgstr "Voer een klant-ID in en meld je aan voordat je opslaat"
 
+#, fuzzy
 msgid ""
-"Remove {name} from Hylki? Its folders and the mail in them stay on this "
-"computer, in {dir}, and come back if it is added again."
+"Remove {name}? Its folders and the mail in them stay on this computer, in "
+"{dir}, and come back if it is added again."
 msgstr ""
 "{name} verwijderen van Hylki? De mappen en de e-mail daarin blijven op deze "
 "computer staan, in {dir}, en komen terug als deze opnieuw wordt toegevoegd."
@@ -3217,7 +3325,7 @@ msgstr ""
 msgid "Edit HTML"
 msgstr "HTML bewerken"
 
-msgid "Edit the signature's HTML source"
+msgid "Edit the signature’s HTML source"
 msgstr "Bewerk de HTML-bron van de handtekening"
 
 msgid "Follow Settings"
@@ -3325,8 +3433,8 @@ msgstr "Slimme map bewerken"
 msgid "Add Smart Folder"
 msgstr "Slimme map toevoegen"
 
-msgid "Those in the unified section."
-msgstr "Degenen in de verenigde sectie."
+msgid "“All accounts” means those in All Inboxes."
+msgstr ""
 
 msgid "Folders"
 msgstr "Mappen"
@@ -3358,8 +3466,9 @@ msgstr "Verwijderen van server…"
 msgid "Key imported"
 msgstr "Sleutel geïmporteerd"
 
+#, fuzzy
 msgid ""
-"The key is in your keyring now. Trust it under Settings, OpenPGP, once you "
+"The key is in your keyring now. Trust it under Settings → OpenPGP, once you "
 "have checked its fingerprint with its owner."
 msgstr ""
 "De sleutel zit nu in je sleutelhanger. Vertrouw het onder Instellingen, "
@@ -3367,9 +3476,6 @@ msgstr ""
 
 msgid "Already in your keyring"
 msgstr "Zit al in je sleutelhanger"
-
-msgid "That key was imported before."
-msgstr "Die sleutel is eerder geïmporteerd."
 
 msgid "Could not import the key"
 msgstr "Kan de sleutel niet importeren"
@@ -3394,11 +3500,11 @@ msgstr[1] "{n} bijlagen"
 msgid "Thumbnail size"
 msgstr "Miniatuurgrootte"
 
-msgid "Sorted Z to A — switch to A to Z"
-msgstr "Gesorteerd van Z tot A — schakel over naar A tot Z"
+msgid "Sort A to Z"
+msgstr ""
 
-msgid "Sorted A to Z — switch to Z to A"
-msgstr "Gesorteerd van A tot Z — schakel over naar Z tot A"
+msgid "Sort Z to A"
+msgstr ""
 
 msgid "Show as thumbnails"
 msgstr "Toon als miniaturen"
@@ -3408,9 +3514,6 @@ msgstr "Toon als een lijst"
 
 msgid "Save All…"
 msgstr "Bewaar alles…"
-
-msgid "Save every attachment to a folder"
-msgstr "Bewaar elke bijlage in een map"
 
 msgid "Save Attachment"
 msgstr "Bijlage opslaan"
@@ -3458,8 +3561,11 @@ msgstr "Onbekend"
 
 #. Deliberately counts messages, not attachments: until a message has
 #. been described there is no telling how many files it holds.
-msgid "Indexing {n} messages…"
-msgstr "{n} berichten indexeren…"
+#, fuzzy
+msgid "Indexing {n} message…"
+msgid_plural "Indexing {n} messages…"
+msgstr[0] "{n} berichten indexeren…"
+msgstr[1] "{n} berichten indexeren…"
 
 msgid "Loading more…"
 msgstr "Meer laden…"
@@ -3494,12 +3600,6 @@ msgstr "Typ"
 
 msgid "Size"
 msgstr "Grootte"
-
-msgid "Thumbnail grid"
-msgstr "Miniatuurraster"
-
-msgid "Table"
-msgstr "Tabel"
 
 msgid "Show only this account"
 msgstr "Toon alleen dit account"
@@ -3579,11 +3679,9 @@ msgstr "Volgende"
 msgid "Open in the default app"
 msgstr "Openen in de standaardapp"
 
-msgid "Waiting for the Keyring"
-msgstr "Wachten op de sleutelhanger"
-
+#, fuzzy
 msgid ""
-"Mail stored on this computer is encrypted with a key stored in the keyring. "
+"Mail kept on this computer is encrypted with a key stored in the keyring. "
 "Unlock the keyring if it asks."
 msgstr ""
 "E-mail die op deze computer is opgeslagen, wordt gecodeerd met een sleutel "
@@ -3674,7 +3772,7 @@ msgstr ""
 "Probeer het opnieuw of reset de cache om je e-mail opnieuw te downloaden."
 
 msgid ""
-"Mail that exists only on this computer is lost: a POP3 account's mail, and "
+"Mail that exists only on this computer is lost: a POP3 account’s mail, and "
 "unsent mail in the Outbox."
 msgstr ""
 "E-mail die alleen op deze computer bestaat, gaat verloren: de e-mail van een "
@@ -3835,12 +3933,8 @@ msgstr "Map uploaden"
 msgid "Server is behind Cloudflare"
 msgstr "Server staat achter Cloudflare"
 
-msgid ""
-"For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 MB "
-"pieces."
+msgid "Files over 100 MB are uploaded in 90 MB pieces."
 msgstr ""
-"Voor een zelfgehoste server achter Cloudflare: bestanden groter dan 100 MB "
-"worden in stukken van 90 MB verhoogd."
 
 msgid "Links expire after"
 msgstr "Links verlopen daarna"
@@ -3857,19 +3951,19 @@ msgstr "Elk bestand krijgt een eigen wachtwoord, dat je moet doorgeven."
 msgid "Link defaults"
 msgstr "Standaardinstellingen voor koppelingen"
 
-msgid "Used unless you change them in the upload dialog for one email."
-msgstr ""
-"Wordt gebruikt tenzij je ze wijzigt in het uploaddialoogvenster voor één e-"
-"mail."
+#, fuzzy
+msgid "The upload dialog can change them for one message."
+msgstr "De schakelaar van de header verandert nog steeds het open bericht."
 
-msgid "Check Connection"
-msgstr "Controleer verbinding"
+msgid "Test Connection"
+msgstr "Verbinding testen"
 
 msgid "{email} (Files is off)"
 msgstr "{email} (Bestanden staan uit)"
 
+#, fuzzy
 msgid ""
-"No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings, "
+"No Microsoft 365 account in GNOME Online Accounts yet. Add one in Settings → "
 "Online Accounts."
 msgstr ""
 "Nog geen Microsoft 365-account in GNOME Online Accounts. Voeg er een toe in "
@@ -3900,7 +3994,7 @@ msgstr ""
 "Elk bestand krijgt een eigen wachtwoord, dat je moet doorgeven. Vereist "
 "Microsoft 365 of OneDrive voor Bedrijven."
 
-msgid "User name"
+msgid "Username"
 msgstr "Gebruikersnaam"
 
 msgid "App password (leave empty to keep)"
@@ -3908,9 +4002,6 @@ msgstr "App-wachtwoord (leeg laten om te behouden)"
 
 msgid "App password"
 msgstr "App-wachtwoord"
-
-msgid "E-mail"
-msgstr "E-mail"
 
 msgid "Password (leave empty to keep)"
 msgstr "Wachtwoord (leeg laten om te behouden)"
@@ -3934,7 +4025,7 @@ msgid ""
 "sharing.write, then press Submit.\n"
 "5. On Settings, under OAuth 2, add the redirect URI {uri} and press Add.\n"
 "6. Copy the App key into the field above.\n"
-"Development status is enough. Leave the field empty to use this build's own "
+"Development status is enough. Leave the field empty to use this build’s own "
 "key, if it has one."
 msgstr ""
 "Dropbox heeft een app nodig die op jou is geregistreerd: \n"
@@ -3965,7 +4056,8 @@ msgstr "Voer eerst de app-sleutel van een Dropbox-app in."
 msgid "Waiting for the sign-in in your browser…"
 msgstr "Wachten op inloggen in je browser…"
 
-msgid "Fill in the server URL, e-mail and password first."
+#, fuzzy
+msgid "Fill in the server URL, email and password first."
 msgstr "Vul eerst de server-URL, het e-mailadres en het wachtwoord in."
 
 msgid "Fill in the server URL, user name and app password first."
@@ -4026,7 +4118,7 @@ msgid "Remove {name}?"
 msgstr "{name} verwijderen?"
 
 msgid ""
-"Files already uploaded and links sent stay active on the provider's service."
+"Files already uploaded and links sent stay active on the provider’s service."
 msgstr ""
 "Reeds geüploade bestanden en verzonden links blijven actief op de service "
 "van de provider."
@@ -4043,8 +4135,11 @@ msgstr "Cloudaccount bewerken"
 msgid "Add Cloud Account"
 msgstr "Cloudaccount toevoegen"
 
-msgid "links expire after {n} days"
-msgstr "links verlopen na {n} dagen"
+#, fuzzy
+msgid "links expire after {n} day"
+msgid_plural "links expire after {n} days"
+msgstr[0] "links verlopen na {n} dagen"
+msgstr[1] "links verlopen na {n} dagen"
 
 msgid "password-protected"
 msgstr "wachtwoord beveiligd"
@@ -4085,7 +4180,7 @@ msgstr "Buiten je eigen domeinen"
 msgid "Not now"
 msgstr "Nu even niet"
 
-msgid "Accept or reject the AI agent's suggested changes first."
+msgid "Accept or reject the AI agent’s suggested changes first."
 msgstr "Accepteer of wijs eerst de voorgestelde wijzigingen van de AI-agent."
 
 msgid "Wait for the translation to come back, then accept the changes."
@@ -4113,7 +4208,7 @@ msgstr "CC:"
 msgid "Subject:"
 msgstr "Onderwerp:"
 
-msgid "Accepting removes this text's formatting, links and pictures."
+msgid "Accepting removes this text’s formatting, links and pictures."
 msgstr ""
 "Als je accepteert, worden de opmaak, koppelingen en afbeeldingen van deze "
 "tekst verwijderd."
@@ -4130,7 +4225,7 @@ msgstr "Toegevoegd, buiten je eigen domeinen"
 msgid "Added"
 msgstr "Toegevoegd"
 
-msgid "Send without an attachment?"
+msgid "Send Without an Attachment?"
 msgstr "Versturen zonder bijlage?"
 
 msgid "The message mentions “{word}”, but nothing is attached."
@@ -4170,26 +4265,22 @@ msgstr[1] "Upload {n} bestanden en plaats hun deellinks in het bericht."
 msgid "Upload"
 msgstr "Uploaden"
 
-msgid "Days; 0 keeps the link indefinitely"
-msgstr "Dagen; 0 behoudt de link voor onbepaalde tijd"
-
-msgid "Protect with a password"
-msgstr "Bescherm met een wachtwoord"
-
-msgid "Download password (empty: generated)"
+#, fuzzy
+msgid "Download password (leave empty to generate one)"
 msgstr "Wachtwoord downloaden (leeg: gegenereerd)"
 
 msgid "link expires {date}"
 msgstr "link verloopt {date}"
 
-msgid "Could not upload {name}"
+msgid "Could Not Upload {name}"
 msgstr "Kan {name} niet uploaden"
 
-msgid "Not signed in"
+msgid "Not Signed In"
 msgstr "Niet aangemeld"
 
+#, fuzzy
 msgid ""
-"The sign-in for {name} is not in the keyring. Open Settings, Cloud Storage, "
+"The sign-in for {name} is not in the keyring. Open Settings → Cloud Storage, "
 "and enter it again."
 msgstr ""
 "De login voor {name} staat niet in de sleutelhanger. Open Instellingen, "
@@ -4213,7 +4304,7 @@ msgstr "Formatteer terwijl je typt; het wordt verzonden als HTML"
 msgid "Write Markdown; it is sent as formatted mail"
 msgstr "Schrijf afwaardering; het wordt verzonden als opgemaakte e-mail"
 
-msgid "Write the message's HTML by hand"
+msgid "Write the message’s HTML by hand"
 msgstr "Schrijf de HTML van het bericht met de hand"
 
 msgid "No formatting at all"
@@ -4238,7 +4329,7 @@ msgstr "Lichte/donkere modus"
 msgid "Writing in {format}"
 msgstr "Schrijven in {format}"
 
-msgid "Switch to plain text?"
+msgid "Switch to Plain Text?"
 msgstr "Overstappen op platte tekst?"
 
 msgid "Formatting, images and links are removed."
@@ -4256,7 +4347,7 @@ msgstr "Samenvouwen in leesweergave"
 msgid "Open in window"
 msgstr "Openen in een venster"
 
-msgid "Save the template?"
+msgid "Save the Template?"
 msgstr "De sjabloon opslaan?"
 
 msgid ""
@@ -4267,7 +4358,7 @@ msgstr ""
 msgid "Save Template"
 msgstr "Sjabloon opslaan"
 
-msgid "Save the message?"
+msgid "Save the Message?"
 msgstr "Het bericht opslaan?"
 
 msgid "It has not been sent. Save it to Drafts to finish later, or discard it."
@@ -4290,7 +4381,7 @@ msgstr "Contacten openen"
 msgid "Sign with your OpenPGP key"
 msgstr "Onderteken met je OpenPGP-sleutel"
 
-msgid "Encrypt with OpenPGP to every recipient's key"
+msgid "Encrypt with OpenPGP to every recipient’s key"
 msgstr "Versleutel met OpenPGP naar de sleutel van elke ontvanger"
 
 msgid "Show Cc, Bcc and Reply-To"
@@ -4317,7 +4408,7 @@ msgstr "OpenPGP-sleutel in je sleutelhanger."
 msgid "OpenPGP key sent with their mail (Autocrypt)."
 msgstr "OpenPGP-sleutel verzonden met hun e-mail (Autocrypt)."
 
-msgid "OpenPGP key passed on in someone else's encrypted mail."
+msgid "OpenPGP key passed on in someone else’s encrypted mail."
 msgstr "OpenPGP-sleutel doorgegeven in de gecodeerde e-mail van iemand anders."
 
 msgid "OpenPGP key published by their mail domain (WKD)."
@@ -4326,18 +4417,19 @@ msgstr "OpenPGP-sleutel gepubliceerd door hun e-maildomein (WKD)."
 msgid "OpenPGP key from the keyserver keys.openpgp.org."
 msgstr "OpenPGP-sleutel van de sleutelserver keyservers.openpgp.org."
 
-msgid "Cannot merge an encrypted message"
+msgid "Cannot Merge an Encrypted Message"
 msgstr "Kan een gecodeerd bericht niet samenvoegen"
 
-msgid "Each message would need its recipient's key. Turn off Encrypt to merge."
+msgid "Each message would need its recipient’s key. Turn off Encrypt to merge."
 msgstr ""
 "Voor elk bericht is de sleutel van de ontvanger nodig. Schakel Versleutelen "
 "uit om samen te voegen."
 
-msgid "Check the From address"
+msgid "Check the From Address"
 msgstr "Controleer het Van-adres"
 
-msgid "Insert Merge Field"
+#, fuzzy
+msgid "Insert merge field"
 msgstr "Samenvoegveld invoegen"
 
 msgid "Contact Groups"
@@ -4346,28 +4438,31 @@ msgstr "Contactgroepen"
 msgid "Choose a CSV File…"
 msgstr "Kies een CSV-bestand…"
 
+#, fuzzy
 msgid ""
-"There is no OpenPGP key of your own for {addr}. Generate one under Settings, "
-"OpenPGP, or choose a key in the account's settings."
+"There is no OpenPGP key of your own for {addr}. Generate one under Settings "
+"→ OpenPGP, or choose a key in the account’s settings."
 msgstr ""
 "Er is geen eigen OpenPGP-sleutel voor {addr}. Genereer er een onder "
 "Instellingen, OpenPGP, of kies een sleutel in de accountinstellingen."
 
+#, fuzzy
 msgid ""
 "There is no OpenPGP key for {addr}. Ask them for their public key, or fetch "
-"it under Settings, OpenPGP."
+"it under Settings → OpenPGP."
 msgstr ""
 "Er is geen OpenPGP-sleutel voor {addr}. Vraag hen om hun publieke sleutel, "
 "of haal deze op onder Instellingen, OpenPGP."
 
-msgid "Encrypt to keys you have not checked?"
+msgid "Encrypt to Keys You Have Not Checked?"
 msgstr "Versleutelen met sleutels die je niet hebt gecontroleerd?"
 
+#, fuzzy
 msgid ""
 "Nothing confirms that the keys for {addresses} belong to them. If one is "
-"someone else's, that person can read this message and the recipient cannot. "
+"someone else’s, that person can read this message and the recipient cannot. "
 "To check a key, compare its fingerprint with its owner and trust it under "
-"Settings, OpenPGP. Send Anyway does not ask about these keys again."
+"Settings → OpenPGP. Send Anyway does not ask about these keys again."
 msgstr ""
 "Niets bevestigt dat de sleutels voor {addresses} van hen zijn. Als het "
 "bericht van iemand anders is, kan die persoon dit bericht lezen en de "
@@ -4387,14 +4482,15 @@ msgstr "De Van moet één adres zijn, bijvoorbeeld Ann <ann@example.com>."
 msgid "“{address}” is not an email address."
 msgstr "“{address}” is geen e-mailadres."
 
-msgid "Cannot send with OpenPGP"
+msgid "Cannot Send With OpenPGP"
 msgstr "Kan niet verzenden met OpenPGP"
 
-msgid "An attachment is missing"
+msgid "An Attachment Is Missing"
 msgstr "Er ontbreekt een bijlage"
 
+#, fuzzy
 msgid ""
-"Hylki cannot read {names}. It was moved or deleted after it was attached. "
+"{names} cannot be read. It was moved or deleted after it was attached. "
 "Remove it, or attach it again from where it is now."
 msgstr ""
 "Hylki kan {names} niet lezen. Het is verplaatst of verwijderd nadat het was "
@@ -4413,13 +4509,11 @@ msgstr ""
 "“{addr}” is een samenvoegveld. Verzenden met Afdruk samenvoegen…, in het "
 "menu naast Verzenden."
 
-msgid "“{addr}” is not an email address."
-msgstr "“{addr}” is geen e-mailadres."
-
-msgid "Check the address"
+msgid "Check the Address"
 msgstr "Controleer het adres"
 
-msgid "Send now"
+#, fuzzy
+msgid "Send Now"
 msgstr "Nu versturen"
 
 msgid "Tomorrow morning ({time})"
@@ -4461,7 +4555,8 @@ msgstr "Toon het bericht zoals het wordt verzonden"
 msgid "Translate what you wrote"
 msgstr "Vertaal wat je hebt geschreven"
 
-msgid "Insert Signature"
+#, fuzzy
+msgid "Insert signature"
 msgstr "Handtekening invoegen"
 
 msgid "No Signature"
@@ -4491,7 +4586,7 @@ msgstr "Andere talen"
 msgid "Translate into"
 msgstr "Vertalen naar"
 
-msgid "Not translated"
+msgid "Not Translated"
 msgstr "Niet vertaald"
 
 msgid ""
@@ -4500,13 +4595,13 @@ msgstr ""
 "Dit bericht is gecodeerd, dus de tekst ervan wordt niet ter vertaling "
 "verzonden."
 
-msgid "Nothing to translate yet"
+msgid "Nothing to Translate Yet"
 msgstr "Nog niets te vertalen"
 
 msgid "Write something first, or select the text to translate."
 msgstr "Schrijf eerst iets of selecteer de tekst die je wilt vertalen."
 
-msgid "Could not translate"
+msgid "Could Not Translate"
 msgstr "Kon niet vertalen"
 
 msgid "Save to Templates"
@@ -4538,9 +4633,6 @@ msgstr "Opties verzenden"
 
 msgid "Show From, To and Subject"
 msgstr "Toon Van, Tot en Onderwerp"
-
-msgid "Send now instead"
-msgstr "Stuur nu in plaats daarvan"
 
 msgid "Download password for {name}: {password}"
 msgstr "Wachtwoord voor {name} downloaden: {password}"
@@ -4577,11 +4669,6 @@ msgid_plural "{n} selected"
 msgstr[0] "{n} geselecteerd"
 msgstr[1] "{n} geselecteerd"
 
-msgid "{n} message"
-msgid_plural "{n} messages"
-msgstr[0] "{n} bericht"
-msgstr[1] "{n} berichten"
-
 msgid "Reading your mail…"
 msgstr "Je mail lezen…"
 
@@ -4600,7 +4687,8 @@ msgstr "Koppel een kolom aan een naam, een e-mailadres of een telefoonnummer."
 msgid "Import Contacts"
 msgstr "Contacten importeren"
 
-msgid "Keeps no groups: their names stay on each contact."
+#, fuzzy
+msgid "This book has no groups. Group names stay on each contact."
 msgstr "Houdt geen groepen bij: hun namen blijven bij elk contact staan."
 
 msgid "Not imported"
@@ -4623,11 +4711,13 @@ msgstr ""
 msgid "Address books"
 msgstr "Adresboeken"
 
-msgid "Rename a book for Hylki, or switch it off to leave it out."
+#, fuzzy
+msgid "Rename a book here, or switch it off to leave it out."
 msgstr "Hernoem een boek voor Hylki, of schakel het uit om het weg te laten."
 
-msgid "Use in Hylki"
-msgstr "Gebruik in Hylki"
+#, fuzzy
+msgid "Use this address book"
+msgstr "{n} adresboek"
 
 msgid "Address book"
 msgstr "Adresboek"
@@ -4637,9 +4727,6 @@ msgstr "Server"
 
 msgid "Sign-in"
 msgstr "Inloggen"
-
-msgid "Password (saved; type to replace it)"
-msgstr "Wachtwoord (opgeslagen; typ om het te vervangen)"
 
 msgid "Enter the user name."
 msgstr "Voer de gebruikersnaam in."
@@ -4680,7 +4767,7 @@ msgstr "Laat dit leeg voor een directory waarvoor geen aanmelding nodig is."
 msgid "Sign in as, such as cn=jane,ou=people,dc=example,dc=com"
 msgstr "Meld je aan als, zoals cn=jane,ou=people,dc=example,dc=com"
 
-msgid "Enter the directory's server."
+msgid "Enter the directory’s server."
 msgstr "Voer de server van de directory in."
 
 msgid "The server took too long to answer."
@@ -4719,27 +4806,18 @@ msgstr ""
 "Google en Microsoft 365 loggen in via GNOME Online Accounts. Voeg daar het "
 "account toe met Contacten ingeschakeld en het wordt hier vermeld."
 
-msgid "Kept in Hylki's own data folder. Works without GNOME."
+#, fuzzy
+msgid "Kept in the app’s own data folder. Works without GNOME."
 msgstr "Bewaarde in Hylki's eigen gegevensmap. Werkt zonder GNOME."
-
-msgid "Contacts in the Hylki book"
-msgstr "Contacten in het Hylki-boek"
 
 msgid "Import vCard or CSV files"
 msgstr "Importeer vCard- of CSV-bestanden"
 
-msgid ""
-"Adds contacts from .vcf or .csv files. Importing a file again updates "
-"existing entries."
+msgid "Importing a file again updates its contacts."
 msgstr ""
-"Voegt contacten toe vanuit .vcf- of .csv-bestanden. Als je een bestand "
-"opnieuw importeert, worden bestaande vermeldingen bijgewerkt."
 
 msgid "Export as a vCard file"
 msgstr "Exporteer als een vCard-bestand"
-
-msgid "Saves every contact in the Hylki book in one .vcf file."
-msgstr "Bewaart elk contact in het Hylki-boek in één .vcf-bestand."
 
 msgid "Delete all contacts"
 msgstr "Verwijder alle contacten"
@@ -4787,23 +4865,21 @@ msgstr[1] "{n} adresboeken gevonden op {name}"
 msgid "Connected to {name}"
 msgstr "Verbonden met {name}"
 
-msgid "Use an app-specific password, not your usual one."
-msgstr ""
-"Gebruik een app-specifiek wachtwoord, niet je gebruikelijke wachtwoord."
-
 msgid "CardDAV Server"
 msgstr "CardDAV-server"
 
+#, fuzzy
 msgid ""
-"The server's address is usually enough. Two-step sign-in needs an app "
+"The server’s address is usually enough. Two-step verification needs an app "
 "password."
 msgstr ""
 "Het adres van de server is meestal voldoende. Voor inloggen in twee stappen "
 "is een app-wachtwoord vereist."
 
+#, fuzzy
 msgid ""
-"Such as cloud.example.org. With two-factor sign-in, make an app password in "
-"Nextcloud under Settings → Security."
+"Such as cloud.example.org. With two-step verification, make an app password "
+"in Nextcloud under Settings → Security."
 msgstr ""
 "Zoals cloud.example.org. Met inloggen met twee factoren kun je een app-"
 "wachtwoord maken in Nextcloud onder Instellingen → Beveiliging."
@@ -4817,9 +4893,6 @@ msgstr ""
 
 msgid "LDAP Directory"
 msgstr "LDAP-directory"
-
-msgid "Address Books"
-msgstr "Adresboeken"
 
 msgid "Look again for address books"
 msgstr "Zoek opnieuw naar adresboeken"
@@ -4851,7 +4924,7 @@ msgstr "In e-mail"
 msgid "Show names from Contacts"
 msgstr "Namen uit contacten weergeven"
 
-msgid "Saved addresses show the contact's name, not the mail's."
+msgid "Saved addresses show the contact’s name, not the mail’s."
 msgstr ""
 "Opgeslagen adressen tonen de naam van het contact, niet die van de e-mail."
 
@@ -4867,8 +4940,8 @@ msgstr "Indeling"
 msgid "Contacts placement"
 msgstr "Plaatsing van contacten"
 
-msgid "'In the footer' disables expand/collapse."
-msgstr "'In de voettekst' schakelt uitvouwen/samenvouwen uit."
+msgid "“In the footer” cannot be folded."
+msgstr ""
 
 msgid "Keep the search field open"
 msgstr "Houd het zoekveld open"
@@ -4878,9 +4951,6 @@ msgstr "Adresboek"
 
 msgid "Looking for address books on {name}…"
 msgstr "Adresboeken zoeken op {name}…"
-
-msgid "Hylki, on this computer"
-msgstr "Hylki, op deze computer"
 
 msgid "Edit Group"
 msgstr "Groep bewerken"
@@ -4912,9 +4982,9 @@ msgstr "Voeg contacten toe in de weergave Contacten om ze hier te zien."
 msgid "Rename Address Book"
 msgstr "Adresboek hernoemen"
 
+#, fuzzy
 msgid ""
-"The name is used in Hylki only; GNOME Contacts and Evolution keep the book's "
-"own."
+"The name is used here only. GNOME Contacts and Evolution keep the book’s own."
 msgstr ""
 "De naam wordt alleen in Hylki gebruikt; GNOME Contacts en Evolution blijven "
 "de eigendommen van het boek."
@@ -4928,35 +4998,32 @@ msgstr "Alle adresboeken"
 msgid "Move Contact?"
 msgstr "Contactpersoon verplaatsen?"
 
+#, fuzzy
 msgid ""
-"This will move {name} out of {from} and into {to}, locally and on the "
-"server. A group in {from} that holds the contact will no longer have it."
+"{name} moves from {from} to {to}, locally and on the server, and leaves any "
+"group in {from}."
 msgstr ""
-"Hierdoor wordt {name} uit {from} verplaatst naar {to}, lokaal en op de "
-"server. Een groep in {from} die de contactpersoon bevat, zal deze niet "
-"langer hebben."
+"{name} verlaat {from}, lokaal en op de server, en elke groep daar die het "
+"contact bevat."
 
 msgid "Move {n} Contact?"
 msgid_plural "Move {n} Contacts?"
 msgstr[0] "{n} contactpersoon verplaatsen?"
 msgstr[1] "{n} contacten verplaatsen?"
 
+#, fuzzy
 msgid ""
-"This will move {n} contact out of the address book it is in and into {to}, "
-"locally and on the server. A group there that holds it will no longer have "
-"it."
+"{n} contact moves to {to}, locally and on the server, and leaves any group "
+"in its old address book."
 msgid_plural ""
-"This will move {n} contacts out of the address books they are in and into "
-"{to}, locally and on the server. Groups there that hold them will no longer "
-"have them."
+"{n} contacts move to {to}, locally and on the server, and leave any group in "
+"their old address books."
 msgstr[0] ""
-"Hierdoor wordt de {n} contactpersoon uit het adresboek waarin hij zich "
-"bevindt, verplaatst naar {to}, lokaal en op de server. Een groep daar die "
-"het bezit, zal het niet langer hebben."
+"De {n} contactpersoon verlaat zijn adresboek, lokaal en op de server, en "
+"elke groep daar die het adresboek bevat."
 msgstr[1] ""
-"Hierdoor worden {n} contacten uit de adresboeken waarin ze zich bevinden, "
-"verplaatst naar {to}, lokaal en op de server. Groepen daar die ze "
-"vasthouden, zullen ze niet langer hebben."
+"{n} contacten laten hun adresboek achter, lokaal en op de server, en elke "
+"groep daar die ze bevat."
 
 msgid "Move"
 msgstr "Verplaatsen"
@@ -4966,10 +5033,6 @@ msgstr "Bekijk foto"
 
 msgid "Add to Contacts"
 msgstr "Toevoegen aan Contacten"
-
-#. ---- note ----
-msgid "Note"
-msgstr "Let op"
 
 msgid "Directory"
 msgstr "Directory"
@@ -4989,9 +5052,8 @@ msgstr "Er zit nog niemand in deze groep."
 msgid "Changed in the app it came from"
 msgstr "Gewijzigd in de app waar het vandaan kwam"
 
-msgid "This group names its members by contact, which Hylki does not edit."
+msgid "Its members are listed by contact, which cannot be edited here."
 msgstr ""
-"Deze groep noemt zijn leden op basis van contact, dat Hylki niet bewerkt."
 
 msgid ""
 "Saving moves the group to this address book, with its people, and removes it "
@@ -5012,7 +5074,7 @@ msgstr "Groep"
 msgid "Send as Bcc"
 msgstr "Verzenden als Bcc"
 
-msgid "Members do not see each other's addresses."
+msgid "Members do not see each other’s addresses."
 msgstr "Leden zien elkaars adressen niet."
 
 #. An Apple group (iCloud's) or a category (Nextcloud's) holds
@@ -5107,9 +5169,6 @@ msgid "{n} Contact Selected"
 msgid_plural "{n} Contacts Selected"
 msgstr[0] "{n} Contactpersoon geselecteerd"
 msgstr[1] "{n} Contacten geselecteerd"
-
-msgid "Move to…"
-msgstr "Verplaatsen naar…"
 
 msgid "Move to another address book"
 msgstr "Ga naar een ander adresboek"
@@ -5278,10 +5337,10 @@ msgstr "Nieuw contact of groep"
 msgid "Loading Contacts…"
 msgstr "Contacten laden…"
 
+#, fuzzy
 msgid ""
-"Add a contact with the + button, or import vCard or CSV files. Contacts are "
-"kept in Hylki's own address book, and the address books of GNOME Contacts "
-"are listed here too."
+"Add a contact with the + button, or import vCard or CSV files. The address "
+"books of GNOME Contacts are listed here too."
 msgstr ""
 "Voeg een contact toe met de + knop of importeer vCard- of CSV-bestanden. "
 "Contacten worden bewaard in Hylki's eigen adresboek, en de adresboeken van "
@@ -5328,10 +5387,9 @@ msgid_plural "Place the pictures where the cursor is"
 msgstr[0] "Plaats de afbeelding op de plek waar de cursor staat"
 msgstr[1] "Plaats de afbeeldingen op de plek waar de cursor staat"
 
-msgid "Pictures insert where the cursor is placed, other files attach normally"
-msgstr ""
-"Afbeeldingen worden ingevoegd waar de cursor is geplaatst, andere bestanden "
-"worden normaal toegevoegd"
+#, fuzzy
+msgid "Place pictures where the cursor is and attach the other files"
+msgstr "Plaats de afbeelding op de plek waar de cursor staat"
 
 msgid "Share a download link from {name}"
 msgstr "Deel een downloadlink van {name}"
@@ -5380,7 +5438,7 @@ msgstr "Zaterdagochtend ({time})"
 msgid "Unsnooze"
 msgstr "Uitstel opheffen"
 
-msgid "That time has passed"
+msgid "That Time Has Passed"
 msgstr "Die tijd is voorbij"
 
 msgid "Choose a time later than now."
@@ -5505,9 +5563,6 @@ msgstr "Geen berichten"
 
 msgid "No Matching Messages"
 msgstr "Geen berichten gevonden"
-
-msgid "There's nothing here right now."
-msgstr "Er is hier momenteel niets."
 
 msgid "No message here passes the filters."
 msgstr "Geen enkel bericht passeert hier de filters."
@@ -5670,7 +5725,8 @@ msgstr ""
 msgid "Load"
 msgstr "Laden"
 
-msgid "Always allow sender"
+#, fuzzy
+msgid "Always Allow Sender"
 msgstr "Afzender altijd toestaan"
 
 msgid "No matches"
@@ -5679,13 +5735,9 @@ msgstr "Niets gevonden"
 msgid "{cur} of {total}"
 msgstr "{cur} van {total}"
 
-msgid ""
-"Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
-"click here, or Ctrl+0, puts it back to the default from Settings."
-msgstr ""
-"Berichtzoom. Ctrl+ en Ctrl-, of Ctrl en het scrollwiel, verander het; een "
-"klik hier, of Ctrl+0, zet het terug naar de standaardinstellingen vanuit "
-"Instellingen."
+#, fuzzy
+msgid "Message zoom. Click or press Ctrl+0 to go back to the default."
+msgstr "Berichtzoom terug naar de standaardwaarde"
 
 msgid ""
 "Show this message in light or dark mode. Other messages are not affected."
@@ -5693,12 +5745,13 @@ msgstr ""
 "Toon dit bericht in de lichte of donkere modus. Andere berichten worden niet "
 "beïnvloed."
 
+#, fuzzy
 msgid ""
-"Reader View shows a message as its text alone, in one plain format, without "
-"the sender's layout, colors and fonts."
+"Reader View shows the text alone, without the sender’s layout, colors and "
+"fonts."
 msgstr ""
-"leesweergave toont een bericht als alleen de tekst, in één eenvoudig "
-"formaat, zonder de lay-out, kleuren en lettertypen van de afzender."
+"Alleen de tekst van een bericht, zonder de lay-out, kleuren en lettertypen "
+"van de afzender."
 
 msgid "Reader View"
 msgstr "Leesweergave"
@@ -5738,26 +5791,38 @@ msgstr "Klik om dit bericht te openen"
 msgid "Repeats daily"
 msgstr "Wordt dagelijks herhaald"
 
-msgid "Repeats every {n} days"
-msgstr "Wordt elke {n} dagen herhaald"
+#, fuzzy
+msgid "Repeats every {n} day"
+msgid_plural "Repeats every {n} days"
+msgstr[0] "Wordt elke {n} dagen herhaald"
+msgstr[1] "Wordt elke {n} dagen herhaald"
 
 msgid "Repeats weekly"
 msgstr "Wordt wekelijks herhaald"
 
-msgid "Repeats every {n} weeks"
-msgstr "Wordt elke {n} week herhaald"
+#, fuzzy
+msgid "Repeats every {n} week"
+msgid_plural "Repeats every {n} weeks"
+msgstr[0] "Wordt elke {n} week herhaald"
+msgstr[1] "Wordt elke {n} week herhaald"
 
 msgid "Repeats monthly"
 msgstr "Wordt maandelijks herhaald"
 
-msgid "Repeats every {n} months"
-msgstr "Wordt elke {n} maanden herhaald"
+#, fuzzy
+msgid "Repeats every {n} month"
+msgid_plural "Repeats every {n} months"
+msgstr[0] "Wordt elke {n} maanden herhaald"
+msgstr[1] "Wordt elke {n} maanden herhaald"
 
 msgid "Repeats yearly"
 msgstr "Wordt jaarlijks herhaald"
 
-msgid "Repeats every {n} years"
-msgstr "Wordt elke {n} jaren herhaald"
+#, fuzzy
+msgid "Repeats every {n} year"
+msgid_plural "Repeats every {n} years"
+msgstr[0] "Wordt elke {n} jaren herhaald"
+msgstr[1] "Wordt elke {n} jaren herhaald"
 
 msgid "Repeats"
 msgstr "Herhalingen"
@@ -5777,7 +5842,8 @@ msgstr "{name} heeft deze uitnodiging afgewezen."
 msgid "Meeting"
 msgstr "Vergadering"
 
-msgid "Cancelled"
+#, fuzzy
+msgid "Canceled"
 msgstr "Geannuleerd"
 
 msgid "Updated invitation"
@@ -5786,7 +5852,8 @@ msgstr "Bijgewerkte uitnodiging"
 msgid "Invitation"
 msgstr "Uitnodiging"
 
-msgid "Organised by {name}"
+#, fuzzy
+msgid "Organized by {name}"
 msgstr "Georganiseerd door {name}"
 
 msgid "{n} guest"
@@ -5815,19 +5882,22 @@ msgstr "Je hebt deze uitnodiging afgewezen."
 msgid "You declined this invitation on {date}."
 msgstr "Je hebt deze uitnodiging op {date} afgewezen."
 
-msgid "Tells the organiser you will be there"
+#, fuzzy
+msgid "Tells the organizer you will be there"
 msgstr "Vertelt de organisator dat je aanwezig zult zijn"
 
 msgid "Maybe"
 msgstr "Misschien"
 
-msgid "Tells the organiser you might be there"
+#, fuzzy
+msgid "Tells the organizer you might be there"
 msgstr "Vertelt de organisator dat je er misschien bent"
 
 msgid "Decline"
 msgstr "Weigeren"
 
-msgid "Tells the organiser you will not be there"
+#, fuzzy
+msgid "Tells the organizer you will not be there"
 msgstr "Vertelt de organisator dat je er niet zult zijn"
 
 msgid "Opens the meeting in your calendar application"
@@ -5838,9 +5908,6 @@ msgstr "Toevoegen aan agenda"
 
 msgid "Open Link"
 msgstr "Link openen"
-
-msgid "Copy Email Address"
-msgstr "E-mailadres kopiëren"
 
 msgid "Copy Link Address"
 msgstr "Kopieer het linkadres"
@@ -5872,8 +5939,9 @@ msgstr "Die sleutel zit niet meer in je sleutelhanger."
 msgid "Key trusted."
 msgstr "Sleutel vertrouwd."
 
+#, fuzzy
 msgid ""
-"Generate a key of your own first (Settings, OpenPGP): trusting a key means "
+"Generate a key of your own first (Settings → OpenPGP): trusting a key means "
 "signing it with yours."
 msgstr ""
 "Genereer eerst een eigen sleutel (Instellingen, OpenPGP): een sleutel "
@@ -5914,12 +5982,12 @@ msgstr "Stuurt niets en stopt met vragen"
 msgid "Copied"
 msgstr "Gekopieerd"
 
-msgid "Trust this key?"
+msgid "Trust This Key?"
 msgstr "Deze sleutel vertrouwen?"
 
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or over "
-"another channel. Trusting a key you have not checked lets an impostor's "
+"another channel. Trusting a key you have not checked lets an impostor’s "
 "signature pass as theirs."
 msgstr ""
 "Vergelijk de vingerafdruk met de vingerafdruk die de {uid} je persoonlijk of "
@@ -5930,25 +5998,28 @@ msgstr ""
 msgid "Trust"
 msgstr "Vertrouwen"
 
-msgid "The sender's key was taken from the message."
+msgid "The sender’s key was taken from the message."
 msgstr "De sleutel van de afzender is uit het bericht gehaald."
 
-msgid "The sender's key was fetched and imported."
+msgid "The sender’s key was fetched and imported."
 msgstr "De sleutel van de afzender is opgehaald en geïmporteerd."
 
-msgid "The sender's key was already in your keyring."
+msgid "The sender’s key was already in your keyring."
 msgstr "De sleutel van de afzender zat al in je sleutelhanger."
 
 msgid "OpenPGP"
 msgstr "OpenPGP"
 
-msgid "Fetch the sender's key"
+#, fuzzy
+msgid "Fetch Sender’s Key"
 msgstr "Haal de sleutel van de afzender op"
 
-msgid "Trust this key…"
+#, fuzzy
+msgid "Trust This Key…"
 msgstr "Vertrouw op deze sleutel…"
 
-msgid "A pass proves the address wasn't forged — not that the message is safe."
+#, fuzzy
+msgid "A pass proves the address was not forged, not that the message is safe."
 msgstr ""
 "Een pasje bewijst dat het adres niet vervalst is – niet dat het bericht "
 "veilig is."
@@ -5991,8 +6062,9 @@ msgstr "Dit bericht staat in {language}."
 msgid "Unsubscribing…"
 msgstr "Afmelden…"
 
-msgid "Unsubscribing didn't work: {why}"
-msgstr "Afmelden werkte niet: {why}"
+#, fuzzy
+msgid "Could not unsubscribe: {why}"
+msgstr "Kon niet vertalen: {why}"
 
 #. Mail sent well after the request means the list did not
 #. act on it, or that the List-Id covers more than the one
@@ -6022,10 +6094,11 @@ msgstr "Stuurt een afmeldingsverzoek per e-mail"
 msgid "Unsubscribe…"
 msgstr "Afmelden…"
 
-msgid "Opens the list's unsubscribe page in your browser"
+msgid "Opens the list’s unsubscribe page in your browser"
 msgstr "Opent de afmeldingspagina van de lijst in je browser"
 
-msgid "Clear all"
+#, fuzzy
+msgid "Clear All"
 msgstr "Alles wissen"
 
 msgid "Export log"
@@ -6099,20 +6172,16 @@ msgstr "5 jaar"
 msgid "GnuPG"
 msgstr "GnuPG"
 
-msgid "The same keyring the gpg command and other mail apps use."
-msgstr ""
-"Dezelfde sleutelhanger die de gpg-opdracht en andere mail-apps gebruiken."
-
 msgid "Finding keys"
 msgstr "Sleutels vinden"
 
 msgid "Keys found here are kept apart from your keyring."
 msgstr "Sleutels die je hier vindt, worden apart van je sleutelhanger bewaard."
 
-msgid "Look up recipients' keys"
+msgid "Look up recipients’ keys"
 msgstr "Zoek de sleutels van de ontvangers op"
 
-msgid "Each recipient's domain (WKD) learns that you write to them."
+msgid "Each recipient’s domain (WKD) learns that you write to them."
 msgstr "Het domein van elke ontvanger (WKD) leert dat je naar hen schrijft."
 
 msgid "Also ask a keyserver"
@@ -6137,7 +6206,7 @@ msgstr "Importeren…"
 msgid "Generate…"
 msgstr "Genereer…"
 
-msgid "Other people's keys"
+msgid "Other people’s keys"
 msgstr "Sleutels van anderen"
 
 msgid ""
@@ -6206,7 +6275,7 @@ msgstr "Wachtwoordzin"
 msgid "Confirm passphrase"
 msgstr "Bevestig de wachtwoordzin"
 
-msgid "The passphrases differ"
+msgid "The Passphrases Differ"
 msgstr "De wachtwoordzinnen verschillen"
 
 msgid "Type the same passphrase twice."
@@ -6227,7 +6296,7 @@ msgstr "Kan niet importeren: {e}"
 msgid "Export Public Key"
 msgstr "Openbare sleutel exporteren"
 
-msgid "Delete your key?"
+msgid "Delete Your Key?"
 msgstr "Je sleutel verwijderen?"
 
 msgid ""
@@ -6238,7 +6307,7 @@ msgstr ""
 "gecodeerd, kan nooit meer worden gelezen, tenzij je een back-up van de "
 "sleutel hebt."
 
-msgid "Remove this key?"
+msgid "Remove This Key?"
 msgstr "Deze sleutel verwijderen?"
 
 msgid ""
@@ -6275,7 +6344,7 @@ msgstr ""
 
 msgid ""
 "Compare the fingerprint with the one {uid} gives you in person or another "
-"way. Trusting an unchecked key lets an impostor's signature pass."
+"way. Trusting an unchecked key lets an impostor’s signature pass."
 msgstr ""
 "Vergelijk de vingerafdruk met de vingerafdruk die de {uid} je persoonlijk of "
 "op een andere manier geeft. Door een ongecontroleerde sleutel te vertrouwen, "
@@ -6452,7 +6521,8 @@ msgstr "LanguageTool-server"
 msgid "English only. Nothing leaves this computer."
 msgstr "Alleen Engels. Niets verlaat deze computer."
 
-msgid "Multi-language support. Nothing leaves this computer. Uses 1GB of RAM"
+#, fuzzy
+msgid "Many languages. Nothing leaves this computer. Uses 1 GB of memory."
 msgstr ""
 "Meertalige ondersteuning. Niets verlaat deze computer. Gebruikt 1 GB RAM"
 
@@ -6596,7 +6666,7 @@ msgstr "Boomstijl"
 msgid "All Inboxes"
 msgstr "Alle postvakken IN"
 
-msgid "The last account's inbox"
+msgid "The last account’s inbox"
 msgstr "De inbox van het laatste account"
 
 msgid "The last folder"
@@ -6703,22 +6773,22 @@ msgstr "Datum en tijd"
 msgid "Backup"
 msgstr "Back-up"
 
-msgid "Save the filter?"
+msgid "Save the Filter?"
 msgstr "Het filter opslaan?"
 
 msgid "Your changes are lost if you discard them."
 msgstr "Je wijzigingen gaan verloren als je ze weggooit."
 
-msgid "Save the smart folder?"
+msgid "Save the Smart Folder?"
 msgstr "De slimme map opslaan?"
 
 msgid "Save the tag?"
 msgstr "De tag opslaan?"
 
-msgid "Save the address book?"
+msgid "Save the Address Book?"
 msgstr "Het adresboek opslaan?"
 
-msgid "Save the account?"
+msgid "Save the Account?"
 msgstr "Het account opslaan?"
 
 msgid "See message lists"
@@ -6747,9 +6817,6 @@ msgstr ""
 "Ze worden allemaal geopend in een venster waarin je ze kunt controleren en "
 "verzenden."
 
-msgid "Mark as read or unread"
-msgstr "Markeer als gelezen of ongelezen"
-
 msgid "Add and remove stars"
 msgstr "Sterren toevoegen en verwijderen"
 
@@ -6771,7 +6838,8 @@ msgstr "Degene die je leest, zoals je hem leest."
 msgid "Read and edit open drafts"
 msgstr "Open concepten lezen en bewerken"
 
-msgid "Those agents prepared. You accept each edit."
+#, fuzzy
+msgid "Drafts an agent prepared. You accept each edit."
 msgstr "Die agenten hadden zich voorbereid. Je accepteert elke bewerking."
 
 msgid "Include drafts you started"
@@ -6780,9 +6848,10 @@ msgstr "Voeg concepten toe waarmee je bent begonnen"
 msgid "What you are writing, unsaved text too."
 msgstr "Wat je schrijft, ook niet-opgeslagen tekst."
 
+#, fuzzy
 msgid ""
-"Hylki contains no AI agent of its own but you can allow outside agents to "
-"access your mail using MCP (Model Context Protocol)"
+"No AI agent is built in. Outside agents can reach your mail through MCP "
+"(Model Context Protocol)."
 msgstr ""
 "Hylki bevat geen eigen AI-agent, maar je kunt externe agenten toegang geven "
 "tot je e-mail met behulp van MCP (Model Context Protocol)"
@@ -6790,12 +6859,14 @@ msgstr ""
 msgid "Allow AI agent access"
 msgstr "Sta AI-agenttoegang toe"
 
-msgid "Recent Activity"
+#, fuzzy
+msgid "Recent activity"
 msgstr "Recente activiteit"
 
+#, fuzzy
 msgid ""
-"Nothing is shared until you allow it. Agents can't send mail, erase it "
-"permanently (moving to Trash is ok) or read encrypted mail."
+"Nothing is shared until you allow it. Agents cannot send mail, delete it for "
+"good or read encrypted mail. They can move it to Trash."
 msgstr ""
 "Er wordt niets gedeeld totdat je het toestaat. Agenten kunnen geen e-mail "
 "verzenden, deze permanent verwijderen (verplaatsen naar de prullenbak is "
@@ -6816,24 +6887,25 @@ msgstr "Van elk account, gedeeld of niet."
 msgid "Full access"
 msgstr "Volledige toegang"
 
-msgid "Grant access to entire account (except Trash and Junk)"
-msgstr ""
-"Toegang verlenen tot het gehele account (behalve prullenbak en ongewenste e-"
-"mail)"
+#, fuzzy
+msgid "Every folder but Trash and Junk."
+msgstr "Alles behalve Prullenbak en Spam"
 
-msgid "Junk and Trash are hidden until you allow them."
+#, fuzzy
+msgid "Trash and Junk are hidden until you allow them."
 msgstr ""
 "Ongewenste berichten en prullenbak zijn verborgen totdat je ze toestaat."
 
-msgid "Reset to Defaults"
-msgstr "Terugzetten naar standaardwaarden"
+msgid "Restore Defaults"
+msgstr "Standaardinstellingen herstellen"
 
-msgid "Reset permissions?"
+msgid "Reset Permissions?"
 msgstr "Machtigingen opnieuw instellen?"
 
+#, fuzzy
 msgid ""
-"The account stays shared, but only for reading and preparing messages. Junk "
-"and Trash are hidden again."
+"The account stays shared, but only for reading and preparing messages. Trash "
+"and Junk are hidden again."
 msgstr ""
 "Het account blijft gedeeld, maar alleen voor het lezen en voorbereiden van "
 "berichten. Junk en Trash zijn weer verborgen."
@@ -6852,7 +6924,7 @@ msgid "Import settings"
 msgstr "Instellingen importeren"
 
 msgid ""
-"Replaces everything in place. Don't remove accounts first: that deletes "
+"Replaces everything in place. Do not remove accounts first: that deletes "
 "their passwords."
 msgstr ""
 "Vervangt alles op zijn plaats. Verwijder niet eerst accounts: daarmee worden "
@@ -6864,7 +6936,7 @@ msgstr "Groepeer berichten op gesprek"
 msgid "Expandable conversations"
 msgstr "Uitbreidbare gesprekken"
 
-msgid "Off, a conversation's messages show only in the reading pane."
+msgid "Off, a conversation’s messages show only in the reading pane."
 msgstr ""
 "Uit: de berichten van een gesprek worden alleen in het leesvenster "
 "weergegeven."
@@ -6976,7 +7048,7 @@ msgstr "Toon kolomkoppen"
 msgid "Preview lines"
 msgstr "Voorbeeldlijnen"
 
-msgid "Fold the message list's header"
+msgid "Fold the message list’s header"
 msgstr "Vouw de koptekst van de berichtenlijst"
 
 msgid "Everything but the sidebar toggle goes into ⋯."
@@ -7000,7 +7072,7 @@ msgstr "Sterren verbergen"
 msgid "Hide attachment icons"
 msgstr "Bijlagepictogrammen verbergen"
 
-msgid "Fold the reading pane's toolbar"
+msgid "Fold the reading pane’s toolbar"
 msgstr "Vouw de werkbalk van het leesvenster"
 
 msgid "Every button goes into its ⋯ menu."
@@ -7056,7 +7128,8 @@ msgstr "Spelen"
 msgid "Sound file"
 msgstr "Geluidsbestand"
 
-msgid "Also play while Hylki is in front"
+#, fuzzy
+msgid "Also play while the window is in front"
 msgstr "Speel ook terwijl Hylki voorop staat"
 
 msgid "Notification Buttons"
@@ -7071,7 +7144,7 @@ msgstr "Toon afzenderavatars"
 msgid "Sent mail uses your account circle"
 msgstr "Verzonden e-mail gebruikt je accountkring"
 
-msgid "The account's picture or emoji, as in the sidebar."
+msgid "The account’s picture or emoji, as in the sidebar."
 msgstr "De foto of emoji van het account, zoals in de zijbalk."
 
 msgid "Automatic uses single lines in wide windows."
@@ -7133,9 +7206,6 @@ msgstr ""
 msgid "Show actions on hover"
 msgstr ""
 
-msgid "Restore Defaults"
-msgstr "Standaardinstellingen herstellen"
-
 msgid "Columns"
 msgstr "Kolommen"
 
@@ -7153,8 +7223,8 @@ msgstr "Pas kolommen aan de lijst aan"
 msgid "Off, a narrow list scrolls sideways."
 msgstr "Uit, een smalle lijst scrollt zijwaarts."
 
-msgid "Hylki collects no telemetry and sends no analytics."
-msgstr "Hylki verzamelt geen telemetrie en verzendt geen analyses."
+msgid "No telemetry is collected and no analytics are sent."
+msgstr ""
 
 msgid "Always load remote content"
 msgstr "Laad altijd externe inhoud"
@@ -7171,13 +7241,13 @@ msgstr "Waarschuw wanneer externe inhoud wordt geblokkeerd"
 msgid "Off hides the banner. Remote content stays blocked."
 msgstr "Uit verbergt de banner. Externe inhoud blijft geblokkeerd."
 
-msgid "Warn when the addressing doesn't match"
+msgid "Warn when the addressing does not match"
 msgstr "Waarschuw wanneer de adressering niet overeenkomt"
 
 msgid "Use Gravatar when a contact has no photo"
 msgstr "Gebruik Gravatar als een contact geen foto heeft"
 
-msgid "Sends a hash of the sender's address to Gravatar."
+msgid "Sends a hash of the sender’s address to Gravatar."
 msgstr "Stuurt een hash van het adres van de afzender naar Gravatar."
 
 msgid "Show sender logos"
@@ -7196,10 +7266,11 @@ msgstr "Versleutel opgeslagen e-mail"
 msgid "Encrypt Stored Mail?"
 msgstr "Opgeslagen e-mail versleutelen?"
 
+#, fuzzy
 msgid ""
-"Mail stored on this computer will be encrypted at the next start which can "
-"take a few minutes. Earlier versions of the app cannot open it. Turn this "
-"setting off and restart before going back to an older version."
+"Mail on this computer is encrypted at the next start, which can take a few "
+"minutes. Earlier versions cannot open it: turn this off and restart before "
+"going back to one."
 msgstr ""
 "E-mail die op deze computer is opgeslagen, wordt bij de volgende start "
 "gecodeerd, wat enkele minuten kan duren. Eerdere versies van de app kunnen "
@@ -7231,7 +7302,8 @@ msgstr "Door een map te slepen, wordt overgeschakeld naar Aangepaste volgorde."
 msgid "Chevron placement"
 msgstr "Chevron-plaatsing"
 
-msgid "When off, only its chevron or a double click activates the fold."
+#, fuzzy
+msgid "Off, only the chevron or a double click folds an account."
 msgstr ""
 "Wanneer uitgeschakeld, activeert alleen de chevron of een dubbele klik de "
 "vouw."
@@ -7239,7 +7311,8 @@ msgstr ""
 msgid "Show Attachments Browser"
 msgstr "Bijlagenbrowser weergeven"
 
-msgid "Browse every account's attachments in one place."
+#, fuzzy
+msgid "Every account’s attachments in one place."
 msgstr "Blader door de bijlagen van elk account op één plek."
 
 msgid "Hovering the icon rail floats the full sidebar out."
@@ -7259,7 +7332,8 @@ msgstr "Onthoud de pictogrammenrail-status"
 msgid "Highlight only new unread mail"
 msgstr "Markeer alleen nieuwe, ongelezen e-mail"
 
-msgid "A count turns grey once you have looked at the folder."
+#, fuzzy
+msgid "A count turns gray once you have looked at the folder."
 msgstr "Een telling wordt grijs zodra je de map hebt bekeken."
 
 msgid "Shown only with more than one account."
@@ -7297,14 +7371,16 @@ msgstr ""
 "De onderstaande items beginnen opgevouwen in de rail. Druk lang om er een te "
 "openen."
 
+#, fuzzy
 msgid ""
-"Inside the Flatpak sandbox, links open through the desktop's chooser. \"Ask "
-"each time\" picks the browser per link with the option to remember it."
+"Inside the Flatpak sandbox, links open through the desktop’s chooser. With "
+"“Ask each time”, it asks for a browser per link and can remember the answer."
 msgstr ""
 "In de Flatpak-sandbox worden links geopend via de desktopkiezer. \"Elke keer "
 "vragen\" kiest de browser per link met de optie om deze te onthouden."
 
-msgid "\"Ask each time\" lets the desktop ask before each link."
+#, fuzzy
+msgid "With “Ask each time”, the desktop asks before each link."
 msgstr "Met 'Elke keer vragen' laat het bureaublad vóór elke link vragen."
 
 msgid "Not installed"
@@ -7316,10 +7392,9 @@ msgstr "Geïnstalleerd en geladen door Bestanden"
 msgid "Installed, but nautilus-python is missing"
 msgstr "Geïnstalleerd, maar nautilus-python ontbreekt"
 
-msgid "Installed. Restart Files to load it; it needs nautilus-python"
-msgstr ""
-"Geïnstalleerd. Start bestanden opnieuw om het te laden; het heeft nautilus-"
-"python nodig"
+#, fuzzy
+msgid "Installed. Needs nautilus-python and a restart of Files."
+msgstr "Geïnstalleerd, maar nautilus-python ontbreekt"
 
 msgid "Installed, but from another version"
 msgstr "Geïnstalleerd, maar vanuit een andere versie"
@@ -7334,10 +7409,10 @@ msgstr ""
 "Berichten {bodies}, bijlagen {files}. {total} in totaal, met de "
 "berichtenlijst."
 
-msgid "Could not install the extension"
+msgid "Could Not Install the Extension"
 msgstr "Kan de extensie niet installeren"
 
-msgid "Remove downloaded mail?"
+msgid "Remove Downloaded Mail?"
 msgstr "Gedownloade e-mail verwijderen?"
 
 msgid ""
@@ -7347,10 +7422,10 @@ msgstr ""
 "E-mail en bijlagen op deze computer worden verwijderd en opnieuw opgehaald "
 "wanneer ze worden geopend. Er verandert niets op de server."
 
-msgid "Could not remove the extension"
+msgid "Could Not Remove the Extension"
 msgstr "Kan de extensie niet verwijderen"
 
-msgid "Could not restart Files"
+msgid "Could Not Restart Files"
 msgstr "Kan bestanden niet opnieuw opstarten"
 
 msgid "Other Font…"
@@ -7374,7 +7449,8 @@ msgstr ""
 "adresboeken CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
 
-msgid "System language — {language}"
+#, fuzzy
+msgid "System language ({language})"
 msgstr "Systeemtaal — {language}"
 
 msgid "Forget this word"
@@ -7633,7 +7709,7 @@ msgid "Delete Smart Folder…"
 msgstr "Slimme map verwijderen…"
 
 msgid ""
-"Uses a translation service under your own key. A message's text is sent only "
+"Uses a translation service under your own key. A message’s text is sent only "
 "when you translate it."
 msgstr ""
 "Maakt gebruik van een vertaalservice onder je eigen sleutel. De tekst van "
@@ -7648,7 +7724,8 @@ msgstr "Regio (leeg voor een mondiale hulpbron)"
 msgid "Translates a greeting to test the service."
 msgstr "Vertaalt een begroeting om de service te testen."
 
-msgid "Hylki's language ({language})"
+#, fuzzy
+msgid "App language ({language})"
 msgstr "Hylki's taal ({language})"
 
 msgid "Offer to translate"
@@ -7673,7 +7750,8 @@ msgstr "Aanmelden"
 msgid "The sign-in window was closed."
 msgstr "Het inlogvenster is gesloten."
 
-msgid "✓ {email} — added"
+#, fuzzy
+msgid "✓ {email} added"
 msgstr "✓ {email} — toegevoegd"
 
 msgid "Add another email account"
@@ -7700,21 +7778,26 @@ msgstr "Voer eerst je e-mailadres en wachtwoord in."
 msgid "Checking the connection…"
 msgstr "De verbinding controleren…"
 
-msgid "✓ {email} — connected and added"
+#, fuzzy
+msgid "✓ {email} connected and added"
 msgstr "✓ {email} — aangesloten en toegevoegd"
 
-msgid "{email} — mail server: {e}"
+#, fuzzy
+msgid "{email} (incoming server): {e}"
 msgstr "{email} — mailserver: {e}"
 
-msgid "{email} — sending (SMTP): {e}"
-msgstr "{email} — verzenden (SMTP): {e}"
+#, fuzzy
+msgid "{email} (outgoing server): {e}"
+msgstr "{email} — mailserver: {e}"
 
-msgid "✓ {email} — signed in and added"
+#, fuzzy
+msgid "✓ {email} signed in and added"
 msgstr "✓ {email} — aangemeld en toegevoegd"
 
+#, fuzzy
 msgid ""
 "A clean, fast home for your mail.\n"
-"Let's set things up — it takes about a minute."
+"Setting up takes about a minute."
 msgstr ""
 "Een schoon, snel thuis voor je e-mail.\n"
 "Laten we alles instellen: het duurt ongeveer een minuut."
@@ -7756,9 +7839,10 @@ msgstr "Opnieuw scannen"
 msgid "Privacy, your way"
 msgstr "Privacy, op jouw manier"
 
+#, fuzzy
 msgid ""
-"Hylki sends no telemetry, ever. These control what leaves your machine while "
-"you read."
+"Hylki sends no telemetry. These control what leaves your computer while you "
+"read."
 msgstr ""
 "Hylki verzendt nooit telemetrie. Deze bepalen wat je machine verlaat terwijl "
 "je leest."
@@ -7770,15 +7854,6 @@ msgid "Stops senders tracking when and where you open mail"
 msgstr ""
 "Zorgt ervoor dat afzenders niet meer kunnen volgen wanneer en waar je e-mail "
 "opent"
-
-msgid "Fetch Gravatar portraits"
-msgstr "Haal Gravatar-portretten op"
-
-msgid "Asks gravatar.com about each sender's address"
-msgstr "Vraagt gravatar.com naar het adres van elke afzender"
-
-msgid "Fetch sender logos"
-msgstr "Afzenderlogo's ophalen"
 
 msgid "Looks up company icons for the message list"
 msgstr "Zoekt bedrijfspictogrammen voor de berichtenlijst"
@@ -7792,36 +7867,29 @@ msgstr "Uit houdt afzenders en onderwerpen buiten het vergrendelscherm"
 msgid "Make it yours"
 msgstr "Maak het de jouwe"
 
-msgid "A few popular choices — everything can be changed later in Settings."
+#, fuzzy
+msgid "A few popular choices. Everything can be changed later in Settings."
 msgstr ""
 "Een paar populaire keuzes: alles kan later worden gewijzigd in Instellingen."
 
 msgid "Message text shown under each subject"
 msgstr "Berichttekst weergegeven onder elk onderwerp"
 
-msgid "Sender avatars"
-msgstr "Avatars van afzenders"
-
 msgid "Colorful initials beside each message"
 msgstr "Kleurrijke initialen naast elk bericht"
-
-msgid "Conversation view"
-msgstr "Gesprekweergave"
-
-msgid "Group messages into threads"
-msgstr "Groepeer berichten in threads"
 
 #. The app icon: the whole set as one sideways-scrolling row on its
 #. own card, the default ringed.
 msgid "Pick your app icon"
 msgstr "Kies je app-pictogram"
 
-msgid "You're all set"
+msgid "You are all set"
 msgstr "Je bent klaar om te beginnen"
 
+#, fuzzy
 msgid ""
-"Enjoy! If you encounter an issue or have a feature request,\n"
-"please open an issue on our <a href=\"{url}\">Github</a>."
+"To report a problem or ask for a feature,\n"
+"open an issue on <a href=\"{url}\">GitHub</a>."
 msgstr ""
 "Genieten! Als je een probleem tegenkomt of een functieverzoek hebt,\n"
 ", open dan een probleem op onze <a href=\"{url}\">Github</a>."
@@ -7868,16 +7936,18 @@ msgstr "Afronden"
 msgid "Skip"
 msgstr "Overslaan"
 
+#, fuzzy
 msgid ""
 "Offline: there is no network connection. Mail syncs again once the network "
-"is back. Click to try now, or long-press for Status Bar"
+"is back. Click to try now, or long-press for the status bar."
 msgstr ""
 "Offline: er is geen netwerkverbinding. Mail wordt opnieuw gesynchroniseerd "
 "zodra het netwerk terug is. Klik om het nu te proberen, of druk lang op voor "
 "de statusbalk"
 
+#, fuzzy
 msgid ""
-"Could not read the password for {email} from the keyring ({e}). Hylki tries "
+"Could not read the password for {email} from the keyring ({e}). It is tried "
 "again at the next connection."
 msgstr ""
 "Kan het wachtwoord voor {email} niet lezen van de sleutelhanger ({e}). Hylki "
@@ -7892,8 +7962,9 @@ msgstr "Het concept kon niet worden gedecodeerd."
 msgid "no OpenPGP key for {addr}"
 msgstr "geen OpenPGP-sleutel voor {addr}"
 
+#, fuzzy
 msgid ""
-"no OpenPGP key of your own for {addr}; generate one under Settings, OpenPGP"
+"no OpenPGP key of your own for {addr}; generate one in Settings → OpenPGP"
 msgstr ""
 "geen eigen OpenPGP-sleutel voor {addr}; genereer er een onder Instellingen, "
 "OpenPGP"
@@ -7911,7 +7982,7 @@ msgstr ""
 
 msgid ""
 "The S/MIME certificate for {address} is not trusted. Add its root "
-"certificate to gpgsm's trustlist.txt."
+"certificate to gpgsm’s trustlist.txt."
 msgstr ""
 
 msgid "Could not save template: {e}"
@@ -7956,8 +8027,11 @@ msgstr "Kon niet markeren als spam: {e}"
 msgid "Could not mark as not spam: {e}"
 msgstr "Kon niet markeren als geen spam: {e}"
 
-msgid "Could not mark {len} messages as not spam: {e}"
-msgstr "Kan {len}-berichten niet als spam markeren: {e}"
+#, fuzzy
+msgid "Could not mark {len} message as not spam: {e}"
+msgid_plural "Could not mark {len} messages as not spam: {e}"
+msgstr[0] "Kan {len}-berichten niet als spam markeren: {e}"
+msgstr[1] "Kan {len}-berichten niet als spam markeren: {e}"
 
 msgid "Could not move messages: {e}"
 msgstr "Kan berichten niet verplaatsen: {e}"
@@ -7990,7 +8064,7 @@ msgid "Could not remove the attachment: {e}"
 msgstr "Kon de bijlage niet verwijderen: {e}"
 
 msgid ""
-"Microsoft did not accept the saved sign-in for {email}. Open Hylki's "
+"Microsoft did not accept the saved sign-in for {email}. Open Hylki’s "
 "Settings → Mail Accounts and sign in to it again."
 msgstr ""
 "Microsoft heeft de opgeslagen aanmelding voor {email} niet geaccepteerd. "
@@ -8010,7 +8084,7 @@ msgstr "Kan “{subject}” nog steeds niet verzenden: {e}"
 msgid "Could not load source: {e}"
 msgstr "Kan bron niet laden: {e}"
 
-msgid "A Microsoft account can't receive mail from another account"
+msgid "A Microsoft account cannot receive mail from another account"
 msgstr "Een Microsoft-account kan geen e-mail ontvangen van een ander account"
 
 msgid "“{folder}” is left out of search: {reason}"
@@ -8025,9 +8099,11 @@ msgstr "Kan mappen niet weergeven: {e}"
 msgid "Connection failed: {e}"
 msgstr "Verbinding mislukt: {e}"
 
+#, fuzzy
 msgid ""
-"This account has no IMAP server. Hylki can't use Exchange accounts from "
-"Online Accounts: remove it and add it as an IMAP or Microsoft 365 account."
+"This account has no IMAP server. Exchange accounts from Online Accounts "
+"cannot be used here: remove it and add it as an IMAP or Microsoft 365 "
+"account."
 msgstr ""
 "Dit account heeft geen IMAP-server. Hylki kan geen Exchange-accounts "
 "gebruiken vanuit Online Accounts: verwijder het en voeg het toe als een "
@@ -8036,7 +8112,7 @@ msgstr ""
 msgid "could not reach the server"
 msgstr "kon de server niet bereiken"
 
-msgid "the server's reply could not be read (it began: {reply})"
+msgid "the server’s reply could not be read (it began: {reply})"
 msgstr ""
 "het antwoord van de server kon niet worden gelezen (het begon: {reply})"
 
@@ -8049,9 +8125,10 @@ msgstr "Dit bericht is verplaatst of verwijderd op de server."
 msgid "Could not load conversation: {e}"
 msgstr "Kan gesprek niet laden: {e}"
 
+#, fuzzy
 msgid ""
 "Message sent, but saving it to Sent failed: {e}. A copy is kept and saved "
-"there when Hylki next connects."
+"there at the next connection."
 msgstr ""
 "Bericht verzonden, maar opslaan in Verzonden mislukt: {e}. Er wordt een "
 "kopie bewaard en daar opgeslagen wanneer Hylki de volgende keer verbinding "
@@ -8066,8 +8143,9 @@ msgstr "Kan bericht niet bijwerken: {e}"
 msgid "Could not change the star: {e}"
 msgstr "Kan de ster niet wijzigen: {e}"
 
+#, fuzzy
 msgid ""
-"This server does not store tags, so Hylki keeps them on this computer only"
+"This server does not store tags, so they are kept on this computer only."
 msgstr ""
 "Deze server slaat geen tags op, dus Hylki bewaart ze alleen op deze computer"
 
@@ -8077,15 +8155,22 @@ msgstr "Kan bericht niet taggen: {e}"
 msgid "Could not mark folder read: {e}"
 msgstr "Kan map als gelezen niet markeren: {e}"
 
+msgid "Could not mark {len} messages as not spam: {e}"
+msgstr "Kan {len}-berichten niet als spam markeren: {e}"
+
+#, fuzzy
 msgid ""
-"Gmail keeps a copy of every message in All Mail, so Hylki cannot remove an "
-"attachment there"
+"Gmail keeps a copy of every message in All Mail, so the attachment cannot be "
+"removed there"
 msgstr ""
 "Gmail bewaart van elk bericht een kopie in Alle berichten, Hylki kan daar "
 "dus geen bijlage verwijderen"
 
-msgid "Could not move {len} messages: {e}"
-msgstr "Kan {len}-berichten niet verplaatsen: {e}"
+#, fuzzy
+msgid "Could not move {len} message: {e}"
+msgid_plural "Could not move {len} messages: {e}"
+msgstr[0] "Kan {len}-berichten niet verplaatsen: {e}"
+msgstr[1] "Kan {len}-berichten niet verplaatsen: {e}"
 
 msgid "Could not delete permanently: {e}"
 msgstr "Kan niet permanent verwijderen: {e}"
@@ -8107,8 +8192,10 @@ msgstr "Die map staat niet op de server"
 msgid "Could not reach the JMAP server: {e}"
 msgstr "Kan de JMAP-server: {e} niet bereiken"
 
-msgid "Mail on this computer is not sent, and has no drafts"
-msgstr "E-mail op deze computer wordt niet verzonden en bevat geen concepten"
+#, fuzzy
+msgid "On This Computer does not keep drafts: choose another From address"
+msgstr ""
+"E-mail wordt niet verzonden vanaf Op deze computer: kies een ander Van-adres"
 
 msgid "Mail is not sent from On This Computer: choose another From address"
 msgstr ""
@@ -8138,8 +8225,11 @@ msgstr "Bericht verzonden, maar opslaan op Op deze computer mislukt: {e}"
 msgid "Could not open the folders on this computer: {e}"
 msgstr "Kon de mappen op deze computer niet openen: {e}"
 
-msgid "Reading {n} messages…"
-msgstr "{n} berichten lezen…"
+#, fuzzy
+msgid "Reading {n} message…"
+msgid_plural "Reading {n} messages…"
+msgstr[0] "{n} berichten lezen…"
+msgstr[1] "{n} berichten lezen…"
 
 #. Nothing failed: the message waits for the network, which the
 #. Refresh button already shows is down (#442).
@@ -8177,10 +8267,10 @@ msgstr "De verbinding is verbroken na een interne fout."
 msgid "Could not delete message: {e}"
 msgstr "Kan bericht niet verwijderen: {e}"
 
-msgid "POP3 accounts don't support folders"
+msgid "POP3 accounts do not support folders"
 msgstr "POP3-accounts ondersteunen geen mappen"
 
-msgid "A POP3 account can't receive mail from another account"
+msgid "A POP3 account cannot receive mail from another account"
 msgstr "Een POP3-account kan geen e-mail ontvangen van een ander account"
 
 msgid ""
@@ -8191,7 +8281,8 @@ msgstr ""
 
 #. What a crash leaves in the Outbox says why it is there; a failure
 #. that is reported replaces it.
-msgid "Hylki closed before the message was sent."
+#, fuzzy
+msgid "The app closed before the message was sent."
 msgstr "Hylki sloot af voordat het bericht werd verzonden."
 
 msgid "The message is signed or encrypted, and removing a file would break it"
@@ -8229,8 +8320,8 @@ msgstr ""
 msgid "Contacts imported: {added} new, {updated} updated"
 msgstr "Contacten geïmporteerd: {added} nieuw, {updated} bijgewerkt"
 
-msgid "No address book available to add contacts"
-msgstr "Geen adresboek beschikbaar om contacten toe te voegen"
+msgid "No address book available"
+msgstr "Geen adresboek beschikbaar"
 
 msgid "Added to Contacts"
 msgstr "Toegevoegd aan Contacten"
@@ -8243,9 +8334,6 @@ msgstr "Al in Contacten ({name})"
 
 msgid "Could not add contact: {e}"
 msgstr "Kan contactpersoon niet toevoegen: {e}"
-
-msgid "No address book available"
-msgstr "Geen adresboek beschikbaar"
 
 msgid "Could not rename the address book: {e}"
 msgstr "Kan de naam van het adresboek niet wijzigen: {e}"
@@ -8263,7 +8351,7 @@ msgstr[1] "{n} contacten zijn niet verplaatst: {e}"
 msgid "Could not update contact: {e}"
 msgstr "Kan contactpersoon niet updaten: {e}"
 
-msgid "Choose Thunderbird's Profile Folder"
+msgid "Choose Thunderbird’s Profile Folder"
 msgstr "Kies de profielmap van Thunderbird"
 
 msgid "Could not import contacts: {e}"
@@ -8289,7 +8377,8 @@ msgstr ""
 msgid "Add Filter…"
 msgstr "Filter toevoegen…"
 
-msgid "Run every rule over the mail already in your inboxes"
+#, fuzzy
+msgid "Run every filter over the mail already in your inboxes"
 msgstr "Voer elke regel uit over de e-mail die al in je inbox staat"
 
 msgid "Keys are managed under OpenPGP in the sidebar."
@@ -8304,7 +8393,8 @@ msgstr "Standaard berichten ondertekenen"
 msgid "Hide the subject of encrypted mail"
 msgstr "Verberg het onderwerp van gecodeerde e-mail"
 
-msgid "Only the recipients see the subject. Others see \"...\"."
+#, fuzzy
+msgid "Only the recipients see the subject. Others see “…”."
 msgstr "Alleen de ontvangers zien het onderwerp. Anderen zien \"...\"."
 
 msgid "Send your key with your mail"
@@ -8333,13 +8423,6 @@ msgstr "De sleutel van de afzender is uit het bericht gehaald."
 msgid "GNOME Online Account"
 msgstr "GNOME Online-account"
 
-msgid "Show in Hylki"
-msgstr "Tonen in Hylki"
-
-msgid "Off returns it to the import list. It stays in GNOME Online Accounts."
-msgstr ""
-"Uit zet het terug naar de importlijst. Het blijft in GNOME Online Accounts."
-
 msgid ""
 "Managed by GNOME Online Accounts. Its address, servers and password are "
 "changed in Settings → Online Accounts."
@@ -8353,23 +8436,21 @@ msgstr "Opslag"
 msgid "Mail Account"
 msgstr "Mailaccount"
 
-msgid "Display Name"
+#, fuzzy
+msgid "Display name"
 msgstr "Weergavenaam"
 
-msgid "Email Address"
-msgstr "E-mailadres"
-
-msgid "Incoming Protocol"
+#, fuzzy
+msgid "Incoming protocol"
 msgstr "Inkomend protocol"
 
-msgid "SMTP Server (optional)"
+#, fuzzy
+msgid "SMTP server (optional)"
 msgstr "SMTP-server (optioneel)"
 
-msgid "SMTP Port (default 587)"
+#, fuzzy
+msgid "SMTP port (default 587)"
 msgstr "SMTP-poort (standaard 587)"
-
-msgid "Username"
-msgstr "Gebruikersnaam"
 
 msgid "Sign in with an API token"
 msgstr "Meld je aan met een API-token"
@@ -8414,12 +8495,6 @@ msgstr "Afzonderlijke SMTP-referenties"
 msgid "Off uses the credentials above."
 msgstr "Off gebruikt de bovenstaande inloggegevens."
 
-msgid "SMTP Username"
-msgstr "SMTP-gebruikersnaam"
-
-msgid "SMTP Password"
-msgstr "SMTP-wachtwoord"
-
 msgid "Accept a certificate for another name"
 msgstr "Accepteer een certificaat voor een andere naam"
 
@@ -8437,9 +8512,6 @@ msgid "Also in the unified Starred, Sent, Drafts, Archive, Filters and Tags."
 msgstr ""
 "Ook in de verenigde functies Met ster, Verzonden, Concepten, Archief, "
 "Filters en Tags."
-
-msgid "Test Connection"
-msgstr "Verbinding testen"
 
 msgid "Account accent color"
 msgstr "Accentkleur van account"
@@ -8483,13 +8555,14 @@ msgstr "Handtekening toevoegen"
 msgid "Import File…"
 msgstr "Bestand importeren…"
 
-msgid "Delete Signature"
+#, fuzzy
+msgid "Delete signature"
 msgstr "Handtekening verwijderen"
 
 msgid "Sender name"
 msgstr "Naam afzender"
 
-msgid "Replaces the account's name in From. Aliases keep their own."
+msgid "Replaces the account’s name in From. Aliases keep their own."
 msgstr ""
 "Vervangt de naam van het account in Van. Aliassen behouden hun eigen naam."
 
@@ -8512,8 +8585,8 @@ msgid "Move list mail to Trash"
 msgstr "Verplaats lijstmail naar de prullenbak"
 
 msgid ""
-"Inbox mail with an unsubscribe link older than this gets trashed unless it's "
-"starred."
+"Inbox mail with an unsubscribe link older than this gets trashed unless it "
+"is starred."
 msgstr ""
 "Inbox-e-mail met een afmeldlink die ouder is dan deze, wordt weggegooid, "
 "tenzij deze een ster bevat."
@@ -8533,27 +8606,19 @@ msgstr "Kan veel ruimte op de harde schijf in beslag nemen."
 msgid "Copy mail to On This Computer"
 msgstr "Kopieer e-mail naar Op deze computer"
 
-msgid ""
-"Downloads copies of every message from every folder of this account to this "
-"computer (except Trash, Junk and Drafts) and stores them in On This Computer."
-msgstr ""
-"Downloadt kopieën van elk bericht uit elke map van dit account naar deze "
-"computer (behalve Prullenbak, Junk en Concepten) en slaat ze op in Op deze "
-"computer."
-
 msgid "Mail already here is not imported again."
 msgstr "E-mail die al hier is, wordt niet opnieuw geïmporteerd."
 
 msgid "Maildir folders"
 msgstr "Maildir-mappen"
 
-msgid "Evolution's On This Computer, Dovecot and other Maildir trees."
+msgid "Evolution’s On This Computer, Dovecot and other Maildir trees."
 msgstr "Evolutions On This Computer, Dovecot en andere Maildir-bomen."
 
 msgid "Mbox files"
 msgstr "Mbox-bestanden"
 
-msgid "Thunderbird's folders and other mbox files."
+msgid "Thunderbird’s folders and other mbox files."
 msgstr "Thunderbird-mappen en andere mbox-bestanden."
 
 msgid "Microsoft 365"
@@ -8568,17 +8633,14 @@ msgstr "Stelt mensen uit je organisatie voor terwijl je typt."
 msgid "Suggest only from this account"
 msgstr "Alleen suggesties vanaf dit account"
 
-msgid "Suggestions come from the directory and this account's mail only."
+msgid "Suggestions come from the directory and this account’s mail only."
 msgstr "Suggesties komen alleen uit de directory en de e-mail van dit account."
 
 msgid "Show sensitivity label names"
 msgstr "Toon namen van gevoeligheidslabels"
 
-msgid "Shows a label's name when a message gives only its ID."
+msgid "Shows a label’s name when a message gives only its ID."
 msgstr "Toont de naam van een label wanneer een bericht alleen de ID vermeldt."
-
-msgid "Folder Order"
-msgstr "Mapvolgorde"
 
 msgid "Also in the right-click menu of its Folders heading."
 msgstr "Ook in het rechtsklikmenu van de kop Mappen."
@@ -8587,7 +8649,7 @@ msgid "Special Folders"
 msgstr "Speciale mappen"
 
 msgid ""
-"Follows the server's own markings unless you pick a folder. Nothing already "
+"Follows the server’s own markings unless you pick a folder. Nothing already "
 "on the server moves."
 msgstr ""
 "Volgt de eigen markeringen van de server, tenzij je een map kiest. Niets dat "
@@ -8635,9 +8697,10 @@ msgstr "Sta deze afzender toe"
 msgid "Blocked Senders"
 msgstr "Geblokkeerde afzenders"
 
+#, fuzzy
 msgid ""
-"Their mail is moved to Trash on arrival. Enter an address, or a domain like "
-"\"example.com\" to apply to all senders from that domain."
+"Their mail is moved to Trash on arrival. A domain, such as “example.com”, "
+"blocks every address in it."
 msgstr ""
 "Hun e-mail wordt bij aankomst naar de Prullenbak verplaatst. Voer een adres "
 "in, of een domein zoals 'example.com' dat van toepassing is op alle "
@@ -8679,7 +8742,7 @@ msgstr "Tekstgrootte"
 msgid "Adjusts the interface and message text size."
 msgstr "Past de interface en de tekstgrootte van het bericht aan."
 
-msgid "Use your desktop environment's icon set"
+msgid "Use your desktop environment’s icon set"
 msgstr "Gebruik de pictogrammenset van je bureaubladomgeving"
 
 msgid "This window opens to"
@@ -8688,12 +8751,8 @@ msgstr "Dit venster opent naar"
 msgid "Toolbar"
 msgstr "Werkbalk"
 
-msgid ""
-"Drag buttons between the groups. The right group folds into ⋯ when the pane "
-"is narrow."
+msgid "Drag buttons between the groups."
 msgstr ""
-"Sleep knoppen tussen de groepen. De rechtergroep vouwt zich in ⋯ wanneer de "
-"ruit smal is."
 
 msgid "Always fold the right group into ⋯"
 msgstr "Vouw de rechtergroep altijd in tot ⋯"
@@ -8736,7 +8795,7 @@ msgstr "Shift+Return doet het andere."
 msgid "Formatting toolbar"
 msgstr "Werkbalk Opmaak"
 
-msgid "For new messages. The toolbar's chevron toggles it."
+msgid "For new messages. The toolbar’s chevron toggles it."
 msgstr ""
 "Voor nieuwe berichten. De punthaak op de werkbalk schakelt deze in of uit."
 
@@ -8749,7 +8808,7 @@ msgstr "Altijd uitgebreid"
 msgid "Start new messages in"
 msgstr "Begin nieuwe berichten in"
 
-msgid "Reply in the original's format"
+msgid "Reply in the original’s format"
 msgstr "Reageer in het origineelformaat"
 
 msgid "Ask before switching to plain text"
@@ -8758,7 +8817,7 @@ msgstr "Vraag ernaar voordat je overschakelt naar platte tekst"
 msgid "Only when formatting, images or links would be removed."
 msgstr "Alleen bij opmaak worden afbeeldingen of links verwijderd."
 
-msgid "For rich text. Default leaves it to the recipient's own font."
+msgid "For rich text. Default leaves it to the recipient’s own font."
 msgstr ""
 "Voor rijke tekst. Standaard wordt dit aan het eigen lettertype van de "
 "ontvanger overgelaten."
@@ -8852,8 +8911,9 @@ msgstr "Talen"
 msgid "Added words"
 msgstr "Woorden toegevoegd"
 
-msgid "Changes apply after a restart."
-msgstr "Wijzigingen zijn van toepassing na een herstart."
+#, fuzzy
+msgid "Applies after app restarts."
+msgstr "Geldt na een herstart."
 
 msgid "Mark as read"
 msgstr "Markeren als gelezen"
@@ -8864,7 +8924,8 @@ msgstr "Gesprekken markeren elk bericht zodra het in beeld komt."
 msgid "Message appearance"
 msgstr "Weergave van bericht"
 
-msgid "Light / Dark Mode switch"
+#, fuzzy
+msgid "Show Light / Dark Mode switch"
 msgstr "Licht/donker modusschakelaar"
 
 msgid "Shown in the message header and the composer."
@@ -8880,13 +8941,13 @@ msgid "Ctrl+0 returns to the default."
 msgstr "Ctrl+0 keert terug naar de standaardwaarde."
 
 #, fuzzy
-msgid "Scale message width to fit reader"
+msgid "Scale wide messages to fit the reading pane"
 msgstr "Begin berichten met deze handtekening"
 
 msgid "Use my own font"
 msgstr "Gebruik mijn eigen lettertype"
 
-msgid "The font below replaces the sender's."
+msgid "The font below replaces the sender’s."
 msgstr "Het onderstaande lettertype vervangt dat van de afzender."
 
 msgid "Message font"
@@ -8898,7 +8959,7 @@ msgstr "Het interfacelettertype, tenzij een ander lettertype wordt gekozen."
 msgid "Use my own colors"
 msgstr "Gebruik mijn eigen kleuren"
 
-msgid "Ignores the sender's colors. Pictures stay; links use the accent color."
+msgid "Ignores the sender’s colors. Pictures stay; links use the accent color."
 msgstr ""
 "Negeert de kleuren van de afzender. Foto's blijven; links gebruiken de "
 "accentkleur."
@@ -8912,7 +8973,7 @@ msgstr "Opgemaakte berichten worden niet beïnvloed."
 msgid "Monospace font"
 msgstr "Monospace-lettertype"
 
-msgid "The system's monospace font unless another is chosen."
+msgid "The system’s monospace font unless another is chosen."
 msgstr ""
 "Het monospace-lettertype van het systeem, tenzij een ander lettertype wordt "
 "gekozen."
@@ -8938,7 +8999,7 @@ msgstr "Zoek de positie van de staaf"
 msgid "Space shows pictures and PDFs in Sushi"
 msgstr "Space toont afbeeldingen en pdf's in Sushi"
 
-msgid "A message's text alone, without the sender's layout, colors and fonts."
+msgid "A message’s text alone, without the sender’s layout, colors and fonts."
 msgstr ""
 "Alleen de tekst van een bericht, zonder de lay-out, kleuren en lettertypen "
 "van de afzender."
@@ -8949,7 +9010,7 @@ msgstr "Toon schakelaar Lezerweergave in berichtkop"
 msgid "When a message is opened"
 msgstr "Wanneer een bericht wordt geopend"
 
-msgid "The header's switch still changes the open message."
+msgid "The header’s switch still changes the open message."
 msgstr "De schakelaar van de header verandert nog steeds het open bericht."
 
 msgid "Printing"
@@ -8966,9 +9027,6 @@ msgstr "Bredere linkermarge"
 
 msgid "25 mm, so punched holes miss the text."
 msgstr "25 mm, dus gaatjes missen de tekst."
-
-msgid "Applies after a restart."
-msgstr "Geldt na een herstart."
 
 msgid "Renderer"
 msgstr "Renderer"
@@ -9050,7 +9108,7 @@ msgstr "Verwijderen…"
 msgid "Keep downloaded mail"
 msgstr "Bewaar gedownloade e-mail"
 
-msgid "Mail inside an account's offline period is kept."
+msgid "Mail inside an account’s offline period is kept."
 msgstr "E-mail binnen de offline periode van een account wordt bewaard."
 
 msgid "GNOME Files Integration"
@@ -9143,9 +9201,8 @@ msgstr "Emoji invoegen"
 msgid "Email Client"
 msgstr "E-mailclient"
 
-msgid ""
-"A fast, GNOME-native email client, built with Rust and libadwaita. Open "
-"source and private by default."
+#, fuzzy
+msgid "A GNOME-native email client built with Rust and libadwaita."
 msgstr ""
 "Een snelle, GNOME-native e-mailclient, gebouwd met Rust en libadwaita. "
 "Standaard open source en privé."
@@ -9154,17 +9211,11 @@ msgid "Email;Mail;IMAP;"
 msgstr "E-mail;Mail;IMAP;"
 
 msgid ""
-"Hylki is a desktop email client for GNOME on Wayland, written in Rust with "
-"libadwaita. Your mail and credentials stay on your machine, remote content "
-"is blocked until you allow it, and there is no telemetry. It works with "
-"IMAP, POP3, JMAP and Microsoft 365, and with any server from iCloud to "
-"Proton Bridge to a Stalwart of your own."
+"Hylki is an email client for the Linux desktop made to fit in with GNOME. It "
+"sends no telemetry or analytics. It is free software built to be both "
+"feature rich and beautiful. It works with IMAP, POP3, JMAP and Microsoft 365 "
+"accounts as well as iCloud, Gmail and Proton Bridge."
 msgstr ""
-"Hylki is een desktop-e-mailclient voor GNOME op Wayland, geschreven in Rust "
-"met libadwaita. Je e-mail en inloggegevens blijven op je machine staan, "
-"externe inhoud wordt geblokkeerd totdat je dit toestaat, en er is geen "
-"telemetrie. Het werkt met IMAP, POP3, JMAP en Microsoft 365, en met elke "
-"server, van iCloud tot Proton Bridge tot een eigen Stalwart."
 
 msgid "Accounts and mail:"
 msgstr "Accounts en e-mail:"
@@ -9213,9 +9264,10 @@ msgstr ""
 "Concepten, vouwen van offertes, gesplitste antwoorden en doorsturen waarbij "
 "de bijlagen behouden blijven"
 
+#, fuzzy
 msgid ""
 "Large files uploaded to your own Nextcloud, OneDrive, Dropbox or Seafile; a "
-"Send with Hylki entry in GNOME Files"
+"“Send with Hylki” entry in GNOME Files"
 msgstr ""
 "Grote bestanden geüpload naar je eigen Nextcloud, OneDrive, Dropbox of "
 "Seafile; een Verzenden met Hylki-invoer in GNOME Files"
@@ -9273,6 +9325,344 @@ msgstr "De uniforme inbox in lichte modus"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#~ msgid "Contributors and translators"
+#~ msgstr "Bijdragers en vertalers"
+
+#~ msgid "Hylki couldn’t save your password"
+#~ msgstr "Hylki kan je wachtwoord niet opslaan"
+
+#~ msgid "Hylki cannot change this kind of group"
+#~ msgstr "Hylki kan dit soort groep niet veranderen"
+
+#~ msgid "Notes"
+#~ msgstr "Opmerkingen"
+
+#~ msgid ""
+#~ "The directory cannot be searched without signing in. Add a sign-in to it "
+#~ "in Settings → Contacts."
+#~ msgstr ""
+#~ "De map kan niet worden doorzocht zonder dat je je hebt aangemeld. Voeg "
+#~ "een aanmelding toe in Instellingen → Contacten."
+
+#~ msgid "The new message starts as a copy of the template you pick."
+#~ msgstr ""
+#~ "Het nieuwe bericht begint als een kopie van de sjabloon die je kiest."
+
+#~ msgid "No Drafts folder available for this account"
+#~ msgstr "Er is geen map Concepten beschikbaar voor dit account"
+
+#~ msgid "No Templates folder available for this account"
+#~ msgstr "Er is geen map Sjablonen beschikbaar voor dit account"
+
+#~ msgid "Unstar"
+#~ msgstr "Ster weghalen"
+
+#~ msgid "Create a new folder for this account."
+#~ msgstr "Maak een nieuwe map voor dit account."
+
+#~ msgid "{names} ({size}). What should the files go into?"
+#~ msgstr "{names} ({size}). Waar moeten de bestanden in staan?"
+
+#~ msgid "Waiting for the keyring"
+#~ msgstr "Wachten op de sleutelhanger"
+
+#~ msgid "Star or unstar"
+#~ msgstr "Ster of ster verwijderen"
+
+#~ msgid "Mark read or unread"
+#~ msgstr "Markeer als gelezen of ongelezen"
+
+#~ msgid "Preview it as a PDF first"
+#~ msgstr "Bekijk het eerst als pdf"
+
+#~ msgid "Print"
+#~ msgstr "Afdrukken"
+
+#~ msgid "Show or Hide the Sidebar"
+#~ msgstr "Toon of verberg de zijbalk"
+
+#~ msgid "Reading Pane Off"
+#~ msgstr "Leesvenster uitgeschakeld"
+
+#~ msgid "Reveal Status Bar"
+#~ msgstr "Statusbalk onthullen"
+
+#~ msgid "The language applies the next time Hylki starts."
+#~ msgstr "De taal is van toepassing de volgende keer dat Hylki start."
+
+#~ msgid "Accounts"
+#~ msgstr "Accounts"
+
+#~ msgid ""
+#~ "Hylki will ask the list to stop sending you mail. A list can take a few "
+#~ "days to act on the request."
+#~ msgstr ""
+#~ "Hylki zal de lijst vragen om je geen e-mail meer te sturen. Het kan "
+#~ "enkele dagen duren voordat een lijst op het verzoek reageert."
+
+#~ msgid "Waiting since {ago}"
+#~ msgstr "Wachten sinds {ago}"
+
+#~ msgid "Use this account in Hylki"
+#~ msgstr "Gebruik dit account in Hylki"
+
+#~ msgid ""
+#~ "Switching this off returns the account to the import list. It stays in "
+#~ "GNOME Online Accounts."
+#~ msgstr ""
+#~ "Als je dit uitschakelt, keert het account terug naar de importlijst. Het "
+#~ "blijft in GNOME Online Accounts."
+
+#~ msgid ""
+#~ "Store mail in folders that live on this computer. Move or copy mail from "
+#~ "any account to here."
+#~ msgstr ""
+#~ "Bewaar e-mail in mappen die op deze computer staan. Verplaats of kopieer "
+#~ "e-mail van elk account naar hier."
+
+#~ msgid "{n} messages"
+#~ msgstr "{n} berichten"
+
+#~ msgid "Those in the unified section."
+#~ msgstr "Degenen in de verenigde sectie."
+
+#~ msgid "That key was imported before."
+#~ msgstr "Die sleutel is eerder geïmporteerd."
+
+#~ msgid "Sorted Z to A — switch to A to Z"
+#~ msgstr "Gesorteerd van Z tot A — schakel over naar A tot Z"
+
+#~ msgid "Sorted A to Z — switch to Z to A"
+#~ msgstr "Gesorteerd van A tot Z — schakel over naar Z tot A"
+
+#~ msgid "Save every attachment to a folder"
+#~ msgstr "Bewaar elke bijlage in een map"
+
+#~ msgid "Thumbnail grid"
+#~ msgstr "Miniatuurraster"
+
+#~ msgid "Table"
+#~ msgstr "Tabel"
+
+#~ msgid ""
+#~ "For a self-hosted server behind Cloudflare: files over 100 MB go up in 90 "
+#~ "MB pieces."
+#~ msgstr ""
+#~ "Voor een zelfgehoste server achter Cloudflare: bestanden groter dan 100 "
+#~ "MB worden in stukken van 90 MB verhoogd."
+
+#~ msgid "Used unless you change them in the upload dialog for one email."
+#~ msgstr ""
+#~ "Wordt gebruikt tenzij je ze wijzigt in het uploaddialoogvenster voor één "
+#~ "e-mail."
+
+#~ msgid "Check Connection"
+#~ msgstr "Controleer verbinding"
+
+#~ msgid "User name"
+#~ msgstr "Gebruikersnaam"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
+
+#~ msgid "Days; 0 keeps the link indefinitely"
+#~ msgstr "Dagen; 0 behoudt de link voor onbepaalde tijd"
+
+#~ msgid "Protect with a password"
+#~ msgstr "Bescherm met een wachtwoord"
+
+#~ msgid "“{addr}” is not an email address."
+#~ msgstr "“{addr}” is geen e-mailadres."
+
+#~ msgid "Send now instead"
+#~ msgstr "Stuur nu in plaats daarvan"
+
+#~ msgid "Use in Hylki"
+#~ msgstr "Gebruik in Hylki"
+
+#~ msgid "Password (saved; type to replace it)"
+#~ msgstr "Wachtwoord (opgeslagen; typ om het te vervangen)"
+
+#~ msgid "Contacts in the Hylki book"
+#~ msgstr "Contacten in het Hylki-boek"
+
+#~ msgid ""
+#~ "Adds contacts from .vcf or .csv files. Importing a file again updates "
+#~ "existing entries."
+#~ msgstr ""
+#~ "Voegt contacten toe vanuit .vcf- of .csv-bestanden. Als je een bestand "
+#~ "opnieuw importeert, worden bestaande vermeldingen bijgewerkt."
+
+#~ msgid "Saves every contact in the Hylki book in one .vcf file."
+#~ msgstr "Bewaart elk contact in het Hylki-boek in één .vcf-bestand."
+
+#~ msgid "Use an app-specific password, not your usual one."
+#~ msgstr ""
+#~ "Gebruik een app-specifiek wachtwoord, niet je gebruikelijke wachtwoord."
+
+#~ msgid "Address Books"
+#~ msgstr "Adresboeken"
+
+#~ msgid "'In the footer' disables expand/collapse."
+#~ msgstr "'In de voettekst' schakelt uitvouwen/samenvouwen uit."
+
+#~ msgid "Hylki, on this computer"
+#~ msgstr "Hylki, op deze computer"
+
+#~ msgid ""
+#~ "This will move {name} out of {from} and into {to}, locally and on the "
+#~ "server. A group in {from} that holds the contact will no longer have it."
+#~ msgstr ""
+#~ "Hierdoor wordt {name} uit {from} verplaatst naar {to}, lokaal en op de "
+#~ "server. Een groep in {from} die de contactpersoon bevat, zal deze niet "
+#~ "langer hebben."
+
+#~ msgid ""
+#~ "This will move {n} contact out of the address book it is in and into "
+#~ "{to}, locally and on the server. A group there that holds it will no "
+#~ "longer have it."
+#~ msgid_plural ""
+#~ "This will move {n} contacts out of the address books they are in and into "
+#~ "{to}, locally and on the server. Groups there that hold them will no "
+#~ "longer have them."
+#~ msgstr[0] ""
+#~ "Hierdoor wordt de {n} contactpersoon uit het adresboek waarin hij zich "
+#~ "bevindt, verplaatst naar {to}, lokaal en op de server. Een groep daar die "
+#~ "het bezit, zal het niet langer hebben."
+#~ msgstr[1] ""
+#~ "Hierdoor worden {n} contacten uit de adresboeken waarin ze zich bevinden, "
+#~ "verplaatst naar {to}, lokaal en op de server. Groepen daar die ze "
+#~ "vasthouden, zullen ze niet langer hebben."
+
+#~ msgid "This group names its members by contact, which Hylki does not edit."
+#~ msgstr ""
+#~ "Deze groep noemt zijn leden op basis van contact, dat Hylki niet bewerkt."
+
+#~ msgid "Move to…"
+#~ msgstr "Verplaatsen naar…"
+
+#~ msgid ""
+#~ "Pictures insert where the cursor is placed, other files attach normally"
+#~ msgstr ""
+#~ "Afbeeldingen worden ingevoegd waar de cursor is geplaatst, andere "
+#~ "bestanden worden normaal toegevoegd"
+
+#~ msgid "There's nothing here right now."
+#~ msgstr "Er is hier momenteel niets."
+
+#~ msgid ""
+#~ "Message zoom. Ctrl+ and Ctrl-, or Ctrl and the scroll wheel, change it; a "
+#~ "click here, or Ctrl+0, puts it back to the default from Settings."
+#~ msgstr ""
+#~ "Berichtzoom. Ctrl+ en Ctrl-, of Ctrl en het scrollwiel, verander het; een "
+#~ "klik hier, of Ctrl+0, zet het terug naar de standaardinstellingen vanuit "
+#~ "Instellingen."
+
+#~ msgid ""
+#~ "Reader View shows a message as its text alone, in one plain format, "
+#~ "without the sender's layout, colors and fonts."
+#~ msgstr ""
+#~ "leesweergave toont een bericht als alleen de tekst, in één eenvoudig "
+#~ "formaat, zonder de lay-out, kleuren en lettertypen van de afzender."
+
+#~ msgid "Copy Email Address"
+#~ msgstr "E-mailadres kopiëren"
+
+#~ msgid "Unsubscribing didn't work: {why}"
+#~ msgstr "Afmelden werkte niet: {why}"
+
+#~ msgid "The same keyring the gpg command and other mail apps use."
+#~ msgstr ""
+#~ "Dezelfde sleutelhanger die de gpg-opdracht en andere mail-apps gebruiken."
+
+#~ msgid "Grant access to entire account (except Trash and Junk)"
+#~ msgstr ""
+#~ "Toegang verlenen tot het gehele account (behalve prullenbak en ongewenste "
+#~ "e-mail)"
+
+#~ msgid "Reset to Defaults"
+#~ msgstr "Terugzetten naar standaardwaarden"
+
+#~ msgid "Hylki collects no telemetry and sends no analytics."
+#~ msgstr "Hylki verzamelt geen telemetrie en verzendt geen analyses."
+
+#~ msgid "Installed. Restart Files to load it; it needs nautilus-python"
+#~ msgstr ""
+#~ "Geïnstalleerd. Start bestanden opnieuw om het te laden; het heeft "
+#~ "nautilus-python nodig"
+
+#~ msgid "{email} — sending (SMTP): {e}"
+#~ msgstr "{email} — verzenden (SMTP): {e}"
+
+#~ msgid "Fetch Gravatar portraits"
+#~ msgstr "Haal Gravatar-portretten op"
+
+#~ msgid "Asks gravatar.com about each sender's address"
+#~ msgstr "Vraagt gravatar.com naar het adres van elke afzender"
+
+#~ msgid "Fetch sender logos"
+#~ msgstr "Afzenderlogo's ophalen"
+
+#~ msgid "Sender avatars"
+#~ msgstr "Avatars van afzenders"
+
+#~ msgid "Conversation view"
+#~ msgstr "Gesprekweergave"
+
+#~ msgid "Group messages into threads"
+#~ msgstr "Groepeer berichten in threads"
+
+#~ msgid "Mail on this computer is not sent, and has no drafts"
+#~ msgstr ""
+#~ "E-mail op deze computer wordt niet verzonden en bevat geen concepten"
+
+#~ msgid "No address book available to add contacts"
+#~ msgstr "Geen adresboek beschikbaar om contacten toe te voegen"
+
+#~ msgid "Show in Hylki"
+#~ msgstr "Tonen in Hylki"
+
+#~ msgid "Email Address"
+#~ msgstr "E-mailadres"
+
+#~ msgid "SMTP Username"
+#~ msgstr "SMTP-gebruikersnaam"
+
+#~ msgid "SMTP Password"
+#~ msgstr "SMTP-wachtwoord"
+
+#~ msgid ""
+#~ "Downloads copies of every message from every folder of this account to "
+#~ "this computer (except Trash, Junk and Drafts) and stores them in On This "
+#~ "Computer."
+#~ msgstr ""
+#~ "Downloadt kopieën van elk bericht uit elke map van dit account naar deze "
+#~ "computer (behalve Prullenbak, Junk en Concepten) en slaat ze op in Op "
+#~ "deze computer."
+
+#~ msgid "Folder Order"
+#~ msgstr "Mapvolgorde"
+
+#~ msgid ""
+#~ "Drag buttons between the groups. The right group folds into ⋯ when the "
+#~ "pane is narrow."
+#~ msgstr ""
+#~ "Sleep knoppen tussen de groepen. De rechtergroep vouwt zich in ⋯ wanneer "
+#~ "de ruit smal is."
+
+#~ msgid ""
+#~ "Hylki is a desktop email client for GNOME on Wayland, written in Rust "
+#~ "with libadwaita. Your mail and credentials stay on your machine, remote "
+#~ "content is blocked until you allow it, and there is no telemetry. It "
+#~ "works with IMAP, POP3, JMAP and Microsoft 365, and with any server from "
+#~ "iCloud to Proton Bridge to a Stalwart of your own."
+#~ msgstr ""
+#~ "Hylki is een desktop-e-mailclient voor GNOME op Wayland, geschreven in "
+#~ "Rust met libadwaita. Je e-mail en inloggegevens blijven op je machine "
+#~ "staan, externe inhoud wordt geblokkeerd totdat je dit toestaat, en er is "
+#~ "geen telemetrie. Het werkt met IMAP, POP3, JMAP en Microsoft 365, en met "
+#~ "elke server, van iCloud tot Proton Bridge tot een eigen Stalwart."
 
 #~ msgid ""
 #~ "Where contacts come from for Contacts, suggestions, sender pictures and "

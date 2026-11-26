@@ -397,7 +397,7 @@ impl AppModel {
         let dialog = adw::AlertDialog::new(
             Some(&i18n_f("Delete “{name}”?", &[("name", &folder.name)])),
             Some(&i18n(
-                "The smart folder goes from the sidebar. The mail it shows stays where it is.",
+                "The smart folder is removed from the sidebar. The mail it shows stays where it is.",
             )),
         );
         dialog.add_response("cancel", &i18n("Cancel"));

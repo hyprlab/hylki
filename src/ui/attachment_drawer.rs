@@ -379,7 +379,7 @@ impl SimpleComponent for AttachmentDrawer {
                             "view-sort-ascending-symbolic"
                         },
                         #[watch]
-                        set_tooltip_text: Some(if model.sort_desc { i18n("Sorted Z to A — switch to A to Z") } else { i18n("Sorted A to Z — switch to Z to A") }.as_str()),
+                        set_tooltip_text: Some(if model.sort_desc { i18n("Sort A to Z") } else { i18n("Sort Z to A") }.as_str()),
                         connect_clicked[sender] => move |_| {
                             sender.input_sender().emit(AttachmentDrawerInput::ToggleSortOrder);
                         },
@@ -409,7 +409,6 @@ impl SimpleComponent for AttachmentDrawer {
                         set_valign: gtk::Align::Center,
                         // Matching the count's inset at the other end.
                         set_margin_end: 3,
-                        set_tooltip_text: Some(i18n("Save every attachment to a folder").as_str()),
                         connect_clicked[sender] => move |_| {
                             sender.input_sender().emit(AttachmentDrawerInput::SaveAll);
                         },

@@ -419,10 +419,10 @@ fn connect_error(dir: &Directory, last: &LastCredentials, fallback: String) -> S
         // Still waiting for a password: neither Hylki nor the keyring EDS
         // reads has one for it.
         "required" if !dir.bind_dn.trim().is_empty() => needs_password(),
-        "required" => i18n("The directory cannot be searched without signing in. Add a sign-in to it in Settings → Contacts."),
+        "required" => i18n("The directory needs a sign-in. Add one in Settings → Contacts."),
         "rejected" => i18n("The directory did not accept the password."),
-        "ssl_failed" if detail.is_empty() => i18n("The directory's certificate could not be verified."),
-        "ssl_failed" => i18n_f("The directory's certificate could not be verified: {error}", &[("error", detail)]),
+        "ssl_failed" if detail.is_empty() => i18n("The directory’s certificate could not be verified."),
+        "ssl_failed" => i18n_f("The directory’s certificate could not be verified: {error}", &[("error", detail)]),
         // EDS's own words for a connection that never came up.
         _ if detail == "Repository offline" => match dir.security {
             Security::Ldaps => i18n_f(
@@ -460,7 +460,7 @@ fn query_directory(dir: &Directory, query: &str) -> Result<Vec<String>, String> 
             if e.contains("Offline unavailable") {
                 let server = format!("{}:{}", dir.host.trim(), dir.port);
                 return Err(i18n_f(
-                    "Could not reach {server}. Check the server's name and the network.",
+                    "Could not reach {server}. Check the server’s name and the network.",
                     &[("server", &server)],
                 ));
             }

@@ -173,7 +173,7 @@ pub(super) fn sign_in_password_blocking(
     read.map(Option::unwrap_or_default).map_err(|e| {
         tracing::warn!("could not read the keyring for {}: {e}", account.email);
         i18n_f(
-            "Could not read the password for {email} from the keyring ({e}). Hylki tries again at the next connection.",
+            "Could not read the password for {email} from the keyring ({e}). It is tried again at the next connection.",
             &[("email", &account.email), ("e", &e)],
         )
     })

@@ -105,7 +105,7 @@ impl AppModel {
                 // change is saved and announced.
                 if config::load_renderer() != renderer {
                     config::save_renderer(&renderer);
-                    self.notice(i18n("The renderer applies the next time Hylki starts."));
+                    self.notice(i18n("The new renderer applies after app restarts."));
                 }
             }
 
@@ -114,7 +114,7 @@ impl AppModel {
                 // change is saved and announced.
                 if config::load_language() != code {
                     config::save_language(&code);
-                    self.notice(i18n("The language applies the next time Hylki starts."));
+                    self.notice(i18n("The new language applies after app restarts."));
                 }
             }
 

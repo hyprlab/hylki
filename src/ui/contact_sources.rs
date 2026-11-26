@@ -51,7 +51,7 @@ struct AddKind {
     what: AddWhat,
 }
 
-const APP_PW: &str = i18n_noop("Use an app-specific password, not your usual one.");
+const APP_PW: &str = i18n_noop("Needs an app password, not your login password.");
 
 const ADD_KINDS: &[AddKind] = &[
     AddKind {
@@ -59,7 +59,7 @@ const ADD_KINDS: &[AddKind] = &[
         mark: "folder-remote-symbolic",
         what: AddWhat::CardDav {
             server: None,
-            hint: i18n_noop("The server's address is usually enough. Two-step sign-in needs an app password."),
+            hint: i18n_noop("The server’s address is usually enough. Two-step verification needs an app password."),
         },
     },
     AddKind { label: "iCloud", mark: "icloud", what: AddWhat::CardDav { server: Some("https://contacts.icloud.com"), hint: APP_PW } },
@@ -68,7 +68,7 @@ const ADD_KINDS: &[AddKind] = &[
         mark: "nextcloud",
         what: AddWhat::CardDav {
             server: None,
-            hint: i18n_noop("Such as cloud.example.org. With two-factor sign-in, make an app password in Nextcloud under Settings → Security."),
+            hint: i18n_noop("Such as cloud.example.org. With two-step verification, make an app password in Nextcloud under Settings → Security."),
         },
     },
     AddKind {
@@ -242,7 +242,7 @@ impl SimpleComponent for ContactSources {
                             #[wrap(Some)]
                             set_child = &adw::PreferencesPage {
                                 add = &adw::PreferencesGroup {
-                                    set_title: &i18n("Address Books"),
+                                    set_title: &i18n("Address books"),
                                     #[wrap(Some)]
                                     set_header_suffix = &gtk::Box {
                                         set_orientation: gtk::Orientation::Horizontal,
@@ -300,7 +300,7 @@ impl SimpleComponent for ContactSources {
                                     // name for people in my address book".
                                     adw::SwitchRow {
                                         set_title: &i18n("Show names from Contacts"),
-                                        set_subtitle: &i18n("Saved addresses show the contact's name, not the mail's."),
+                                        set_subtitle: &i18n("Saved addresses show the contact’s name, not the mail’s."),
                                         set_active: init.contact_names,
                                         connect_active_notify[sender] => move |row| {
                                             let _ = sender.output(ContactSourcesOutput::SetContactNames(row.is_active()));
@@ -333,7 +333,7 @@ impl SimpleComponent for ContactSources {
                                     #[name = "placement_row"]
                                     adw::ComboRow {
                                         set_title: &i18n("Contacts placement"),
-                                        set_subtitle: &i18n("'In the footer' disables expand/collapse."),
+                                        set_subtitle: &i18n("“In the footer” cannot be folded."),
                                         set_model: Some(&crate::ui::preferences::contacts_placement_model()),
                                         set_selected: crate::ui::preferences::contacts_placement_index(init.placement),
                                     },

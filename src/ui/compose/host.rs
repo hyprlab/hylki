@@ -101,13 +101,13 @@ fn confirm_discard_dialog(
 ) {
     let (heading, body, save) = if template {
         (
-            i18n("Save the template?"),
+            i18n("Save the Template?"),
             i18n("Its changes have not been saved. Save them to the template, or discard them."),
             i18n("Save Template"),
         )
     } else {
         (
-            i18n("Save the message?"),
+            i18n("Save the Message?"),
             i18n("It has not been sent. Save it to Drafts to finish later, or discard it."),
             i18n("Save Draft"),
         )
@@ -326,13 +326,13 @@ impl Compose {
             let encrypt = widgets.encrypt_btn.clone();
             pgp.push(
                 MenuEntry::new(
-                    i18n("Encrypt with OpenPGP to every recipient's key"),
+                    i18n("Encrypt with OpenPGP to every recipient’s key"),
                     move || encrypt.set_active(!encrypt.is_active()),
                 )
                 .icon("channel-secure-symbolic")
                 .checked(self.encrypt)
                 .tooltip(pgp_tooltip(
-                    &i18n("Encrypt with OpenPGP to every recipient's key"),
+                    &i18n("Encrypt with OpenPGP to every recipient’s key"),
                     self.encrypt,
                 )),
             );

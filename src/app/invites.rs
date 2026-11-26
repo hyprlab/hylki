@@ -91,7 +91,7 @@ impl AppModel {
         rsvp: crate::models::Rsvp,
     ) {
         let Some(organizer) = invite.organizer.as_ref().map(|o| o.email.clone()) else {
-            self.notice_error(i18n("This invitation names no organiser to answer."));
+            self.notice_error(i18n("This invitation names no organizer to answer."));
             return;
         };
         let (from_alias, name, address) = self.invite_identity(message, invite);

@@ -117,7 +117,6 @@ impl Component for PgpKeys {
                     #[name = "status_row"]
                     adw::ActionRow {
                         set_title: &i18n("GnuPG"),
-                        set_subtitle: &i18n("The same keyring the gpg command and other mail apps use."),
                     },
                 },
 
@@ -129,8 +128,8 @@ impl Component for PgpKeys {
                         i18n("Keys found here are kept apart from your keyring.").as_str()
                     ),
                     adw::SwitchRow {
-                        set_title: &i18n("Look up recipients' keys"),
-                        set_subtitle: &i18n("Each recipient's domain (WKD) learns that you write to them."),
+                        set_title: &i18n("Look up recipients’ keys"),
+                        set_subtitle: &i18n("Each recipient’s domain (WKD) learns that you write to them."),
                         set_active: crate::config::load_privacy().key_lookup,
                         connect_active_notify => move |row| {
                             let mut prefs = crate::config::load_privacy();
@@ -183,7 +182,7 @@ impl Component for PgpKeys {
 
                 #[name = "others_group"]
                 add = &adw::PreferencesGroup {
-                    set_title: &i18n("Other people's keys"),
+                    set_title: &i18n("Other people’s keys"),
                     set_description: Some(
                         i18n("Keys you encrypt to and check signatures with. Check a fingerprint with its owner before trusting it.").as_str()
                     ),
@@ -590,7 +589,7 @@ impl PgpKeys {
                 let parent = dialog.transient_for();
                 crate::ui::dialog::alert(
                     parent.as_ref(),
-                    &i18n("The passphrases differ"),
+                    &i18n("The Passphrases Differ"),
                     &i18n("Type the same passphrase twice."),
                 );
                 return;
@@ -733,7 +732,7 @@ impl PgpKeys {
         let parent = relm4::main_application().active_window();
         let (title, body) = if secret {
             (
-                i18n("Delete your key?"),
+                i18n("Delete Your Key?"),
                 i18n_f(
                     "{uid} will be removed, secret half included. Mail encrypted to it \
                      can never be read again, unless you have a backup of the key.",
@@ -742,7 +741,7 @@ impl PgpKeys {
             )
         } else {
             (
-                i18n("Remove this key?"),
+                i18n("Remove This Key?"),
                 i18n_f("{uid} will be removed from your keyring. It can be imported or fetched again later.", &[("uid", key.primary_uid())]),
             )
         };
@@ -858,9 +857,9 @@ impl PgpKeys {
         let parent = relm4::main_application().active_window();
         let dialog = crate::ui::dialog::message_dialog(
             parent.as_ref(),
-            Some(&i18n("Trust this key?")),
+            Some(&i18n("Trust This Key?")),
             Some(&i18n_f(
-                "Compare the fingerprint with the one {uid} gives you in person or another way. Trusting an unchecked key lets an impostor's signature pass.",
+                "Compare the fingerprint with the one {uid} gives you in person or another way. Trusting an unchecked key lets an impostor’s signature pass.",
                 &[("uid", key.primary_uid())],
             )),
         );

@@ -192,7 +192,7 @@ impl FolderHierarchy {
             }
             (_, Some(d)) if name.contains(d) => {
                 return Err(i18n_f(
-                    "A folder name can't contain “{c}” on this account.",
+                    "A folder name cannot contain “{c}” on this account.",
                     &[("c", &d.to_string())],
                 ))
             }

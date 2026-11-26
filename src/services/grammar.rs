@@ -223,7 +223,7 @@ pub(crate) fn check(
         Engine::Server => {
             let Some(base) = languagetool::endpoint(&settings.url) else {
                 return Err(i18n(
-                    "Enter the LanguageTool server's address in Settings → Composing.",
+                    "Enter the LanguageTool server’s address in Settings → Composing.",
                 ));
             };
             let account = languagetool::Account {
@@ -239,7 +239,7 @@ pub(crate) fn check(
 /// version, or why not.
 pub(crate) fn check_server(settings: &Settings, key: &str) -> Result<String, String> {
     let Some(base) = languagetool::endpoint(&settings.url) else {
-        return Err(i18n("Enter the server's address first."));
+        return Err(i18n("Enter the server’s address first."));
     };
     let account = languagetool::Account {
         username: settings.username.trim(),

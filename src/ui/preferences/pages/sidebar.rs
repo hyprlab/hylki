@@ -102,7 +102,7 @@ impl SidebarPage {
                     #[name = "account_click_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Fold accounts with one click"),
-                        set_subtitle: &i18n("When off, only its chevron or a double click activates the fold."),
+                        set_subtitle: &i18n("Off, only the chevron or a double click folds an account."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetAccountClickFolds(row.is_active()));
                         },
@@ -111,7 +111,7 @@ impl SidebarPage {
                     #[name = "show_attachments_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Show Attachments Browser"),
-                        set_subtitle: &i18n("Browse every account's attachments in one place."),
+                        set_subtitle: &i18n("Every account’s attachments in one place."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetAttachmentsRow(row.is_active()));
                         },
@@ -146,7 +146,7 @@ impl SidebarPage {
                     #[name = "seen_counts_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Highlight only new unread mail"),
-                        set_subtitle: &i18n("A count turns grey once you have looked at the folder."),
+                        set_subtitle: &i18n("A count turns gray once you have looked at the folder."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetSeenCounts(row.is_active()));
                         },
@@ -320,7 +320,7 @@ impl SidebarPage {
                     #[name = "contacts_placement_row"]
                     adw::ComboRow {
                         set_title: &i18n("Contacts placement"),
-                        set_subtitle: &i18n("'In the footer' disables expand/collapse."),
+                        set_subtitle: &i18n("“In the footer” cannot be folded."),
                         connect_selected_notify[sender] => move |row| {
                             sender.input(PrefInput::ChangeContactsPlacement(row.selected()));
                         },

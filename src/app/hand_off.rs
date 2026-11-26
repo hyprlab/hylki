@@ -150,8 +150,8 @@ impl AppModel {
                 })
                 .collect();
             let text = crate::i18n::ni18n_f(
-                "Could not attach {names}: Hylki cannot read the file.",
-                "Could not attach {n} files (Hylki cannot read them): {names}",
+                "Could not read {names}, so it was not attached.",
+                "Could not read {n} files, so they were not attached: {names}",
                 dropped.len() as u32,
                 &[
                     ("n", &dropped.len().to_string()),
@@ -222,7 +222,7 @@ impl AppModel {
             ),
             Some(
                 i18n_f(
-                    "{names} ({size}). What should the files go into?",
+                    "{names} ({size}). Attach to a new message, a reply or a draft?",
                     &[("names", &names), ("size", &size)],
                 )
                 .as_str(),
@@ -345,7 +345,7 @@ impl AppModel {
                 let names = hand_off_names(&hand_off.files);
                 let dialog = crate::ui::dialog::message_dialog(
                     Some(&self.window),
-                    Some(i18n("Large files").as_str()),
+                    Some(i18n("Large Files").as_str()),
                     Some(
                         ni18n_f(
                             "{names} is {size}, over the {limit} limit. Upload it to cloud storage and put a download link in the message instead?",

@@ -326,7 +326,7 @@ pub(crate) fn save_group(
             patched_apple_group(original, &edit)
         }
         GroupFormat::Kind | GroupFormat::Categories => {
-            return Err(i18n("Hylki cannot change this kind of group"))
+            return Err(i18n("This kind of group cannot be changed here"))
         }
     };
     if create {

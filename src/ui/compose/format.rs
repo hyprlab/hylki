@@ -50,7 +50,7 @@ fn format_hint(format: ComposeFormat) -> String {
     match format {
         ComposeFormat::Rich => i18n("Format as you type; it is sent as HTML"),
         ComposeFormat::Markdown => i18n("Write Markdown; it is sent as formatted mail"),
-        ComposeFormat::Html => i18n("Write the message's HTML by hand"),
+        ComposeFormat::Html => i18n("Write the message’s HTML by hand"),
         ComposeFormat::Plain => i18n("No formatting at all"),
     }
 }
@@ -269,7 +269,7 @@ impl Compose {
         root: &adw::BreakpointBin,
     ) {
         let dialog = adw::AlertDialog::new(
-            Some(&i18n("Switch to plain text?")),
+            Some(&i18n("Switch to Plain Text?")),
             Some(&i18n("Formatting, images and links are removed.")),
         );
         dialog.add_response("cancel", &i18n("Cancel"));

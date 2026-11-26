@@ -169,7 +169,7 @@ impl AppModel {
         sender: &ComponentSender<Self>,
     ) {
         if books.is_empty() || email.trim().is_empty() {
-            self.notice_error(i18n("No address book available to add contacts"));
+            self.notice_error(i18n("No address book available"));
             return;
         }
 
@@ -557,7 +557,7 @@ impl AppModel {
             // portal.
             AppMsg::ChooseThunderbirdFolder { book } => {
                 let dialog = gtk::FileDialog::builder()
-                    .title(i18n("Choose Thunderbird's Profile Folder"))
+                    .title(i18n("Choose Thunderbird’s Profile Folder"))
                     .build();
                 let s = sender.input_sender().clone();
                 dialog.select_folder(

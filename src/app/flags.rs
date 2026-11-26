@@ -20,7 +20,7 @@ pub(super) fn star_label(starred: bool) -> String {
     if starred {
         i18n("Star")
     } else {
-        i18n("Unstar")
+        i18n("Remove Star")
     }
 }
 

@@ -89,8 +89,10 @@ impl AccountsWindow {
             parent,
             Some(i18n("Tags Found").as_str()),
             Some(
-                i18n_f(
+                ni18n_f(
+                    "{n} tag is in use in your mailboxes but not set up here.",
                     "{n} tags are in use in your mailboxes but not set up here.",
+                    n as u32,
                     &[("n", &n.to_string())],
                 )
                 .as_str(),
@@ -112,7 +114,12 @@ impl AccountsWindow {
             row.set_title(&gtk::glib::markup_escape_text(&p.tag.name));
             let mut parts = vec![p.tag.keyword.clone()];
             if p.count > 0 {
-                parts.push(i18n_f("{n} messages", &[("n", &p.count.to_string())]));
+                parts.push(ni18n_f(
+                    "{n} message",
+                    "{n} messages",
+                    p.count as u32,
+                    &[("n", &p.count.to_string())],
+                ));
             }
             parts.extend(p.places.iter().cloned());
             row.set_subtitle(&gtk::glib::markup_escape_text(&parts.join(" · ")));
@@ -260,7 +267,7 @@ impl AccountsWindow {
         let keyword_row = adw::EntryRow::new();
         keyword_row.set_title(&i18n("Keyword"));
         keyword_row.set_tooltip_text(Some(
-            i18n("How the server stores the tag, without spaces. Thunderbird's built-in tags are $label1 to $label5.")
+            i18n("How the server stores the tag, without spaces. Thunderbird’s built-in tags are $label1 to $label5.")
                 .as_str(),
         ));
 

@@ -289,7 +289,7 @@ impl AppModel {
             sidebar_header: None,
             sidebar_refresh: {
                 let b = gtk::Button::new();
-                b.set_tooltip_text(Some(i18n("Refresh or long-press for Status Bar").as_str()));
+                b.set_tooltip_text(Some(i18n("Refresh, or long-press for the status bar").as_str()));
                 b.add_css_class("flat");
                 b.set_valign(gtk::Align::Center);
                 b

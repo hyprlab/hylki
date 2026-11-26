@@ -139,7 +139,7 @@ pub(crate) fn readable_error(text: &str) -> String {
         excerpt.push('…');
     }
     let what = i18n_f(
-        "the server's reply could not be read (it began: {reply})",
+        "the server’s reply could not be read (it began: {reply})",
         &[("reply", &excerpt)],
     );
     if head.is_empty() {
@@ -173,7 +173,7 @@ mod fetch_mode_tests {
         let text = "Could not load INBOX: io: Error(Error { input: [42, 32, 55, 57, 56, 32, 70], code: Tag }) during parsing of \"* 798 FETCH (FLAGS (\\\\Seen) UID 4321 BODY[HEADER] {9821}\\r\\nReceived: from a\\r\\n\"";
         let out = readable_error(text);
         assert!(
-            out.starts_with("Could not load INBOX: the server's reply could not be read"),
+            out.starts_with("Could not load INBOX: the server’s reply could not be read"),
             "{out}"
         );
         assert!(

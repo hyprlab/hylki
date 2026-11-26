@@ -78,7 +78,7 @@ pub(super) fn add_toolbar_end_buttons(
         });
     }
     let signature_btn = gtk::Button::from_icon_name("signature-symbolic");
-    signature_btn.set_tooltip_text(Some(i18n("Insert Signature").as_str()));
+    signature_btn.set_tooltip_text(Some(i18n("Insert signature").as_str()));
     signature_btn.add_css_class("flat");
     signature_btn.set_can_focus(false);
     signature_btn.set_visible(has_signatures);
@@ -99,7 +99,7 @@ pub(super) fn add_toolbar_end_buttons(
     // Mail merge fields (#447), at the caret: in every format, since a
     // field is text in each.
     let fields_btn = gtk::Button::from_icon_name("hylki-merge-field-symbolic");
-    fields_btn.set_tooltip_text(Some(i18n("Insert Merge Field").as_str()));
+    fields_btn.set_tooltip_text(Some(i18n("Insert merge field").as_str()));
     fields_btn.add_css_class("flat");
     fields_btn.set_can_focus(false);
     {

@@ -51,7 +51,7 @@ fn refusal(error: &SignError, address: &str) -> SmtpError {
         ),
         SignError::Expired => i18n_f("The S/MIME certificate for {address} has expired.", &args),
         SignError::NotTrusted => i18n_f(
-            "The S/MIME certificate for {address} is not trusted. Add its root certificate to gpgsm's trustlist.txt.",
+            "The S/MIME certificate for {address} is not trusted. Add its root certificate to gpgsm’s trustlist.txt.",
             &args,
         ),
         SignError::Other(text) if text.is_empty() => i18n("gpgsm did not sign the message."),

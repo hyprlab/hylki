@@ -233,7 +233,7 @@ impl AppModel {
     }
 
     /// Explain how to set up the system keyring (Secret Service) so passwords
-    /// persist across restarts, and — on Linux Mint / Cinnamon — how to stop the
+    /// persist across restarts and, on Linux Mint / Cinnamon, how to stop the
     /// keyring asking for an unlock password at every login.
     ///
     /// `problem` is true when this is shown because a save actually failed;
@@ -243,62 +243,44 @@ impl AppModel {
         let mint = crate::desktop::platform::is_mint_cinnamon();
 
         let heading = if problem {
-            i18n("Hylki couldn’t save your password")
+            i18n("Could Not Save Your Password")
         } else {
-            i18n("Keyring setup on Linux Mint")
+            i18n("Keyring Setup on Linux Mint")
         };
 
-        let mut body = String::new();
-        if problem {
-            body.push_str(
-                "Hylki stores account passwords in the system keyring (the Secret \
-                 Service), never on disk. The keyring didn’t accept the password, so \
-                 this account won’t stay signed in after you close Hylki.\n\n",
-            );
+        let mut body = if problem {
+            i18n(
+                "Account passwords are kept in the system keyring (the Secret Service), never on disk. The keyring did not accept the password, so this account will not stay signed in after you close the app.",
+            )
         } else {
-            body.push_str(
-                "Hylki keeps your account passwords in the system keyring (the Secret \
-                 Service) rather than on disk. On Linux Mint with Cinnamon the keyring \
-                 sometimes needs a one-time setup so passwords persist — and so it \
-                 doesn’t ask you to unlock it at every login.\n\n",
-            );
-        }
+            i18n(
+                "Account passwords are kept in the system keyring (the Secret Service), never on disk. On Linux Mint with Cinnamon the keyring can need a one-time setup to keep them, and to stop asking to be unlocked at every login.",
+            )
+        };
+        body.push_str("\n\n");
 
         if mint {
-            body.push_str(
-                "Set it up:\n\
-                 1. Install the keyring tools if needed:\n\
-                 \u{2003}sudo apt install gnome-keyring seahorse\n\
-                 2. Open “Passwords and Keys” (Seahorse) and make sure a keyring named \
-                 “Login” exists and is set as Default (right-click → Set as Default).\n\n\
-                 Stop it asking for a password at each login — pick one:\n\
-                 • Recommended: set the Login keyring’s password to match your user \
-                 login password (right-click the Login keyring → Change Password), and \
-                 log in with your password rather than using automatic login. The \
-                 keyring then unlocks automatically when you log in.\n\
-                 • Or, to remove the prompt entirely even with automatic login: set the \
-                 Login keyring’s password to blank (Change Password → leave the new \
-                 password empty). This is convenient, but your saved passwords are then \
-                 stored unencrypted at rest — only do this on a machine you trust.",
-            );
+            // The command stays out of the translation: it is typed as is.
+            body.push_str(&i18n("Set it up:\n1. Install the keyring tools if needed:"));
+            body.push_str("\n\u{2003}sudo apt install gnome-keyring seahorse\n");
+            body.push_str(&i18n(
+                "2. Open Passwords and Keys (Seahorse). Make sure a keyring named “Login” exists and is the default (right-click → Set as Default).\n\nTo stop the unlock prompt at each login, choose one:\n• Give the Login keyring the same password as your user account (right-click → Change Password) and log in with a password, not automatic login. The keyring then unlocks when you log in. This is the safer choice.\n• With automatic login, give the Login keyring an empty password. Your saved passwords are then stored unencrypted, so do this only on a computer you trust.",
+            ));
             if crate::desktop::platform::is_flatpak() {
-                body.push_str(
-                    "\n\nNote: run these steps on the host system (not inside the \
-                     Flatpak) — Hylki uses whatever keyring your desktop provides.",
-                );
+                body.push_str("\n\n");
+                body.push_str(&i18n(
+                    "Run these steps on the host system, not inside the Flatpak: the app uses your desktop’s keyring.",
+                ));
             }
         } else {
-            body.push_str(
-                "Make sure a Secret Service keyring is installed, running, and \
-                 unlocked — for example install “gnome-keyring” and “seahorse” \
-                 (Passwords and Keys), then create a default “Login” keyring and set \
-                 its password to your login password so it unlocks automatically.",
-            );
+            body.push_str(&i18n(
+                "Make sure a Secret Service keyring is installed, running and unlocked. For example, install gnome-keyring and seahorse (Passwords and Keys), create a default “Login” keyring and give it your login password so it unlocks when you log in.",
+            ));
         }
 
         let dialog =
             crate::ui::dialog::message_dialog(Some(&self.window), Some(&heading), Some(&body));
-        dialog.add_response("ok", &i18n("Got it"));
+        dialog.add_response("ok", &i18n("Got It"));
         dialog.set_default_response(Some("ok"));
         // The proactive tip is a one-time thing: mark it seen once dismissed (by
         // any means) so it never nags again. A real save failure always shows.

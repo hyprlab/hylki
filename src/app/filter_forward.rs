@@ -291,7 +291,7 @@ impl AppModel {
         f.refused = true;
         let rule = f.rule.clone();
         self.notice_error(i18n_f(
-            "The forward of filter {rule} was refused. The message was left where it is and will be tried again",
+            "The forward of filter {rule} was refused. The message stays where it is and will be tried again.",
             &[("rule", &rule)],
         ));
         true

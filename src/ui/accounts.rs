@@ -11,7 +11,7 @@ use relm4::prelude::*;
 use crate::config::{
     split_identity, AccountConfig, AliasConfig, NamedSignature, OAuthSettings, Protocol,
 };
-use crate::i18n::{i18n, i18n_f, i18n_noop};
+use crate::i18n::{i18n, i18n_f, i18n_noop, ni18n_f};
 use crate::ui::rich_editor::{self, RichEditor};
 use crate::ui::sender_row::{SenderRow, SenderRowOutput};
 use crate::worker::{self, ConnTest};
@@ -224,7 +224,7 @@ impl Component for AccountsWindow {
 
                 // ---- list page ----
                 add = &adw::NavigationPage {
-                    set_title: &i18n("Accounts"),
+                    set_title: &i18n("Mail Accounts"),
                     set_tag: Some("list"),
 
                     #[wrap(Some)]

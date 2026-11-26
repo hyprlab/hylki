@@ -218,7 +218,7 @@ pub(crate) fn pick_later_time(
             Some(t) if t > crate::datefmt::now() => pick(t),
             _ => alert(
                 dlg.transient_for().as_ref(),
-                i18n("That time has passed").as_str(),
+                i18n("That Time Has Passed").as_str(),
                 i18n("Choose a time later than now.").as_str(),
             ),
         }

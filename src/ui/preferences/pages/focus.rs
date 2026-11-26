@@ -184,7 +184,7 @@ impl FocusPage {
         add(
             &list_group,
             F::ListHeader,
-            i18n("Fold the message list's header"),
+            i18n("Fold the message list’s header"),
             Some(i18n("Everything but the sidebar toggle goes into ⋯.")),
         );
         add(
@@ -217,7 +217,7 @@ impl FocusPage {
         add(
             &group,
             F::ReaderToolbar,
-            i18n("Fold the reading pane's toolbar"),
+            i18n("Fold the reading pane’s toolbar"),
             Some(i18n("Every button goes into its ⋯ menu.")),
         );
         add(

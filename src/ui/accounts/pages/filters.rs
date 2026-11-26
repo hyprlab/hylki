@@ -59,7 +59,7 @@ impl FiltersPage {
                         gtk::Button {
                             set_size_request: (130, -1),
                             set_tooltip_text: Some(
-                                i18n("Run every rule over the mail already in your inboxes").as_str()
+                                i18n("Run every filter over the mail already in your inboxes").as_str()
                             ),
                             connect_clicked => AccountsInput::ApplyFilters,
                             // A spinner inside the button

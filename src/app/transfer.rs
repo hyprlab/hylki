@@ -610,10 +610,10 @@ impl AppModel {
         }
         if foreign > 0 {
             self.notice_error(if foreign == 1 {
-                i18n("One message stayed put: this account can't take mail from another")
+                i18n("One message was not moved: this account cannot take mail from another")
             } else {
                 i18n_f(
-                    "{foreign} messages stayed put: this account can't take mail from another",
+                    "{foreign} messages were not moved: this account cannot take mail from another",
                     &[("foreign", &foreign.to_string())],
                 )
             });

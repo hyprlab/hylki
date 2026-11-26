@@ -1,7 +1,7 @@
 //! Messages waiting in the outbox.
 
 use super::message::Message;
-use crate::i18n::{i18n, i18n_f};
+use crate::i18n::{i18n, i18n_f, ni18n_f};
 
 /// A message that could not be sent and is waiting in the Outbox.
 ///
@@ -51,13 +51,13 @@ impl OutboxItem {
         let secs = (now - queued_at).max(0);
         let ago = match secs {
             s if s < 90 => i18n("just now"),
-            s if s < 3600 => i18n_f("{n} minutes ago", &[("n", &(s / 60).to_string())]),
+            s if s < 3600 => ni18n_f("{n} minute ago", "{n} minutes ago", (s / 60) as u32, &[("n", &(s / 60).to_string())]),
             s if s < 7200 => i18n("an hour ago"),
-            s if s < 86400 => i18n_f("{n} hours ago", &[("n", &(s / 3600).to_string())]),
+            s if s < 86400 => ni18n_f("{n} hour ago", "{n} hours ago", (s / 3600) as u32, &[("n", &(s / 3600).to_string())]),
             s if s < 172_800 => i18n("yesterday"),
-            s => i18n_f("{n} days ago", &[("n", &(s / 86400).to_string())]),
+            s => ni18n_f("{n} day ago", "{n} days ago", (s / 86400) as u32, &[("n", &(s / 86400).to_string())]),
         };
-        i18n_f("Waiting since {ago}", &[("ago", &ago)])
+        i18n_f("Queued {ago}", &[("ago", &ago)])
     }
 
     /// The queued message as a list row. Everything the list needs is stored with
@@ -73,7 +73,7 @@ impl OutboxItem {
             // The list's headline column is the sender everywhere else; for
             // unsent mail the useful name is who it is going to.
             from_name: if self.recipients.trim().is_empty() {
-                "(no recipients)".to_string()
+                i18n("(no recipients)")
             } else {
                 self.recipients.clone()
             },
@@ -84,7 +84,7 @@ impl OutboxItem {
             cc: String::new(),
             bcc: String::new(),
             subject: if self.subject.trim().is_empty() {
-                "(no subject)".to_string()
+                i18n("(no subject)")
             } else {
                 self.subject.clone()
             },

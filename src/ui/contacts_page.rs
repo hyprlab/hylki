@@ -96,7 +96,7 @@ impl Component for ContactsPage {
                     set_description: Some(if model.loading {
                         String::new()
                     } else {
-                        i18n("Add a contact with the + button, or import vCard or CSV files. Contacts are kept in Hylki's own address book, and the address books of GNOME Contacts are listed here too.")
+                        i18n("Add a contact with the + button, or import vCard or CSV files. The address books of GNOME Contacts are listed here too.")
                     }.as_str()),
                 },
             },

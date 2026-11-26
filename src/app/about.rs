@@ -86,10 +86,7 @@ fn about_identity(page: &gtk::Box) {
     if cfg!(feature = "beta") {
         let warn = gtk::Label::new(Some(
             i18n(
-                "This is a beta build for trying upcoming changes early. \
-             Expect bugs and instability — please report anything broken \
-             on GitHub. It shares your accounts and mail with the stable \
-             Hylki install.",
+                "This is a beta build for trying upcoming changes early. Expect bugs, and report anything broken on GitHub. It shares your accounts and mail with the stable install.",
             )
             .as_str(),
         ));
@@ -127,7 +124,6 @@ fn about_info_rows(page: &gtk::Box, nav: &adw::NavigationView, sender: &Componen
     // The thanks lists outgrew the main page, so they slide in like the notes.
     let credits_row = adw::ActionRow::builder()
         .title(i18n("Credits"))
-        .subtitle(i18n("Contributors and translators"))
         .activatable(true)
         .build();
     credits_row.add_suffix(&gtk::Image::from_icon_name("go-next-symbolic"));
@@ -177,7 +173,7 @@ fn about_links(page: &gtk::Box) {
     };
     links.append(&mk_row(&i18n("Website"), "https://hylki.hyprlab.co"));
     links.append(&mk_row(
-        &i18n("Report an issue or feature request"),
+        &i18n("Issues and Feature Requests"),
         "https://github.com/hyprlab/hylki/issues",
     ));
     links.append(&mk_row("Discord", "https://discord.gg/YfEJ4b6PFW"));

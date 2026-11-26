@@ -115,7 +115,7 @@ pub(crate) fn show(
     scroller.add_css_class("card");
     scroller.set_overflow(gtk::Overflow::Hidden);
     scroller.set_child(Some(&notes));
-    let notes_label = gtk::Label::new(Some(&i18n("Notes")));
+    let notes_label = gtk::Label::new(Some(&i18n("Note")));
     notes_label.set_halign(gtk::Align::Start);
     notes_label.add_css_class("heading");
 

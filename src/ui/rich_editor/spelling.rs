@@ -43,7 +43,7 @@ pub(super) fn append_spelling_menu(menu: &webkit6::ContextMenu, cb: &SpellLangsC
     let chosen = crate::desktop::spell::parse_languages(&setting);
     let system = crate::desktop::spell::system_spell_languages();
     let system_label = i18n_f(
-        "System language — {language}",
+        "System language ({language})",
         &[(
             "language",
             &crate::desktop::spell::spell_language_names(&system),
