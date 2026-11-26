@@ -190,6 +190,7 @@ pub(in crate::worker) async fn connect(
     // Read before the connect timeout starts: the keyring's own wait is not
     // the server's, and must not be reported as one.
     let password = sign_in_password(account, false).await?;
+    super::login_pace::note_login(account);
     match tokio::time::timeout(IMAP_CONNECT_TIMEOUT, connect_inner(account, &password)).await {
         Ok(result) => result,
         Err(_) => Err(format!(
@@ -269,6 +270,7 @@ async fn connect_inner(
             Ok(_) => tracing::debug!(target: "hylki::imap", "< OK (AUTHENTICATE XOAUTH2)"),
             Err(e) => {
                 tracing::warn!(target: "hylki::imap", "< {e} (AUTHENTICATE XOAUTH2)");
+                super::login_pace::note_refusal(account, &e.to_string());
                 forget_access_token(account);
             }
         }
@@ -281,7 +283,10 @@ async fn connect_inner(
             .map_err(|(e, _client)| e);
         match &r {
             Ok(_) => tracing::debug!(target: "hylki::imap", "< OK (LOGIN)"),
-            Err(e) => tracing::warn!(target: "hylki::imap", "< {e} (LOGIN)"),
+            Err(e) => {
+                tracing::warn!(target: "hylki::imap", "< {e} (LOGIN)");
+                super::login_pace::note_refusal(account, &e.to_string());
+            }
         }
         r?
     };
