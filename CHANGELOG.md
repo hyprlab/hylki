@@ -174,6 +174,13 @@
   server answers it sooner. Emptying every account's Trash or Junk from the
   unified row gives the total and each account's own count.
 
+- **Fixed: opening a folder held a slow server for seconds** (#676,
+  reported by DarkStarCrashes123). Each open of a folder and each refresh
+  fetched the newest 50 messages' headers and previews again and listed
+  every message in the folder, 6 to 7 seconds on Yahoo, and a move or an
+  Empty Trash count waited behind it. A folder with no mail added or removed
+  since its last load now has only its flags read, about a second.
+
 - **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
   translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
   (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese

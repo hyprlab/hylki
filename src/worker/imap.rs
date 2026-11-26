@@ -63,6 +63,7 @@ mod structure;
 mod summary;
 mod sweep;
 mod sync;
+mod sync_stamp;
 mod text_search;
 pub(super) mod watch;
 mod wire;
