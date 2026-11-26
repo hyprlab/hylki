@@ -6,7 +6,9 @@
   requested by bstegmaier75). Each tag under Tags, in the unified section
   and in each account, shows how many unread messages carry it, counted as
   the tag's view lists them: Trash and Junk left out, and a Gmail message
-  under several labels counted once. Sort and filter → Show only has
+  under several labels counted once. On Gmail, mail under the label named
+  like the tag counts too, and the tag's view lists it, including mail
+  labelled in Gmail itself. Sort and filter → Show only has
   Untagged beside Tagged, for mail with no tag; turning one on turns the
   other off.
 

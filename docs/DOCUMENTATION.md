@@ -230,7 +230,9 @@ chevron at its end. Clicking the name opens the combined view either way.
 Each tag under Tags, in the unified section and in each account, shows how
 many unread messages carry it. The count covers what the tag's view lists:
 mail in Trash and Junk is left out, and a Gmail message under several labels
-counts once.
+counts once. On Gmail, mail under the label named like the tag counts too,
+including mail labelled in Gmail itself, which Hylki fetches when the
+label's unread count changes.
 
 ### Favorites
 

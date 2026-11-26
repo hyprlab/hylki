@@ -132,6 +132,29 @@ impl Cache {
         })
     }
 
+    /// Every cached message in one folder, newest first: on Gmail, the label
+    /// a tag stands for (#717), whose mail carries the label although its
+    /// rows leave it out (the folder being read is never listed as a label).
+    pub(crate) fn messages_in_label(&self, account_id: u32, path: &str) -> Vec<(String, Message)> {
+        let cols = message_columns();
+        let sql = format!(
+            "SELECT folder_path, {cols} FROM messages \
+             WHERE account_id = ?1 AND folder_path = ?2 ORDER BY ts DESC LIMIT ?3"
+        );
+        let run = || -> rusqlite::Result<Vec<(String, Message)>> {
+            let mut stmt = self.conn.prepare(&sql)?;
+            let rows = stmt.query_map(params![account_id, path, TAG_VIEW_LIMIT], |row| {
+                let m = message_from_row(row, 1, account_id, 0)?;
+                Ok((row.get::<_, String>(0)?, m))
+            })?;
+            rows.collect()
+        };
+        run().unwrap_or_else(|e| {
+            tracing::warn!("cache messages_in_label failed: {e}");
+            Vec::new()
+        })
+    }
+
     /// The account's unread mail as the tag rows' chips need it (#717): one
     /// read of the unread rows answers every tag, where a query per tag
     /// would walk the whole index once each.

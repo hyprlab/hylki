@@ -3,7 +3,7 @@
 use relm4::prelude::*;
 
 use crate::config;
-use crate::models::{FolderKind, KeywordFinding, Message};
+use crate::models::{Folder, FolderKind, KeywordFinding, Message};
 use crate::ui::message_list::MessageListInput;
 use crate::ui::message_view::MessageViewInput;
 use crate::ui::message_window::MessageWindowInput;
@@ -17,12 +17,22 @@ use super::msg::AppMsg;
 
 /// What one pass over the tag rows' unread chips reads (#717), gathered on
 /// the main thread: every tag with the name a Gmail label goes by, and each
-/// account with the folders whose mail a tag view lists (all but Trash and
-/// Junk, which keep their tags but stay out) and whether the unified Tags
-/// rows cover it.
+/// account in turn.
 pub(super) struct TagCountJob {
     tags: Vec<(String, String)>,
-    accounts: Vec<(u32, std::collections::HashSet<String>, bool)>,
+    accounts: Vec<TagCountAccount>,
+}
+
+/// One account of a [`TagCountJob`].
+struct TagCountAccount {
+    id: u32,
+    /// The folders whose mail a tag view lists: all but Trash and Junk,
+    /// which keep their tags but stay out.
+    listed: std::collections::HashSet<String>,
+    /// Whether the unified Tags rows cover the account.
+    unified: bool,
+    /// On Gmail, the label folder each tag stands for, by keyword.
+    labels: std::collections::HashMap<String, String>,
 }
 
 impl TagCountJob {
@@ -34,16 +44,17 @@ impl TagCountJob {
         for (kw, _) in &self.tags {
             out.insert((None, kw.clone()), 0);
         }
-        for (account_id, listed, unified) in &self.accounts {
+        for a in &self.accounts {
             let marks: Vec<crate::cache::TagMarks> = cache
-                .unread_tag_marks(*account_id)
+                .unread_tag_marks(a.id)
                 .into_iter()
-                .filter(|m| listed.contains(&m.path))
+                .filter(|m| a.listed.contains(&m.path))
                 .collect();
             for (kw, name) in &self.tags {
-                let n = count_tagged(&marks, kw, name);
-                out.insert((Some(*account_id), kw.clone()), n);
-                if *unified {
+                let label = a.labels.get(kw).map(String::as_str);
+                let n = count_tagged(&marks, kw, name, label);
+                out.insert((Some(a.id), kw.clone()), n);
+                if a.unified {
                     *out.entry((None, kw.clone())).or_default() += n;
                 }
             }
@@ -52,12 +63,18 @@ impl TagCountJob {
     }
 }
 
-/// The messages among `marks` carrying the tag, each Message-ID once.
-fn count_tagged(marks: &[crate::cache::TagMarks], keyword: &str, name: &str) -> u32 {
+/// The messages among `marks` carrying the tag, or filed in the Gmail label
+/// it stands for, each Message-ID once.
+fn count_tagged(
+    marks: &[crate::cache::TagMarks],
+    keyword: &str,
+    name: &str,
+    label: Option<&str>,
+) -> u32 {
     let mut seen: std::collections::HashSet<&str> = std::collections::HashSet::new();
     marks
         .iter()
-        .filter(|m| m.carries(keyword, name))
+        .filter(|m| m.carries(keyword, name) || label == Some(m.path.as_str()))
         .filter(|m| m.message_id.is_empty() || seen.insert(m.message_id.as_str()))
         .count() as u32
 }
@@ -135,10 +152,45 @@ impl AppModel {
                     .filter(|f| !matches!(f.kind, FolderKind::Trash | FolderKind::Junk))
                     .map(|f| f.path.clone())
                     .collect();
-                Some((a.id, listed, self.in_tag_scope(None, a.id)))
+                let labels = self
+                    .tag_label_folders(a.id)
+                    .into_iter()
+                    .map(|(kw, f)| (kw, f.path.clone()))
+                    .collect();
+                Some(TagCountAccount {
+                    id: a.id,
+                    listed,
+                    unified: self.in_tag_scope(None, a.id),
+                    labels,
+                })
             })
             .collect();
         TagCountJob { tags, accounts }
+    }
+
+    /// On a Gmail account, the label each tag stands for (#374), by the
+    /// tag's keyword: the folder named like its keyword or its name. Mail
+    /// labelled in Gmail itself carries the tag, but reaches the cache only
+    /// through that folder, whose rows leave out the label they are read
+    /// under (#717).
+    pub(super) fn tag_label_folders(&self, account_id: u32) -> Vec<(String, &Folder)> {
+        let Some(folders) = self.folders.get(&account_id) else {
+            return Vec::new();
+        };
+        if self.tags.is_empty() || !self.gmail_labels(account_id) {
+            return Vec::new();
+        }
+        self.tags
+            .iter()
+            .filter_map(|t| {
+                let names = [&t.keyword, &t.name].map(|n| crate::mail::mutf7::encode(n));
+                let f = folders.iter().find(|f| {
+                    f.kind == FolderKind::Custom
+                        && names.iter().any(|n| n.eq_ignore_ascii_case(&f.path))
+                })?;
+                Some((t.keyword.clone(), f))
+            })
+            .collect()
     }
 
     /// The demo's tag counts, from the views it assembles out of the folders
@@ -215,19 +267,34 @@ impl AppModel {
                 (k, name)
             })
             .collect();
-        let accounts: Vec<u32> = self
+        // Each account with the Gmail labels its keywords stand for.
+        let accounts: Vec<(u32, Vec<String>)> = self
             .accounts
             .iter()
             .map(|a| a.id)
             .filter(|id| self.in_tag_scope(scope, *id))
+            .map(|id| {
+                let labels = self
+                    .tag_label_folders(id)
+                    .into_iter()
+                    .filter(|(kw, _)| keywords.iter().any(|(k, _)| k == kw))
+                    .map(|(_, f)| f.path.clone())
+                    .collect();
+                (id, labels)
+            })
             .collect();
         let s = sender.clone();
         std::thread::spawn(move || {
             let mut rows: Vec<(u32, String, Message)> = Vec::new();
             if let Ok(cache) = crate::cache::Cache::open() {
-                for account_id in accounts {
+                for (account_id, labels) in accounts {
                     for (kw, name) in &keywords {
                         for (path, m) in cache.messages_with_keyword(account_id, kw, name) {
+                            rows.push((account_id, path, m));
+                        }
+                    }
+                    for label in &labels {
+                        for (path, m) in cache.messages_in_label(account_id, label) {
                             rows.push((account_id, path, m));
                         }
                     }
@@ -510,6 +577,8 @@ impl AppModel {
                 // view falls back to All Inboxes there (SetContents).
                 self.rebuild_sidebar();
                 self.schedule_smart_counts(&sender);
+                // A new tag may stand for a Gmail label nothing fetched yet.
+                self.sync_unloaded_counted_folders();
                 // Rules may name a tag that now exists: tag what already sits
                 // in the inboxes, through the same sweep the filters use.
                 self.sweep_blacklisted();
@@ -571,5 +640,51 @@ impl AppModel {
             }
             _ => unreachable!("not routed to on_tags"),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::app::test_support::msg;
+
+    /// Mail labelled in Gmail itself sits in the label's folder without the
+    /// label on its row (#717): the chip counts it there, once beside its
+    /// All Mail copy, and leaves Trash out.
+    #[test]
+    fn a_tags_gmail_label_folder_counts_toward_its_chip() {
+        let c = crate::cache::Cache::in_memory().unwrap();
+        let unread = |uid: u32, id: &str| {
+            let mut m = msg(5, 1, uid);
+            m.unread = true;
+            m.message_id = id.to_string();
+            m
+        };
+        c.save_messages(5, "Vireo", &[unread(1, "a@x"), unread(2, "b@x")]);
+        let mut copy = unread(9, "a@x");
+        copy.labels = vec!["Vireo".into()];
+        c.save_messages(5, "[Gmail]/All Mail", &[copy]);
+        c.save_messages(5, "[Gmail]/Trash", &[unread(3, "c@x")]);
+        let job = |label: Option<&str>| TagCountJob {
+            tags: vec![("Vireo".into(), "Vireo".into())],
+            accounts: vec![TagCountAccount {
+                id: 5,
+                listed: ["Vireo", "[Gmail]/All Mail"]
+                    .map(String::from)
+                    .into_iter()
+                    .collect(),
+                unified: true,
+                labels: label
+                    .map(|l| ("Vireo".to_string(), l.to_string()))
+                    .into_iter()
+                    .collect(),
+            }],
+        };
+        let counts = job(Some("Vireo")).run(&c);
+        assert_eq!(counts[&(Some(5), "Vireo".to_string())], 2);
+        assert_eq!(counts[&(None, "Vireo".to_string())], 2);
+        // Without the label folder, only the copy that lists the label.
+        let counts = job(None).run(&c);
+        assert_eq!(counts[&(Some(5), "Vireo".to_string())], 1);
     }
 }
