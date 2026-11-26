@@ -2,6 +2,49 @@
 
 Hylki (formerly Vireo) is a clean, fast, GNOME-native email client built with Rust and libadwaita for Wayland desktops. Privacy-first: no telemetry, remote content blocked by default, and credentials kept in the system keyring.
 
+## What's new in 1.50.0
+
+### New features:
+
+- S/MIME signing for outgoing mail by @adriadam10 - (#478)
+- Microsoft 365 shared mailboxes from GNOME Online Accounts - (#701)
+- Unread counts on the Tags rows and an Untagged filter - (#717)
+- Actions under a message row on hover by @bastiancolpaert - (#702)
+- A picture in a message opens in the lightbox by @adriadam10 - (#713)
+- Settings → Message List chooses where a search starts - (#699)
+- New-mail notifications show the sender's face - (#693)
+- Duck Addresses can show the address behind them - (#708)
+- Crash reports with a backtrace, included in an exported log - (#449)
+- A shorter message right-click menu, with Create, View and More submenus - (#692)
+- Contacts picked from the people in the cached mail - (#677)
+- Contacts imported straight from Thunderbird - (#681)
+- Empty Trash and Empty Junk say how many messages they erase - (#676)
+- Shorter and plainer interface text across the app
+
+### Fixes:
+
+- mail wider than the reader cut off at its edge by @adriadam10 - (#712)
+- a folded composer running past a narrow reader by @adriadam10 - (#711)
+- a slow server held for seconds on every folder open - (#676)
+- a move or delete waiting behind folder fetches - (#676)
+- folder watchers setting off Yahoo's login limit - (#676)
+- smart folder and tag counts changing seconds after a mark
+- tags and smart folders empty with no account in All Inboxes - (#714)
+- a blank password marking the server row in the account editor - (#716)
+- the account ring cut at the sides in All Inboxes on GTK 4.18 - (#706)
+- a second u scrolling the list to the top - (#392)
+- messages dated centuries ahead - (#709)
+- calendars drawn unlike the popovers and dialogs around them by @alosarjos - (#696)
+
+### Translations:
+
+- Dutch by @bastiancolpaert
+- Simplified Chinese by @lancelee25
+- Turkish by @f4646
+- Portuguese and Brazilian Portuguese by @somepaulo
+- German, complete, by @samuel-edlmeier
+- French, complete, by @frenchy82
+
 ## What's new in 1.49.2
 
 ### Fixes:

@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased
+## 1.50.0 — 2026-11-26
+
+Everything from 1.50.0-beta.1 to 1.50.0-beta.6: S/MIME signing, Microsoft
+365 shared mailboxes, unread counts on the Tags rows with an Untagged filter,
+actions under a message row on hover, pictures in a message opened in the
+lightbox, a choice of where a search starts, the sender's face on
+notifications, the address behind a Duck Address, crash reports, contacts
+picked from the mail or imported from Thunderbird, a shorter right-click menu
+and plainer interface text throughout.
 
 - **Fixed: smart folder and tag counts changed seconds after a mark.**
   Marking mail read or unread, tagging it or marking a folder read now moves
@@ -226,13 +234,12 @@
   five logins in ten minutes, and waits 15 minutes after a server says it
   is limiting logins. The main connection is never held back.
 
-- **Translations:** Dutch (PR #704 by BastianC), new, 2596 of 2627 strings
-  translated. Portuguese (Portugal) and Portuguese (Brazil) completed again
-  (PR #707 by Paulo Fino), 2627 of 2628 strings each. Simplified Chinese
-  (#155 by lancelee25), new, 2596 of 2628 strings translated. Turkish (PR #710
-  by f4646), new, 2617 of 2629 strings translated. German (PRs #718 and #719 by
-  Samuel Edlmeier) caught up with the text review, complete. French (PR #721
-  by frenchy82) caught up with the text review, complete.
+- **Translations:** Dutch (PR #704 by BastianC), new, 2372 of 2590
+  strings translated. Simplified Chinese (#155 by lancelee25), new, 2372 of
+  2590. Turkish (PR #710 by f4646), new, 2393 of 2590. Portuguese (Portugal)
+  and Portuguese (Brazil) (PR #707 by Paulo Fino), 2403 of 2590 each. German
+  (PRs #718 and #719 by Samuel Edlmeier) and French (PR #721 by frenchy82),
+  complete at 2590.
 
 ## 1.49.2 — 2026-11-23
 
