@@ -73,6 +73,11 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.50.1" date="2026-11-27">
+      <description>
+        <p>Mail in Sent leads with its recipients, the reader's web process ends when the window is hidden, popover and window edges blend at a fractional scale, and the Italian translation is updated.</p>
+      </description>
+    </release>
     <release version="1.50.0" date="2026-11-26">
       <description>
         <p>S/MIME signing, Microsoft 365 shared mailboxes, unread counts on the Tags rows with an Untagged filter, actions under a message row on hover, pictures in a message opened in the lightbox, a choice of where a search starts, the sender's face on notifications, the address behind a Duck Address, crash reports, contacts picked from the mail or imported from Thunderbird, a shorter right-click menu and plainer interface text throughout.</p>
