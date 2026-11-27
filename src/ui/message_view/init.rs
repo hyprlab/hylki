@@ -124,6 +124,7 @@ impl MessageView {
             fold_messages: crate::config::FoldMessages::Never,
             fold_preview_lines: 1,
             painted_hidden: false,
+            web_released: false,
             scroll_owed: false,
             sent: std::collections::HashSet::new(),
             folds: std::collections::HashMap::new(),

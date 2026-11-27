@@ -517,6 +517,7 @@ impl Component for MessageView {
                 folded,
             } => self.on_folded(account_id, id, folded),
             MessageViewInput::Mapped => self.on_mapped(),
+            MessageViewInput::Backgrounded => self.on_backgrounded(),
             MessageViewInput::SetChecked {
                 count,
                 conversations,

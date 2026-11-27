@@ -62,6 +62,8 @@ pub(crate) enum MessageViewInput {
     },
     /// The view came on screen (#332).
     Mapped,
+    /// The window was hidden to run in the background (#727).
+    Backgrounded,
     /// The OpenPGP chip's words on or off (#300), applied to the open
     /// document at once.
     SetPgpLabels(bool),

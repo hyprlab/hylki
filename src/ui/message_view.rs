@@ -295,6 +295,9 @@ pub(crate) struct MessageView {
     fold_preview_lines: u32,
     /// A document was loaded while the view was not on screen (#332).
     painted_hidden: bool,
+    /// The web process was ended while the window runs in the background
+    /// (#727), and nothing is loaded until the view is on screen again.
+    web_released: bool,
     /// The open scroll went to a document loaded while the view was hidden,
     /// which never painted (#332): the next document loaded on screen is owed
     /// it, unless the reader has a place to keep by then.

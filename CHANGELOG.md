@@ -10,6 +10,13 @@
   by the name you last wrote to them under, with the address beside it.
   Addresses in card headers no longer wear angle brackets.
 
+- **Fixed: closing the window into the background kept the reader's
+  WebKit processes** (#727). With Run in Background on, the hidden window
+  held its web process and the last message it showed, a few hundred MB,
+  for as long as Hylki ran. That process now ends when the window is
+  hidden, and the open message is rendered again when the window comes
+  back. WebKit's network process stays while Hylki runs.
+
 ## 1.50.0 — 2026-11-26
 
 Everything from 1.50.0-beta.1 to 1.50.0-beta.6: S/MIME signing, Microsoft
