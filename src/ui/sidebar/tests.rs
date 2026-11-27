@@ -27,6 +27,7 @@ fn custom(id: u32, path: &str) -> Folder {
         path: path.to_string(),
         kind: FolderKind::Custom,
         unread: 0,
+        total: 0,
         childless: false,
     }
 }

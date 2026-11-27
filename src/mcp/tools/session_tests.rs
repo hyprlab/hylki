@@ -52,6 +52,7 @@ fn folder(id: u32, path: &str, kind: FolderKind) -> Folder {
         kind,
         account_id: 0,
         unread: 0,
+        total: 0,
         childless: false,
     }
 }

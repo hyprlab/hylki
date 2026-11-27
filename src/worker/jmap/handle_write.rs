@@ -106,6 +106,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
         emit(WorkerEvent::FolderUnread {
             folder_id,
             unread: 0,
+            total: None,
         });
     }
 
@@ -309,6 +310,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                 emit(WorkerEvent::FolderUnread {
                     folder_id,
                     unread: 0,
+                    total: Some(0),
                 });
             }
             Err(e) => emit(WorkerEvent::error(i18n_f(
@@ -363,6 +365,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                     emit(WorkerEvent::FolderUnread {
                         folder_id: dest_folder_id,
                         unread,
+                        total: None,
                     });
                 }
             }

@@ -203,6 +203,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         }
     }
@@ -316,6 +317,7 @@ mod tests {
             path: path.into(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         };
         let list = vec![

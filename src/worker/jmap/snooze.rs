@@ -59,6 +59,7 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                     emit(WorkerEvent::FolderUnread {
                         folder_id: dest_folder_id,
                         unread,
+                        total: None,
                     });
                 }
                 true

@@ -476,6 +476,7 @@ fn the_offline_period_is_downloaded_message_by_message() {
                 path: "Inbox".into(),
                 kind: crate::models::FolderKind::Inbox,
                 unread: 0,
+                total: 0,
                 childless: false,
             },
             crate::models::Folder {
@@ -485,6 +486,7 @@ fn the_offline_period_is_downloaded_message_by_message() {
                 path: "Deleted Items".into(),
                 kind: crate::models::FolderKind::Trash,
                 unread: 0,
+                total: 0,
                 childless: false,
             },
         ],

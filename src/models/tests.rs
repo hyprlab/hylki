@@ -266,6 +266,7 @@ fn english_folder_names_stay_as_the_server_has_them() {
         path: name.into(),
         kind,
         unread: 0,
+        total: 0,
         childless: false,
     };
     let mut folders = vec![
@@ -374,6 +375,7 @@ fn assigned_drafts_folder_takes_the_kind_that_counts_every_draft() {
         path: path.to_string(),
         kind,
         unread: 0,
+        total: 0,
         childless: false,
     };
     // A laposte.net-style listing: nothing detected as Drafts, and the
@@ -411,6 +413,7 @@ fn templates_can_be_assigned_and_are_named_in_the_language() {
         path: path.to_string(),
         kind,
         unread: 0,
+        total: 0,
         childless: false,
     };
     let mut folders = vec![
@@ -435,6 +438,7 @@ fn plain_folder(path: &str, kind: FolderKind) -> Folder {
         path: path.to_string(),
         kind,
         unread: 0,
+        total: 0,
         childless: false,
     }
 }

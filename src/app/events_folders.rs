@@ -10,7 +10,7 @@ use crate::models::Folder;
 use crate::ui::notifications::NotifyInput;
 use crate::worker::MailRequest;
 
-use super::folders::{apply_folder_roles, merged_unread, same_folder_list};
+use super::folders::{apply_folder_roles, keep_known_totals, merged_unread, same_folder_list};
 use super::model::AppModel;
 use super::msg::AppMsg;
 use super::pending::{PENDING_MOVE_MAX, PENDING_SEEN_MAX, PENDING_TAG_SETTLED};
@@ -46,18 +46,23 @@ impl AppModel {
                 account_id,
                 folder_id,
                 unread,
+                total,
             } => {
                 // A whole-folder mark is in the cache once its count comes
                 // back: the chips counted from the cache can be recounted.
                 if self.folder_write_settled(account_id, folder_id) {
                     self.schedule_smart_counts(&sender);
                 }
+                let total_moved = self.take_folder_total(account_id, folder_id, total);
                 // A count fetched ahead of a read mark still in the worker's
                 // queue: the app's own count (adjusted when the mark was
                 // made) stands until the mark is stored, and the server is
                 // asked again once it is (#333).
                 if self.pending_seen_in_folder(account_id, folder_id) {
                     self.dropped_unread.insert((account_id, folder_id));
+                    if total_moved {
+                        self.push_unread_counts();
+                    }
                     return;
                 }
                 // Nothing unread left where the notification points: it is
@@ -157,16 +162,22 @@ impl AppModel {
                 account_id,
                 path,
                 unread,
+                total,
             } => {
                 // Resolve against the current list; a path the app no longer
                 // knows (folder deleted/renamed under a live watcher) is
                 // dropped rather than guessed at.
                 let id = self.folder_by_path(account_id, &path).map(|f| f.id);
+                let total_moved = id
+                    .is_some_and(|folder_id| self.take_folder_total(account_id, folder_id, total));
                 if self.pending_seen_in(account_id, &path)
                     || self.pending_moves_in(account_id, &path)
                 {
                     if let Some(folder_id) = id {
                         self.dropped_unread.insert((account_id, folder_id));
+                    }
+                    if total_moved {
+                        self.push_unread_counts();
                     }
                     return;
                 }
@@ -226,6 +237,10 @@ impl AppModel {
             ));
         }
         self.merge_folder_unread(account_id, &folders);
+        keep_known_totals(
+            self.folders.get(&account_id).map(Vec::as_slice),
+            &mut folders,
+        );
         // An identical list — above all the refresh confirming an
         // optimistic folder move, whose local reshape mirrors the
         // worker exactly — changes nothing on screen: skip the rebuild
@@ -318,6 +333,49 @@ impl AppModel {
         }
         // After the look-over above, which goes by the English names.
         crate::models::localize_special_folder_names(folders);
+    }
+
+    /// Store a folder's total (#720) as its count brought it, unless mail
+    /// is being moved out of it: each move changes the server's number
+    /// before the app hears it is done, and the app's own count stands
+    /// until then, as the unread one does. Whether the number changed.
+    pub(super) fn take_folder_total(
+        &mut self,
+        account_id: u32,
+        folder_id: u32,
+        total: Option<u32>,
+    ) -> bool {
+        let Some(total) = total else {
+            return false;
+        };
+        let moving = self
+            .folder_path(account_id, folder_id)
+            .is_some_and(|p| self.pending_moves_in(account_id, &p));
+        if moving {
+            return false;
+        }
+        let Some(f) = self
+            .folders
+            .get_mut(&account_id)
+            .and_then(|fs| fs.iter_mut().find(|f| f.id == folder_id))
+        else {
+            return false;
+        };
+        let moved = f.total != total;
+        f.total = total;
+        moved
+    }
+
+    /// The app's own change to a folder's total (#720), ahead of the
+    /// server's next count: mail taken out, or put back by Undo.
+    pub(super) fn bump_folder_total(&mut self, account_id: u32, folder_id: u32, by: i64) {
+        if let Some(f) = self
+            .folders
+            .get_mut(&account_id)
+            .and_then(|fs| fs.iter_mut().find(|f| f.id == folder_id))
+        {
+            f.total = (i64::from(f.total) + by).clamp(0, i64::from(u32::MAX)) as u32;
+        }
     }
 
     /// The new list's unread counts, never trading a known count for a

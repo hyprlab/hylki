@@ -15,7 +15,7 @@ use crate::worker::imap::folders::cached_folder_kind;
 use crate::worker::imap::prefetch::{queue_attachment_prefetch, queue_body_prefetch};
 use crate::worker::imap::retry::load_messages_retry;
 use crate::worker::imap::stream::ImapIo;
-use crate::worker::imap::sweep::{emit_body_hits, selected_chip_count};
+use crate::worker::imap::sweep::{emit_body_hits, selected_chip_count, selected_total};
 use crate::worker::imap::wire::sel;
 use crate::worker::imap::{ImapSession, IDLE_DONE_TIMEOUT, IDLE_START_TIMEOUT};
 use crate::worker::{MailRequest, WorkerEvent};
@@ -177,10 +177,18 @@ pub(super) async fn idle_wait(
                     if let Some(sess) = session.as_mut() {
                         let kind = cached_folder_kind(cache, account_id, path);
                         if let Some(unread) = selected_chip_count(sess, kind).await {
+                            let total = selected_total(sess).await;
                             if let Some(c) = cache {
                                 c.set_folder_unread(account_id, path, unread);
+                                if let Some(n) = total {
+                                    c.set_folder_total(account_id, path, n);
+                                }
                             }
-                            emit(WorkerEvent::FolderUnread { folder_id, unread });
+                            emit(WorkerEvent::FolderUnread {
+                                folder_id,
+                                unread,
+                                total,
+                            });
                         }
                     }
                 }

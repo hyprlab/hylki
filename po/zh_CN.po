@@ -6904,6 +6904,13 @@ msgstr "仅高亮新的未读邮件"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "查看过文件夹后，计数会变为灰色。"
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "显示邮件"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "仅在多于一个账户时显示。"
 

@@ -46,6 +46,7 @@ fn pop3_folders(account_id: u32) -> Vec<Folder> {
         path: "INBOX".to_string(),
         kind: FolderKind::Inbox,
         unread: 0,
+        total: 0,
         childless: false,
     }]
 }
@@ -263,6 +264,7 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
                 emit(WorkerEvent::FolderUnread {
                     folder_id,
                     unread: 0,
+                    total: None,
                 });
             }
 
@@ -405,6 +407,9 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
         match pop3_sync(account_id, account, INBOX_ID, cache.as_ref()).await {
             Ok(messages) => {
                 let unread = messages.iter().filter(|m| m.unread).count() as u32;
+                // What the account holds here: POP3 indexes no more than
+                // POP3_LIMIT, and the total says what the list can show.
+                let total = Some(messages.len() as u32);
                 emit(WorkerEvent::Messages {
                     folder_id,
                     messages,
@@ -412,6 +417,7 @@ impl<E: Fn(WorkerEvent)> Pop3Worker<E> {
                 emit(WorkerEvent::FolderUnread {
                     folder_id: INBOX_ID,
                     unread,
+                    total,
                 });
                 // POP3 syncs the whole mailbox in one pass; no backfill
                 // follows, so the index is complete (see the Graph path).

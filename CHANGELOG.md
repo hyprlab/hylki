@@ -9,6 +9,13 @@
   compact reply. **Settings → Composing → Ask before sending without a
   subject** turns it off; it is on by default.
 
+- **New: message totals in the sidebar** (#720). **Settings → Sidebar →
+  Show message totals** shows how many messages each folder holds beside
+  its unread count, in gray, as the server counts them. The count is
+  cached with the folder list, kept current by the same checks that keep
+  the unread counts current, and lowered at once when mail is moved out.
+  It is off by default.
+
 ## 1.50.1 — 2026-11-27
 
 A patch release with four fixes and a translation: mail in Sent leads

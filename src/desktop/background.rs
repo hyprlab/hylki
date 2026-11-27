@@ -17,8 +17,8 @@
 //! refused — Hylki still runs; it just isn't listed, which is the desktop's
 //! decision to make, not ours.
 
-use crate::i18n::{i18n, ni18n_f};
 use super::portal;
+use crate::i18n::{i18n, ni18n_f};
 use gtk::glib::prelude::ToVariant;
 
 const IFACE_BACKGROUND: &str = "org.freedesktop.portal.Background";

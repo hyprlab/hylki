@@ -111,6 +111,7 @@ pub(crate) fn container_ancestors(folders: &[Folder], h: &FolderHierarchy) -> Ve
                 path: prefix.to_string(),
                 kind: FolderKind::Custom,
                 unread: 0,
+                total: 0,
                 childless: true,
             });
         }

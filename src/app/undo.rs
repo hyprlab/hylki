@@ -454,6 +454,7 @@ impl AppModel {
             let mut m = row.clone();
             // Folder ids are positional and shift as folders come and go.
             m.folder_id = folder_id;
+            self.bump_folder_total(account_id, folder_id, 1);
             if m.unread {
                 *self
                     .folder_unread

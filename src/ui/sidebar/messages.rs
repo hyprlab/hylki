@@ -25,6 +25,9 @@ pub(crate) enum SidebarInput {
         /// Off, no unread count shows anywhere in the sidebar (Settings →
         /// Focus Mode → Unread counts).
         unread_counts: bool,
+        /// How many messages each folder holds, beside its unread chip
+        /// (#720).
+        message_totals: bool,
         rail_fold: crate::config::RailFold,
         unified_unread: u32,
         /// Filter-rule folders to list inside All Inboxes (already
@@ -185,6 +188,9 @@ pub(crate) enum SidebarInput {
     /// Update unread badges in place without rebuilding the sidebar.
     SetUnread {
         folders: HashMap<(u32, u32), u32>,
+        /// Each folder's message total (#720); empty while they are not
+        /// shown.
+        totals: HashMap<(u32, u32), u32>,
         unified: u32,
         /// With "Highlight only new unread mail" on (#343): the folders
         /// with mail come in since they were last looked at. Every other

@@ -78,6 +78,7 @@ fn live_copy_to_this_computer() {
                 path: folder.clone(),
                 kind: crate::models::FolderKind::Custom,
                 unread: 0,
+                total: 0,
                 childless: false,
             }],
         );

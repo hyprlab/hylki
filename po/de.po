@@ -7349,6 +7349,13 @@ msgstr "Nur neue, ungelesene Nachrichten hervorheben"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "Nach dem Öffnen des Ordners färbt sich die Anzahl grau."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Nachricht anzeigen"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Wird nur angezeigt, wenn mehr als ein Konto eingerichtet ist."
 

@@ -148,6 +148,7 @@ impl AppModel {
             remember_rail: self.remember_rail,
             rail_dots: self.rail_dots,
             seen_counts: self.seen_counts,
+            message_totals: self.message_totals,
             rail_fold: self.rail_fold,
             app_theme: self.app_theme,
             text_scale: self.text_scale,

@@ -7775,6 +7775,13 @@ msgid "A count turns gray once you have looked at the folder."
 msgstr ""
 
 #, fuzzy
+msgid "Show message totals"
+msgstr "Wyświetl w wiadomości"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
+#, fuzzy
 msgid "Shown only with more than one account."
 msgstr "Wyświetl tylko to konto"
 

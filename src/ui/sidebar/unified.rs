@@ -494,6 +494,7 @@ impl Sidebar {
                         path: String::new(),
                         kind,
                         unread: 0,
+                        total: 0,
                         childless: false,
                     };
                     &flagged

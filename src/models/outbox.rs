@@ -51,11 +51,26 @@ impl OutboxItem {
         let secs = (now - queued_at).max(0);
         let ago = match secs {
             s if s < 90 => i18n("just now"),
-            s if s < 3600 => ni18n_f("{n} minute ago", "{n} minutes ago", (s / 60) as u32, &[("n", &(s / 60).to_string())]),
+            s if s < 3600 => ni18n_f(
+                "{n} minute ago",
+                "{n} minutes ago",
+                (s / 60) as u32,
+                &[("n", &(s / 60).to_string())],
+            ),
             s if s < 7200 => i18n("an hour ago"),
-            s if s < 86400 => ni18n_f("{n} hour ago", "{n} hours ago", (s / 3600) as u32, &[("n", &(s / 3600).to_string())]),
+            s if s < 86400 => ni18n_f(
+                "{n} hour ago",
+                "{n} hours ago",
+                (s / 3600) as u32,
+                &[("n", &(s / 3600).to_string())],
+            ),
             s if s < 172_800 => i18n("yesterday"),
-            s => ni18n_f("{n} day ago", "{n} days ago", (s / 86400) as u32, &[("n", &(s / 86400).to_string())]),
+            s => ni18n_f(
+                "{n} day ago",
+                "{n} days ago",
+                (s / 86400) as u32,
+                &[("n", &(s / 86400).to_string())],
+            ),
         };
         i18n_f("Queued {ago}", &[("ago", &ago)])
     }

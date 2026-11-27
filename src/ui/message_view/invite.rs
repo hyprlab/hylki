@@ -42,13 +42,33 @@ pub(super) fn repeat_text(rrule: &str) -> Option<String> {
     let n = &interval.to_string();
     Some(match (freq.to_ascii_uppercase().as_str(), interval) {
         ("DAILY", 1) => i18n("Repeats daily"),
-        ("DAILY", _) => ni18n_f("Repeats every {n} day", "Repeats every {n} days", interval, &[("n", n)]),
+        ("DAILY", _) => ni18n_f(
+            "Repeats every {n} day",
+            "Repeats every {n} days",
+            interval,
+            &[("n", n)],
+        ),
         ("WEEKLY", 1) => i18n("Repeats weekly"),
-        ("WEEKLY", _) => ni18n_f("Repeats every {n} week", "Repeats every {n} weeks", interval, &[("n", n)]),
+        ("WEEKLY", _) => ni18n_f(
+            "Repeats every {n} week",
+            "Repeats every {n} weeks",
+            interval,
+            &[("n", n)],
+        ),
         ("MONTHLY", 1) => i18n("Repeats monthly"),
-        ("MONTHLY", _) => ni18n_f("Repeats every {n} month", "Repeats every {n} months", interval, &[("n", n)]),
+        ("MONTHLY", _) => ni18n_f(
+            "Repeats every {n} month",
+            "Repeats every {n} months",
+            interval,
+            &[("n", n)],
+        ),
         ("YEARLY", 1) => i18n("Repeats yearly"),
-        ("YEARLY", _) => ni18n_f("Repeats every {n} year", "Repeats every {n} years", interval, &[("n", n)]),
+        ("YEARLY", _) => ni18n_f(
+            "Repeats every {n} year",
+            "Repeats every {n} years",
+            interval,
+            &[("n", n)],
+        ),
         _ => i18n("Repeats"),
     })
 }

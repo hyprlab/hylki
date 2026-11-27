@@ -1416,6 +1416,8 @@ pub(crate) enum AppMsg {
         account_id: u32,
         folder_id: u32,
         unread: u32,
+        /// Every message in the folder (#720), when the same check counted.
+        total: Option<u32>,
     },
     /// The worker stored (or failed to store) a read/unread change the app
     /// had applied ahead of it.
@@ -1452,6 +1454,7 @@ pub(crate) enum AppMsg {
         account_id: u32,
         path: String,
         unread: u32,
+        total: Option<u32>,
     },
     /// The message-body filter conditions the server confirmed for a folder's
     /// listed mail (#191): uid → the lowercased alternatives found in it.

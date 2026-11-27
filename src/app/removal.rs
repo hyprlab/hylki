@@ -471,6 +471,7 @@ impl AppModel {
                 rows.retain(|(p, x)| *p != path || x.uid != m.uid);
             }
         }
+        self.bump_folder_total(m.account_id, m.folder_id, -1);
         // The Drafts chip counts every draft, so leaving that folder always
         // drops it by one; elsewhere only unread mail is counted.
         if m.unread || self.is_drafts_folder(m.account_id, m.folder_id) {

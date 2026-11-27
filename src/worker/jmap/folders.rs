@@ -111,6 +111,7 @@ pub(super) fn jmap_list_folders(
                 path,
                 kind,
                 unread: 0,
+                total: count("totalEmails"),
                 childless,
             },
         });
@@ -190,10 +191,14 @@ pub(super) async fn jmap_refresh_unread(
     if let Some(c) = cache {
         c.save_folders(account_id, &folders);
     }
-    let counts: Vec<(u32, u32)> = folders.iter().map(|f| (f.id, f.unread)).collect();
+    let counts: Vec<(u32, u32, u32)> = folders.iter().map(|f| (f.id, f.unread, f.total)).collect();
     emit(WorkerEvent::Folders(folders));
-    for (folder_id, unread) in counts {
-        emit(WorkerEvent::FolderUnread { folder_id, unread });
+    for (folder_id, unread, total) in counts {
+        emit(WorkerEvent::FolderUnread {
+            folder_id,
+            unread,
+            total: Some(total),
+        });
     }
     for ev in snoozed {
         emit(ev);

@@ -21,7 +21,7 @@ use crate::worker::imap::retry::{
     load_bodies_retry, load_body_retry, load_messages_retry, load_raw_retry, load_source_retry,
 };
 use crate::worker::imap::structure::structure_attachments;
-use crate::worker::imap::sweep::{emit_body_hits, selected_chip_count};
+use crate::worker::imap::sweep::{emit_body_hits, selected_chip_count, selected_total};
 use crate::worker::imap::watch::{watch_active_folder, watchable};
 use crate::worker::imap::wire::{exam, fetch_uids, search_uids, sel, uid_set};
 use crate::worker::imap::{BODY_FETCH_BATCH, FIRST_PAGE, SCAN_CHUNK, SCAN_SPLIT_BUDGET};
@@ -148,10 +148,18 @@ impl<E: Emit> ImapWorker<E> {
         if let Some(sess) = session.as_mut() {
             let kind = cached_folder_kind(cache.as_ref(), account_id, path);
             if let Some(unread) = selected_chip_count(sess, kind).await {
+                let total = selected_total(sess).await;
                 if let Some(c) = cache.as_ref() {
                     c.set_folder_unread(account_id, path, unread);
+                    if let Some(n) = total {
+                        c.set_folder_total(account_id, path, n);
+                    }
                 }
-                emit(WorkerEvent::FolderUnread { folder_id, unread });
+                emit(WorkerEvent::FolderUnread {
+                    folder_id,
+                    unread,
+                    total,
+                });
             }
         }
     }

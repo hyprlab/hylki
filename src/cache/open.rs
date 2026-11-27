@@ -556,7 +556,7 @@ fn drop_stale_tables(conn: &Connection, version: i64) {
 /// each is added in place rather than dropping the message index, which
 /// would cost every user a full re-sync; the error when a column is already
 /// there is the expected outcome, not a problem.
-const ADDED_COLUMNS: [&str; 20] = [
+const ADDED_COLUMNS: [&str; 21] = [
     // The list preview.
     "ALTER TABLE messages ADD COLUMN preview TEXT NOT NULL DEFAULT ''",
     // Send Later (#145): when a queued message is due; NULL sends at once.
@@ -612,6 +612,9 @@ const ADDED_COLUMNS: [&str; 20] = [
     // leaving out an empty Inbox. A listing saved before reads as numbered
     // by place until it is saved again.
     "ALTER TABLE folders ADD COLUMN id INTEGER NOT NULL DEFAULT 0",
+    // And how many messages a folder holds (#720): a listing saved before
+    // reads as uncounted until the server counts it again.
+    "ALTER TABLE folders ADD COLUMN total INTEGER NOT NULL DEFAULT 0",
 ];
 
 /// The cleanups run at every open, whatever the version.

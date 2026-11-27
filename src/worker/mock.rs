@@ -310,6 +310,7 @@ pub(super) async fn run_mock(
                 emit(WorkerEvent::FolderUnread {
                     folder_id,
                     unread: 0,
+                    total: Some(0),
                 });
             }
             // The demo backend sends nothing, so its Outbox is always empty.

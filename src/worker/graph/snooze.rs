@@ -58,6 +58,7 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                         emit(WorkerEvent::FolderUnread {
                             folder_id: dest_folder_id,
                             unread,
+                            total: None,
                         });
                     }
                 }

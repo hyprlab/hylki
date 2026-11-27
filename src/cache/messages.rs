@@ -135,7 +135,8 @@ impl Cache {
     pub(crate) fn load_folders(&self, account_id: u32) -> Vec<Folder> {
         let run = || -> rusqlite::Result<Vec<Folder>> {
             let mut stmt = self.conn.prepare(
-                "SELECT path, name, kind, unread, childless, id FROM folders WHERE account_id = ?1 ORDER BY ord",
+                "SELECT path, name, kind, unread, childless, id, total FROM folders \
+                 WHERE account_id = ?1 ORDER BY ord",
             )?;
             let rows = stmt.query_map([account_id], |row| {
                 Ok((
@@ -145,11 +146,12 @@ impl Cache {
                     row.get::<_, u32>(3)?,
                     row.get::<_, bool>(4)?,
                     row.get::<_, u32>(5)?,
+                    row.get::<_, u32>(6)?,
                 ))
             })?;
             let mut folders = Vec::new();
             for (i, r) in rows.enumerate() {
-                let (path, name, kind, unread, childless, id) = r?;
+                let (path, name, kind, unread, childless, id, total) = r?;
                 folders.push(Folder {
                     // The id the worker gave it, so a cached message maps
                     // back to the folder the app knows (#689); by place for
@@ -160,6 +162,7 @@ impl Cache {
                     path,
                     kind: kind_from_i64(kind),
                     unread,
+                    total,
                     childless,
                 });
             }
@@ -177,8 +180,8 @@ impl Cache {
             tx.execute("DELETE FROM folders WHERE account_id = ?1", [account_id])?;
             for (i, f) in folders.iter().enumerate() {
                 tx.execute(
-                    "INSERT INTO folders (account_id, path, name, kind, unread, ord, childless, id)
-                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+                    "INSERT INTO folders (account_id, path, name, kind, unread, ord, childless, id, total)
+                     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
                     params![
                         account_id,
                         f.path,
@@ -187,7 +190,8 @@ impl Cache {
                         f.unread,
                         i as i64,
                         f.childless,
-                        f.id
+                        f.id,
+                        f.total
                     ],
                 )?;
             }
@@ -208,6 +212,17 @@ impl Cache {
             params![account_id, path, unread],
         ) {
             tracing::warn!("cache set_folder_unread failed: {e}");
+        }
+    }
+
+    /// Store how many messages a folder holds, as the server last counted
+    /// (#720), so the next launch shows it before the server is asked.
+    pub(crate) fn set_folder_total(&self, account_id: u32, path: &str, total: u32) {
+        if let Err(e) = self.conn.execute(
+            "UPDATE folders SET total = ?3 WHERE account_id = ?1 AND path = ?2",
+            params![account_id, path, total],
+        ) {
+            tracing::warn!("cache set_folder_total failed: {e}");
         }
     }
 

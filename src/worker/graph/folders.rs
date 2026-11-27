@@ -151,6 +151,7 @@ pub(super) fn graph_list_folders(
                 path,
                 kind,
                 unread: 0, // filled in below, once the kinds are final,
+                total: count("totalItemCount"),
                 childless: false,
             },
         });
@@ -204,7 +205,11 @@ pub(super) async fn graph_poll_inbox(
             folder_id,
             messages,
         });
-        emit(WorkerEvent::FolderUnread { folder_id, unread });
+        emit(WorkerEvent::FolderUnread {
+            folder_id,
+            unread,
+            total: None,
+        });
     }
     // The poll only re-syncs the inbox; mail filed by server-side rules lands
     // in other folders without passing through it. Re-list for every folder's
@@ -247,10 +252,14 @@ pub(super) async fn graph_refresh_unread(
     if let Some(c) = cache {
         c.save_folders(account_id, &folders);
     }
-    let counts: Vec<(u32, u32)> = folders.iter().map(|f| (f.id, f.unread)).collect();
+    let counts: Vec<(u32, u32, u32)> = folders.iter().map(|f| (f.id, f.unread, f.total)).collect();
     emit(WorkerEvent::Folders(folders));
-    for (folder_id, unread) in counts {
-        emit(WorkerEvent::FolderUnread { folder_id, unread });
+    for (folder_id, unread, total) in counts {
+        emit(WorkerEvent::FolderUnread {
+            folder_id,
+            unread,
+            total: Some(total),
+        });
     }
     for ev in snoozed {
         emit(ev);

@@ -7330,6 +7330,13 @@ msgstr "Evidenzia solo la nuova posta non letta"
 msgid "A count turns gray once you have looked at the folder."
 msgstr ""
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Mostra messaggio"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Visibile solo se esistono più account."
 

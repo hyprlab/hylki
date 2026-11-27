@@ -7432,6 +7432,13 @@ msgstr "Выделять только новые непрочитанные пи
 msgid "A count turns gray once you have looked at the folder."
 msgstr "Когда вы посмотрите на папку, счетчик станет серым."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Показать сообщение"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Отображается только при наличии более чем одной учётной записи."
 

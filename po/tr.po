@@ -7325,6 +7325,13 @@ msgstr "Yalnızca yeni okunmamış postaları vurgula"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "Klasöre baktığınızda sayı griye döner."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "İletiyi Göster"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Yalnızca birden fazla hesap varken gösterilir."
 

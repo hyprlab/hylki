@@ -78,6 +78,7 @@ pub(super) async fn list_folder_metadata(
             path,
             kind,
             unread: 0,
+            total: 0,
             childless,
         });
     }
@@ -121,10 +122,9 @@ pub(super) async fn list_folder_metadata(
 
     if let Some(cached) = cached_counts {
         for folder in &mut folders {
-            folder.unread = cached
-                .iter()
-                .find(|f| f.path == folder.path)
-                .map_or(0, |f| f.unread);
+            let known = cached.iter().find(|f| f.path == folder.path);
+            folder.unread = known.map_or(0, |f| f.unread);
+            folder.total = known.map_or(0, |f| f.total);
         }
         return Ok(folders);
     }
@@ -133,6 +133,7 @@ pub(super) async fn list_folder_metadata(
     // downloads no message content, so this stays fast even for huge mailboxes.
     for f in folders.iter_mut() {
         if let Ok(mb) = box_status(session, &f.path, "(UNSEEN MESSAGES)").await {
+            f.total = mb.exists;
             f.unread = if chip_counts_all(f.kind) {
                 mb.exists
             } else {
@@ -147,7 +148,8 @@ pub(super) async fn list_folder_metadata(
     // accurate EXAMINE + SEARCH UNSEEN (read-only; subsequent mutations must
     // re-select the mailbox in write mode).
     if let Some(inbox) = folders.iter_mut().find(|f| f.kind == FolderKind::Inbox) {
-        if exam(session, &inbox.path).await.is_ok() {
+        if let Ok(mb) = exam(session, &inbox.path).await {
+            inbox.total = mb.exists;
             if let Some(n) = selected_unseen(session).await {
                 inbox.unread = n;
             }

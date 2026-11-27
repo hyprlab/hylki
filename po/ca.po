@@ -7489,6 +7489,13 @@ msgstr "Ressalta només el correu no llegit nou"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "El recompte es torna gris un cop has mirat la carpeta."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Mostra al missatge"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Només es mostra amb més d'un compte."
 

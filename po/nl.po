@@ -7348,6 +7348,13 @@ msgstr "Markeer alleen nieuwe, ongelezen e-mail"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "Een telling wordt grijs zodra je de map hebt bekeken."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Toon bericht"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Alleen weergegeven met meer dan één account."
 

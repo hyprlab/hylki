@@ -219,6 +219,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
                     path,
                     kind,
                     unread: 0,
+                    total: 0,
                     childless: false,
                 };
                 (folder, 0)
@@ -231,6 +232,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
             f.kind = assigned.kind;
             let (all, unseen) = self.store.counts(&f.path);
             *total = all;
+            f.total = all;
             f.unread = if chip_counts_all(f.kind) { all } else { unseen };
         }
         // The Inbox is the tree's top, which Maildir always has, but mail
@@ -350,6 +352,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
             Ok(messages) => {
                 let kind = self.folder(&path).map_or(FolderKind::Custom, |f| f.kind);
                 let unread = chip_count_of(kind, &messages);
+                let total = Some(messages.len() as u32);
                 let same = shown
                     && messages.len() == cached.len()
                     && messages.iter().all(|m| {
@@ -366,7 +369,11 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
                         messages,
                     });
                 }
-                (self.emit)(WorkerEvent::FolderUnread { folder_id, unread });
+                (self.emit)(WorkerEvent::FolderUnread {
+                    folder_id,
+                    unread,
+                    total,
+                });
             }
             Err(e) => (self.emit)(WorkerEvent::error(i18n_f(
                 "Could not fetch mail: {e}",
@@ -420,6 +427,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
             (self.emit)(WorkerEvent::FolderUnread {
                 folder_id: f.id,
                 unread: f.unread,
+                total: Some(f.total),
             });
         }
         let Some(c) = self.cache.as_ref() else {

@@ -146,7 +146,11 @@ impl<E: Fn(WorkerEvent)> GraphWorker<E> {
                     folder_id,
                     messages,
                 });
-                emit(WorkerEvent::FolderUnread { folder_id, unread });
+                emit(WorkerEvent::FolderUnread {
+                    folder_id,
+                    unread,
+                    total: None,
+                });
                 // The index is complete when the first page held the
                 // whole folder, or once the background index has run
                 // (#429). Said at once when it is, so the list's

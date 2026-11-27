@@ -228,7 +228,10 @@ impl MailBackend for MockBackend {
         self.folders
             .iter()
             .filter(|f| f.account_id == account_id)
-            .cloned()
+            .map(|f| Folder {
+                total: self.messages.iter().filter(|m| m.folder_id == f.id).count() as u32,
+                ..f.clone()
+            })
             .collect()
     }
 
@@ -249,6 +252,7 @@ fn folder(id: u32, account_id: u32, name: &str, kind: FolderKind, unread: u32) -
         path: name.into(),
         kind,
         unread,
+        total: 0,
         childless: false,
     }
 }

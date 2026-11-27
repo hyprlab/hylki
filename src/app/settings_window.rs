@@ -146,6 +146,7 @@ impl AppModel {
             remember_rail: self.remember_rail,
             rail_dots: self.rail_dots,
             seen_counts: self.seen_counts,
+            message_totals: self.message_totals,
             rail_fold: self.rail_fold,
             reader_toolbar: self.reader_toolbar.clone(),
             focus: self.focus,

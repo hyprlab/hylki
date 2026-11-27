@@ -7307,6 +7307,13 @@ msgstr "Mettre en évidence uniquement les nouveaux messages non lus"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "Un compteur devient gris une fois que vous avez consulté le dossier."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Afficher le message"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Affiché uniquement avec plus d’un compte."
 

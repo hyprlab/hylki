@@ -395,6 +395,9 @@ pub(crate) struct AppModel {
     /// Preference: unread counts are accented only for mail that came in
     /// since the folder was last looked at (#343).
     pub(super) seen_counts: bool,
+    /// Preference: each folder row shows how many messages it holds
+    /// (#720).
+    pub(super) message_totals: bool,
     /// Each folder's unread count when last looked at, keyed as in
     /// state.toml ("address␟path").
     pub(super) unread_seen: std::cell::RefCell<std::collections::BTreeMap<String, u32>>,

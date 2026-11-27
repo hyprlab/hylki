@@ -718,6 +718,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         };
         let folders = vec![
@@ -792,6 +793,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         };
         let folders = vec![

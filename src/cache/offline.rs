@@ -194,6 +194,7 @@ mod tests {
                 path: p.to_string(),
                 kind: crate::models::FolderKind::Custom,
                 unread: 0,
+                total: 0,
                 childless: false,
             })
             .collect();

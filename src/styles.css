@@ -769,6 +769,18 @@ flowbox.attach-flow > flowboxchild {
   font-weight: 700;
 }
 
+/* A folder's message total (#720), after its unread chip: the chip's size,
+   without its weight, so the unread number stays the one that stands out.
+   The row's 12px spacing would part the two too far. */
+.folder-row label.folder-total {
+  font-size: 0.8em;
+  margin-left: -6px;
+}
+.folder-row label.folder-total:dir(rtl) {
+  margin-left: 0;
+  margin-right: -6px;
+}
+
 /* "Highlight only new unread mail" (#343): a count already looked at. */
 .unread-badge.seen {
   background: alpha(currentColor, 0.14);

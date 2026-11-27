@@ -350,8 +350,51 @@ pub(super) fn style_badge(badge: &gtk::Label, max_chars: i32) {
     badge.set_max_width_chars(max_chars);
 }
 
+/// A folder row's message total (#720): dim, after the unread chip, and
+/// blank while there is nothing to count. Right-aligned in a few
+/// characters' room that every row keeps, so the chips of folders holding
+/// up to thousands of messages stay in line.
+fn total_label(total: u32) -> gtk::Label {
+    let label = gtk::Label::new(None);
+    label.add_css_class("folder-total");
+    label.add_css_class("dim-label");
+    label.add_css_class("numeric");
+    label.set_valign(gtk::Align::Center);
+    label.set_xalign(1.0);
+    label.set_width_chars(4);
+    show_total(&label, total);
+    label
+}
+
+/// Put a new total on a folder row's total label; 0 leaves it blank.
+pub(super) fn show_total(label: &gtk::Label, total: u32) {
+    if total == 0 {
+        label.set_text("");
+        label.set_tooltip_text(None);
+        return;
+    }
+    label.set_text(&total.to_string());
+    let tip = ni18n_f(
+        "{n} message",
+        "{n} messages",
+        total,
+        &[("n", &total.to_string())],
+    );
+    label.set_tooltip_text(Some(&tip));
+}
+
+/// One folder row's widgets: the row, and the labels a count change
+/// updates in place.
+pub(super) struct FolderRow {
+    pub(super) row: gtk::ListBoxRow,
+    pub(super) badge: Option<gtk::Label>,
+    pub(super) total: Option<gtk::Label>,
+}
+
 /// Build one folder row. `depth` indents sub-folders to mirror the server's
-/// hierarchy (0 = top level; only meaningful for custom folders).
+/// hierarchy (0 = top level; only meaningful for custom folders). `totals`
+/// adds how many messages the folder holds beside its unread chip (#720).
+#[allow(clippy::too_many_arguments)]
 pub(super) fn build_folder_row(
     folder: &Folder,
     collapsed: bool,
@@ -360,7 +403,8 @@ pub(super) fn build_folder_row(
     inset: bool,
     glyph: FolderGlyph,
     h: &FolderHierarchy,
-) -> (gtk::ListBoxRow, Option<gtk::Label>) {
+    totals: bool,
+) -> FolderRow {
     let row = gtk::ListBoxRow::new();
     let hbox = gtk::Box::new(gtk::Orientation::Horizontal, 12);
     hbox.add_css_class("folder-row");
@@ -423,6 +467,7 @@ pub(super) fn build_folder_row(
     // it off the in-place update lists too.
     let counted = folder.kind != FolderKind::Sent;
     let unread = if counted { folder.unread } else { 0 };
+    let mut total = None;
     let badge = if collapsed {
         hbox.set_halign(gtk::Align::Center);
         let tip = if unread > 0 {
@@ -453,11 +498,22 @@ pub(super) fn build_folder_row(
         style_badge(&badge, 5);
         badge.set_visible(unread > 0);
         hbox.append(&badge);
+        // Drafts' chip already counts every draft: its row keeps the
+        // column blank, and off the in-place updates.
+        if totals {
+            let label = total_label(folder.total);
+            hbox.append(&label);
+            if crate::worker::chip_counts_all(folder.kind) {
+                show_total(&label, 0);
+            } else {
+                total = Some(label);
+            }
+        }
         counted.then_some(badge)
     };
 
     row.set_child(Some(&hbox));
-    (row, badge)
+    FolderRow { row, badge, total }
 }
 
 /// Move a folder row's content into a revealer, so folding its parent

@@ -7434,6 +7434,13 @@ msgstr "Resaltar solo el correo nuevo sin leer"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "El contador se vuelve gris cuando ya has consultado la carpeta."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Mostrar en el mensaje"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Solo se muestra si hay más de una cuenta."
 

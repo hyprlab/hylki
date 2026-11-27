@@ -570,6 +570,9 @@ pub(crate) enum WorkerEvent {
     FolderUnread {
         folder_id: u32,
         unread: u32,
+        /// Every message in the folder (#720), where the same check counted
+        /// them; `None` where it did not.
+        total: Option<u32>,
     },
     /// The same, from a per-folder IDLE watcher ([`watch_folder`]), which knows
     /// its folder only by path: folder ids are positional and shift when the
@@ -578,6 +581,7 @@ pub(crate) enum WorkerEvent {
     FolderUnreadByPath {
         path: String,
         unread: u32,
+        total: Option<u32>,
     },
     /// How many messages the Snoozed folder `path` holds (#542), snoozed
     /// here or by another computer, read by the same checks that recount

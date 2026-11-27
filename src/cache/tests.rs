@@ -952,6 +952,7 @@ fn a_folders_fresh_chip_number_outlasts_the_session() {
         path: path.to_string(),
         kind,
         unread,
+        total: 0,
         childless: false,
     };
     c.save_folders(
@@ -974,4 +975,31 @@ fn a_folders_fresh_chip_number_outlasts_the_session() {
         counts,
         vec![("INBOX".to_string(), 3), ("Drafts".to_string(), 0)]
     );
+}
+
+/// A folder's message total (#720) is kept with its listing, and a later
+/// count of it replaces the listed one, so a launch shows the last number
+/// the server gave before it is asked again.
+#[test]
+fn a_folders_total_outlasts_the_session() {
+    let c = Cache::in_memory().unwrap();
+    let folder = |path: &str, total: u32| crate::models::Folder {
+        id: 0,
+        account_id: 1,
+        name: path.to_string(),
+        path: path.to_string(),
+        kind: FolderKind::Custom,
+        unread: 0,
+        total,
+        childless: false,
+    };
+    c.save_folders(1, &[folder("A", 120), folder("B", 4)]);
+    c.set_folder_total(1, "B", 5);
+    c.set_folder_total(2, "A", 9);
+    let totals: Vec<(String, u32)> = c
+        .load_folders(1)
+        .into_iter()
+        .map(|f| (f.path, f.total))
+        .collect();
+    assert_eq!(totals, vec![("A".to_string(), 120), ("B".to_string(), 5)]);
 }

@@ -2700,6 +2700,18 @@ is open. Reading mail elsewhere lowers the mark with the count. What was
 unread when the setting was turned on counts as seen. The marks are kept in
 `state.toml`, and the setting is `seen_counts` in `privacy.toml`.
 
+### Message totals
+
+**Settings → Sidebar → Show message totals** puts how many messages each
+folder holds beside its unread count, in gray; hovering the number says it in
+words. Drafts has none, since its count is already every draft, and the icon
+rail and Focus Mode show none. The number is the server's: IMAP's STATUS and
+EXAMINE (and an ESEARCH count, where the server has it, after each sync),
+JMAP's `totalEmails`, Microsoft Graph's `totalItemCount`, and the files of an
+On This Computer folder. For a POP3 account it is the mail Hylki has
+downloaded. It is off by default, and stored as `message_totals` in
+`privacy.toml`.
+
 ### Unread count on the app icon
 
 Hylki puts a number on its icon in the dock or task manager. KDE Plasma's

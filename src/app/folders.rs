@@ -86,6 +86,21 @@ pub(super) fn merged_unread(
         .collect()
 }
 
+/// A new listing's totals (#720), keeping the one already known for a
+/// folder the listing did not count: a cached listing saved before the
+/// totals were, or a server whose listing leaves them out. A real zero
+/// comes with the folder's own count (`AppModel::take_folder_total`).
+pub(super) fn keep_known_totals(old: Option<&[Folder]>, folders: &mut [Folder]) {
+    let Some(old) = old else {
+        return;
+    };
+    for f in folders.iter_mut().filter(|f| f.total == 0) {
+        if let Some(known) = old.iter().find(|o| o.path == f.path) {
+            f.total = known.total;
+        }
+    }
+}
+
 /// Whether two listings show the same folders: same ids, paths, kinds and
 /// names, in the same order. Unread counts do not count.
 pub(super) fn same_folder_list(old: &[Folder], new: &[Folder]) -> bool {
@@ -215,6 +230,7 @@ impl AppModel {
                 path: path.clone(),
                 kind: FolderKind::Custom,
                 unread: 0,
+                total: 0,
                 childless: false,
             });
             self.normalize_folders(account_id);
@@ -680,6 +696,7 @@ mod tests {
             path: path.into(),
             kind: FolderKind::Custom,
             unread,
+            total: 0,
             childless: false,
         }
     }
@@ -694,6 +711,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         };
         let mut folders = vec![
@@ -732,6 +750,7 @@ mod tests {
                 path: "INBOX".into(),
                 kind: FolderKind::Inbox,
                 unread: 0,
+                total: 0,
                 childless: false,
             },
             Folder {
@@ -741,6 +760,7 @@ mod tests {
                 path: "Sent".into(),
                 kind: FolderKind::Sent,
                 unread: 0,
+                total: 0,
                 childless: false,
             },
         ];
@@ -766,6 +786,7 @@ mod tests {
             path: path.to_string(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         };
         let folders = vec![
@@ -823,6 +844,19 @@ mod tests {
     }
 
     #[test]
+    fn a_listing_keeps_the_totals_it_did_not_count() {
+        let with = |id, path: &str, total| Folder {
+            total,
+            ..folder(id, path, 0)
+        };
+        let old = vec![with(1, "INBOX", 40), with(2, "A", 7)];
+        let mut new = vec![with(1, "A", 0), with(2, "INBOX", 41), with(3, "B", 0)];
+        keep_known_totals(Some(&old), &mut new);
+        let totals: Vec<u32> = new.iter().map(|f| f.total).collect();
+        assert_eq!(totals, vec![7, 41, 0]);
+    }
+
+    #[test]
     fn folder_lists_compare_without_their_counts() {
         let a = vec![folder(1, "INBOX", 5), folder(2, "A", 3)];
         let mut b = a.clone();
@@ -860,6 +894,7 @@ mod tests {
             path: path.to_string(),
             kind: FolderKind::Custom,
             unread: 0,
+            total: 0,
             childless: false,
         };
         // Byte six falls inside a character in these top-level paths.
@@ -912,6 +947,7 @@ mod tests {
             path: path.into(),
             kind: FolderKind::Custom,
             unread: 0,
+            total: 0,
             childless: false,
         };
         assert_eq!(

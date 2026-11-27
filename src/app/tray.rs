@@ -1,6 +1,6 @@
 //! The tray icon and its menu, and the launcher badge.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use adw::prelude::*;
 use relm4::prelude::*;
@@ -95,6 +95,7 @@ impl AppModel {
         let fresh = self.seen_counts.then(|| self.fresh_unread());
         self.sidebars_emit(SidebarInput::SetUnread {
             folders,
+            totals: self.folder_totals(),
             unified: self.unified_inboxes_unread(),
             fresh,
         });
@@ -112,6 +113,17 @@ impl AppModel {
         }
         self.push_launcher_count();
         self.push_tray_mail();
+    }
+
+    /// Each folder's message total (#720), while the sidebar shows them.
+    fn folder_totals(&self) -> HashMap<(u32, u32), u32> {
+        if !self.message_totals_now() {
+            return HashMap::new();
+        }
+        self.folders
+            .iter()
+            .flat_map(|(a, fs)| fs.iter().map(move |f| ((*a, f.id), f.total)))
+            .collect()
     }
 
     /// The launcher icon's badge (#271): the same inboxes total as the tray

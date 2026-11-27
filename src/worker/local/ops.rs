@@ -75,6 +75,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
         (self.emit)(WorkerEvent::FolderUnread {
             folder_id,
             unread: 0,
+            total: None,
         });
     }
 
@@ -174,6 +175,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
         (self.emit)(WorkerEvent::FolderUnread {
             folder_id,
             unread: 0,
+            total: Some(0),
         });
     }
 
@@ -205,6 +207,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
             .folder(dest)
             .map_or(crate::models::FolderKind::Custom, |f| f.kind);
         let unread = crate::worker::folders::chip_count_of(kind, &messages);
+        let total = Some(messages.len() as u32);
         (self.emit)(WorkerEvent::Messages {
             folder_id: dest_folder_id,
             messages,
@@ -212,6 +215,7 @@ impl<E: Fn(WorkerEvent)> LocalWorker<E> {
         (self.emit)(WorkerEvent::FolderUnread {
             folder_id: dest_folder_id,
             unread,
+            total,
         });
         Ok(())
     }

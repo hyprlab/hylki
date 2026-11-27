@@ -7,7 +7,7 @@ use super::tree::{hidden_by_collapse, is_main_row, nests_in_inbox, path_is_under
 use super::types::chevron_icon;
 use super::widgets::{
     account_gravatar, build_folder_row, filter_icon, fold_on_double_click, heading_chevron,
-    section_heading, with_unread_overlay, wrap_row_in_revealer, ROW_LEFT_INSET,
+    section_heading, with_unread_overlay, wrap_row_in_revealer, FolderRow, ROW_LEFT_INSET,
 };
 use super::*;
 
@@ -368,7 +368,7 @@ impl Sidebar {
             } else {
                 0
             };
-            let (row, badge) = build_folder_row(
+            let FolderRow { row, badge, total } = build_folder_row(
                 folder,
                 self.collapsed,
                 depth,
@@ -376,6 +376,7 @@ impl Sidebar {
                 self.chevrons_left,
                 icon,
                 &section.hierarchy,
+                self.message_totals,
             );
             if has_children {
                 if let Some(lead) = &lead {
@@ -411,6 +412,9 @@ impl Sidebar {
             list.append(&row);
             if let Some(badge) = badge {
                 self.folder_badges.insert((id, folder.id), badge);
+            }
+            if let Some(total) = total {
+                self.folder_totals.insert((id, folder.id), total);
             }
         }
         self.main_folders
@@ -459,7 +463,7 @@ impl Sidebar {
                 } else {
                     Some(self.tree_lead(id, folder, has_children, collapsed_nodes, sender))
                 };
-                let (row, badge) = build_folder_row(
+                let FolderRow { row, badge, total } = build_folder_row(
                     folder,
                     self.collapsed,
                     depth,
@@ -467,6 +471,7 @@ impl Sidebar {
                     self.chevrons_left,
                     filter_icon(section, folder),
                     &section.hierarchy,
+                    self.message_totals,
                 );
                 if inert {
                     row.set_selectable(false);
@@ -501,6 +506,9 @@ impl Sidebar {
                 custom_list.append(&row);
                 if let Some(badge) = badge {
                     self.folder_badges.insert((id, folder.id), badge);
+                }
+                if let Some(total) = total {
+                    self.folder_totals.insert((id, folder.id), total);
                 }
             }
             self.custom_folders

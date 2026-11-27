@@ -171,6 +171,7 @@ pub(crate) struct PrefInit {
     pub(crate) remember_rail: bool,
     pub(crate) rail_dots: bool,
     pub(crate) seen_counts: bool,
+    pub(crate) message_totals: bool,
     pub(crate) rail_fold: crate::config::RailFold,
     /// The reader header's buttons, per side and in order.
     pub(crate) reader_toolbar: ReaderToolbar,
@@ -544,6 +545,7 @@ pub(crate) enum PrefOutput {
     SetRememberRail(bool),
     SetRailDots(bool),
     SetSeenCounts(bool),
+    SetMessageTotals(bool),
     SetReaderToolbar(ReaderToolbar),
     SetToolbarFoldRight(bool),
     SetFocusMode(crate::config::FocusMode),

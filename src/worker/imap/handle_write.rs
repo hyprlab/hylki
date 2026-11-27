@@ -194,6 +194,7 @@ impl<E: Emit> ImapWorker<E> {
                 emit(WorkerEvent::FolderUnread {
                     folder_id,
                     unread: 0,
+                    total: None,
                 });
             }
             Err(e) => {
@@ -643,6 +644,7 @@ impl<E: Emit> ImapWorker<E> {
                 emit(WorkerEvent::FolderUnread {
                     folder_id,
                     unread: 0,
+                    total: Some(0),
                 });
             }
             Err(e) => {

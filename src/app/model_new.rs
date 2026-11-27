@@ -335,6 +335,7 @@ impl AppModel {
             tags_expanded_accounts,
             rail_dots: prefs.rail_dots,
             seen_counts: prefs.seen_counts,
+            message_totals: prefs.message_totals,
             unread_seen: std::cell::RefCell::new(config::load_unread_seen()),
             rail_fold: prefs.rail_fold,
             app_theme: prefs.app_theme,

@@ -9,7 +9,7 @@ use crate::config::AccountConfig;
 use crate::models::{Folder, FolderKind};
 use crate::worker::imap::connect::connect;
 use crate::worker::imap::idle::idle_done;
-use crate::worker::imap::sweep::selected_unseen;
+use crate::worker::imap::sweep::{selected_total, selected_unseen};
 use crate::worker::imap::wire::exam;
 use crate::worker::imap::{
     ImapSession, IDLE_START_TIMEOUT, NETWORK_WAIT, WATCHER_LIMIT, WATCH_LEASE, WATCH_VERIFY,
@@ -191,14 +191,14 @@ pub(in crate::worker) async fn watch_folder(
             continue;
         };
         backoff = Duration::from_secs(60);
-        match tokio::time::timeout(IDLE_START_TIMEOUT, exam(&mut sess, &path)).await {
-            Ok(Ok(_)) => {}
+        let total = match tokio::time::timeout(IDLE_START_TIMEOUT, exam(&mut sess, &path)).await {
+            Ok(Ok(mb)) => mb.exists,
             Ok(Err(_)) => {
                 tracing::info!("unwatching {path}: no longer selectable");
                 return;
             }
             Err(_) => continue, // wedged straight away; reconnect
-        }
+        };
         // Catch up on whatever happened while unwatched (startup, or the gap a
         // dropped connection left), then settle into the IDLE/verify cycle.
         let last_count = selected_unseen(&mut sess).await;
@@ -206,10 +206,12 @@ pub(in crate::worker) async fn watch_folder(
             Some(unread) => emit(WorkerEvent::FolderUnreadByPath {
                 path: path.clone(),
                 unread,
+                total: Some(total),
             }),
             None => continue, // wedged straight out of the gate; reconnect
         }
-        if watch_session(sess, &account, &path, lease.as_ref(), last_count, &emit).await
+        let counts = (last_count, Some(total));
+        if watch_session(sess, &account, &path, lease.as_ref(), counts, &emit).await
             == Watch::Retire
         {
             return;
@@ -239,7 +241,7 @@ async fn watch_session(
     account: &AccountConfig,
     path: &str,
     lease: Option<&Rc<Cell<std::time::Instant>>>,
-    mut last_count: Option<u32>,
+    (mut last_count, mut last_total): (Option<u32>, Option<u32>),
     emit: &impl Fn(WorkerEvent),
 ) -> Watch {
     loop {
@@ -289,7 +291,9 @@ async fn watch_session(
         // and only a changed number is worth an event.
         match selected_unseen(&mut sess).await {
             Some(unread) => {
-                let moved = last_count != Some(unread);
+                // Mail that came in read, or went, moves the total alone.
+                let total = selected_total(&mut sess).await;
+                let moved = last_count != Some(unread) || (total.is_some() && total != last_total);
                 if woke || moved {
                     if let Some(l) = lease {
                         l.set(std::time::Instant::now());
@@ -298,9 +302,11 @@ async fn watch_session(
                 if moved {
                     tracing::debug!("watcher for {path}: unseen now {unread}");
                     last_count = Some(unread);
+                    last_total = total.or(last_total);
                     emit(WorkerEvent::FolderUnreadByPath {
                         path: path.to_string(),
                         unread,
+                        total,
                     });
                 }
             }

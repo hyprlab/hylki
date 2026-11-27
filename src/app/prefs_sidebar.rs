@@ -39,6 +39,12 @@ impl AppModel {
                 }
             }
 
+            PrefOutput::SetMessageTotals(on) => {
+                if pref!(self.message_totals = on) {
+                    self.rebuild_sidebar();
+                }
+            }
+
             PrefOutput::SetRailDots(on) => {
                 if pref!(self.rail_dots = on) {
                     self.rebuild_sidebar();

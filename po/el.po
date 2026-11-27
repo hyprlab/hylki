@@ -7478,6 +7478,13 @@ msgstr "Επισήμανση μόνο νέας μη αναγνωσμένης α�
 msgid "A count turns gray once you have looked at the folder."
 msgstr "Ο αριθμός γίνεται γκρίζος μόλις ανοίξετε τον φάκελο."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Εμφάνιση στο μήνυμα"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Εμφανίζεται μόνο όταν υπάρχουν περισσότεροι από ένας λογαριασμοί."
 

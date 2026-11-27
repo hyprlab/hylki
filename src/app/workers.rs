@@ -127,20 +127,30 @@ fn map_event(account_id: u32, event: WorkerEvent) -> AppMsg {
             account_id,
             folder_id,
         },
-        WorkerEvent::FolderUnread { folder_id, unread } => AppMsg::FolderUnread {
+        WorkerEvent::FolderUnread {
+            folder_id,
+            unread,
+            total,
+        } => AppMsg::FolderUnread {
             account_id,
             folder_id,
             unread,
+            total,
         },
         WorkerEvent::SnoozedCount { path, count } => AppMsg::SnoozedCount {
             account_id,
             path,
             count,
         },
-        WorkerEvent::FolderUnreadByPath { path, unread } => AppMsg::FolderUnreadByPath {
+        WorkerEvent::FolderUnreadByPath {
+            path,
+            unread,
+            total,
+        } => AppMsg::FolderUnreadByPath {
             account_id,
             path,
             unread,
+            total,
         },
         WorkerEvent::SeenSettled { path, uid } => AppMsg::SeenSettled {
             account_id,

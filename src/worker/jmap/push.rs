@@ -104,7 +104,11 @@ pub(super) async fn jmap_poll_inbox(
             folder_id,
             messages,
         });
-        emit(WorkerEvent::FolderUnread { folder_id, unread });
+        emit(WorkerEvent::FolderUnread {
+            folder_id,
+            unread,
+            total: None,
+        });
     }
     jmap_refresh_unread(s, account_id, cache, state, emit).await;
 }

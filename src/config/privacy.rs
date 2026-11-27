@@ -396,6 +396,10 @@ pub(crate) struct PrivacyFile {
     /// default.
     #[serde(default)]
     pub(crate) seen_counts: bool,
+    /// Each folder's message total beside its unread count (#720). Off
+    /// by default.
+    #[serde(default)]
+    pub(crate) message_totals: bool,
     /// Icon rail: the sections folded up by themselves when the sidebar
     /// collapses, one switch each.
     #[serde(default)]
@@ -823,6 +827,7 @@ impl Default for PrivacyFile {
             remember_rail: true,
             rail_dots: true,
             seen_counts: false,
+            message_totals: false,
             rail_fold: RailFold::default(),
             app_theme: AppTheme::default(),
             text_scale: default_text_scale(),

@@ -264,10 +264,12 @@ pub(super) async fn refresh_unread_counts(
         };
         if let Some(c) = cache {
             c.set_folder_unread(account_id, &f.path, unread);
+            c.set_folder_total(account_id, &f.path, mb.exists);
         }
         emit(WorkerEvent::FolderUnread {
             folder_id: f.id,
             unread,
+            total: Some(mb.exists),
         });
         let now = (unread, mb.uid_next);
         match baseline.insert(f.path.clone(), now) {
@@ -323,6 +325,15 @@ pub(super) async fn selected_chip_count(
     } else {
         selected_unseen(session).await
     }
+}
+
+/// Every message in the currently-selected mailbox (#720), where the
+/// server counts them without listing them (ESEARCH); `None` elsewhere,
+/// where listing every uid only for a number costs more than it is worth.
+/// The sweep's EXAMINE and the folder listing's STATUS count every
+/// folder anyway.
+pub(super) async fn selected_total(session: &mut ImapSession) -> Option<u32> {
+    search_count(session, "ALL").await
 }
 
 /// Answer the "Message body" filter conditions (#191) for an inbox sync on
@@ -416,6 +427,7 @@ mod tests {
             path: path.into(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         }
     }

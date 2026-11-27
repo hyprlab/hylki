@@ -1,6 +1,7 @@
 //! What the app hands the sidebar: its contents (a rebuild), unread counts
 //! and the small states of the outbox, attachments, busy and offline rows.
 
+use super::widgets::show_total;
 use super::*;
 
 impl Sidebar {
@@ -22,6 +23,7 @@ impl Sidebar {
             account_click_folds,
             rail_dots,
             unread_counts,
+            message_totals,
             rail_fold,
             unified_unread,
             unified_folders,
@@ -63,6 +65,7 @@ impl Sidebar {
         self.account_click_folds = account_click_folds;
         self.rail_dots = rail_dots;
         self.unread_counts = unread_counts;
+        self.message_totals = message_totals;
         // "Fold up expanded items" is a view of the rail, not a
         // change to what is saved: the rebuild below draws the
         // ticked items folded while the sidebar is collapsed and
@@ -315,6 +318,7 @@ impl Sidebar {
     pub(super) fn on_set_unread(
         &mut self,
         folders: HashMap<(u32, u32), u32>,
+        totals: HashMap<(u32, u32), u32>,
         unified: u32,
         fresh: Option<std::collections::HashSet<(u32, u32)>>,
     ) {
@@ -351,6 +355,9 @@ impl Sidebar {
             let n = folders.get(&(*aid, *fid)).copied().unwrap_or(0);
             label.set_text(&n.to_string());
             label.set_visible(n > 0);
+        }
+        for (key, label) in &self.folder_totals {
+            show_total(label, totals.get(key).copied().unwrap_or(0));
         }
         if let Some(label) = &self.unified_badge {
             label.set_text(&unified.to_string());
@@ -396,10 +403,11 @@ impl Sidebar {
         // reappears on collapse. Keep `sections` a faithful mirror.
         for section in &mut self.sections {
             for folder in &mut section.folders {
-                folder.unread = folders
-                    .get(&(section.account.id, folder.id))
-                    .copied()
-                    .unwrap_or(0);
+                let key = (section.account.id, folder.id);
+                folder.unread = folders.get(&key).copied().unwrap_or(0);
+                if let Some(n) = totals.get(&key) {
+                    folder.total = *n;
+                }
             }
         }
     }

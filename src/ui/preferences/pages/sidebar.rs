@@ -20,6 +20,7 @@ pub(in crate::ui::preferences) struct SidebarPage {
     pub(in crate::ui::preferences) remember_sidebar_row: adw::SwitchRow,
     pub(in crate::ui::preferences) remember_rail_row: adw::SwitchRow,
     pub(in crate::ui::preferences) seen_counts_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) message_totals_row: adw::SwitchRow,
     pub(in crate::ui::preferences) show_unified_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_starred_row: adw::SwitchRow,
     pub(in crate::ui::preferences) unified_sent_row: adw::SwitchRow,
@@ -149,6 +150,15 @@ impl SidebarPage {
                         set_subtitle: &i18n("A count turns gray once you have looked at the folder."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetSeenCounts(row.is_active()));
+                        },
+                    },
+
+                    #[name = "message_totals_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Show message totals"),
+                        set_subtitle: &i18n("Beside each folder's unread count."),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetMessageTotals(row.is_active()));
                         },
                     },
                 },
@@ -442,6 +452,7 @@ impl SidebarPage {
             remember_sidebar_row,
             remember_rail_row,
             seen_counts_row,
+            message_totals_row,
             show_unified_row,
             unified_starred_row,
             unified_sent_row,

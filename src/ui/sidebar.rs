@@ -14,7 +14,7 @@ use std::collections::{HashMap, HashSet};
 use adw::prelude::*;
 use relm4::prelude::*;
 
-use crate::i18n::{i18n, i18n_f, i18n_noop};
+use crate::i18n::{i18n, i18n_f, i18n_noop, ni18n_f};
 use crate::models::{Account, Folder, FolderHierarchy, FolderKind};
 use crate::ui::context_menu::{show_context_menu, show_context_menu_with_header, MenuEntry};
 
@@ -60,6 +60,9 @@ pub(crate) struct Sidebar {
     rail_dots: bool,
     /// Whether unread counts show at all (Settings → Focus Mode).
     unread_counts: bool,
+    /// Whether each folder row shows how many messages it holds beside
+    /// its unread chip (#720, Settings → Sidebar).
+    message_totals: bool,
     /// Icon rail: the sections that fold up by themselves when the sidebar
     /// collapses (Settings → Sidebar → Icon rail).
     rail_fold: crate::config::RailFold,
@@ -162,6 +165,8 @@ pub(crate) struct Sidebar {
     fresh: Option<std::collections::HashSet<(u32, u32)>>,
     /// Unread badge labels by (account_id, folder_id), updated in place.
     folder_badges: HashMap<(u32, u32), gtk::Label>,
+    /// Message total labels by (account_id, folder_id) (#720), the same way.
+    folder_totals: HashMap<(u32, u32), gtk::Label>,
     /// The "All Inboxes" unread badge label, when shown.
     unified_badge: Option<gtk::Label>,
     /// Whether the "All Inboxes" per-account inbox sub-list is expanded.
@@ -332,6 +337,7 @@ impl Component for Sidebar {
             account_click_folds: false,
             rail_dots: false,
             unread_counts: true,
+            message_totals: false,
             rail_fold: crate::config::RailFold::default(),
             revealers: HashMap::new(),
             chevrons: HashMap::new(),
@@ -374,6 +380,7 @@ impl Component for Sidebar {
             unified_unread: 0,
             fresh: None,
             folder_badges: HashMap::new(),
+            folder_totals: HashMap::new(),
             unified_badge: None,
             unified_expanded: init.unified_expanded,
             unified_revealer: None,
@@ -539,9 +546,10 @@ impl Sidebar {
             }
             SidebarInput::SetUnread {
                 folders,
+                totals,
                 unified,
                 fresh,
-            } => self.on_set_unread(folders, unified, fresh),
+            } => self.on_set_unread(folders, totals, unified, fresh),
             SidebarInput::SetAttachmentsRow(show) => {
                 self.on_set_attachments_row(show, widgets, sender)
             }

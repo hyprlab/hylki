@@ -125,6 +125,7 @@ mod tests {
             path: "Deleted Messages".into(),
             kind: FolderKind::Trash,
             unread: 0,
+            total: 0,
             childless: false,
         }];
         assert_eq!(

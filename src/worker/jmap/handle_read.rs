@@ -246,7 +246,11 @@ impl<E: Fn(WorkerEvent)> JmapWorker<E> {
                     folder_id,
                     messages,
                 });
-                emit(WorkerEvent::FolderUnread { folder_id, unread });
+                emit(WorkerEvent::FolderUnread {
+                    folder_id,
+                    unread,
+                    total: None,
+                });
                 // Complete when the first page held the whole folder,
                 // or once the background index has run (#429).
                 if state.index_after_load(&path, complete, user) {

@@ -316,6 +316,7 @@ mod tests {
             path: path.into(),
             kind,
             unread: 0,
+            total: 0,
             childless: false,
         };
         let h = FolderHierarchy::inferred(&[

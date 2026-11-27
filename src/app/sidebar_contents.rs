@@ -22,6 +22,7 @@ pub(super) struct SidebarShape {
     account_click_folds: bool,
     rail_dots: bool,
     unread_counts: bool,
+    message_totals: bool,
     rail_fold: config::RailFold,
     section_style: config::SectionStyle,
     filtered_placement: config::SectionPlacement,
@@ -106,6 +107,7 @@ impl AppModel {
                 account_click_folds: focus.click_folds,
                 rail_dots,
                 unread_counts: focus.unread_counts,
+                message_totals: self.message_totals_now(),
                 rail_fold: focus.rail_fold(),
                 section_style: config::SectionStyle::Unified,
                 filtered_placement: placed(focus.show_filters),
@@ -122,6 +124,7 @@ impl AppModel {
                 account_click_folds: self.account_click_folds,
                 rail_dots,
                 unread_counts: true,
+                message_totals: self.message_totals_now(),
                 rail_fold: self.rail_fold,
                 section_style: self.section_style,
                 filtered_placement: self.filtered_placement,
@@ -130,6 +133,12 @@ impl AppModel {
                 contacts_placement: self.contacts_placement,
             }
         }
+    }
+
+    /// Whether folder rows show their message totals (#720): the setting,
+    /// except in Focus Mode, which decides its own layout and offers none.
+    pub(super) fn message_totals_now(&self) -> bool {
+        self.message_totals && !self.focus.enabled
     }
 
     /// Where Contacts is in the sidebar: Focus Mode's choice while it is on,
@@ -179,6 +188,7 @@ impl AppModel {
             account_click_folds: shape.account_click_folds,
             rail_dots: shape.rail_dots,
             unread_counts: shape.unread_counts,
+            message_totals: shape.message_totals,
             rail_fold: shape.rail_fold,
             unified_unread,
             unified_folders,

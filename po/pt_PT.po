@@ -7376,6 +7376,13 @@ msgstr "Destacar apenas as novas mensagens não lidas"
 msgid "A count turns gray once you have looked at the folder."
 msgstr "A contagem passa a cinzento depois de abrir a pasta."
 
+#, fuzzy
+msgid "Show message totals"
+msgstr "Mostrar mensagem"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
 msgid "Shown only with more than one account."
 msgstr "Mostrado apenas quando há mais de uma conta."
 

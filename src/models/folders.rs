@@ -110,6 +110,10 @@ pub(crate) struct Folder {
     /// The sidebar chip's number: unread mail, except Drafts, where it is
     /// how many drafts there are (see `worker::chip_counts_all`).
     pub(crate) unread: u32,
+    /// Every message in the folder, as the server last counted it (#720):
+    /// shown beside the unread chip when Settings asks for it. 0 until a
+    /// count comes in.
+    pub(crate) total: u32,
     /// The server makes no folder inside this one (IMAP's `\Noinferiors`,
     /// a JMAP mailbox without `mayCreateChild` or at the depth limit).
     pub(crate) childless: bool,

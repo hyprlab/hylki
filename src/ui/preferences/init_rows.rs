@@ -349,6 +349,10 @@ impl Preferences {
         widgets.sidebar.seen_counts_row.set_active(init.seen_counts);
         widgets
             .sidebar
+            .message_totals_row
+            .set_active(init.message_totals);
+        widgets
+            .sidebar
             .rail_fold_row
             .set_enable_expansion(init.rail_fold.enabled);
         // Unread counts and Fold up expanded items start folded each

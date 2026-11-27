@@ -7679,6 +7679,13 @@ msgid "A count turns gray once you have looked at the folder."
 msgstr ""
 
 #, fuzzy
+msgid "Show message totals"
+msgstr "Megjelenítés az üzenetben"
+
+msgid "Beside each folder's unread count."
+msgstr ""
+
+#, fuzzy
 msgid "Shown only with more than one account."
 msgstr "Csak ezt a fiókot mutasd"
 
