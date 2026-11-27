@@ -35,6 +35,7 @@ pub(super) fn prepare_text_search() {
         return;
     }
     crate::ui::message_list::load_address_names();
+    crate::contacts::load_sent_names();
     gtk::glib::timeout_add_seconds_local_once(30, || {
         std::thread::spawn(|| {
             let Ok(cache) = crate::cache::Cache::open() else {

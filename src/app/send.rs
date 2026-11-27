@@ -601,6 +601,7 @@ impl AppModel {
         if let Some(c) = self.cache.as_ref() {
             c.record_addresses(&recipients);
         }
+        crate::contacts::note_sent_names(&recipients);
         let own: HashSet<String> = self.config.iter().map(|c| c.email.to_lowercase()).collect();
         let fresh: Vec<crate::contacts::Suggestion> = recipients
             .into_iter()
