@@ -258,6 +258,30 @@ fn a_sent_card_names_its_recipient_on_top() {
     assert!(!second.contains("hylki-to-label"), "{second}");
 }
 
+/// Recipients are kept as bare addresses, so a sent card names one by the
+/// name you last wrote to them under, with the address beside it (#724).
+#[test]
+fn a_sent_card_names_a_bare_recipient_by_the_name_sent_to() {
+    crate::contacts::note_sent_names(&[("Public".into(), "public@dccma.example".into())]);
+    let mut sent = msg_for_print();
+    sent.to = "public@dccma.example".into();
+    sent.cc = String::new();
+    let mut other = msg_for_print();
+    other.id = 2;
+    let doc = sent_document(&[sent, other], &[(1, 1)]);
+    let first = doc.split_once("data-key=\"1:2\"").unwrap().0;
+    assert!(
+        first.contains(
+            "<span class=\"hylki-mail\" data-mail=\"public@dccma.example\">Public</span></span>"
+        ),
+        "the name on top: {first}"
+    );
+    assert!(
+        first.contains("data-addr=\"public@dccma.example\">public@dccma.example</span>"),
+        "the address beside it: {first}"
+    );
+}
+
 /// Several recipients share the top line, the whole list on hover, and
 /// the From line carries the Cc the top line left out (#724).
 #[test]

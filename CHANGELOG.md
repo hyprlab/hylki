@@ -6,8 +6,9 @@
   message in Sent named only you in its header, with the To line folded
   behind a "1 recipient" chip. A card of mail filed in Sent now leads with
   its recipients and the first one's circle, and your account and its seal
-  sit on a From line below. Addresses in card headers no longer wear angle
-  brackets.
+  sit on a From line below. A recipient is named by the address book, else
+  by the name you last wrote to them under, with the address beside it.
+  Addresses in card headers no longer wear angle brackets.
 
 ## 1.50.0 — 2026-11-26
 

@@ -51,6 +51,25 @@ impl Cache {
         }
     }
 
+    /// The name each address was last written to under, by lower-cased
+    /// address (#724). Addresses recorded with no name are left out.
+    pub(crate) fn recorded_names(&self) -> std::collections::HashMap<String, String> {
+        let Ok(mut stmt) = self
+            .conn
+            .prepare("SELECT email, name FROM addresses WHERE name <> ''")
+        else {
+            return Default::default();
+        };
+        let rows = stmt.query_map([], |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)));
+        let Ok(rows) = rows else {
+            return Default::default();
+        };
+        rows.flatten()
+            .filter(|(email, name)| !name.trim().eq_ignore_ascii_case(email.trim()))
+            .map(|(email, name)| (email.to_lowercase(), name.trim().to_string()))
+            .collect()
+    }
+
     // -----------------------------------------------------------------------
     // Outbox: messages that could not be sent yet
     // -----------------------------------------------------------------------

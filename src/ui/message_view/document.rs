@@ -332,7 +332,7 @@ fn card_avatar(m: &Message, dark: bool) -> String {
         .flatten();
     let circle = match sent.as_ref().and_then(|t| t.people.first()) {
         Some((name, addr)) => circle_html(
-            &crate::contacts::shown_name(name, addr),
+            &crate::contacts::recipient_name(name, addr),
             addr,
             &crate::contacts::shown_addr(addr),
             dark,
@@ -419,12 +419,21 @@ fn circle_html(name: &str, addr: &str, face_addr: &str, dark: bool) -> String {
     })
 }
 
-/// The names a sent card's top line shows (#724): each recipient's saved or
-/// given name, else the address.
+/// A recipient as a sent card's top line names them (#724): by name when
+/// anything gives one, else by address.
+fn shown_recipient(name: &str, addr: &str) -> String {
+    match crate::contacts::recipient_name(name, addr) {
+        n if n.is_empty() => crate::contacts::shown_addr(addr).into_owned(),
+        n => n,
+    }
+}
+
+/// The names a sent card's top line shows (#724): each recipient's saved,
+/// given or last-sent-to name, else the address.
 fn sent_names(top: &SentTo) -> String {
     top.people
         .iter()
-        .map(|(name, addr)| crate::contacts::shown_name_or_addr(name, addr).into_owned())
+        .map(|(name, addr)| shown_recipient(name, addr))
         .collect::<Vec<_>>()
         .join(", ")
 }
@@ -440,7 +449,7 @@ fn sent_names_html(top: &SentTo) -> String {
             format!(
                 "<span class=\"hylki-mail\" data-mail=\"{}\">{}{}</span>",
                 attr_escape(addr),
-                escape_html(&crate::contacts::shown_name_or_addr(name, addr)),
+                escape_html(&shown_recipient(name, addr)),
                 duck_mark_html(addr, duck.is_some())
             )
         })
@@ -653,8 +662,7 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
             // shows the address in its place.
             Some(SentTo { people, .. })
                 if people.len() == 1
-                    && !crate::contacts::shown_name(&people[0].0, &people[0].1)
-                        .trim()
+                    && !crate::contacts::recipient_name(&people[0].0, &people[0].1)
                         .is_empty() =>
             {
                 addr_html(&people[0].1)

@@ -179,6 +179,7 @@ impl AppModel {
         if let Some(c) = self.cache.as_ref() {
             c.record_addresses(&recipients);
         }
+        crate::contacts::note_sent_names(&recipients);
         let Some(account) = account_id
             .checked_sub(1)
             .and_then(|i| self.effective_config().get(i as usize).cloned())

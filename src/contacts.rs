@@ -25,6 +25,7 @@ mod names;
 mod photos;
 mod read;
 mod registry;
+mod sent_names;
 mod vcard;
 
 pub(crate) mod carddav;
@@ -45,6 +46,7 @@ pub(crate) use names::*;
 pub(crate) use photos::*;
 pub(crate) use read::*;
 pub(crate) use registry::*;
+pub(crate) use sent_names::{load_sent_names, note_sent_names, recipient_name};
 pub(crate) use vcard::*;
 
 #[cfg(test)]
