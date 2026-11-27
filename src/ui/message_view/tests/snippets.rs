@@ -280,7 +280,7 @@ fn a_reply_to_sender_card_shows_the_from_address() {
     crate::contacts::set_reply_to_sender(true);
     let via = sender_addr_html(&m);
     assert!(
-        via.contains("data-mail=\"jane@x.example\">&lt;jane@x.example&gt;"),
+        via.contains("data-mail=\"jane@x.example\">jane@x.example</span>"),
         "{via}"
     );
     assert!(
@@ -288,7 +288,7 @@ fn a_reply_to_sender_card_shows_the_from_address() {
         "{via}"
     );
     assert!(
-        via.contains("data-addr=\"&lt;jane@x.example&gt; via no-reply@site.example\""),
+        via.contains("data-addr=\"jane@x.example via no-reply@site.example\""),
         "{via}"
     );
     crate::contacts::set_reply_to_sender(false);
@@ -306,7 +306,8 @@ fn a_duck_relay_shows_the_address_behind_it() {
 
     crate::contacts::set_duck_addresses(false);
     let plain = sender_addr_html(&m);
-    assert!(plain.contains(&format!("&lt;{relay}&gt;")), "{plain}");
+    assert!(plain.contains(&format!(">{relay}</span>")), "{plain}");
+    assert!(!plain.contains("&lt;"), "no angle brackets: {plain}");
     assert!(!plain.contains("hylki-duck"), "{plain}");
     assert_eq!(m.shown_from_name(), relay);
     assert_eq!(m.face_addr(), relay);
@@ -314,18 +315,24 @@ fn a_duck_relay_shows_the_address_behind_it() {
     crate::contacts::set_duck_addresses(true);
     let addr = sender_addr_html(&m);
     assert!(
-        addr.contains(&format!("data-mail=\"{relay}\" data-addr=\"&lt;brian@gmail.com&gt;\">&lt;brian@gmail.com&gt;")),
+        addr.contains(&format!(
+            "data-mail=\"{relay}\" data-addr=\"brian@gmail.com\">brian@gmail.com"
+        )),
         "{addr}"
     );
     assert!(
-        addr.contains(&format!("<span class=\"hylki-duck\" title=\"{relay}\">duck.com</span>")),
+        addr.contains(&format!(
+            "<span class=\"hylki-duck\" title=\"{relay}\">duck.com</span>"
+        )),
         "{addr}"
     );
     assert_eq!(m.shown_from_name(), "brian@gmail.com");
     assert_eq!(m.face_addr(), "brian@gmail.com");
     let rcpt = recipients_html(&m, true);
     assert!(
-        rcpt.contains(&format!("data-mail=\"{relay}\">Brian &lt;brian@gmail.com&gt; <span class=\"hylki-duck\"")),
+        rcpt.contains(&format!(
+            "data-mail=\"{relay}\">Brian &lt;brian@gmail.com&gt; <span class=\"hylki-duck\""
+        )),
         "{rcpt}"
     );
     assert!(

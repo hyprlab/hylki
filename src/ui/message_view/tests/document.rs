@@ -194,6 +194,95 @@ fn every_card_carries_its_recipients_escaped_and_collapsed() {
     );
 }
 
+/// The document for `thread` with the cards in `sent` filed in Sent.
+fn sent_document(thread: &[Message], sent: &[(u32, u32)]) -> String {
+    super::super::frame::LIVE_SENT.with(|s| *s.borrow_mut() = sent.iter().copied().collect());
+    let doc = MessageView::conversation_document(
+        thread,
+        &std::collections::HashMap::new(),
+        &Default::default(),
+        &Default::default(),
+        &[],
+        "#3584e4",
+        true,
+        false,
+        false,
+        false,
+        &crate::config::ReaderStyle::NONE,
+        &Default::default(),
+        false,
+        100,
+    );
+    super::super::frame::LIVE_SENT.with(|s| s.borrow_mut().clear());
+    doc
+}
+
+/// Mail filed in Sent names who it went to on top, where a received card
+/// names its sender, and your account on a From line below (#724). A
+/// received card beside it is unchanged.
+#[test]
+fn a_sent_card_names_its_recipient_on_top() {
+    let mut sent = msg_for_print();
+    sent.cc = String::new();
+    let mut received = msg_for_print();
+    received.id = 2;
+    let doc = sent_document(&[sent, received], &[(1, 1)]);
+    let (first, second) = doc.split_once("data-key=\"1:2\"").unwrap();
+    assert!(
+        first.contains(
+            "<span class=\"hylki-to-label\">To:</span>\
+             <span class=\"hylki-from hylki-sent-to\">\
+             <span class=\"hylki-mail\" data-mail=\"me@example.com\">me@example.com</span></span>"
+        ),
+        "the recipient leads the sent card: {first}"
+    );
+    assert!(
+        first.contains(
+            "<div class=\"hylki-rcpt\"><div class=\"hylki-sent-from\"><b>From:</b> Ada Lovelace \
+             <span class=\"hylki-addr hylki-mail\" data-mail=\"ada@example.com\""
+        ),
+        "your account on an open From line: {first}"
+    );
+    assert!(
+        !first.contains("<button type=\"button\" class=\"hylki-rcpt-toggle"),
+        "no chip on the sent card: {first}"
+    );
+    assert!(
+        second.contains("<span class=\"hylki-from\">Ada Lovelace</span>"),
+        "the received card names its sender: {second}"
+    );
+    assert!(
+        second.contains("class=\"hylki-rcpt\" hidden"),
+        "and keeps its recipients folded: {second}"
+    );
+    assert!(!second.contains("hylki-to-label"), "{second}");
+}
+
+/// Several recipients share the top line, the whole list on hover, and
+/// the From line carries the Cc the top line left out (#724).
+#[test]
+fn a_sent_card_to_several_lists_them_on_top() {
+    let mut sent = msg_for_print();
+    sent.to = "Ann <ann@x.example>, \"Doe, Bob\" <bob@x.example>".into();
+    let mut other = msg_for_print();
+    other.id = 2;
+    let doc = sent_document(&[sent, other], &[(1, 1)]);
+    let first = doc.split_once("data-key=\"1:2\"").unwrap().0;
+    assert!(
+        first.contains(
+            "<span class=\"hylki-from hylki-sent-to\" title=\"Ann, Doe, Bob\">\
+             <span class=\"hylki-mail\" data-mail=\"ann@x.example\">Ann</span>, \
+             <span class=\"hylki-mail\" data-mail=\"bob@x.example\">Doe, Bob</span></span>"
+        ),
+        "{first}"
+    );
+    assert!(first.contains("<b>Cc:</b>"), "{first}");
+    assert!(
+        !first.contains("<b>To:</b>"),
+        "To is on top, not repeated: {first}"
+    );
+}
+
 /// A message that names no recipients at all gets neither chip nor block.
 #[test]
 fn a_card_with_no_recipients_shows_no_chip() {

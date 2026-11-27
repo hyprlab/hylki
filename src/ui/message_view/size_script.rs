@@ -348,7 +348,7 @@ document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e
 if(!b)return;e.stopPropagation();e.preventDefault();\
 try{window.webkit.messageHandlers.hylki.postMessage('invite:'+b.dataset.key+':'+b.dataset.inv);}catch(_){}});\
 });\
-function markClipped(){var as=document.querySelectorAll('.hylki-addr');\
+function markClipped(){var as=document.querySelectorAll('.hylki-hdr-line .hylki-addr');\
 for(var i=0;i<as.length;i++){var a=as[i];\
 a.classList.toggle('clipped',a.scrollWidth>a.clientWidth+1);}}\
 function hideMailMenu(){var m=window.__hylkiMailMenu;\
@@ -400,7 +400,7 @@ return JSON.stringify({key:(m.dataset&&m.dataset.key)||'',sel:sel});};\
    Its key, or nothing. */\
 window.__hylkiDragAt=function(x,y,w){var r=window.innerWidth/w;x*=r;y*=r;\
 var el=document.elementFromPoint(x,y);if(!el||!el.closest)return '';\
-if(el.closest('button,a,input,.hylki-addr,.hylki-tags,.hylki-verify,.hylki-rcpt'))return '';\
+if(el.closest('button,a,input,.hylki-addr,.hylki-mail,.hylki-tags,.hylki-verify,.hylki-rcpt'))return '';\
 var h=el.closest('.hylki-msg-hdr,.hylki-fbar');if(!h)return '';\
 var m=h.closest('.hylki-msg');return (m&&m.dataset.key)||h.dataset.key||'';};\
 /* The reader drags a card by its header itself; WebKit's own drag of the\

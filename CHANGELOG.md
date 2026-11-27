@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed: who sent mail went to was hidden behind a chip** (#724). A
+  message in Sent named only you in its header, with the To line folded
+  behind a "1 recipient" chip. A card of mail filed in Sent now leads with
+  its recipients and the first one's circle, and your account and its seal
+  sit on a From line below. Addresses in card headers no longer wear angle
+  brackets.
+
 ## 1.50.0 — 2026-11-26
 
 Everything from 1.50.0-beta.1 to 1.50.0-beta.6: S/MIME signing, Microsoft
