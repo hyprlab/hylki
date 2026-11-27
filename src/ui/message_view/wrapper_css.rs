@@ -350,6 +350,12 @@ pub(super) fn wrapper_css(
          .hylki-rcpt{{font-size:0.85em;opacity:0.75;\
          user-select:text;overflow-wrap:anywhere;margin:2px 0 0;margin-inline-start:34px;}}\
          .hylki-rcpt div{{margin-top:2px;}}\
+         /* Mail you sent (#724): the top line says who it went to, and\
+         your account and its seal sit on the From line below. */\
+         .hylki-to-label{{font-weight:700;opacity:0.75;flex:none;margin-inline-end:-4px;}}\
+         .hylki-sent-from .hylki-addr{{opacity:1;font-size:1em;}}\
+         .hylki-from.hylki-sent-to{{font-weight:400;}}\
+         .hylki-sent-from .hylki-verify{{vertical-align:-0.12em;transform:none;}}\
          .hylki-loading{{opacity:0.5;padding:16px;}}\
          /* The Copied pill after Ctrl+C: a toast the page draws itself,\
          since the reader has no toast overlay of its own. */\

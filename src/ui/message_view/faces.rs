@@ -180,6 +180,21 @@ pub(super) struct Faces {
 }
 
 impl MessageView {
+    /// The address a card's circle shows the face of: the sender's, or on
+    /// mail you sent the first recipient's (#724).
+    fn card_face_addr(&self, m: &crate::models::Message) -> String {
+        let recipient = self
+            .sent
+            .contains(&(m.account_id, m.id))
+            .then(|| super::snippets::sent_to(m))
+            .flatten()
+            .and_then(|t| t.people.into_iter().next());
+        match recipient {
+            Some((_, addr)) => key(&crate::contacts::shown_addr(&addr)),
+            None => key(&m.face_addr()),
+        }
+    }
+
     /// Start looking up the faces of the senders on screen not known yet.
     pub(super) fn look_up_faces(&mut self) {
         let Some(input) = self.faces.input.clone() else {
@@ -187,7 +202,7 @@ impl MessageView {
         };
         let mut seen = HashSet::new();
         for m in &self.thread {
-            let email = key(&m.face_addr());
+            let email = self.card_face_addr(m);
             if email.is_empty() || !seen.insert(email.clone()) {
                 continue;
             }
@@ -241,7 +256,7 @@ impl MessageView {
         let keys: Vec<String> = self
             .thread
             .iter()
-            .filter(|m| key(&m.face_addr()) == email && avatar::own_face(email).is_none())
+            .filter(|m| self.card_face_addr(m) == email && avatar::own_face(email).is_none())
             .map(|m| format!("{}:{}", m.account_id, m.id))
             .collect();
         if keys.is_empty() {

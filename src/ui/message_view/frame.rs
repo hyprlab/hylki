@@ -178,6 +178,11 @@ thread_local! {
     /// tests.
     pub(super) static LIVE_TEMPLATES: std::cell::RefCell<std::collections::HashSet<(u32, u32)>> =
         std::cell::RefCell::new(std::collections::HashSet::new());
+    /// The messages filed in a Sent folder, whose headers show who the
+    /// mail went to without asking: the sender is only you (#724). Empty
+    /// in tests.
+    pub(super) static LIVE_SENT: std::cell::RefCell<std::collections::HashSet<(u32, u32)>> =
+        std::cell::RefCell::new(std::collections::HashSet::new());
     /// Whether a translation service is set up, so cards offer Translate.
     pub(super) static LIVE_TRANSLATE_ON: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
 }

@@ -168,56 +168,139 @@ pub(super) fn recipient_count(m: &Message) -> usize {
 /// message names no recipients at all. Bcc is there only on the sender's own
 /// copy (#476).
 pub(super) fn recipients_html(m: &Message, always_shown: bool) -> String {
-    let mut lines = String::new();
-    for (label, list) in [
+    let lines: String = [
         (i18n("To:"), m.to.trim()),
         (i18n("Cc:"), m.cc.trim()),
         (i18n("Bcc:"), m.bcc.trim()),
-    ] {
-        if list.is_empty() {
-            continue;
-        }
-        // Each recipient becomes a `.hylki-mail` span (click composes to it,
-        // right-click offers copy/new-message), keyed by its bare address.
-        let mut parts = String::new();
-        for entry in split_addr_list(list) {
-            let entry = entry.trim();
-            if entry.is_empty() {
-                continue;
-            }
-            let mail = entry
-                .rfind('<')
-                .and_then(|s| entry[s + 1..].find('>').map(|e| &entry[s + 1..s + 1 + e]))
-                .unwrap_or(entry)
-                .trim();
-            if !parts.is_empty() {
-                parts.push_str(", ");
-            }
-            // A saved contact by its saved name alone (#541): the address
-            // is in the right-click menu. A Duck Address relay shows the
-            // address behind it, marked (#708).
-            let duck = crate::contacts::shown_duck(mail);
-            let text = match (crate::contacts::contact_name(mail), &duck) {
-                (Some(saved), _) => escape_html(&saved),
-                (None, Some(original)) => escape_html(&entry.replace(mail, original)),
-                (None, None) => escape_html(entry),
-            };
-            parts.push_str(&format!(
-                "<span class=\"hylki-mail\" data-mail=\"{}\">{text}{}</span>",
-                escape_html(mail).replace('"', "&quot;"),
-                duck_mark_html(mail, duck.is_some())
-            ));
-        }
-        lines.push_str(&format!(
-            "<div><b>{}</b> {parts}</div>",
-            escape_html(&label)
-        ));
-    }
+    ]
+    .iter()
+    .map(|(label, list)| addr_line(label, list))
+    .collect();
     if lines.is_empty() {
         return String::new();
     }
     let hidden = if always_shown { "" } else { " hidden" };
     format!("<div class=\"hylki-rcpt\"{hidden}>{lines}</div>")
+}
+
+/// One labelled line of the recipients block: `To:` and its people, each a
+/// `.hylki-mail` span (click composes to it, right-click offers copy/new
+/// message) keyed by its bare address. Empty for an empty header.
+fn addr_line(label: &str, list: &str) -> String {
+    let mut parts = String::new();
+    for entry in split_addr_list(list) {
+        let entry = entry.trim();
+        if entry.is_empty() {
+            continue;
+        }
+        let mail = entry
+            .rfind('<')
+            .and_then(|s| entry[s + 1..].find('>').map(|e| &entry[s + 1..s + 1 + e]))
+            .unwrap_or(entry)
+            .trim();
+        if !parts.is_empty() {
+            parts.push_str(", ");
+        }
+        // A saved contact by its saved name alone (#541): the address
+        // is in the right-click menu. A Duck Address relay shows the
+        // address behind it, marked (#708).
+        let duck = crate::contacts::shown_duck(mail);
+        let text = match (crate::contacts::contact_name(mail), &duck) {
+            (Some(saved), _) => escape_html(&saved),
+            (None, Some(original)) => escape_html(&entry.replace(mail, original)),
+            (None, None) => escape_html(entry),
+        };
+        parts.push_str(&format!(
+            "<span class=\"hylki-mail\" data-mail=\"{}\">{text}{}</span>",
+            escape_html(mail).replace('"', "&quot;"),
+            duck_mark_html(mail, duck.is_some())
+        ));
+    }
+    if parts.is_empty() {
+        return String::new();
+    }
+    format!("<div><b>{}</b> {parts}</div>", escape_html(label))
+}
+
+/// Who mail you sent went to, for the top of its card (#724): the first of
+/// To, Cc and Bcc that names anyone, its label, and its people as (name,
+/// address) pairs.
+pub(super) struct SentTo {
+    pub(super) label: String,
+    pub(super) people: Vec<(String, String)>,
+    /// Which header it is, so the block below leaves it out.
+    which: usize,
+}
+
+pub(super) fn sent_to(m: &Message) -> Option<SentTo> {
+    [
+        (i18n("To:"), &m.to),
+        (i18n("Cc:"), &m.cc),
+        (i18n("Bcc:"), &m.bcc),
+    ]
+    .into_iter()
+    .enumerate()
+    .find_map(|(which, (label, list))| {
+        let people: Vec<(String, String)> = crate::worker::parse_recipients(list)
+            .into_iter()
+            .filter(|(_, addr)| !addr.trim().is_empty())
+            .collect();
+        (!people.is_empty()).then_some(SentTo {
+            label,
+            people,
+            which,
+        })
+    })
+}
+
+/// The block under a sent card's header (#724), always open: the account
+/// it went from, then whichever of Cc and Bcc the top line left out.
+/// `seal` is the sender-authentication marks, which belong with the sender.
+pub(super) fn sent_from_html(m: &Message, top: &SentTo, seal: &str) -> String {
+    let name = m.shown_from_name();
+    let addr = sender_addr_html(m);
+    let from = if name.trim().is_empty() {
+        format!("{addr}{seal}")
+    } else {
+        format!("{} {addr}{seal}", escape_html(&name))
+    };
+    let mut lines = format!(
+        "<div class=\"hylki-sent-from\"><b>{}</b> {from}</div>",
+        escape_html(&i18n("From:"))
+    );
+    for (which, (label, list)) in [
+        (i18n("To:"), m.to.trim()),
+        (i18n("Cc:"), m.cc.trim()),
+        (i18n("Bcc:"), m.bcc.trim()),
+    ]
+    .iter()
+    .enumerate()
+    {
+        if which != top.which {
+            lines.push_str(&addr_line(label, list));
+        }
+    }
+    format!("<div class=\"hylki-rcpt\">{lines}</div>")
+}
+
+/// A bare address on a card's header, with no angle brackets around it.
+/// `data-addr` feeds the hover reveal's ::after overlay; `data-mail` (the
+/// bare address) drives click-to-compose and the copy menu. Fully
+/// entity-escaped (&<>"), so an attacker-controlled address can't smuggle
+/// markup through the attributes. A Duck Address relay (#708) shows the
+/// address behind it, while `data-mail` keeps the relay so replies still go
+/// through it.
+pub(super) fn addr_html(shown: &str) -> String {
+    let esc = |s: &str| escape_html(s).replace('"', "&quot;");
+    let duck = crate::contacts::shown_duck(shown);
+    let text = duck.as_deref().unwrap_or(shown);
+    format!(
+        "<span class=\"hylki-addr hylki-mail\" data-mail=\"{0}\" \
+             data-addr=\"{1}\">{1}{2}</span>",
+        esc(shown),
+        esc(text),
+        duck_mark_html(shown, duck.is_some())
+    )
 }
 
 /// The sender's address beside the name on a card's header. When the card
@@ -228,24 +311,10 @@ pub(super) fn sender_addr_html(m: &Message) -> String {
     if shown.is_empty() {
         return String::new();
     }
-    // `data-addr` feeds the hover reveal's ::after overlay; `data-mail` (the
-    // bare address) drives click-to-compose and the copy menu. Fully
-    // entity-escaped (&<>"), so an attacker-controlled address can't smuggle
-    // markup through the attributes.
-    let esc = |s: &str| escape_html(s).replace('"', "&quot;");
     if !m.shows_reply_to() || m.from_addr.trim().is_empty() {
-        // A Duck Address relay (#708) shows the address behind it, while
-        // `data-mail` keeps the relay so replies still go through it.
-        let duck = crate::contacts::shown_duck(shown);
-        let text = duck.as_deref().unwrap_or(shown);
-        return format!(
-            "<span class=\"hylki-addr hylki-mail\" data-mail=\"{0}\" \
-                 data-addr=\"&lt;{1}&gt;\">&lt;{1}&gt;{2}</span>",
-            esc(shown),
-            esc(text),
-            duck_mark_html(shown, duck.is_some())
-        );
+        return addr_html(shown);
     }
+    let esc = |s: &str| escape_html(s).replace('"', "&quot;");
     // The translation decides where the address sits; only the text around
     // it is escaped, and the address goes in as a link of its own.
     let via = i18n("via {sender}");
@@ -259,8 +328,8 @@ pub(super) fn sender_addr_html(m: &Message) -> String {
         ),
     );
     format!(
-        "<span class=\"hylki-addr\" data-addr=\"&lt;{0}&gt; {reveal}\">\
-             <span class=\"hylki-mail\" data-mail=\"{0}\">&lt;{0}&gt;</span> {via}</span>",
+        "<span class=\"hylki-addr\" data-addr=\"{0} {reveal}\">\
+             <span class=\"hylki-mail\" data-mail=\"{0}\">{0}</span> {via}</span>",
         esc(shown)
     )
 }

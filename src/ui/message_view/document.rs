@@ -7,16 +7,17 @@ use super::wrapper_css::wrapper_css;
 
 use super::frame::{
     message_frame, ThemeColors, CHROME, GROUND, LIVE_ATTS, LIVE_COLORS, LIVE_FOLDBAR, LIVE_FOLDED,
-    LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES,
-    LIVE_TRANSLATE, LIVE_UNSUB, PAGE,
+    LIVE_GROUNDS, LIVE_INVITE, LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_SENT, LIVE_TAGS,
+    LIVE_TEMPLATES, LIVE_TRANSLATE, LIVE_UNSUB, PAGE,
 };
 use super::html::attr_escape;
 use super::invite::invite_row_html;
 use super::receipt_banner::{read_mark_html, receipt_row_html};
 use super::size_script::SIZE_SCRIPT;
 use super::snippets::{
-    att_row_html, inline_icon_svg, paints_own_background, recipient_count, recipients_html,
-    sender_addr_html, tag_chips_html, template_row_html, unsub_row_html,
+    addr_html, att_row_html, duck_mark_html, inline_icon_svg, paints_own_background,
+    recipient_count, recipients_html, sender_addr_html, sent_from_html, sent_to, tag_chips_html,
+    template_row_html, unsub_row_html, SentTo,
 };
 use super::MessageView;
 use crate::encoding::escape_html;
@@ -323,8 +324,21 @@ fn card_body(cards: &Cards<'_>, m: &Message) -> String {
 /// given (#189), anyone else their photo or icon once one is known (#560),
 /// else tinted initials. Each circle carries its card's key, for the face a
 /// lookup patches in later.
+/// On mail you sent the face is the first recipient's instead (#724).
 fn card_avatar(m: &Message, dark: bool) -> String {
-    let circle = circle_html(m, dark);
+    let sent = LIVE_SENT
+        .with(|s| s.borrow().contains(&(m.account_id, m.id)))
+        .then(|| sent_to(m))
+        .flatten();
+    let circle = match sent.as_ref().and_then(|t| t.people.first()) {
+        Some((name, addr)) => circle_html(
+            &crate::contacts::shown_name(name, addr),
+            addr,
+            &crate::contacts::shown_addr(addr),
+            dark,
+        ),
+        None => circle_html(&m.shown_from_name(), &m.from_addr, &m.face_addr(), dark),
+    };
     let key = format!(" data-key=\"{}:{}\"", m.account_id, m.id);
     // Both shapes open with the class attribute; the key goes at the end of
     // the opening tag.
@@ -334,19 +348,21 @@ fn card_avatar(m: &Message, dark: bool) -> String {
     }
 }
 
-fn circle_html(m: &Message, dark: bool) -> String {
+/// The circle for `name` at `addr`; `face_addr` is the address its picture
+/// is looked up by (the one behind a Duck Address relay, #708).
+fn circle_html(name: &str, addr: &str, face_addr: &str, dark: bool) -> String {
     // One of your own mailboxes wrote this card (#189):
     // show what its account chose — the sidebar's picture,
     // or its emoji on the account color — so your own
     // replies in a conversation wear the face you gave
     // that mailbox rather than plain initials.
-    let own = crate::services::avatar::own_face(&m.from_addr).and_then(|face| {
+    let own = crate::services::avatar::own_face(addr).and_then(|face| {
         // The account's own Gravatar leads when it asked
         // for one and the address has one; the picture and
         // the emoji are what it falls back to.
         let gravatar = face
             .gravatar
-            .then(|| crate::services::avatar::own_gravatar_data_uri(&m.from_addr, 26))
+            .then(|| crate::services::avatar::own_gravatar_data_uri(addr, 26))
             .flatten();
         if let Some(uri) = gravatar {
             return Some(format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"));
@@ -373,18 +389,17 @@ fn circle_html(m: &Message, dark: bool) -> String {
         }
     });
     let face = || {
-        super::faces::known_face(&m.face_addr())
+        super::faces::known_face(face_addr)
             .map(|uri| format!("<img class=\"hylki-ava\" src=\"{uri}\" alt=\"\">"))
     };
     own.or_else(face).unwrap_or_else(|| {
-        let initial = crate::ui::initials::word_initials(&m.shown_from_name())
+        let initial = crate::ui::initials::word_initials(name)
             .first()
             .copied()
-            .or_else(|| m.face_addr().trim().chars().next())
+            .or_else(|| face_addr.trim().chars().next())
             .map(|c| c.to_uppercase().to_string())
             .unwrap_or_else(|| "?".to_string());
-        let hue = m
-            .face_addr()
+        let hue = face_addr
             .to_ascii_lowercase()
             .bytes()
             .fold(0u32, |h, b| h.wrapping_mul(31).wrapping_add(b as u32))
@@ -404,6 +419,35 @@ fn circle_html(m: &Message, dark: bool) -> String {
     })
 }
 
+/// The names a sent card's top line shows (#724): each recipient's saved or
+/// given name, else the address.
+fn sent_names(top: &SentTo) -> String {
+    top.people
+        .iter()
+        .map(|(name, addr)| crate::contacts::shown_name_or_addr(name, addr).into_owned())
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+/// The same names as links (#724): a click writes to that person and a
+/// right click offers New Message, Copy Address and Add to Contacts, as on
+/// the From line.
+fn sent_names_html(top: &SentTo) -> String {
+    top.people
+        .iter()
+        .map(|(name, addr)| {
+            let duck = crate::contacts::shown_duck(addr);
+            format!(
+                "<span class=\"hylki-mail\" data-mail=\"{}\">{}{}</span>",
+                attr_escape(addr),
+                escape_html(&crate::contacts::shown_name_or_addr(name, addr)),
+                duck_mark_html(addr, duck.is_some())
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
 /// One conversation card: header, banners, the message and its attachments.
 fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> String {
     let Cards {
@@ -414,6 +458,12 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         folder_labels,
         ..
     } = *cards;
+    // On mail you sent the sender is only you, so the top line names who
+    // it went to and your account goes on a From line below (#724).
+    let sent = LIVE_SENT
+        .with(|s| s.borrow().contains(&(m.account_id, m.id)))
+        .then(|| sent_to(m))
+        .flatten();
     // The sender-authentication seal (#88): hidden until a
     // verdict arrives (SenderCheckFor patches it live), then
     // tinted by trust — Bazaar's fixed blue for a pass.
@@ -442,7 +492,7 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
                <header class=\"hylki-msg-hdr\" data-key=\"{aid}:{id}\" \
                  title=\"{hdr_title}\">\
                  <div class=\"hylki-hdr-line\">\
-                   {ava}{dot}<span class=\"hylki-from\">{from}</span>{verify}{addr}\
+                   {ava}{dot}{to_label}<span class=\"hylki-from{from_cls}\"{from_title}>{from}</span>{top_verify}{addr}\
                    <span class=\"hylki-tags\" data-key=\"{aid}:{id}\">{tags}</span>\
                    <span class=\"hylki-hdr-meta\">{folder}{rcpt_toggle}{marks}{read}\
                      <span class=\"hylki-date\">{date}</span></span>\
@@ -568,7 +618,29 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         // display name is attacker-controlled (and RFC 2047-decoded,
         // so any byte sequence can be delivered), and this document
         // is the trusted wrapper — not a sandboxed message frame.
-        from = escape_html(&m.shown_from_name()),
+        from = match &sent {
+            Some(top) => sent_names_html(top),
+            None => escape_html(&m.shown_from_name()),
+        },
+        // Many recipients ellipsize on the top line: the whole list is on
+        // hover.
+        from_title = match &sent {
+            Some(top) if top.people.len() > 1 => {
+                format!(" title=\"{}\"", attr_escape(&sent_names(top)))
+            }
+            _ => String::new(),
+        },
+        from_cls = if sent.is_some() { " hylki-sent-to" } else { "" },
+        to_label = match &sent {
+            Some(top) => format!(
+                "<span class=\"hylki-to-label\">{}</span>",
+                escape_html(&top.label)
+            ),
+            None => String::new(),
+        },
+        // The seal is the sender's: on sent mail it goes with your
+        // account on the From line.
+        top_verify = if sent.is_some() { "" } else { verify.as_str() },
         // An initials circle, tinted per sender address, so who
         // wrote each card — and which cards are your own replies —
         // reads at a glance (#22). Nothing is linked: a picture
@@ -576,13 +648,29 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
         // could reach for, and the initial is escaped like every
         // other header field.
         ava = ava_html,
-        addr = sender_addr_html(m),
+        addr = match &sent {
+            // Beside a lone recipient's name; one with no name already
+            // shows the address in its place.
+            Some(SentTo { people, .. })
+                if people.len() == 1
+                    && !crate::contacts::shown_name(&people[0].0, &people[0].1)
+                        .trim()
+                        .is_empty() =>
+            {
+                addr_html(&people[0].1)
+            }
+            Some(_) => String::new(),
+            None => sender_addr_html(m),
+        },
         date = escape_html(&m.datetime_full()),
         // Everyone the message went to, tucked behind a small chip so
         // a card's header stays one line tall until asked. Escaped
         // like the sender: recipient headers are attacker-controlled.
         rcpt_toggle = match recipient_count(m) {
             0 => String::new(),
+            // A sent card names its recipients on top, and its block
+            // stays open for the From line.
+            _ if sent.is_some() => String::new(),
             // With the recipients line always visible, a
             // single-recipient chip would only repeat it (#40).
             1 if always_show_recipients => String::new(),
@@ -603,7 +691,10 @@ fn card_html(cards: &Cards<'_>, m: &Message, ava_html: &str, body: String) -> St
                 },
             ),
         },
-        rcpt = recipients_html(m, always_show_recipients),
+        rcpt = match &sent {
+            Some(top) => sent_from_html(m, top, &verify),
+            None => recipients_html(m, always_show_recipients),
+        },
         // Where this message was read from, when that isn't the
         // folder on screen — the reply you sent, pulled in from Sent.
         folder = match folder_labels.get(&(m.account_id, m.id)) {

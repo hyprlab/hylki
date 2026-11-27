@@ -4,7 +4,7 @@
 
 use super::frame::{
     theme_colors_for, LIVE_ATTS, LIVE_COLORS, LIVE_FOLDBAR, LIVE_FOLDED, LIVE_GROUNDS, LIVE_INVITE,
-    LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE,
+    LIVE_MARKS, LIVE_READ, LIVE_RECEIPT, LIVE_SENT, LIVE_TAGS, LIVE_TEMPLATES, LIVE_TRANSLATE,
     LIVE_TRANSLATE_ON, LIVE_UNSUB,
 };
 use super::types::TrState;
@@ -220,6 +220,7 @@ impl MessageView {
                 .collect()
         });
         LIVE_FOLDED.with(|f| *f.borrow_mut() = self.folded_cards());
+        LIVE_SENT.with(|s| *s.borrow_mut() = self.sent.clone());
         LIVE_TEMPLATES.with(|t| {
             *t.borrow_mut() = self
                 .thread
