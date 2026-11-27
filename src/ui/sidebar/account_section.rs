@@ -237,6 +237,11 @@ impl Sidebar {
             // not light up as if it did: only the chevron shows a hover.
             header.add_css_class("fold-chevron-only");
         }
+        if self.account_click_folds && !self.collapsed {
+            // The whole header lights up for the click, so the chevron
+            // inside it lighting up as well reads as a second target.
+            header.add_css_class("fold-whole-header");
+        }
         if self.account_click_folds {
             // By choice: a click anywhere opens or folds the account.
             let s = sender.input_sender().clone();

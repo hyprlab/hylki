@@ -111,6 +111,14 @@ row.compose-row .compose-caret:active {
   background-image: none;
 }
 
+/* With it on, the header is the one target: its chevron takes no hover or
+   press highlight of its own. */
+.account-header.fold-whole-header .chevron-btn:hover,
+.account-header.fold-whole-header .chevron-btn:active {
+  background-color: transparent;
+  background-image: none;
+}
+
 /* Icon-only rail: tighten horizontal padding/margin so pills/icons fit a narrow column. */
 .rail-collapsed .account-header {
   padding-left: 4px;
