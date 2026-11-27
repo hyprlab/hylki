@@ -70,6 +70,7 @@ fn install_globals(root: &adw::ApplicationWindow) -> config::PrivacyFile {
     // connection order, so the palette has to be in place first.
     crate::desktop::theme::install(&config::load_theme());
     install_scheme_css(root);
+    crate::desktop::fractional_edges::install();
     // Before any web view loads: a font fallback WebKit needed under
     // this runtime has to be in place for its first web process (#296).
     crate::desktop::web_fonts::startup(root);
