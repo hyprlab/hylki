@@ -242,6 +242,7 @@ impl Sidebar {
         self.outbox_list = None;
         self.folder_badges.clear();
         self.folder_totals.clear();
+        self.header_totals.clear();
         self.tree_chevrons.clear();
         self.tree_row_revealers.clear();
         self.main_folders.clear();

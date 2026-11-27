@@ -2704,8 +2704,10 @@ unread when the setting was turned on counts as seen. The marks are kept in
 
 **Settings → Sidebar → Show message totals** puts how many messages each
 folder holds beside its unread count, in gray; hovering the number says it in
-words. Drafts has none, since its count is already every draft, and the icon
-rail and Focus Mode show none. The number is the server's: IMAP's STATUS and
+words. The unified rows (Inboxes, Sent, Favorites, Filters and the others)
+show the total of the folders listed under them, and each of those folders
+its own. Drafts has none, since its count is already every draft, and the
+icon rail and Focus Mode show none. The number is the server's: IMAP's STATUS and
 EXAMINE (and an ESEARCH count, where the server has it, after each sync),
 JMAP's `totalEmails`, Microsoft Graph's `totalItemCount`, and the files of an
 On This Computer folder. For a POP3 account it is the mail Hylki has

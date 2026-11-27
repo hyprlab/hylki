@@ -9,8 +9,8 @@ use super::types::{
     SectionWidgets, UnifiedRow,
 };
 use super::widgets::{
-    build_unified_inbox_row, filtered_folder_icon, heading_chevron, section_heading, style_badge,
-    tree_indent, with_unread_overlay, ROW_LEFT_INSET,
+    build_unified_inbox_row, filtered_folder_icon, heading_chevron, section_heading, show_total,
+    style_badge, total_label, tree_indent, with_unread_overlay, ROW_LEFT_INSET,
 };
 use super::*;
 
@@ -58,6 +58,7 @@ impl Sidebar {
         let img = gtk::Image::from_icon_name(row_icon(row_kind));
         img.add_css_class("folder-icon");
         let mut chevron_img: Option<gtk::Image> = None;
+        let mut header_total: Option<gtk::Label> = None;
         let badge: gtk::Label;
         if self.collapsed {
             hbox.set_halign(gtk::Align::Center);
@@ -144,6 +145,14 @@ impl Sidebar {
             b.set_visible(show_chip);
             hbox.append(&b);
             badge = b;
+            // The total of the folders listed beneath (#720), filled in
+            // once the list is built; blank on a row that lists no folders,
+            // keeping the column so the chips line up.
+            if self.message_totals {
+                let t = total_label(0);
+                hbox.append(&t);
+                header_total = Some(t);
+            }
             if tree {
                 // The caret leads already.
             } else if self.chevrons_left {
@@ -279,6 +288,11 @@ impl Sidebar {
             UnifiedRow::Contacts => self.fill_contacts(&sub, sender),
             UnifiedRow::Filtered => self.fill_filtered(&sub, sections, &mut row_badges, sender),
             UnifiedRow::Tags => self.fill_tags(&sub, sender),
+        }
+        if let Some(label) = header_total {
+            let keys = self.header_total_keys(row_kind, &rows);
+            show_total(&label, self.total_of(&keys));
+            self.header_totals.push((label, keys));
         }
 
         let revealer = gtk::Revealer::new();
@@ -510,6 +524,7 @@ impl Sidebar {
                 row.add_controller(folder_drop_target(aid, folder.path.clone(), sender));
             }
             sub.append(&row);
+            self.add_row_total(&row, aid, folder);
             if counted && !folder.path.is_empty() {
                 row_badges.insert((aid, folder.id), badge);
             } else {
@@ -639,6 +654,7 @@ impl Sidebar {
                 sender,
             ));
             sub.append(&row);
+            self.add_row_total(&row, r.account_id, &r.folder);
             if counted {
                 row_badges.insert((r.account_id, r.folder.id), badge);
             } else {
@@ -715,6 +731,7 @@ impl Sidebar {
                 false,
             );
             sub.append(&row);
+            self.add_blank_total(&row);
             self.smart_badges.insert(id.clone(), badge);
         }
         let ss = sender.input_sender().clone();
@@ -823,6 +840,7 @@ impl Sidebar {
                 sender,
             ));
             sub.append(&row);
+            self.add_row_total(&row, r.account_id, &r.folder);
             row_badges.insert((r.account_id, r.folder.id), badge);
         }
         self.filtered_badges
@@ -886,6 +904,7 @@ impl Sidebar {
                 false,
             );
             sub.append(&row);
+            self.add_blank_total(&row);
             self.tag_badges.insert(key, badge);
         }
         let ss = sender.input_sender().clone();

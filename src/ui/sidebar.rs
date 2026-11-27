@@ -28,6 +28,7 @@ mod picks;
 mod rail;
 mod rebuild;
 mod selection;
+mod totals;
 mod tree;
 mod types;
 mod unified;
@@ -165,8 +166,13 @@ pub(crate) struct Sidebar {
     fresh: Option<std::collections::HashSet<(u32, u32)>>,
     /// Unread badge labels by (account_id, folder_id), updated in place.
     folder_badges: HashMap<(u32, u32), gtk::Label>,
-    /// Message total labels by (account_id, folder_id) (#720), the same way.
-    folder_totals: HashMap<(u32, u32), gtk::Label>,
+    /// Message total labels by (account_id, folder_id) (#720), the same
+    /// way: a folder can be on several rows (its account, a unified row,
+    /// Favorites, Filters).
+    folder_totals: HashMap<(u32, u32), Vec<gtk::Label>>,
+    /// The unified headers' total labels (#720), each with the folders it
+    /// adds up.
+    header_totals: Vec<(gtk::Label, Vec<(u32, u32)>)>,
     /// The "All Inboxes" unread badge label, when shown.
     unified_badge: Option<gtk::Label>,
     /// Whether the "All Inboxes" per-account inbox sub-list is expanded.
@@ -381,6 +387,7 @@ impl Component for Sidebar {
             fresh: None,
             folder_badges: HashMap::new(),
             folder_totals: HashMap::new(),
+            header_totals: Vec::new(),
             unified_badge: None,
             unified_expanded: init.unified_expanded,
             unified_revealer: None,

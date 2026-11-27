@@ -414,7 +414,7 @@ impl Sidebar {
                 self.folder_badges.insert((id, folder.id), badge);
             }
             if let Some(total) = total {
-                self.folder_totals.insert((id, folder.id), total);
+                self.keep_total(id, folder.id, total);
             }
         }
         self.main_folders
@@ -508,7 +508,7 @@ impl Sidebar {
                     self.folder_badges.insert((id, folder.id), badge);
                 }
                 if let Some(total) = total {
-                    self.folder_totals.insert((id, folder.id), total);
+                    self.keep_total(id, folder.id, total);
                 }
             }
             self.custom_folders

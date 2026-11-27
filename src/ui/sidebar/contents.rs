@@ -333,6 +333,9 @@ impl Sidebar {
             .chain(self.favorite_folders.iter_mut())
         {
             r.folder.unread = fresh(r.account_id, r.folder.id, r.folder.unread);
+            if let Some(n) = totals.get(&(r.account_id, r.folder.id)) {
+                r.folder.total = *n;
+            }
         }
         for rows in self.filtered_rows.values_mut() {
             for r in rows.iter_mut() {
@@ -356,8 +359,13 @@ impl Sidebar {
             label.set_text(&n.to_string());
             label.set_visible(n > 0);
         }
-        for (key, label) in &self.folder_totals {
-            show_total(label, totals.get(key).copied().unwrap_or(0));
+        for (key, labels) in &self.folder_totals {
+            for label in labels {
+                show_total(label, totals.get(key).copied().unwrap_or(0));
+            }
+        }
+        for (label, keys) in &self.header_totals {
+            show_total(label, keys.iter().filter_map(|k| totals.get(k)).sum());
         }
         if let Some(label) = &self.unified_badge {
             label.set_text(&unified.to_string());

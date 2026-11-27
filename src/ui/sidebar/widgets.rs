@@ -354,7 +354,7 @@ pub(super) fn style_badge(badge: &gtk::Label, max_chars: i32) {
 /// blank while there is nothing to count. Right-aligned in a few
 /// characters' room that every row keeps, so the chips of folders holding
 /// up to thousands of messages stay in line.
-fn total_label(total: u32) -> gtk::Label {
+pub(super) fn total_label(total: u32) -> gtk::Label {
     let label = gtk::Label::new(None);
     label.add_css_class("folder-total");
     label.add_css_class("dim-label");
@@ -381,6 +381,16 @@ pub(super) fn show_total(label: &gtk::Label, total: u32) {
         &[("n", &total.to_string())],
     );
     label.set_tooltip_text(Some(&tip));
+}
+
+/// Add the total column (#720) to the end of a row built by
+/// [`build_unified_sub_row`], showing `total`; 0 leaves it blank, which
+/// keeps the column so the row's chip lines up with its neighbours'.
+pub(super) fn add_total_column(row: &gtk::ListBoxRow, total: u32) -> Option<gtk::Label> {
+    let hbox = row.child()?.downcast::<gtk::Box>().ok()?;
+    let label = total_label(total);
+    hbox.append(&label);
+    Some(label)
 }
 
 /// One folder row's widgets: the row, and the labels a count change

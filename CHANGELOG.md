@@ -11,7 +11,8 @@
 
 - **New: message totals in the sidebar** (#720). **Settings → Sidebar →
   Show message totals** shows how many messages each folder holds beside
-  its unread count, in gray, as the server counts them. The count is
+  its unread count, in gray, as the server counts them, and each unified
+  row the total of the folders under it. The count is
   cached with the folder list, kept current by the same checks that keep
   the unread counts current, and lowered at once when mail is moved out.
   It is off by default.
