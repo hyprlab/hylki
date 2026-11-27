@@ -9,6 +9,13 @@
   compact reply. **Settings → Composing → Ask before sending without a
   subject** turns it off; it is on by default.
 
+## 1.50.1 — 2026-11-27
+
+A patch release with four fixes and a translation: mail in Sent leads
+with its recipients, the reader's web process ends when the window is
+hidden, popover and window edges blend at a fractional scale, and the
+account chevron no longer lights up on its own.
+
 - **Fixed: who sent mail went to was hidden behind a chip** (#724). A
   message in Sent named only you in its header, with the To line folded
   behind a "1 recipient" chip. A card of mail filed in Sent now leads with
@@ -17,21 +24,26 @@
   by the name you last wrote to them under, with the address beside it.
   Addresses in card headers no longer wear angle brackets.
 
-- **Fixed: a grey line along the edge of popovers and windows at 125 %.**
-  At a fractional display scale the compositor drew the row of pixels at a
-  popover's or a floating window's edge without blending it, a dark line
-  over a light window. While a monitor has a fractional scale, popovers and
-  windows that are not maximized now leave their edges to be blended.
-
-- **Translations:** Italian (#725 by Jimmy), 2263 of 2590 strings
-  translated.
-
 - **Fixed: closing the window into the background kept the reader's
   WebKit processes** (#727). With Run in Background on, the hidden window
   held its web process and the last message it showed, a few hundred MB,
   for as long as Hylki ran. That process now ends when the window is
   hidden, and the open message is rendered again when the window comes
   back. WebKit's network process stays while Hylki runs.
+
+- **Fixed: a grey line along the edge of popovers and windows at 125 %.**
+  At a fractional display scale the compositor drew the row of pixels at a
+  popover's or a floating window's edge without blending it, a dark line
+  over a light window. While a monitor has a fractional scale, popovers and
+  windows that are not maximized now leave their edges to be blended.
+
+- **Fixed: the account chevron lit up inside a lit header.** With a
+  click on the account header set to fold it, the whole header lights up
+  for the click, and the chevron inside it no longer takes a highlight of
+  its own.
+
+- **Translations:** Italian (#725 by Jimmy), 2263 of 2590 strings
+  translated.
 
 ## 1.50.0 — 2026-11-26
 
