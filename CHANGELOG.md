@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **New: Send asks about an empty subject** (#726). A message with no
+  subject, or spaces alone, asks "Send Without a Subject?" first. **Send
+  Anyway** sends it, after the attachment reminder if that applies, and
+  **Cancel** puts the cursor in the subject, showing the field rows of a
+  compact reply. **Settings → Composing → Ask before sending without a
+  subject** turns it off; it is on by default.
+
 - **Fixed: who sent mail went to was hidden behind a chip** (#724). A
   message in Sent named only you in its header, with the To line folded
   behind a "1 recipient" chip. A card of mail filed in Sent now leads with

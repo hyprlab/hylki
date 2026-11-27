@@ -80,6 +80,7 @@ fold_quote = true
 reply_header = ""
 undo_send_secs = 5
 discard_notice = false
+ask_empty_subject = true
 spellcheck = true
 spellcheck_langs = ""
 sidebar_hover_expand = false

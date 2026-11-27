@@ -855,6 +855,8 @@ pub(crate) struct AppModel {
     /// Messages discarded with something written in them, newest last,
     /// each under the key its Undo entry names (#678).
     pub(super) discarded: Vec<(u64, crate::worker::OutgoingMessage)>,
+    /// Send asks first when the subject is empty (#726).
+    pub(super) ask_empty_subject: bool,
     /// The words that make Send ask when nothing is attached, "" for never,
     /// `None` for the default list.
     pub(super) attachment_keywords: Option<String>,

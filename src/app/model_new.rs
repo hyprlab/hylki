@@ -568,6 +568,7 @@ impl AppModel {
             undo_send_secs: prefs.undo_send_secs,
             discard_notice: prefs.discard_notice,
             discarded: Vec::new(),
+            ask_empty_subject: prefs.ask_empty_subject,
             attachment_keywords: prefs.attachment_keywords,
             spellcheck: prefs.spellcheck,
             spellcheck_langs: prefs.spellcheck_langs,

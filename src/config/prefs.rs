@@ -581,6 +581,11 @@ pub(super) fn default_undo_send_secs() -> u32 {
     5
 }
 
+/// Whether Send asks first when the subject is empty (#726).
+pub(crate) fn load_ask_empty_subject() -> bool {
+    load_privacy().ask_empty_subject
+}
+
 /// The words, comma-separated, that make Send ask when nothing is attached.
 pub(crate) fn load_attachment_keywords() -> String {
     load_privacy()

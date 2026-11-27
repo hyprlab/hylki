@@ -1308,6 +1308,13 @@ While it waits and while it is being sent, the message is listed in the
 **Send** sends it without waiting. Quitting Hylki before the wait is over
 keeps it in the Outbox, and it is sent at the next start.
 
+### Empty subject
+
+A message with no subject, or one of spaces alone, is asked about at
+**Send**: **Send Anyway** sends it, and **Cancel**, the default, puts the
+cursor in the subject. **Settings → Composing → Ask before sending without
+a subject** turns the question off. Mail Merge does not ask.
+
 ### Attachment reminder
 
 When what you wrote mentions an attachment and nothing is attached,

@@ -1764,19 +1764,6 @@ msgstr "Tags verwijderen"
 msgid "Open a message first, then print it."
 msgstr "Open eerst een bericht en druk het vervolgens af."
 
-msgid "Delete “{name}”?"
-msgstr "“{name}” verwijderen?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"De slimme map komt uit de zijbalk. De getoonde e-mail blijft waar hij is."
-
-msgid "Snooze until"
-msgstr "Snoozen tot"
-
 msgid "Message Source"
 msgstr "Berichtbron"
 
@@ -1791,6 +1778,19 @@ msgstr "Volgende overeenkomst"
 
 msgid "Close find"
 msgstr "Zoekbalk sluiten"
+
+msgid "Delete “{name}”?"
+msgstr "“{name}” verwijderen?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"De slimme map komt uit de zijbalk. De getoonde e-mail blijft waar hij is."
+
+msgid "Snooze until"
+msgstr "Snoozen tot"
 
 msgid "Could not add the event: {e}"
 msgstr "Kon de gebeurtenis niet toevoegen: {e}"
@@ -4570,6 +4570,14 @@ msgstr "Invoegen na de tekst"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Versturen zonder bijlage?"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "Het bericht is nog niet geladen."
 
 msgid "Show Original"
 msgstr "Origineel tonen"
@@ -8860,6 +8868,10 @@ msgstr "Ongedaan maken na weggooien"
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr "Een bericht biedt het bericht terug. Ctrl+Z werkt in beide richtingen."
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Vraag ernaar voordat je overschakelt naar platte tekst"
 
 msgid "Request read receipts"
 msgstr "Vraag leesbevestigingen aan"

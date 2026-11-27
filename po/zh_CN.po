@@ -1651,18 +1651,6 @@ msgstr "移除标签"
 msgid "Open a message first, then print it."
 msgstr "请先打开一封邮件，然后再打印。"
 
-msgid "Delete “{name}”?"
-msgstr "删除“{name}”？"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr "智能文件夹将从侧边栏中移除。它显示的邮件仍保留在原处。"
-
-msgid "Snooze until"
-msgstr "稍后处理至"
-
 msgid "Message Source"
 msgstr "邮件源码"
 
@@ -1677,6 +1665,18 @@ msgstr "下一个匹配项"
 
 msgid "Close find"
 msgstr "关闭查找"
+
+msgid "Delete “{name}”?"
+msgstr "删除“{name}”？"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr "智能文件夹将从侧边栏中移除。它显示的邮件仍保留在原处。"
+
+msgid "Snooze until"
+msgstr "稍后处理至"
 
 msgid "Could not add the event: {e}"
 msgstr "无法添加事件：{e}"
@@ -4274,6 +4274,14 @@ msgstr "插入到正文之后"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "不带附件发送？"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "邮件尚未加载。"
 
 msgid "Show Original"
 msgstr "显示原文"
@@ -8339,6 +8347,10 @@ msgstr "丢弃后可撤销"
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr "会有通知提供恢复该邮件的选项。无论何种情况，Ctrl+Z 都有效。"
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "切换到纯文本前询问"
 
 msgid "Request read receipts"
 msgstr "请求已读回执"

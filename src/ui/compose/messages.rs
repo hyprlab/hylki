@@ -133,8 +133,13 @@ pub(crate) enum ComposeInput {
     SetImportance(crate::models::Importance),
     /// The editor's HTML + plain text came back asynchronously — finish sending.
     SendBody(OutgoingFields),
+    /// The empty subject check's Send Anyway: the attachment reminder is
+    /// still to come (#726).
+    SendUntitled(OutgoingFields),
     /// The attachment reminder's Send Anyway: send without asking again.
     SendAnyway(OutgoingFields),
+    /// The empty subject check's Cancel: the cursor goes to the subject.
+    FocusSubject,
     /// Mail Merge (#447): read the message, fields and all, for the dialog.
     MailMerge,
     /// The field palette, at the cursor in the subject or the body (#447).

@@ -1820,20 +1820,6 @@ msgstr "Αφαίρεση ετικετών"
 msgid "Open a message first, then print it."
 msgstr "Ανοίξτε πρώτα ένα μήνυμα και έπειτα εκτυπώστε το."
 
-msgid "Delete “{name}”?"
-msgstr "Διαγραφή του «{name}»;"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Ο έξυπνος φάκελος αφαιρείται από την πλευρική στήλη. Τα μηνύματα που "
-"εμφανίζει παραμένουν στη θέση τους."
-
-msgid "Snooze until"
-msgstr "Αναβολή έως"
-
 msgid "Message Source"
 msgstr "Πηγαίος κώδικας μηνύματος"
 
@@ -1848,6 +1834,20 @@ msgstr "Επόμενη αντιστοιχία"
 
 msgid "Close find"
 msgstr "Κλείσιμο εύρεσης"
+
+msgid "Delete “{name}”?"
+msgstr "Διαγραφή του «{name}»;"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Ο έξυπνος φάκελος αφαιρείται από την πλευρική στήλη. Τα μηνύματα που "
+"εμφανίζει παραμένουν στη θέση τους."
+
+msgid "Snooze until"
+msgstr "Αναβολή έως"
 
 msgid "Could not add the event: {e}"
 msgstr "Δεν ήταν δυνατή η προσθήκη του συμβάντος: {e}"
@@ -4648,6 +4648,14 @@ msgstr "Εισαγωγή μετά το κείμενο"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Αποστολή ως κανονικό συνημμένο"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "Το μήνυμα δεν έχει φορτωθεί ακόμη."
 
 msgid "Show Original"
 msgstr "Εμφάνιση πρωτοτύπου"
@@ -9026,6 +9034,10 @@ msgstr ""
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Μετάβαση σε απλό κείμενο;"
 
 msgid "Request read receipts"
 msgstr "Αίτημα επιβεβαιώσεων ανάγνωσης"

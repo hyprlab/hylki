@@ -1879,18 +1879,6 @@ msgstr "Címkék eltávolítása"
 msgid "Open a message first, then print it."
 msgstr "Előbb nyisson meg egy üzenetet, majd nyomtassa ki."
 
-#, fuzzy
-msgid "Delete “{name}”?"
-msgstr "Kiüríti ezt: „{name}”?"
-
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-
-msgid "Snooze until"
-msgstr ""
-
 msgid "Message Source"
 msgstr "Üzenetforrás"
 
@@ -1905,6 +1893,18 @@ msgstr "Következő találat"
 
 msgid "Close find"
 msgstr "Keresés bezárása"
+
+#, fuzzy
+msgid "Delete “{name}”?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+
+msgid "Snooze until"
+msgstr ""
 
 #, fuzzy
 msgid "Could not add the event: {e}"
@@ -4776,6 +4776,14 @@ msgstr "Beillesztés a szövegbe"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Küldés normál mellékletként"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "Ezt az üzenetet még nem ellenőrizték."
 
 #, fuzzy
 msgid "Show Original"
@@ -9254,6 +9262,10 @@ msgstr ""
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Beillesztés egyszerű szövegként"
 
 msgid "Request read receipts"
 msgstr ""

@@ -401,6 +401,10 @@ impl Preferences {
             .composing
             .discard_notice_row
             .set_active(init.discard_notice);
+        widgets
+            .composing
+            .ask_empty_subject_row
+            .set_active(init.ask_empty_subject);
         widgets.composing.set_reply_header(&init.reply_header);
         widgets
             .composing

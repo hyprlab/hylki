@@ -506,9 +506,24 @@ impl Compose {
         false
     }
 
-    /// Handles [`ComposeInput::SendBody`]: a message that mentions an
-    /// attachment it does not have is asked about first.
+    /// Handles [`ComposeInput::SendBody`]: a message without a subject is
+    /// asked about first (#726), then one that mentions an attachment it
+    /// does not have.
     pub(super) fn on_send_body(
+        &mut self,
+        fields: OutgoingFields,
+        widgets: &ComposeWidgets,
+        sender: &ComponentSender<Self>,
+    ) {
+        if self.asks_for_subject(&fields) {
+            self.ask_send_untitled(fields, widgets, sender);
+            return;
+        }
+        self.send_if_attached(fields, widgets, sender);
+    }
+
+    /// The attachment reminder, then the send.
+    pub(super) fn send_if_attached(
         &mut self,
         fields: OutgoingFields,
         widgets: &ComposeWidgets,

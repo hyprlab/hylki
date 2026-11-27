@@ -1819,20 +1819,6 @@ msgstr "Treu les etiquetes"
 msgid "Open a message first, then print it."
 msgstr "Obre primer un missatge i després imprimeix-lo."
 
-msgid "Delete “{name}”?"
-msgstr "Vols suprimir «{name}»?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"La carpeta intel·ligent desapareixerà de la barra lateral. El correu que "
-"mostra es queda on és."
-
-msgid "Snooze until"
-msgstr ""
-
 msgid "Message Source"
 msgstr "Codi font del missatge"
 
@@ -1847,6 +1833,20 @@ msgstr "Coincidència següent"
 
 msgid "Close find"
 msgstr "Tanca la cerca"
+
+msgid "Delete “{name}”?"
+msgstr "Vols suprimir «{name}»?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"La carpeta intel·ligent desapareixerà de la barra lateral. El correu que "
+"mostra es queda on és."
+
+msgid "Snooze until"
+msgstr ""
 
 #, fuzzy
 msgid "Could not add the event: {e}"
@@ -4647,6 +4647,14 @@ msgstr "Insereix després del text"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Envia com un adjunt normal"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "El missatge encara no s'ha carregat."
 
 msgid "Show Original"
 msgstr "Mostra l'original"
@@ -9010,6 +9018,10 @@ msgstr ""
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Vols canviar a text pla?"
 
 msgid "Request read receipts"
 msgstr ""

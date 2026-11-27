@@ -95,6 +95,7 @@ impl AppModel {
             reply_header: self.reply_header.clone(),
             undo_send_secs: self.undo_send_secs,
             discard_notice: self.discard_notice,
+            ask_empty_subject: self.ask_empty_subject,
             attachment_keywords: self.attachment_keywords.clone(),
             spellcheck: self.spellcheck,
             // Every save is after the first load, which applied it.

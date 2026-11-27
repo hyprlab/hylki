@@ -1788,20 +1788,6 @@ msgstr "Eliminar etiquetas"
 msgid "Open a message first, then print it."
 msgstr "Abre primero un mensaje y después imprímelo."
 
-msgid "Delete “{name}”?"
-msgstr "¿Eliminar «{name}»?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"La carpeta inteligente desaparecerá de la barra lateral. Los mensajes que "
-"muestra permanecerán en su ubicación."
-
-msgid "Snooze until"
-msgstr "Posponer hasta"
-
 msgid "Message Source"
 msgstr "Código fuente del mensaje"
 
@@ -1816,6 +1802,20 @@ msgstr "Coincidencia siguiente"
 
 msgid "Close find"
 msgstr "Cerrar búsqueda"
+
+msgid "Delete “{name}”?"
+msgstr "¿Eliminar «{name}»?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"La carpeta inteligente desaparecerá de la barra lateral. Los mensajes que "
+"muestra permanecerán en su ubicación."
+
+msgid "Snooze until"
+msgstr "Posponer hasta"
 
 msgid "Could not add the event: {e}"
 msgstr "No se pudo añadir el evento: {e}"
@@ -4609,6 +4609,14 @@ msgstr "Insertar después del texto"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "¿Enviar sin archivo adjunto?"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "El mensaje todavía no se ha cargado."
 
 msgid "Show Original"
 msgstr "Mostrar original"
@@ -8958,6 +8966,10 @@ msgstr ""
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "¿Cambiar a texto sin formato?"
 
 msgid "Request read receipts"
 msgstr "Solicitar confirmaciones de lectura"

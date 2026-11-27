@@ -152,6 +152,10 @@ impl AppModel {
             PrefOutput::SetDiscardNotice(on) => {
                 pref!(self.discard_notice = on);
             }
+            PrefOutput::SetAskEmptySubject(on) => {
+                // Read again at each Send, so open composers follow it.
+                pref!(self.ask_empty_subject = on);
+            }
             PrefOutput::SetRequestReceipts(on) => {
                 // Open composers keep the check they opened with.
                 pref!(self.request_receipts = on);

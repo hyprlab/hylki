@@ -1753,20 +1753,6 @@ msgstr "Etiketleri Kaldır"
 msgid "Open a message first, then print it."
 msgstr "Önce bir ileti açın, ardından yazdırın."
 
-msgid "Delete “{name}”?"
-msgstr "“{name}” silinsin mi?"
-
-#, fuzzy
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Akıllı klasör kenar çubuğundan kaldırılacak. Gösterdiği e-postalar "
-"bulundukları yerde kalacak."
-
-msgid "Snooze until"
-msgstr "Şu zamana kadar ertele"
-
 msgid "Message Source"
 msgstr "İleti Kaynağı"
 
@@ -1781,6 +1767,20 @@ msgstr "Sonraki eşleşme"
 
 msgid "Close find"
 msgstr "Aramayı kapat"
+
+msgid "Delete “{name}”?"
+msgstr "“{name}” silinsin mi?"
+
+#, fuzzy
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Akıllı klasör kenar çubuğundan kaldırılacak. Gösterdiği e-postalar "
+"bulundukları yerde kalacak."
+
+msgid "Snooze until"
+msgstr "Şu zamana kadar ertele"
 
 msgid "Could not add the event: {e}"
 msgstr "Etkinlik eklenemedi: {e}"
@@ -4567,6 +4567,14 @@ msgstr "Metinden Sonra Ekle"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr ""
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Ek olmadan gönderilsin mi?"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "İleti henüz yüklenmedi."
 
 msgid "Show Original"
 msgstr "Orijinali Göster"
@@ -8815,6 +8823,10 @@ msgstr "Attıktan sonra geri al"
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr "Bir bildirim iletiyi geri sunar. Ctrl+Z her iki durumda da çalışır."
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Düz metne geçmeden önce sor"
 
 msgid "Request read receipts"
 msgstr "Okundu bilgisi iste"

@@ -30,6 +30,7 @@ mod showcase;
 mod signature;
 mod smime;
 mod subject;
+mod subject_check;
 mod suggest;
 mod template;
 #[cfg(test)]
@@ -978,7 +979,13 @@ impl Component for Compose {
 
                 ComposeInput::SendBody(fields) => self.on_send_body(fields, widgets, &sender),
 
+                ComposeInput::SendUntitled(fields) => {
+                    self.send_if_attached(fields, widgets, &sender)
+                }
+
                 ComposeInput::SendAnyway(fields) => self.finish_send(fields, &sender),
+
+                ComposeInput::FocusSubject => self.on_focus_subject(widgets),
 
                 ComposeInput::MailMerge => self.on_mail_merge(widgets, &sender),
 

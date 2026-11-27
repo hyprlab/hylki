@@ -136,6 +136,8 @@ pub(crate) struct PrefInit {
     pub(crate) undo_send_secs: u32,
     /// A notice with Undo after a discard (#678).
     pub(crate) discard_notice: bool,
+    /// Send asks first when the subject is empty (#726).
+    pub(crate) ask_empty_subject: bool,
     /// The words that make Send ask when nothing is attached, "" for never.
     pub(crate) attachment_keywords: String,
     pub(crate) app_theme: AppTheme,
@@ -614,5 +616,6 @@ pub(crate) enum PrefOutput {
     SetAttachmentKeywords(String),
     SetUndoSend(u32),
     SetDiscardNotice(bool),
+    SetAskEmptySubject(bool),
     Closed,
 }

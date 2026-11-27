@@ -1768,19 +1768,6 @@ msgstr "Tags entfernen"
 msgid "Open a message first, then print it."
 msgstr "Zuerst eine Nachricht öffnen, dann drucken."
 
-msgid "Delete “{name}”?"
-msgstr "Lösche »{name}«?"
-
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-"Der Smart Folder wird aus der Seitenleiste entfernt. Die darin angezeigten E-"
-"Mails bleiben an ihrem Speicherort."
-
-msgid "Snooze until"
-msgstr "Zurückstellen bis"
-
 msgid "Message Source"
 msgstr "Nachrichtenquelle"
 
@@ -1795,6 +1782,19 @@ msgstr "Nächster Treffer"
 
 msgid "Close find"
 msgstr "Suche schließen"
+
+msgid "Delete “{name}”?"
+msgstr "Lösche »{name}«?"
+
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+"Der Smart Folder wird aus der Seitenleiste entfernt. Die darin angezeigten E-"
+"Mails bleiben an ihrem Speicherort."
+
+msgid "Snooze until"
+msgstr "Zurückstellen bis"
 
 msgid "Could not add the event: {e}"
 msgstr "Termin konnte nicht erstellt werden: {e}"
@@ -4584,6 +4584,14 @@ msgstr "Nach dem Text einfügen"
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr "Mit OpenPGP gesendete Nachrichten werden nicht mit S/MIME signiert."
+
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Ohne Anhang senden?"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "Diese Nachricht wurde noch nicht geladen."
 
 msgid "Show Original"
 msgstr "Original anzeigen"
@@ -8862,6 +8870,10 @@ msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
 "Ein Hinweis ermöglicht die Wiederherstellung der Nachricht. »Strg+Z« "
 "funktioniert in jedem Fall."
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Vor Wechsel zu reinem Text nachfragen"
 
 msgid "Request read receipts"
 msgstr "Lesebestätigungen anfordern"

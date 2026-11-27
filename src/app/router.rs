@@ -582,6 +582,7 @@ impl AppModel {
             | PrefOutput::SetAttachmentKeywords(..)
             | PrefOutput::SetUndoSend(..)
             | PrefOutput::SetDiscardNotice(..)
+            | PrefOutput::SetAskEmptySubject(..)
             | PrefOutput::SetRequestReceipts(..)
             | PrefOutput::SetReturnedReceipts(..)) => self.on_prefs_compose_pref(pref),
             pref @ PrefOutput::SetAssistantPolicy(..) => self.on_assistant_pref(pref, sender),

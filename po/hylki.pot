@@ -1630,17 +1630,6 @@ msgstr ""
 msgid "Open a message first, then print it."
 msgstr ""
 
-msgid "Delete “{name}”?"
-msgstr ""
-
-msgid ""
-"The smart folder is removed from the sidebar. The mail it shows stays where "
-"it is."
-msgstr ""
-
-msgid "Snooze until"
-msgstr ""
-
 msgid "Message Source"
 msgstr ""
 
@@ -1654,6 +1643,17 @@ msgid "Next match"
 msgstr ""
 
 msgid "Close find"
+msgstr ""
+
+msgid "Delete “{name}”?"
+msgstr ""
+
+msgid ""
+"The smart folder is removed from the sidebar. The mail it shows stays where "
+"it is."
+msgstr ""
+
+msgid "Snooze until"
 msgstr ""
 
 msgid "Could not add the event: {e}"
@@ -4146,6 +4146,12 @@ msgid "Insert After the Text"
 msgstr ""
 
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
+msgstr ""
+
+msgid "Send Without a Subject?"
+msgstr ""
+
+msgid "The message has no subject."
 msgstr ""
 
 msgid "Show Original"
@@ -8086,6 +8092,9 @@ msgid "Undo after Discard"
 msgstr ""
 
 msgid "A notice offers the message back. Ctrl+Z works either way."
+msgstr ""
+
+msgid "Ask before sending without a subject"
 msgstr ""
 
 msgid "Request read receipts"

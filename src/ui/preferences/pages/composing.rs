@@ -32,6 +32,7 @@ pub(in crate::ui::preferences) struct ComposingPage {
     pub(in crate::ui::preferences) fold_quote_row: adw::SwitchRow,
     pub(in crate::ui::preferences) undo_send_row: adw::ComboRow,
     pub(in crate::ui::preferences) discard_notice_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) ask_empty_subject_row: adw::SwitchRow,
     pub(in crate::ui::preferences) request_receipts_row: adw::SwitchRow,
     pub(in crate::ui::preferences) returned_receipts_row: adw::ComboRow,
     pub(in crate::ui::preferences) reply_header_row: adw::EntryRow,
@@ -210,6 +211,14 @@ impl ComposingPage {
                         },
                     },
 
+                    #[name = "ask_empty_subject_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Ask before sending without a subject"),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetAskEmptySubject(row.is_active()));
+                        },
+                    },
+
                     #[name = "request_receipts_row"]
                     adw::SwitchRow {
                         set_title: &i18n("Request read receipts"),
@@ -345,6 +354,7 @@ impl ComposingPage {
             fold_quote_row,
             undo_send_row,
             discard_notice_row,
+            ask_empty_subject_row,
             request_receipts_row,
             returned_receipts_row,
             reply_header_row,

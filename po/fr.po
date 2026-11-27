@@ -4563,6 +4563,14 @@ msgstr "Insérer après le texte"
 msgid "Mail sent with OpenPGP is not signed with S/MIME."
 msgstr "Le courrier envoyé avec OpenPGP n’est pas signé avec S/MIME."
 
+#, fuzzy
+msgid "Send Without a Subject?"
+msgstr "Envoyer sans pièce jointe ?"
+
+#, fuzzy
+msgid "The message has no subject."
+msgstr "Le message n’est pas encore chargé."
+
 msgid "Show Original"
 msgstr "Afficher l’original"
 
@@ -8809,6 +8817,10 @@ msgid "A notice offers the message back. Ctrl+Z works either way."
 msgstr ""
 "Une notification propose de récupérer le message. Ctrl+Z fonctionne dans les "
 "deux cas."
+
+#, fuzzy
+msgid "Ask before sending without a subject"
+msgstr "Demander avant de passer en texte brut"
 
 msgid "Request read receipts"
 msgstr "Demander des accusés de lecture"
