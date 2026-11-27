@@ -929,6 +929,7 @@ impl SimpleComponent for AppModel {
         model.init_refresh_buttons(&widgets, &sender);
 
         model.install_app_actions(&root, &sender);
+        model.release_reader_when_hidden(&root);
 
         let (undo_action, redo_action) = install_window_actions(&root, &sender);
 

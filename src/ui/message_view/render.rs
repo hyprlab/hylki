@@ -38,7 +38,14 @@ impl MessageView {
         // loading the page a second time then made every open wait for two.
         if !self.webview.root().is_some_and(|r| r.is_mapped()) {
             self.painted_hidden = true;
+            // Loading would start the web process again, for mail arriving
+            // in the background that nobody sees yet (#727).
+            if self.web_released {
+                self.shown_fingerprint = None;
+                return true;
+            }
         }
+        self.web_released = false;
         // What is on screen (a page, or the spinner) stays, frozen, until the
         // new page is ready: opening a message has frozen the whole pane
         // already, and this covers a page replaced in place. A sent reply's

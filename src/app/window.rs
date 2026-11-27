@@ -114,6 +114,18 @@ fn follow_content_floor(root: &adw::ApplicationWindow, widgets: &AppModelWidgets
 }
 
 impl AppModel {
+    /// Hand the reader the window's trips into the background (#727), where
+    /// it ends its web process. Whatever hides the window counts: the close
+    /// button with Run in Background on, or the tray.
+    pub(super) fn release_reader_when_hidden(&self, root: &adw::ApplicationWindow) {
+        let reader = self.message_view.sender().clone();
+        root.connect_visible_notify(move |w| {
+            if !w.is_visible() {
+                reader.emit(crate::ui::message_view::MessageViewInput::Backgrounded);
+            }
+        });
+    }
+
     /// Restore the last window size + maximized state (Wayland can't restore
     /// position/monitor).
     pub(super) fn init_window_size(

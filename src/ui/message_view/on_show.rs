@@ -206,6 +206,25 @@ impl MessageView {
         }
     }
 
+    /// End the web process behind a window hidden to run in the background
+    /// (#727). It held the last message rendered, a few hundred MB that
+    /// nobody could see for as long as the app ran; the page is built again
+    /// from what the reader keeps (place, folds, translations) once the
+    /// window is back. Pop-out windows have readers of their own and stay.
+    pub(super) fn on_backgrounded(&mut self) {
+        // Shown again before this arrived.
+        if self.webview.root().is_some_and(|r| r.is_visible()) {
+            return;
+        }
+        self.webview.terminate_web_process();
+        self.web_released = true;
+        self.shown_fingerprint = None;
+        if self.current.is_some() {
+            self.painted_hidden = true;
+        }
+        tracing::debug!(target: "hylki::memory", "reader's web process ended for the background");
+    }
+
     pub(super) fn on_rendered(&mut self) {
         let uri = self.webview.uri().unwrap_or_default().to_string();
         // A page reports once. The backstop for one that never does fires
