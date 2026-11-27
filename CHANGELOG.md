@@ -10,6 +10,9 @@
   by the name you last wrote to them under, with the address beside it.
   Addresses in card headers no longer wear angle brackets.
 
+- **Translations:** Italian (#725 by Jimmy), 2263 of 2590 strings
+  translated.
+
 - **Fixed: closing the window into the background kept the reader's
   WebKit processes** (#727). With Run in Background on, the hidden window
   held its web process and the last message it showed, a few hundred MB,
