@@ -17,6 +17,12 @@
   by the name you last wrote to them under, with the address beside it.
   Addresses in card headers no longer wear angle brackets.
 
+- **Fixed: a grey line along the edge of popovers and windows at 125 %.**
+  At a fractional display scale the compositor drew the row of pixels at a
+  popover's or a floating window's edge without blending it, a dark line
+  over a light window. While a monitor has a fractional scale, popovers and
+  windows that are not maximized now leave their edges to be blended.
+
 - **Translations:** Italian (#725 by Jimmy), 2263 of 2590 strings
   translated.
 

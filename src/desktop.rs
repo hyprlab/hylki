@@ -8,6 +8,7 @@ pub(crate) mod background;
 pub(crate) mod brand;
 pub(crate) mod console_log;
 pub(crate) mod crash_log;
+pub(crate) mod fractional_edges;
 pub(crate) mod icon_theme;
 pub(crate) mod launcher_badge;
 pub(crate) mod legacy;
