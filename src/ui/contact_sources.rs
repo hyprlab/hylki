@@ -55,7 +55,7 @@ const APP_PW: &str = i18n_noop("Needs an app password, not your login password."
 
 const ADD_KINDS: &[AddKind] = &[
     AddKind {
-        label: i18n_noop("CardDAV Server"),
+        label: i18n_noop("CalDAV and CardDAV Server"),
         mark: "folder-remote-symbolic",
         what: AddWhat::CardDav {
             server: None,
@@ -76,7 +76,7 @@ const ADD_KINDS: &[AddKind] = &[
         mark: "fastmail",
         what: AddWhat::CardDav {
             server: Some("https://carddav.fastmail.com"),
-            hint: i18n_noop("Use an app password with access to contacts, made in Fastmail under Settings → Privacy & Security."),
+            hint: i18n_noop("Use an app password with access to contacts and calendars, made in Fastmail under Settings → Privacy & Security."),
         },
     },
     AddKind { label: "Yahoo", mark: "yahoo", what: AddWhat::CardDav { server: Some("https://carddav.address.yahoo.com"), hint: APP_PW } },

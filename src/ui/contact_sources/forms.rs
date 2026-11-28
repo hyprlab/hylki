@@ -179,6 +179,12 @@ pub(super) fn carddav_form(
     url.set_visible(preset.is_none());
     server.add(&name);
     server.add(&url);
+    // The same account's calendars (#715), which EDS finds on the server.
+    let calendars = adw::SwitchRow::new();
+    calendars.set_title(&i18n("Calendars"));
+    calendars.set_subtitle(&i18n("Its calendars show in Calendar."));
+    calendars.set_active(account.calendars);
+    server.add(&calendars);
 
     let signin = adw::PreferencesGroup::new();
     signin.set_title(&i18n("Sign-in"));
@@ -256,6 +262,7 @@ pub(super) fn carddav_form(
         a.name = name.text().trim().to_string();
         a.url = address;
         a.user = user.text().trim().to_string();
+        a.calendars = calendars.is_active();
         let _ = sender.send(ContactSourcesInput::SaveCardDav {
             account: a,
             password: pass.text().to_string(),

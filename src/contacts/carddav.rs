@@ -37,6 +37,9 @@ pub(crate) struct Account {
     pub(crate) enabled: bool,
     /// The address books EDS found on the server, by name.
     pub(crate) books: Vec<String>,
+    /// Whether the account's calendars are kept too (CalDAV, #715). EDS
+    /// finds them on the same server, or on the service's calendar server.
+    pub(crate) calendars: bool,
     /// The registry's object for the source, for writing and removing it.
     path: String,
     /// The source as EDS keeps it, so saving keeps the keys Hylki does not
@@ -53,6 +56,7 @@ impl Account {
             user: String::new(),
             enabled: true,
             books: Vec::new(),
+            calendars: true,
             path: String::new(),
             data: String::new(),
         }
@@ -92,6 +96,7 @@ impl Account {
             user: get("Authentication", "User"),
             enabled: kf.boolean("Data Source", "Enabled").unwrap_or(true),
             books,
+            calendars: kf.boolean("Collection", "CalendarEnabled").unwrap_or(false),
             path: path.to_string(),
             data: data.to_string(),
         })
@@ -104,11 +109,19 @@ impl Account {
         kf.set_boolean("Data Source", "Enabled", self.enabled);
         if self.data.is_empty() {
             kf.set_string("Data Source", "Parent", "");
-            // Address books only: mail and calendars are another app's.
-            kf.set_boolean("Collection", "CalendarEnabled", false);
+            // Mail is another account's.
             kf.set_boolean("Collection", "MailEnabled", false);
-            kf.set_string("Collection", "CalendarUrl", "");
             kf.set_boolean("Authentication", "RememberPassword", true);
+        }
+        kf.set_boolean("Collection", "CalendarEnabled", self.calendars);
+        let calendar_url = kf
+            .string("Collection", "CalendarUrl")
+            .map(|s| s.to_string())
+            .unwrap_or_default();
+        if self.calendars && calendar_url.is_empty() {
+            kf.set_string("Collection", "CalendarUrl", &calendar_server(&url.url));
+        } else if !self.calendars && self.data.is_empty() {
+            kf.set_string("Collection", "CalendarUrl", "");
         }
         kf.set_string("Collection", "BackendName", "webdav");
         kf.set_boolean("Collection", "ContactsEnabled", true);
@@ -121,6 +134,21 @@ impl Account {
         kf.set_string("Security", "Method", if url.tls { "tls" } else { "none" });
         kf.to_data().to_string()
     }
+}
+
+/// Where a service keeps its calendars, from where it keeps its address
+/// books: a server of their own for the big services, the same server
+/// (found through its `.well-known/caldav`) for the rest.
+pub(crate) fn calendar_server(contacts: &str) -> String {
+    const SERVERS: [(&str, &str); 3] = [
+        ("contacts.icloud.com", "https://caldav.icloud.com"),
+        ("carddav.fastmail.com", "https://caldav.fastmail.com"),
+        ("carddav.address.yahoo.com", "https://caldav.calendar.yahoo.com"),
+    ];
+    SERVERS
+        .iter()
+        .find(|(c, _)| contacts.contains(c))
+        .map_or_else(|| contacts.to_string(), |(_, cal)| cal.to_string())
 }
 
 /// A server address taken apart the way EDS keeps it.
@@ -493,7 +521,7 @@ mod tests {
     }
 
     #[test]
-    fn a_new_account_asks_for_address_books_only() {
+    fn a_new_account_asks_for_address_books_and_calendars() {
         let mut a = Account::empty();
         a.url = "dav.example.org".into();
         a.user = "ann".into();
@@ -501,7 +529,16 @@ mod tests {
         let kf = crate::desktop::platform::keyfile(&data).unwrap();
         assert_eq!(kf.string("Collection", "BackendName").unwrap(), "webdav");
         assert!(kf.boolean("Collection", "ContactsEnabled").unwrap());
+        assert!(kf.boolean("Collection", "CalendarEnabled").unwrap());
+        assert_eq!(
+            kf.string("Collection", "CalendarUrl").unwrap(),
+            "https://dav.example.org"
+        );
+        a.calendars = false;
+        let data = a.to_source(&parse_url(&a.url).unwrap());
+        let kf = crate::desktop::platform::keyfile(&data).unwrap();
         assert!(!kf.boolean("Collection", "CalendarEnabled").unwrap());
+        assert_eq!(super::calendar_server("https://contacts.icloud.com"), "https://caldav.icloud.com");
         assert!(!kf.boolean("Collection", "MailEnabled").unwrap());
         assert_eq!(
             kf.string("Collection", "ContactsUrl").unwrap(),
