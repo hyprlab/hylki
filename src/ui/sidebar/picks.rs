@@ -22,6 +22,15 @@ impl Sidebar {
         let _ = sender.output(SidebarOutput::AttachmentsSelected);
     }
 
+    pub(super) fn on_calendar_row_selected(&mut self, sender: ComponentSender<Self>) {
+        if self.selected == Sel::Calendar {
+            return;
+        }
+        self.selected = Sel::Calendar;
+        self.clear_other_selections(Sel::Calendar);
+        let _ = sender.output(SidebarOutput::CalendarSelected);
+    }
+
     pub(super) fn on_contacts_row_clicked(&mut self, sender: ComponentSender<Self>) {
         if self.selected == Sel::Contacts {
             return;

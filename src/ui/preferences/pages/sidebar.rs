@@ -16,6 +16,7 @@ pub(in crate::ui::preferences) struct SidebarPage {
     pub(in crate::ui::preferences) chevron_side_row: adw::ComboRow,
     pub(in crate::ui::preferences) account_click_row: adw::SwitchRow,
     pub(in crate::ui::preferences) show_attachments_row: adw::SwitchRow,
+    pub(in crate::ui::preferences) show_calendar_row: adw::SwitchRow,
     pub(in crate::ui::preferences) sidebar_hover_expand_row: adw::SwitchRow,
     pub(in crate::ui::preferences) remember_sidebar_row: adw::SwitchRow,
     pub(in crate::ui::preferences) remember_rail_row: adw::SwitchRow,
@@ -115,6 +116,14 @@ impl SidebarPage {
                         set_subtitle: &i18n("Every account’s attachments in one place."),
                         connect_active_notify[sender] => move |row| {
                             let _ = sender.output(PrefOutput::SetAttachmentsRow(row.is_active()));
+                        },
+                    },
+
+                    #[name = "show_calendar_row"]
+                    adw::SwitchRow {
+                        set_title: &i18n("Show Calendar"),
+                        connect_active_notify[sender] => move |row| {
+                            let _ = sender.output(PrefOutput::SetCalendarRow(row.is_active()));
                         },
                     },
 
@@ -448,6 +457,7 @@ impl SidebarPage {
             chevron_side_row,
             account_click_row,
             show_attachments_row,
+            show_calendar_row,
             sidebar_hover_expand_row,
             remember_sidebar_row,
             remember_rail_row,

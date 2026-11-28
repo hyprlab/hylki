@@ -991,8 +991,9 @@ provider's, without GNOME Online Accounts or Evolution. Their contacts are liste
 in the book list above them, and suggested in the composer; a contact added
 or changed in Hylki is saved to the server.
 
-Pick **CardDAV Server**, or the service by name: iCloud, Fastmail and Yahoo
-fill in their server, and Nextcloud asks for yours. The form asks for:
+Pick **CalDAV and CardDAV Server**, or the service by name: iCloud,
+Fastmail and Yahoo fill in their server, and Nextcloud asks for yours. The
+form asks for:
 
 - **Server**: the server's address is enough for most services, such as
   `nextcloud.example.org`, and Hylki finds the address books on it. A full
@@ -1002,6 +1003,10 @@ fill in their server, and Nextcloud asks for yours. The form asks for:
 - **Username** and **Password**. A service that signs in with two steps
   wants an app password made for Hylki: iCloud, Fastmail, and Nextcloud with
   two-factor sign-in among them.
+- **Calendars**, on by default: the account's calendars are kept too, over
+  CalDAV, and show in [Calendar](#calendar). iCloud, Fastmail and Yahoo keep
+  calendars on a server of their own, which Hylki fills in; on other servers
+  Evolution Data Server finds them on the same one.
 
 Saving looks for the address books and says how many it found, or why it
 found none (a password the server refused, a server it could not reach). The
@@ -1026,6 +1031,75 @@ and opening Contacts fetches what changed if that was more than five minutes
 ago. Away from GNOME, Evolution Data Server has to be installed: it is the
 `evolution-data-server` package on every major distribution and runs without
 GNOME. Without it, the page says so.
+
+### Calendar
+
+**Calendar** in the sidebar's footer shows the calendars in place of the
+mail: every calendar Evolution Data Server keeps, which is GNOME Calendar's
+and Evolution's, the ones of GNOME Online Accounts (Google, Microsoft 365,
+Nextcloud), and [CalDAV accounts](#carddav-accounts) set up here. Without
+Evolution Data Server, Hylki keeps calendars of its own as `.ics` files in
+`~/.local/share/hylki/calendars/`. **Settings → Sidebar → Show Calendar**
+takes the row away. The launcher's **Calendar** action opens Hylki on it.
+
+The header switches between **Day**, **Week**, **Month**, **Year** and
+**List**, and **Today**, the arrows and the keys below move through them.
+The calendar button in the header opens the calendars, grouped by account,
+each with a check that shows or hides it here; the button is tinted while
+any is hidden, and **Show All** brings them back. A calendar's ⋯ button (or
+a right-click) has **Show Only This Calendar**, its color, **Refresh**, and
+for a calendar on this computer or a subscription its name and **Delete
+Calendar…**. **Add Calendar** makes a calendar on this computer, subscribes
+to a published calendar (a `webcal://` or `.ics` address, read again every
+hour), imports an `.ics` file, or adds a CalDAV account.
+
+Making an event:
+
+- Drag across the hours of a day, or across days in the all-day row or the
+  month, and give it a title. **More Details…** opens the editor.
+- Double-click an empty hour or day.
+- The header's **+** reads a sentence: "Lunch with Sam tomorrow at 12:30"
+  is an event called "Lunch with Sam" at 12:30 the next day. A day alone
+  makes an all-day event. **New Event…** opens the editor.
+
+Click an event for its details: when, how it repeats, where, the alerts,
+the people invited and where each stands, the notes, and **Join Meeting**
+when it links to Zoom, Google Meet, Teams, Webex, Jitsi or a similar
+service. A meeting someone else organized has **Accept**, **Maybe** and
+**Decline**, which mail the organizer the answer from your account and
+keep it in your copy. Double-click, or **Edit**, for the editor.
+
+Drag an event to move it, and drag its bottom edge to make it longer or
+shorter; times snap to the quarter hour, and Ctrl and the wheel make the
+hours taller or shorter. A change to a repeating event asks whether it is
+for that event only, that one and the ones after it, or all of them. A
+deleted event can be put back with **Undo** in the notice that follows.
+
+The editor has the title, place, calendar, start and end, **Repeat** (every
+day, weekday, week, two weeks, month or year, or **Custom…** for every so
+many days, weeks, months or years, on chosen weekdays, or on the first or
+last Tuesday of the month), how a repeat ends, two alerts, whether the time
+shows as busy or free, the status, **Private**, the people invited, a link
+and notes. Moving an event to another calendar moves its whole series.
+People added under **Invitees** get an invitation by mail when it is saved,
+from the account whose address is the organizer's, and a notice when it is
+cancelled. Their answers update the event when they come back to the
+calendar's server.
+
+Search (Ctrl+F) looks through the titles, places, notes and attendees of a
+year back and two years ahead.
+
+From the mail: **Add to Calendar** on an invitation adds it to the calendar
+new events go to, and **Accept** or **Maybe** adds it with your answer on
+it. **Create Event…** in a message's menu writes to the same calendars.
+
+**Settings → Calendar** sets the first day of the week, whether Week shows
+seven days or five, week numbers, the working hours (shaded outside them),
+a new event's length, alert and calendar, and whether declined meetings
+show. **Show reminders** decides who shows an event's alerts: **Automatic**
+leaves them to Evolution Data Server's alarm service where it runs, as it
+does on GNOME, and shows them here otherwise; **Always** and **Never** do
+what they say.
 
 ### LDAP directories
 

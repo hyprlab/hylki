@@ -52,6 +52,7 @@ notification_buttons = [
     "delete",
 ]
 show_attachments = true
+show_calendar = true
 settings_open_accounts = false
 swipe_enabled = true
 swipe_reversed = false

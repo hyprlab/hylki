@@ -223,7 +223,7 @@ fn event_rows(
 
 /// The alarms offered, in minutes before the start, the ones GNOME Calendar
 /// offers and one at the start itself.
-const ALARMS: [Option<u32>; 10] = [
+pub(crate) const ALARMS: [Option<u32>; 10] = [
     None,
     Some(0),
     Some(5),
@@ -237,7 +237,7 @@ const ALARMS: [Option<u32>; 10] = [
 ];
 
 /// When one of the event's alarms goes off, `last` picked first.
-fn alarm_row(title: &str, last: Option<u32>) -> adw::ComboRow {
+pub(crate) fn alarm_row(title: &str, last: Option<u32>) -> adw::ComboRow {
     let labels: Vec<String> = ALARMS.iter().map(|a| alarm_label(*a)).collect();
     let labels: Vec<&str> = labels.iter().map(String::as_str).collect();
     let row = adw::ComboRow::new();
@@ -250,7 +250,7 @@ fn alarm_row(title: &str, last: Option<u32>) -> adw::ComboRow {
     row
 }
 
-fn alarm_label(alarm: Option<u32>) -> String {
+pub(crate) fn alarm_label(alarm: Option<u32>) -> String {
     const DAY: u32 = 24 * 60;
     let Some(m) = alarm else {
         return i18n("None");
@@ -364,18 +364,18 @@ fn next_hour() -> DateTime<Local> {
 /// A day on a button that opens a calendar, and a time on one that opens
 /// an hour and a minute: side by side, they leave the row its title.
 #[derive(Clone)]
-struct Moment {
+pub(crate) struct Moment {
     date: Rc<Cell<NaiveDate>>,
     button: gtk::MenuButton,
     calendar: gtk::Calendar,
     hour: gtk::SpinButton,
     minute: gtk::SpinButton,
     /// The time's button, hidden for a whole day.
-    time: gtk::MenuButton,
+    pub(crate) time: gtk::MenuButton,
 }
 
 impl Moment {
-    fn new(at: DateTime<Local>) -> Self {
+    pub(crate) fn new(at: DateTime<Local>) -> Self {
         let calendar = gtk::Calendar::new();
         crate::ui::flat_calendar::style(&calendar);
         let popover = gtk::Popover::new();
@@ -430,7 +430,7 @@ impl Moment {
         m
     }
 
-    fn row(&self, title: &str) -> adw::ActionRow {
+    pub(crate) fn row(&self, title: &str) -> adw::ActionRow {
         let row = adw::ActionRow::new();
         row.set_title(title);
         // A title too long even so ends in an ellipsis rather than breaking
@@ -444,7 +444,7 @@ impl Moment {
     }
 
     /// The moment shown, in local time; `None` for a time the clocks skip.
-    fn at(&self) -> Option<DateTime<Local>> {
+    pub(crate) fn at(&self) -> Option<DateTime<Local>> {
         let t = self.date.get().and_hms_opt(
             self.hour.value_as_int() as u32,
             self.minute.value_as_int() as u32,
@@ -453,7 +453,7 @@ impl Moment {
         Local.from_local_datetime(&t).earliest()
     }
 
-    fn set(&self, at: DateTime<Local>) {
+    pub(crate) fn set(&self, at: DateTime<Local>) {
         self.hour.set_value(at.hour() as f64);
         self.minute.set_value(at.minute() as f64);
         self.show_date(at.date_naive());
@@ -483,7 +483,7 @@ impl Moment {
     }
 
     /// `f` runs whenever the day, the hour or the minute changes.
-    fn connect_changed(&self, f: impl Fn() + 'static) {
+    pub(crate) fn connect_changed(&self, f: impl Fn() + 'static) {
         let f = Rc::new(f);
         let g = f.clone();
         self.calendar.connect_day_selected(move |_| g());

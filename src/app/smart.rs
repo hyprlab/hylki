@@ -106,6 +106,7 @@ impl AppModel {
         self.mirror_selection(sel);
         self.leave_gallery();
         self.showing_contacts = false;
+        self.showing_calendar = false;
         self.showing_outbox = false;
         self.unified = false;
         self.selected = None;

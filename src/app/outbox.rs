@@ -157,6 +157,7 @@ impl AppModel {
                 self.showing_outbox = true;
                 self.leave_gallery();
                 self.showing_contacts = false;
+                self.showing_calendar = false;
                 self.unified = false;
                 self.tag_view = None;
                 self.smart_view = None;

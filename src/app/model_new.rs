@@ -77,6 +77,7 @@ impl AppModel {
             gallery,
             contacts_compose_revealer,
             contacts_page,
+            calendar_page,
             notifications,
         } = children;
         let MainMenu {
@@ -373,6 +374,7 @@ impl AppModel {
             notification_content: prefs.notification_content,
             notification_buttons: config::load_notification_buttons(),
             show_attachments,
+            show_calendar: prefs.show_calendar,
             settings_open_accounts: prefs.settings_open_accounts,
             last_settings_page: None,
             list_count: String::new(),
@@ -596,6 +598,8 @@ impl AppModel {
             showing_gallery: false,
             contacts_page,
             showing_contacts: false,
+            calendar_page,
+            showing_calendar: false,
             showing_outbox: false,
             outbox_by_account: HashMap::new(),
             snoozed: super::snooze::load_snoozed(),

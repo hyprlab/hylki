@@ -9,11 +9,11 @@ Icon=co.hyprlab.Hylki
 Terminal=false
 Type=Application
 Categories=GNOME;GTK;Network;Email;
-Keywords=Email;Mail;IMAP;
+Keywords=Email;Mail;IMAP;Calendar;CalDAV;
 MimeType=x-scheme-handler/mailto;x-scheme-handler/mid;message/rfc822;application/vnd.ms-outlook;
 StartupNotify=true
 StartupWMClass=co.hyprlab.Hylki
-Actions=new-message;contacts;attachments;
+Actions=new-message;contacts;calendar;attachments;
 # Earlier names, for desktops that carry favourites across a rename.
 X-Flatpak-RenamedFrom=co.hyprlab.Vireo.desktop;com.getveem.Veem.desktop;
 
@@ -24,6 +24,10 @@ Exec=hylki mailto:
 [Desktop Action contacts]
 Name=Contacts
 Exec=hylki --contacts
+
+[Desktop Action calendar]
+Name=Calendar
+Exec=hylki --calendar
 
 [Desktop Action attachments]
 Name=Attachments

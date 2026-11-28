@@ -228,6 +228,8 @@ pub(crate) struct SidebarInit {
     pub(crate) contacts_folded: Vec<String>,
     /// Whether the "Attachments" row is shown.
     pub(crate) show_attachments: bool,
+    /// Whether the "Calendar" row is shown (#715).
+    pub(crate) show_calendar: bool,
     /// Where the first pick lands instead of All Inboxes (#256).
     pub(crate) start: Option<StartTarget>,
 }
@@ -247,6 +249,8 @@ pub(crate) enum Sel {
     Unified,
     /// The attachments gallery (all inboxes).
     Attachments,
+    /// The calendar (#715).
+    Calendar,
     /// The in-app contacts view, every contact.
     Contacts,
     /// An address book or group picked under the Contacts row.

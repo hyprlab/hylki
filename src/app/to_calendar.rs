@@ -89,7 +89,7 @@ impl AppModel {
     /// The mail accounts' nicknames by address, for the calendars of the
     /// same accounts in EDS. An address two mail accounts share names
     /// neither.
-    fn calendar_account_names(&self) -> crate::calendar::AccountNames {
+    pub(super) fn calendar_account_names(&self) -> crate::calendar::AccountNames {
         let mut names = crate::calendar::AccountNames::default();
         let mut shared = Vec::new();
         for cfg in self.effective_config() {
@@ -145,7 +145,10 @@ impl AppModel {
                 kind,
                 text,
             } => self.make_calendar_item(*message, kind, Some(text), &sender),
-            ToCalendar::Saved(_, Ok(())) => {}
+            // The calendar shows what was just added.
+            ToCalendar::Saved(_, Ok(())) => self
+                .calendar_page
+                .emit(crate::ui::calendar_page::CalendarInput::Reload),
             ToCalendar::Saved(kind, Err(e)) => self.notice_error(match kind {
                 ItemKind::Event => i18n_f("Could not add the event: {e}", &[("e", &e)]),
                 ItemKind::Task => i18n_f("Could not add the task: {e}", &[("e", &e)]),

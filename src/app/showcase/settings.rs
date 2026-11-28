@@ -146,6 +146,36 @@ impl AppModel {
     /// selects the first n entries at 5s; "import:" imports the files,
     /// split by commas, at 5s (see `ui::contact_import`); "mail" opens
     /// Import from Mail at 5s.
+    /// HYLKI_SHOWCASE_CALENDAR=<view>[,<step>…] opens the calendar (#715)
+    /// on a view (day, week, month, year, agenda); `new` opens the editor,
+    /// `edit` the first event, `calendars` the Calendars popover, `search:<words>`, `quick:<sentence>`.
+    pub(super) fn stage_calendar(&self, sender: &ComponentSender<AppModel>) {
+        use crate::calendar::prefs::View;
+        use crate::ui::calendar_page::CalendarInput;
+        let Ok(steps) = std::env::var("HYLKI_SHOWCASE_CALENDAR") else {
+            return;
+        };
+        input_after(sender, 2, AppMsg::ShowCalendar);
+        let page = self.calendar_page.sender().clone();
+        gtk::glib::timeout_add_seconds_local_once(3, move || {
+            for step in steps.split(',') {
+                let msg = match step {
+                    "day" => CalendarInput::View(View::Day),
+                    "week" => CalendarInput::View(View::Week),
+                    "month" => CalendarInput::View(View::Month),
+                    "year" => CalendarInput::View(View::Year),
+                    "agenda" => CalendarInput::View(View::Agenda),
+                    "new" => CalendarInput::NewEvent,
+                    "edit" | "inspect" | "calendars" => CalendarInput::Showcase(step.to_string()),
+                    s if s.starts_with("search:") => CalendarInput::Search(s[7..].to_string()),
+                    s if s.starts_with("quick:") => CalendarInput::QuickAdd(s[6..].to_string()),
+                    _ => continue,
+                };
+                let _ = page.send(msg);
+            }
+        });
+    }
+
     pub(super) fn stage_contacts(&self, sender: &ComponentSender<AppModel>) {
         if let Ok(which) = std::env::var("HYLKI_SHOWCASE_CONTACTS") {
             input_after(sender, 3, AppMsg::OpenContacts);

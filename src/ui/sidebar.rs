@@ -114,6 +114,8 @@ pub(crate) struct Sidebar {
         std::cell::RefCell<Vec<(crate::ui::contacts_page::ContactScope, gtk::ListBoxRow)>>,
     >,
     attachments_row: Option<gtk::ListBoxRow>,
+    /// The footer's Calendar row, when shown.
+    calendar_row: Option<gtk::ListBoxRow>,
     /// The footer's Contacts row, when Contacts is placed there.
     contacts_row: Option<gtk::ListBoxRow>,
     /// Refresh/spinner stack + spinner beside the "New Message" button.
@@ -155,6 +157,8 @@ pub(crate) struct Sidebar {
     reannounce: Option<(Sel, Option<String>)>,
     /// Whether the "Attachments" row is shown (in the pinned footer).
     show_attachments: bool,
+    /// Whether the "Calendar" row is shown (in the pinned footer).
+    show_calendar: bool,
     /// How many messages are waiting in the Outbox across all accounts. The row
     /// only exists while this is non-zero — an empty Outbox is the normal state
     /// and does not deserve permanent furniture.
@@ -366,6 +370,7 @@ impl Component for Sidebar {
             contact_tree: None,
             tree_rows: std::rc::Rc::new(std::cell::RefCell::new(Vec::new())),
             attachments_row: None,
+            calendar_row: None,
             contacts_row: None,
             sync_stack: None,
             sync_spinner: None,
@@ -382,6 +387,7 @@ impl Component for Sidebar {
             start_wait: false,
             reannounce: None,
             show_attachments: init.show_attachments,
+            show_calendar: init.show_calendar,
             outbox_count: 0,
             unified_unread: 0,
             fresh: None,
@@ -489,6 +495,7 @@ impl Sidebar {
             SidebarInput::UnifiedRowSelected => self.on_unified_row_selected(sender),
             SidebarInput::SelectUnifiedRow => self.on_select_unified_row(sender),
             SidebarInput::AttachmentsRowSelected => self.on_attachments_row_selected(sender),
+            SidebarInput::CalendarRowSelected => self.on_calendar_row_selected(sender),
             SidebarInput::ContactsRowClicked => self.on_contacts_row_clicked(sender),
             SidebarInput::SetContactTree(tree) => self.on_set_contact_tree(tree, sender),
             SidebarInput::ToggleContactsExpand => {
@@ -560,6 +567,7 @@ impl Sidebar {
             SidebarInput::SetAttachmentsRow(show) => {
                 self.on_set_attachments_row(show, widgets, sender)
             }
+            SidebarInput::SetCalendarRow(show) => self.on_set_calendar_row(show, widgets, sender),
             SidebarInput::SetBusy(busy) => self.on_set_busy(busy),
             SidebarInput::SetOffline(offline) => self.on_set_offline(offline),
             SidebarInput::SetFocus {

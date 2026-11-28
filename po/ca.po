@@ -422,6 +422,39 @@ msgid "New Message"
 msgstr "Missatge nou"
 
 #, fuzzy
+msgid "That is not a web address."
+msgstr "Aquesta carpeta"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "Aquest missatge és massa llarg per enviar-lo a traduir."
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "D'esquerra a dreta"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
+msgid "Personal"
+msgstr "Personal"
+
+#, fuzzy
+msgid "There is no data folder to keep calendars in."
+msgstr "No hi ha text per traduir."
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "L'Evolution Data Server no està disponible"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "No s'ha pogut obrir el fitxer"
+
+#, fuzzy
 msgid "A group needs a name."
 msgstr "Nom de la carpeta"
 
@@ -1558,6 +1591,10 @@ msgstr "Tots els comptes"
 msgid "Contacts"
 msgstr "Contactes"
 
+#, fuzzy
+msgid "Calendar"
+msgstr "Afegeix al calendari"
+
 msgid "Outbox"
 msgstr "Bústia de sortida"
 
@@ -2069,16 +2106,6 @@ msgstr "Cerca al missatge (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "S'estan baixant els adjunts…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-#, fuzzy
-msgid "today tonight"
-msgstr "D'esquerra a dreta"
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr ""
-
 msgid "Signature"
 msgstr "Signatura"
 
@@ -2338,9 +2365,6 @@ msgstr "Importa la clau pública del remitent per verificar-ho."
 
 msgid "Labeled"
 msgstr "Etiquetat"
-
-msgid "Personal"
-msgstr "Personal"
 
 msgid "Private"
 msgstr "Privat"
@@ -3900,10 +3924,6 @@ msgid "Title"
 msgstr "Càrrec"
 
 #, fuzzy
-msgid "Calendar"
-msgstr "Afegeix al calendari"
-
-#, fuzzy
 msgid "Task list"
 msgstr "Aquesta llista"
 
@@ -3954,6 +3974,692 @@ msgstr[1] "fa {n} minuts"
 
 msgid "Due"
 msgstr "Venciment"
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "Mou a {name}"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "Càrrec"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "Vols suprimir «{name}»?"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "Suprimeix permanentment"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "Tots els tipus"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "Edita l'etiqueta…"
+
+#, fuzzy
+msgid "Details…"
+msgstr "Detalls"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "Accepta"
+
+msgid "Maybe"
+msgstr "Potser"
+
+msgid "Decline"
+msgstr "Rebutja"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "Adreça de correu electrònic"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "Contacte nou"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "Ves a contactes"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "No hi ha resultats"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "Introdueix la contrasenya."
+
+msgid "Today"
+msgstr "Avui"
+
+msgid "Tomorrow"
+msgstr ""
+
+msgid "Repeats"
+msgstr "Es repeteix"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "No s'ha pogut canviar la destacat: {e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "No s'ha pogut desar el missatge: {e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "fa {n} minuts"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "Edita el contacte"
+
+#, fuzzy
+msgid "Event"
+msgstr "Contacte nou"
+
+#, fuzzy
+msgid "Location"
+msgstr "Acció"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "Es repeteix"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "caduca el {date}"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "Últims 7 dies"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "Envia-ho tot"
+
+#, fuzzy
+msgid "Show as"
+msgstr "Mostra"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "Barra d'estat"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "Provisional: {subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Cancel·lat"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "Afegeix una adreça"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "Organització"
+
+msgid "URL"
+msgstr ""
+
+#, fuzzy
+msgid "Notes"
+msgstr "Nota"
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "Suprimeix permanentment"
+
+#, fuzzy
+msgid "Every"
+msgstr "A tot arreu"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "Any"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "L'última carpeta"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} segon"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "{n} adreça més"
+msgstr[1] "{n} adreces més"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "Reunió"
+
+msgid "Edit"
+msgstr "Edita"
+
+msgid "Details"
+msgstr "Detalls"
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "S'ha etiquetat {n} missatge"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "No trobat"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "Encara no hi ha comptes"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name} (enllaç)"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "Color de l'etiqueta"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "Hylki, en aquest ordinador"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "No s'ha pogut desar el missatge: {e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "Afegeix al calendari"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "Dona'm de baixa"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "No s'ha pogut traduir: {why}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "Afegeix al calendari"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "Importa una signatura"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "No s'ha pogut crear la carpeta: {e}"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importa…"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not import: {e}"
+msgstr "No s'ha pogut importar: {e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "Vols donar-te de baixa de {name}?"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "Vols suprimir «{name}»?"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "Detalls"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "fa {n} hores"
+msgstr[1] "fa {n} hores"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "fa {n} minuts"
+msgstr[1] "fa {n} minuts"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date} a les {time}"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "caduca el {date}"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "A tot arreu"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "A tot arreu"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "Cada 5 minuts"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "Cada minut"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "A tot arreu"
+
+msgid "Custom…"
+msgstr "Personalitzada…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "Envia-ho tot"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "A tot arreu"
+msgstr[1] "A tot arreu"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "Cada minut"
+msgstr[1] "Cada minut"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "A tot arreu"
+msgstr[1] "A tot arreu"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "A tot arreu"
+msgstr[1] "A tot arreu"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "Cada minut"
+msgstr[1] "Cada minut"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} segon"
+msgstr[1] "{n} segons"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "A tot arreu"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "caduca el {date}"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "Show All"
+msgstr "Mostra només"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "Carpeta nova…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "Importa un fitxer…"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "Afegeix un compte…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Seccions"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 línia"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "Afegeix al calendari"
+msgstr[1] "Afegeix al calendari"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "Lectura"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "Obre en una finestra"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "Canvia el nom de la carpeta…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "Color"
+
+msgid "Refresh"
+msgstr "Actualitza"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "Suprimeix la carpeta…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "Contacte nou"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "Cerca contactes (Ctrl+F)"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr "Any"
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "Cerca remitents"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "Contacte nou"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "Hylki, en aquest ordinador"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "No hi ha res per exportar."
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "fa {n} hores"
+msgstr[1] "fa {n} hores"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "fa {n} hores"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "fa {n} minuts"
+msgstr[1] "fa {n} minuts"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "Reinicia"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "Afegeix un correu"
+
+msgid "Monday to Friday"
+msgstr ""
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "Números de pàgina"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "Contacte nou"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "signa i xifra"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "Mostra els encapçalaments de columna"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "Mostra els logotips dels remitents"
+
+msgid "Always"
+msgstr "Sempre"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr "Automàtic utilitza la clau l'adreça de la qual coincideix."
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Benvingut a l'Hylki, abans {old}"
@@ -4282,9 +4988,6 @@ msgstr "Els teus canvis es perden si els descartes."
 #, fuzzy
 msgid "Reject"
 msgstr "Projecte"
-
-msgid "Accept"
-msgstr "Accepta"
 
 msgid "To:"
 msgstr "A:"
@@ -4738,10 +5441,6 @@ msgid "Import from Mail"
 msgstr "Importa un fitxer…"
 
 #, fuzzy
-msgid "Import"
-msgstr "Importa…"
-
-#, fuzzy
 msgid "Import into"
 msgstr "Importa una signatura"
 
@@ -4824,6 +5523,9 @@ msgstr "Llibreta d'adreces"
 
 msgid "Server"
 msgstr "Servidor"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "Inici de sessió"
@@ -4969,7 +5671,8 @@ msgstr[1] "S'han trobat {n} llibretes d'adreces a {name}"
 msgid "Connected to {name}"
 msgstr "Connectat a {name}"
 
-msgid "CardDAV Server"
+#, fuzzy
+msgid "CalDAV and CardDAV Server"
 msgstr "Servidor CardDAV"
 
 #, fuzzy
@@ -4988,9 +5691,10 @@ msgstr ""
 "Com ara cloud.example.org. Amb inici de sessió en dos factors, crea una "
 "contrasenya d'aplicació al Nextcloud a Paràmetres → Seguretat."
 
+#, fuzzy
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 "Utilitza una contrasenya d'aplicació amb accés als contactes, creada al "
 "Fastmail a Paràmetres → Privacitat i seguretat."
@@ -5142,9 +5846,6 @@ msgstr "Afegeix a contactes"
 msgid "Directory"
 msgstr "Directori"
 
-msgid "Details"
-msgstr "Detalls"
-
 msgid "Members"
 msgstr "Membres"
 
@@ -5225,9 +5926,6 @@ msgstr "Afegeix una adreça"
 msgid "No birthday"
 msgstr "Sense aniversari"
 
-msgid "Year"
-msgstr "Any"
-
 msgid "Change Photo…"
 msgstr "Canvia la foto…"
 
@@ -5258,9 +5956,6 @@ msgstr "Mou a una llibreta d'adreces"
 
 msgid "Delete…"
 msgstr "Suprimeix…"
-
-msgid "Edit"
-msgstr "Edita"
 
 msgid "Open in GNOME Contacts"
 msgstr "Obre als contactes del GNOME"
@@ -5722,9 +6417,6 @@ msgstr "Importància alta"
 msgid "Untagged"
 msgstr "Etiquetat"
 
-msgid "Today"
-msgstr "Avui"
-
 msgid "Customize Columns…"
 msgstr "Personalitza les columnes…"
 
@@ -5959,9 +6651,6 @@ msgid_plural "Repeats every {n} years"
 msgstr[0] "Es repeteix cada {n} anys"
 msgstr[1] "Es repeteix cada {n} anys"
 
-msgid "Repeats"
-msgstr "Es repeteix"
-
 msgid "Somebody answered this invitation."
 msgstr "Algú ha respost aquesta invitació."
 
@@ -6021,15 +6710,9 @@ msgstr "Vas rebutjar aquesta invitació el {date}."
 msgid "Tells the organizer you will be there"
 msgstr "Diu a l'organitzador que hi seràs"
 
-msgid "Maybe"
-msgstr "Potser"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "Diu a l'organitzador que potser hi seràs"
-
-msgid "Decline"
-msgstr "Rebutja"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -6431,9 +7114,6 @@ msgstr "Importa una clau"
 msgid "OpenPGP keys"
 msgstr "Claus OpenPGP"
 
-msgid "Could not import: {e}"
-msgstr "No s'ha pogut importar: {e}"
-
 msgid "Export Public Key"
 msgstr "Exporta la clau pública"
 
@@ -6580,9 +7260,6 @@ msgstr "24 hores (17:40)"
 
 msgid "Manually"
 msgstr "Manualment"
-
-msgid "Every minute"
-msgstr "Cada minut"
 
 msgid "Every 5 minutes"
 msgstr "Cada 5 minuts"
@@ -6859,9 +7536,6 @@ msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
 "El llançador mostra un conjunt d'icones en un altre lloc. Triar-ne un aquí "
 "el substitueix."
-
-msgid "Always"
-msgstr "Sempre"
 
 msgid "A year"
 msgstr "Un any"
@@ -7469,6 +8143,10 @@ msgstr "Mostra el navegador d'adjunts"
 msgid "Every account’s attachments in one place."
 msgstr "Navega pels adjunts de cada compte en un sol lloc."
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "Afegeix al calendari"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
 "Passar per sobre de la barra d'icones fa surar la barra lateral sencera."
@@ -7604,6 +8282,9 @@ msgstr "No hi ha resultats"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7644,9 +8325,6 @@ msgstr "No s'ha pogut desar el PDF: {error}"
 
 msgid "Filled in by Mail Merge"
 msgstr ""
-
-msgid "Custom…"
-msgstr "Personalitzada…"
 
 msgid "Sans Serif"
 msgstr "Sans Serif"
@@ -7782,9 +8460,6 @@ msgstr "Mostra o amaga les subcarpetes"
 
 msgid "Mark Inbox as Read"
 msgstr "Marca la bústia d'entrada com a llegida"
-
-msgid "Refresh"
-msgstr "Actualitza"
 
 msgid "New Folder…"
 msgstr "Carpeta nova…"
@@ -8473,6 +9148,33 @@ msgstr "no hi ha connexió de xarxa"
 
 msgid "runtime error: {e}"
 msgstr "error en temps d'execució: {e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "Acceptat: {subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "Provisional: {subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] "Aquesta invitació no indica cap organitzador per respondre."
+msgstr[1] "Aquesta invitació no indica cap organitzador per respondre."
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "Afegeix al calendari"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "No s'ha pogut desar el missatge: {e}"
 
 msgid "No contacts were found in the selected files"
 msgstr "No s'ha trobat cap contacte als fitxers seleccionats"
@@ -9384,7 +10086,8 @@ msgstr ""
 "Un client de correu ràpid i natiu per al GNOME, construït amb Rust i "
 "libadwaita. De codi obert i privat per defecte."
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "Correu;Mail;IMAP;"
 
 msgid ""
@@ -9508,10 +10211,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Hylki cannot change this kind of group"
 #~ msgstr "L'Hylki no pot modificar aquest tipus de grup"
-
-#, fuzzy
-#~ msgid "Notes"
-#~ msgstr "Nota"
 
 #~ msgid ""
 #~ "The directory cannot be searched without signing in. Add a sign-in to it "
@@ -9785,9 +10484,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "Mostra a l'Hylki"
-
-#~ msgid "Email Address"
-#~ msgstr "Adreça de correu electrònic"
 
 #~ msgid "SMTP Username"
 #~ msgstr "Nom d'usuari SMTP"

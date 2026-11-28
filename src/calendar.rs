@@ -1,10 +1,24 @@
-//! Events and tasks made from a message (#564): written to a calendar or a
-//! task list in Evolution Data Server, or, where there is none, handed to
-//! the calendar application as an `.ics` file.
+//! Calendars (#715): events and tasks read from Evolution Data Server (or
+//! Hylki's own calendar files where there is none), expanded into the
+//! occurrences the calendar views draw, and written back.
+//!
+//! Also the events and tasks made from a message (#564), written to a
+//! calendar or a task list, or handed to the calendar application as an
+//! `.ics` file where there is nowhere to write them.
 
+mod demo;
 mod eds;
+mod eds_cal;
+pub(crate) mod edit;
 mod extract;
+mod files;
 mod ical;
+pub(crate) mod model;
+pub(crate) mod prefs;
+pub(crate) mod recur;
+pub(crate) mod store;
+pub(crate) mod time;
+pub(crate) mod tree;
 
 pub(crate) use eds::{create, sources};
 pub(crate) use extract::{find, title, Found, Words};
@@ -58,4 +72,16 @@ pub(crate) struct AccountNames {
 pub(crate) struct Source {
     pub(crate) uid: String,
     pub(crate) name: String,
+}
+
+/// The colors a calendar without one of its own is given, GNOME's palette.
+pub(crate) const PALETTE: [&str; 9] = [
+    "#3584e4", "#2ec27e", "#e5a50a", "#e66100", "#c01c28", "#9141ac", "#986a44", "#26a269",
+    "#1c71d8",
+];
+
+/// A color for a calendar that names none, the same one every time.
+pub(crate) fn palette_color(uid: &str) -> String {
+    let sum = uid.bytes().fold(0usize, |a, b| a.wrapping_mul(31).wrapping_add(b as usize));
+    PALETTE[sum % PALETTE.len()].to_string()
 }

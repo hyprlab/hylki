@@ -421,6 +421,39 @@ msgid "New Message"
 msgstr "Νέο μήνυμα"
 
 #, fuzzy
+msgid "That is not a web address."
+msgstr "Αυτό δεν είναι έγκυρο όνομα φακέλου"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "Το μήνυμα είναι υπερβολικά μεγάλο για τον διακομιστή."
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+#, fuzzy
+msgid "today tonight"
+msgstr "Από αριστερά προς τα δεξιά"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
+msgid "Personal"
+msgstr "Προσωπικό"
+
+#, fuzzy
+msgid "There is no data folder to keep calendars in."
+msgstr "Δεν υπάρχει φάκελος εγκατάστασης."
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "Ο Evolution Data Server δεν είναι διαθέσιμος"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "Δεν ήταν δυνατό το άνοιγμα του αρχείου"
+
+#, fuzzy
 msgid "A group needs a name."
 msgstr "Ο φάκελος πρέπει να έχει όνομα."
 
@@ -1554,6 +1587,9 @@ msgstr "Όλοι οι λογαριασμοί"
 msgid "Contacts"
 msgstr "Επαφές"
 
+msgid "Calendar"
+msgstr "Ημερολόγιο"
+
 msgid "Outbox"
 msgstr "Εξερχόμενα"
 
@@ -2068,16 +2104,6 @@ msgstr "Εύρεση στο μήνυμα (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Λήψη συνημμένων…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-#, fuzzy
-msgid "today tonight"
-msgstr "Από αριστερά προς τα δεξιά"
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr ""
-
 msgid "Signature"
 msgstr "Υπογραφή"
 
@@ -2326,9 +2352,6 @@ msgstr "Εισαγάγετε το δημόσιο κλειδί του αποστ�
 
 msgid "Labeled"
 msgstr "Με ετικέτα"
-
-msgid "Personal"
-msgstr "Προσωπικό"
 
 msgid "Private"
 msgstr "Ιδιωτικό"
@@ -3881,9 +3904,6 @@ msgstr "Άνοιγμα στο Ημερολόγιο"
 msgid "Title"
 msgstr "Τίτλος"
 
-msgid "Calendar"
-msgstr "Ημερολόγιο"
-
 msgid "Task list"
 msgstr "Λίστα εργασιών"
 
@@ -3927,6 +3947,691 @@ msgstr[1] "{n} λεπτά πριν"
 
 msgid "Due"
 msgstr "Λήξη"
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "Μετακίνηση στο {name}"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "Τίτλος"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "Διαγραφή του «{name}»;"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "Οριστική διαγραφή"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "Όλα τα κλειδιά"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "Επεξεργασία ετικέτας…"
+
+#, fuzzy
+msgid "Details…"
+msgstr "Λεπτομέρειες"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "Αποδοχή"
+
+msgid "Maybe"
+msgstr "Ίσως"
+
+msgid "Decline"
+msgstr "Απόρριψη"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "Διεύθυνση email"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "Νέο συμβάν"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "Μετάβαση στις Επαφές"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "Δεν βρέθηκαν αποτελέσματα"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "Εισαγάγετε τον κωδικό πρόσβασης."
+
+msgid "Today"
+msgstr "Σήμερα"
+
+msgid "Tomorrow"
+msgstr ""
+
+msgid "Repeats"
+msgstr "Επαναλαμβάνεται"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "Δεν ήταν δυνατή η προσθήκη της εργασίας: {e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "Δεν ήταν δυνατή η αποθήκευση του μηνύματος: {e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "πριν από {n} λεπτά"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "Επεξεργασία επαφής"
+
+#, fuzzy
+msgid "Event"
+msgstr "Νέο συμβάν"
+
+#, fuzzy
+msgid "Location"
+msgstr "Ενέργεια"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "Επαναλαμβάνεται"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "Από {date}"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "Τελευταίες 7 ημέρες"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "Δεύτερη υπενθύμιση"
+
+#, fuzzy
+msgid "Show as"
+msgstr "Εμφάνιση"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "Γραμμή κατάστασης"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "Προσωρινή αποδοχή: {subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Ακυρώθηκε"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "Προσθήκη διεύθυνσης"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "Οργανισμός"
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "Δημιουργία συμβάντος…"
+
+#, fuzzy
+msgid "Every"
+msgstr "Παντού"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "Έτος"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "Ο τελευταίος φάκελος"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} δευτερόλεπτο"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "{n} ακόμη διεύθυνση"
+msgstr[1] "{n} ακόμη διευθύνσεις"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "Συνάντηση"
+
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+msgid "Details"
+msgstr "Λεπτομέρειες"
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "Προστέθηκε ετικέτα σε {n} μήνυμα"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "Δεν βρέθηκε"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "Δεν υπάρχουν ακόμη λογαριασμοί"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name} (σύνδεσμος)"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "Χρώμα ετικέτας"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "Ημερολόγιο"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "Φάκελοι σε αυτόν τον υπολογιστή"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "Δεν ήταν δυνατή η προσθήκη του συμβάντος: {e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "Προσθήκη στο ημερολόγιο"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "Κατάργηση εγγραφής"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "Δεν ήταν δυνατή η μετάφραση: {why}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "Ημερολόγιο"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "Εισαγωγή υπογραφής"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "Δεν ήταν δυνατή η δημιουργία φακέλου: {e}"
+
+msgid "Import"
+msgstr "Εισαγωγή"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not import: {e}"
+msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "Κατάργηση εγγραφής από {name};"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "Διαγραφή του «{name}»;"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "Λεπτομέρειες"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "Πριν από {n} ώρες"
+msgstr[1] "Πριν από {n} ώρες"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "πριν από {n} λεπτά"
+msgstr[1] "πριν από {n} λεπτά"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date} στις {time}"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "Έως {date}"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "Παντού"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "Παντού"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "Κάθε 5 λεπτά"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "Κάθε λεπτό"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "Παντού"
+
+msgid "Custom…"
+msgstr "Προσαρμοσμένο…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "Δεύτερη υπενθύμιση"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "Παντού"
+msgstr[1] "Παντού"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "Κάθε λεπτό"
+msgstr[1] "Κάθε λεπτό"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "Παντού"
+msgstr[1] "Παντού"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "Παντού"
+msgstr[1] "Παντού"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "Κάθε λεπτό"
+msgstr[1] "Κάθε λεπτό"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} δευτερόλεπτο"
+msgstr[1] "{n} δευτερόλεπτα"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "Παντού"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "Έως {date}"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "Ημερολόγιο"
+
+#, fuzzy
+msgid "Show All"
+msgstr "Εμφάνιση μόνο"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "Προσθήκη στο ημερολόγιο"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "Νέος φάκελος…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "Προσθήκη στο ημερολόγιο"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "Ταξινόμηση επαφών"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "Προσθήκη λογαριασμού…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Ενότητες"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 γραμμή"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "Ημερολόγιο"
+msgstr[1] "Ημερολόγιο"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "Ανάγνωση"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "Άνοιγμα στο Ημερολόγιο"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "Μετονομασία φακέλου…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "Χρώμα"
+
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "Διαγραφή φακέλου…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "Νέο συμβάν"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "Αναζήτηση επαφών (Ctrl+F)"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr "Έτος"
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "Αναζήτηση αποστολέων"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "Νέο συμβάν"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "Ημερολόγιο"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "Φάκελοι σε αυτόν τον υπολογιστή"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Δεν υπάρχει τίποτα για εξαγωγή."
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "Πριν από {n} ώρες"
+msgstr[1] "Πριν από {n} ώρες"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "Πριν από {n} ώρες"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "πριν από {n} λεπτά"
+msgstr[1] "πριν από {n} λεπτά"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "Κατά την έναρξη"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "Όλη την ημέρα"
+
+msgid "Monday to Friday"
+msgstr ""
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "Αριθμοί σελίδων"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "Νέο συμβάν"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "υπογράφει και κρυπτογραφεί"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "Εμφάνιση επικεφαλίδων στηλών"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "Εμφάνιση λογοτύπων αποστολέων"
+
+msgid "Always"
+msgstr "Πάντα"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr ""
+"Η Αυτόματη επιλογή χρησιμοποιεί το κλειδί του οποίου η διεύθυνση ταιριάζει."
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Καλώς ορίσατε στο Hylki, πρώην {old}"
@@ -4271,9 +4976,6 @@ msgstr "Οι αλλαγές σας θα χαθούν αν τις απορρίψ�
 #, fuzzy
 msgid "Reject"
 msgstr "Έργο"
-
-msgid "Accept"
-msgstr "Αποδοχή"
 
 msgid "To:"
 msgstr "Προς:"
@@ -4738,9 +5440,6 @@ msgstr "Όλη η αλληλογραφία"
 msgid "Import from Mail"
 msgstr "Εισαγωγή αρχείων Mbox"
 
-msgid "Import"
-msgstr "Εισαγωγή"
-
 #, fuzzy
 msgid "Import into"
 msgstr "Εισαγωγή υπογραφής"
@@ -4825,6 +5524,9 @@ msgstr "Βιβλίο διευθύνσεων"
 
 msgid "Server"
 msgstr "Διακομιστής"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "Σύνδεση"
@@ -4969,7 +5671,8 @@ msgstr[1] "Βρέθηκαν {n} κατάλογοι διευθύνσεων για
 msgid "Connected to {name}"
 msgstr "Συνδέθηκε με το {name}"
 
-msgid "CardDAV Server"
+#, fuzzy
+msgid "CalDAV and CardDAV Server"
 msgstr "Διακομιστής CardDAV"
 
 #, fuzzy
@@ -4988,9 +5691,10 @@ msgstr ""
 "Για παράδειγμα cloud.example.org. Με έλεγχο ταυτότητας δύο παραγόντων, "
 "δημιουργήστε κωδικό εφαρμογής στο Nextcloud από τις Ρυθμίσεις → Ασφάλεια."
 
+#, fuzzy
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 "Χρησιμοποιήστε κωδικό εφαρμογής με πρόσβαση στις επαφές, που δημιουργείται "
 "στο Fastmail από τις Ρυθμίσεις → Απόρρητο και ασφάλεια."
@@ -5145,9 +5849,6 @@ msgstr "Προσθήκη στις επαφές"
 msgid "Directory"
 msgstr "Κατάλογος"
 
-msgid "Details"
-msgstr "Λεπτομέρειες"
-
 msgid "Members"
 msgstr "Μέλη"
 
@@ -5229,9 +5930,6 @@ msgstr "Προσθήκη διεύθυνσης"
 msgid "No birthday"
 msgstr "Χωρίς γενέθλια"
 
-msgid "Year"
-msgstr "Έτος"
-
 msgid "Change Photo…"
 msgstr "Αλλαγή φωτογραφίας…"
 
@@ -5262,9 +5960,6 @@ msgstr "Μετακίνηση σε κατάλογο διευθύνσεων"
 
 msgid "Delete…"
 msgstr "Διαγραφή…"
-
-msgid "Edit"
-msgstr "Επεξεργασία"
 
 msgid "Open in GNOME Contacts"
 msgstr "Άνοιγμα στις Επαφές GNOME"
@@ -5714,9 +6409,6 @@ msgstr "Υψηλή προτεραιότητα"
 msgid "Untagged"
 msgstr "Με ετικέτα"
 
-msgid "Today"
-msgstr "Σήμερα"
-
 msgid "Customize Columns…"
 msgstr "Προσαρμογή στηλών…"
 
@@ -5953,9 +6645,6 @@ msgid_plural "Repeats every {n} years"
 msgstr[0] "Επαναλαμβάνεται κάθε {n} έτη"
 msgstr[1] "Επαναλαμβάνεται κάθε {n} έτη"
 
-msgid "Repeats"
-msgstr "Επαναλαμβάνεται"
-
 msgid "Somebody answered this invitation."
 msgstr "Κάποιος απάντησε σε αυτή την πρόσκληση."
 
@@ -6015,15 +6704,9 @@ msgstr "Απορρίψατε αυτή την πρόσκληση στις {date}.
 msgid "Tells the organizer you will be there"
 msgstr "Ενημερώνει τον διοργανωτή ότι θα παρευρεθείτε"
 
-msgid "Maybe"
-msgstr "Ίσως"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "Ενημερώνει τον διοργανωτή ότι ενδέχεται να παρευρεθείτε"
-
-msgid "Decline"
-msgstr "Απόρριψη"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -6423,9 +7106,6 @@ msgstr "Εισαγωγή κλειδιού"
 msgid "OpenPGP keys"
 msgstr "Κλειδιά OpenPGP"
 
-msgid "Could not import: {e}"
-msgstr "Δεν ήταν δυνατή η εισαγωγή: {e}"
-
 msgid "Export Public Key"
 msgstr "Εξαγωγή δημόσιου κλειδιού"
 
@@ -6571,9 +7251,6 @@ msgstr "24ωρη (17:40)"
 
 msgid "Manually"
 msgstr "Χειροκίνητα"
-
-msgid "Every minute"
-msgstr "Κάθε λεπτό"
 
 msgid "Every 5 minutes"
 msgstr "Κάθε 5 λεπτά"
@@ -6840,9 +7517,6 @@ msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
 "Ο εκκινητής εμφανίζει ένα σύνολο εικονιδίων που ορίζεται αλλού. Αν επιλέξετε "
 "ένα εδώ, το αντικαθιστά."
-
-msgid "Always"
-msgstr "Πάντα"
 
 msgid "A year"
 msgstr "Ένα έτος"
@@ -7457,6 +8131,10 @@ msgstr "Εμφάνιση προγράμματος περιήγησης συνη�
 msgid "Every account’s attachments in one place."
 msgstr "Περιήγηση στα συνημμένα όλων των λογαριασμών σε ένα μέρος."
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "Ημερολόγιο"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
 "Με το πέρασμα πάνω από τη λωρίδα εικονιδίων, εμφανίζεται ολόκληρη η πλευρική "
@@ -7594,6 +8272,9 @@ msgstr "Δεν βρέθηκαν αποτελέσματα"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7634,9 +8315,6 @@ msgstr "Δεν ήταν δυνατή η αποθήκευση του PDF: {error}
 
 msgid "Filled in by Mail Merge"
 msgstr "Συμπληρώνεται από τη συγχώνευση αλληλογραφίας"
-
-msgid "Custom…"
-msgstr "Προσαρμοσμένο…"
 
 msgid "Sans Serif"
 msgstr "Sans Serif"
@@ -7772,9 +8450,6 @@ msgstr "Εμφάνιση ή απόκρυψη υποφακέλων"
 
 msgid "Mark Inbox as Read"
 msgstr "Σήμανση Εισερχομένων ως αναγνωσμένων"
-
-msgid "Refresh"
-msgstr "Ανανέωση"
 
 msgid "New Folder…"
 msgstr "Νέος φάκελος…"
@@ -8472,6 +9147,33 @@ msgstr "δεν υπάρχει σύνδεση δικτύου"
 
 msgid "runtime error: {e}"
 msgstr "σφάλμα χρόνου εκτέλεσης: {e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "Αποδεκτή: {subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "Προσωρινή αποδοχή: {subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] "Αυτή η πρόσκληση δεν αναφέρει διοργανωτή για να απαντήσετε."
+msgstr[1] "Αυτή η πρόσκληση δεν αναφέρει διοργανωτή για να απαντήσετε."
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "Προσθήκη στο ημερολόγιο"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "Δεν ήταν δυνατή η προσθήκη του συμβάντος: {e}"
 
 msgid "No contacts were found in the selected files"
 msgstr "Δεν βρέθηκαν επαφές στα επιλεγμένα αρχεία"
@@ -9405,7 +10107,8 @@ msgstr ""
 "Μια γρήγορη, εγγενής εφαρμογή email για το GNOME, κατασκευασμένη με Rust και "
 "libadwaita. Ανοιχτού κώδικα και ιδιωτική από προεπιλογή."
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "Email;Αλληλογραφία;IMAP;"
 
 msgid ""
@@ -9527,9 +10230,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Hylki cannot change this kind of group"
 #~ msgstr "Το Hylki δεν μπορεί να αλλάξει αυτόν τον τύπο ομάδας"
-
-#~ msgid "Notes"
-#~ msgstr "Σημειώσεις"
 
 #~ msgid ""
 #~ "The directory cannot be searched without signing in. Add a sign-in to it "
@@ -9810,9 +10510,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "Εμφάνιση στο Hylki"
-
-#~ msgid "Email Address"
-#~ msgstr "Διεύθυνση email"
 
 #~ msgid "SMTP Username"
 #~ msgstr "Όνομα χρήστη SMTP"
@@ -11434,9 +12131,6 @@ msgstr "Hyprlab"
 #~ msgstr ""
 #~ "Ένας λογαριασμός POP3 δεν μπορεί να λαμβάνει αλληλογραφία από άλλον "
 #~ "λογαριασμό"
-
-#~ msgid "Import contacts…"
-#~ msgstr "Ταξινόμηση επαφών"
 
 #~ msgid "Contacts you add in GNOME Contacts appear here."
 #~ msgstr "Οι επαφές που προσθέτετε στις Επαφές GNOME εμφανίζονται εδώ."

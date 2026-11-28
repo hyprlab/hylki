@@ -435,6 +435,19 @@ impl Sidebar {
         self.rebuild(widgets, &sender);
     }
 
+    pub(super) fn on_set_calendar_row(
+        &mut self,
+        show: bool,
+        widgets: &SidebarWidgets,
+        sender: ComponentSender<Self>,
+    ) {
+        self.show_calendar = show;
+        if !show && self.selected == Sel::Calendar {
+            self.selected = Sel::None;
+        }
+        self.rebuild(widgets, &sender);
+    }
+
     pub(super) fn on_set_busy(&mut self, busy: bool) {
         self.busy = busy;
         if let Some(sp) = &self.sync_spinner {

@@ -387,6 +387,38 @@ msgstr "Afdrukken…"
 msgid "New Message"
 msgstr "Nieuw bericht"
 
+#, fuzzy
+msgid "That is not a web address."
+msgstr "Dat is geen mapnaam"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "Het bericht is te lang voor de server."
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "vandaag vanavond"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "morgen"
+
+msgid "Personal"
+msgstr "Persoonlijk"
+
+#, fuzzy
+msgid "There is no data folder to keep calendars in."
+msgstr "Er is geen map om in te installeren."
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "Evolution Data Server is niet beschikbaar"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "Het bestand kon niet worden geopend"
+
 msgid "A group needs a name."
 msgstr "Een groep heeft een naam nodig."
 
@@ -1498,6 +1530,9 @@ msgstr "Alle accounts"
 msgid "Contacts"
 msgstr "Contacten"
 
+msgid "Calendar"
+msgstr "Kalender"
+
 msgid "Outbox"
 msgstr "Postvak UIT"
 
@@ -2016,15 +2051,6 @@ msgstr "Zoeken in bericht (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Bijlagen downloaden…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-msgid "today tonight"
-msgstr "vandaag vanavond"
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr "morgen"
-
 msgid "Signature"
 msgstr "Handtekening"
 
@@ -2275,9 +2301,6 @@ msgstr "Importeer de openbare sleutel van de afzender om deze te verifiëren."
 
 msgid "Labeled"
 msgstr "Gelabeld"
-
-msgid "Personal"
-msgstr "Persoonlijk"
 
 msgid "Private"
 msgstr "Privé"
@@ -3827,9 +3850,6 @@ msgstr "Openen in Agenda"
 msgid "Title"
 msgstr "Titel"
 
-msgid "Calendar"
-msgstr "Kalender"
-
 msgid "Task list"
 msgstr "Takenlijst"
 
@@ -3873,6 +3893,691 @@ msgstr[1] "{n} minuten vooraf"
 
 msgid "Due"
 msgstr "Vervalt"
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "Ga naar {name}"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "Titel"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "“{name}” verwijderen?"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "Definitief verwijderen"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "Alle sleutels"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "Tag bewerken…"
+
+#, fuzzy
+msgid "Details…"
+msgstr "Details"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "Accepteer"
+
+msgid "Maybe"
+msgstr "Misschien"
+
+msgid "Decline"
+msgstr "Weigeren"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "E-mailadres"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "Nieuw evenement"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "Ga naar Contacten"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "Geen resultaten gevonden"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "Voer het wachtwoord in."
+
+msgid "Today"
+msgstr "Vandaag"
+
+#, fuzzy
+msgid "Tomorrow"
+msgstr "morgen"
+
+msgid "Repeats"
+msgstr "Herhalingen"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "Kan de taak niet toevoegen: {e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "Kon het bericht niet opslaan: {e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "{n} minuten geleden"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "Contactpersoon bewerken"
+
+#, fuzzy
+msgid "Event"
+msgstr "Nieuw evenement"
+
+#, fuzzy
+msgid "Location"
+msgstr "Actie"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "Herhalingen"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "Sinds {date}"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "Laatste 7 dagen"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "Tweede alarmsignaal"
+
+#, fuzzy
+msgid "Show as"
+msgstr "Toon"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "Statusbalk"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "Voorlopig: {subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "Adres toevoegen"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "Organisatie"
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr "Opmerkingen"
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "Evenement maken…"
+
+#, fuzzy
+msgid "Every"
+msgstr "Overal"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "Jaar"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "De laatste map"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} seconde"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "nog {n} adres"
+msgstr[1] "nog {n} adressen"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "Vergadering"
+
+msgid "Edit"
+msgstr "Bewerken"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "{n} bericht getagd"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "Niet gevonden"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "Nog geen accounts"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name} (link)"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "Tagkleur"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "Kalender"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "Mappen op deze computer"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "Kon de gebeurtenis niet toevoegen: {e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "Toevoegen aan agenda"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "Afmelden"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "Kon niet vertalen: {why}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "Kalender"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "Importeren in"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "Kan map niet maken: {e}"
+
+msgid "Import"
+msgstr "Importeren"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not import: {e}"
+msgstr "Kan niet importeren: {e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "Afmelden voor {name}?"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "“{name}” verwijderen?"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "Details"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "{n} uur geleden"
+msgstr[1] "{n} uur geleden"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "{n} minuten geleden"
+msgstr[1] "{n} minuten geleden"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date} om {time}"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "Tot {date}"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "Overal"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "Overal"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "Elke 5 minuten"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "Elke minuut"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "Overal"
+
+msgid "Custom…"
+msgstr "Aangepast…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "Tweede alarmsignaal"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "Overal"
+msgstr[1] "Overal"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "Elke minuut"
+msgstr[1] "Elke minuut"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "Overal"
+msgstr[1] "Overal"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "per uur"
+msgstr[1] "per uur"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "Elke minuut"
+msgstr[1] "Elke minuut"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} seconde"
+msgstr[1] "{n} seconden"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "Overal"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "Tot {date}"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "Kalender"
+
+#, fuzzy
+msgid "Show All"
+msgstr "Alleen weergeven"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "Toevoegen aan agenda"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "Nieuwe map…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "Toevoegen aan agenda"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "Bestand importeren…"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "Account toevoegen…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Secties"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 regel"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "Kalender"
+msgstr[1] "Kalender"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "Lezen"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "Openen in Agenda"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "Map hernoemen…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "Kleur"
+
+msgid "Refresh"
+msgstr "Vernieuwen"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "Map verwijderen…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "Nieuw evenement"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "Contacten zoeken (Ctrl+F)"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr "Jaar"
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "Zoek afzenders"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "Nieuw evenement"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "Kalender"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "Mappen op deze computer"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Niets om te exporteren."
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "{n} uur geleden"
+msgstr[1] "{n} uur geleden"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "{n} uur geleden"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "{n} minuten geleden"
+msgstr[1] "{n} minuten geleden"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "Aan het begin"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "De hele dag"
+
+msgid "Monday to Friday"
+msgstr ""
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "Paginanummers"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "Nieuw evenement"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "tekent en codeert"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "Toon kolomkoppen"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "Toon afzenderlogo's"
+
+msgid "Always"
+msgstr "Altijd"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr "Automatisch gebruikt de sleutel waarvan het adres overeenkomt."
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Welkom bij Hylki, voorheen {old}"
@@ -4195,9 +4900,6 @@ msgstr "Er verandert niets totdat je ze accepteert."
 
 msgid "Reject"
 msgstr "Afwijzen"
-
-msgid "Accept"
-msgstr "Accepteer"
 
 msgid "To:"
 msgstr "Aan:"
@@ -4657,9 +5359,6 @@ msgstr "Alle mail"
 msgid "Import from Mail"
 msgstr "Importeren uit e-mail"
 
-msgid "Import"
-msgstr "Importeren"
-
 msgid "Import into"
 msgstr "Importeren in"
 
@@ -4732,6 +5431,9 @@ msgstr "Adresboek"
 
 msgid "Server"
 msgstr "Server"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "Inloggen"
@@ -4873,7 +5575,8 @@ msgstr[1] "{n} adresboeken gevonden op {name}"
 msgid "Connected to {name}"
 msgstr "Verbonden met {name}"
 
-msgid "CardDAV Server"
+#, fuzzy
+msgid "CalDAV and CardDAV Server"
 msgstr "CardDAV-server"
 
 #, fuzzy
@@ -4892,9 +5595,10 @@ msgstr ""
 "Zoals cloud.example.org. Met inloggen met twee factoren kun je een app-"
 "wachtwoord maken in Nextcloud onder Instellingen → Beveiliging."
 
+#, fuzzy
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 "Gebruik een app-wachtwoord met toegang tot contacten, gemaakt in Fastmail "
 "onder Instellingen → Privacy & Beveiliging."
@@ -5045,9 +5749,6 @@ msgstr "Toevoegen aan Contacten"
 msgid "Directory"
 msgstr "Directory"
 
-msgid "Details"
-msgstr "Details"
-
 msgid "Members"
 msgstr "Leden"
 
@@ -5129,9 +5830,6 @@ msgstr "Adres toevoegen"
 msgid "No birthday"
 msgstr "Geen verjaardag"
 
-msgid "Year"
-msgstr "Jaar"
-
 msgid "Change Photo…"
 msgstr "Foto wijzigen…"
 
@@ -5161,9 +5859,6 @@ msgstr "Verplaatsen naar adresboek…"
 
 msgid "Delete…"
 msgstr "Verwijderen…"
-
-msgid "Edit"
-msgstr "Bewerken"
 
 msgid "Open in GNOME Contacts"
 msgstr "Openen in GNOME-contacten"
@@ -5604,9 +6299,6 @@ msgstr "Hoog belang"
 msgid "Untagged"
 msgstr "Getagd"
 
-msgid "Today"
-msgstr "Vandaag"
-
 msgid "Customize Columns…"
 msgstr "Kolommen aanpassen…"
 
@@ -5836,9 +6528,6 @@ msgid_plural "Repeats every {n} years"
 msgstr[0] "Wordt elke {n} jaren herhaald"
 msgstr[1] "Wordt elke {n} jaren herhaald"
 
-msgid "Repeats"
-msgstr "Herhalingen"
-
 msgid "Somebody answered this invitation."
 msgstr "Iemand heeft op deze uitnodiging gereageerd."
 
@@ -5898,15 +6587,9 @@ msgstr "Je hebt deze uitnodiging op {date} afgewezen."
 msgid "Tells the organizer you will be there"
 msgstr "Vertelt de organisator dat je aanwezig zult zijn"
 
-msgid "Maybe"
-msgstr "Misschien"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "Vertelt de organisator dat je er misschien bent"
-
-msgid "Decline"
-msgstr "Weigeren"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -6302,9 +6985,6 @@ msgstr "Sleutel importeren"
 msgid "OpenPGP keys"
 msgstr "OpenPGP-sleutels"
 
-msgid "Could not import: {e}"
-msgstr "Kan niet importeren: {e}"
-
 msgid "Export Public Key"
 msgstr "Openbare sleutel exporteren"
 
@@ -6450,9 +7130,6 @@ msgstr "24 uur (17:40)"
 
 msgid "Manually"
 msgstr "Handmatig"
-
-msgid "Every minute"
-msgstr "Elke minuut"
 
 msgid "Every 5 minutes"
 msgstr "Elke 5 minuten"
@@ -6715,9 +7392,6 @@ msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
 "Het opstartprogramma toont een pictogram dat elders is ingesteld. Als je er "
 "hier één kiest, wordt deze vervangen."
-
-msgid "Always"
-msgstr "Altijd"
 
 msgid "A year"
 msgstr "Een jaar"
@@ -7327,6 +8001,10 @@ msgstr "Bijlagenbrowser weergeven"
 msgid "Every account’s attachments in one place."
 msgstr "Blader door de bijlagen van elk account op één plek."
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "Kalender"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
 "Als je over de pictogrammenrail beweegt, zweeft de volledige zijbalk naar "
@@ -7461,6 +8139,9 @@ msgstr "Geen resultaten"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7501,9 +8182,6 @@ msgstr "Kan de PDF: {error} niet opslaan"
 
 msgid "Filled in by Mail Merge"
 msgstr "Ingevuld via Mailmerge"
-
-msgid "Custom…"
-msgstr "Aangepast…"
 
 msgid "Sans Serif"
 msgstr "Sans-serif"
@@ -7639,9 +8317,6 @@ msgstr "Toon of verberg submappen"
 
 msgid "Mark Inbox as Read"
 msgstr "Markeer Postvak IN als gelezen"
-
-msgid "Refresh"
-msgstr "Vernieuwen"
 
 msgid "New Folder…"
 msgstr "Nieuwe map…"
@@ -8325,6 +9000,35 @@ msgstr "geen netwerkverbinding"
 
 msgid "runtime error: {e}"
 msgstr "runtimefout: {e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "Geaccepteerd: {subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "Voorlopig: {subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] ""
+"Op deze uitnodiging wordt geen organisator genoemd die moet antwoorden."
+msgstr[1] ""
+"Op deze uitnodiging wordt geen organisator genoemd die moet antwoorden."
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "Toevoegen aan agenda"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "Kon de gebeurtenis niet toevoegen: {e}"
 
 msgid "No contacts were found in the selected files"
 msgstr "Er zijn geen contacten gevonden in de geselecteerde bestanden"
@@ -9230,7 +9934,8 @@ msgstr ""
 "Een snelle, GNOME-native e-mailclient, gebouwd met Rust en libadwaita. "
 "Standaard open source en privé."
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "E-mail;Mail;IMAP;"
 
 msgid ""
@@ -9357,9 +10062,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Hylki cannot change this kind of group"
 #~ msgstr "Hylki kan dit soort groep niet veranderen"
-
-#~ msgid "Notes"
-#~ msgstr "Opmerkingen"
 
 #~ msgid ""
 #~ "The directory cannot be searched without signing in. Add a sign-in to it "
@@ -9645,9 +10347,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "Tonen in Hylki"
-
-#~ msgid "Email Address"
-#~ msgstr "E-mailadres"
 
 #~ msgid "SMTP Username"
 #~ msgstr "SMTP-gebruikersnaam"

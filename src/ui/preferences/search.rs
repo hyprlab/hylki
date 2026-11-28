@@ -248,6 +248,7 @@ fn page_keywords(id: &str) -> String {
     match id {
         // Translators: words the settings search finds the Contacts page by,
         // separated by spaces; keep "CardDAV" and "LDAP".
+        "calendar" => i18n("calendar week working hours events alert reminders declined CalDAV"),
         "contacts" => i18n("address books CardDAV LDAP directory directories Online Accounts Nextcloud iCloud Google Microsoft vCard"),
         _ => String::new(),
     }

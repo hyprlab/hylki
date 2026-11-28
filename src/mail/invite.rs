@@ -37,9 +37,9 @@ use gtk::glib;
 
 use crate::models::{Invite, InvitePerson};
 
-mod ics;
+pub(crate) mod ics;
 mod reply;
-mod tz;
+pub(crate) mod tz;
 
 pub(crate) use ics::fold;
 use ics::{unfold, Line};
@@ -260,7 +260,7 @@ impl EventProps {
 
 /// One `ORGANIZER` or `ATTENDEE` line: the address it points at and the
 /// parameters that say who they are and where they stand.
-fn person(line: &Line) -> Option<InvitePerson> {
+pub(crate) fn person(line: &Line) -> Option<InvitePerson> {
     let email = line
         .raw
         .trim()
@@ -300,7 +300,7 @@ fn person(line: &Line) -> Option<InvitePerson> {
 
 /// A date-time as written, before the zone it names has been found.
 #[derive(Debug)]
-struct Stamp {
+pub(crate) struct Stamp {
     /// Calendar fields, as written on the wire.
     y: i32,
     mo: i32,
@@ -317,6 +317,22 @@ struct Stamp {
 }
 
 impl Stamp {
+    /// A wall-clock reading in no zone, for asking a `VTIMEZONE` which
+    /// offset is in force then.
+    pub(crate) fn wall(y: i32, mo: i32, d: i32, h: i32, mi: i32, s: i32) -> Stamp {
+        Stamp {
+            y,
+            mo,
+            d,
+            h,
+            mi,
+            s,
+            utc: false,
+            date_only: false,
+            tzid: String::new(),
+        }
+    }
+
     fn read(line: &Line) -> Option<Stamp> {
         let mut stamp = Stamp::parse(line.raw.trim())?;
         stamp.tzid = line.param("TZID").unwrap_or_default().trim().to_string();
@@ -392,7 +408,7 @@ impl Stamp {
 }
 
 /// `PT1H30M`, `P1D`, `-PT15M`: a length of time, in seconds.
-fn duration_seconds(text: &str) -> Option<i64> {
+pub(crate) fn duration_seconds(text: &str) -> Option<i64> {
     let (sign, rest) = match text.strip_prefix('-') {
         Some(rest) => (-1, rest),
         None => (1, text.strip_prefix('+').unwrap_or(text)),

@@ -3,23 +3,23 @@
 //! folding on the way out.
 
 // iCalendar's TEXT escapes are vCard's (crate::encoding).
-pub(super) use crate::encoding::escape_text_value as escape;
+pub(crate) use crate::encoding::escape_text_value as escape;
 use crate::encoding::unescape_text_value as unescape;
 
 /// One unfolded content line: `NAME;PARAM=VALUE:value`.
 #[derive(Debug, Default)]
-pub(super) struct Line {
-    pub(super) name: String,
-    params: Vec<(String, String)>,
+pub(crate) struct Line {
+    pub(crate) name: String,
+    pub(crate) params: Vec<(String, String)>,
     /// The value with iCalendar's text escapes undone (`\n`, `\,`, `\;`).
-    pub(super) value: String,
+    pub(crate) value: String,
     /// The value exactly as written, for the fields that are not text
     /// (a date, an address) and must not be un-escaped.
-    pub(super) raw: String,
+    pub(crate) raw: String,
 }
 
 impl Line {
-    pub(super) fn param(&self, name: &str) -> Option<&str> {
+    pub(crate) fn param(&self, name: &str) -> Option<&str> {
         self.params
             .iter()
             .find(|(k, _)| k.eq_ignore_ascii_case(name))
@@ -32,7 +32,7 @@ impl Line {
 /// RFC 5545 folds any line longer than 75 octets by breaking it and starting
 /// the next with a single space or tab, which is *not* part of the value —
 /// a long description or a URL is routinely split mid-word.
-pub(super) fn unfold(ics: &str) -> Vec<Line> {
+pub(crate) fn unfold(ics: &str) -> Vec<Line> {
     let mut joined: Vec<String> = Vec::new();
     for raw in ics.split('\n') {
         let line = raw.strip_suffix('\r').unwrap_or(raw);
@@ -53,7 +53,7 @@ pub(super) fn unfold(ics: &str) -> Vec<Line> {
 /// Read one content line. The name and its parameters end at the first colon
 /// that is not inside a quoted parameter value — `TZID="Europe/Paris"` and
 /// `mailto:someone@example.org` both put colons where a naive split breaks.
-fn split_line(line: &str) -> Option<Line> {
+pub(crate) fn split_line(line: &str) -> Option<Line> {
     if line.trim().is_empty() {
         return None;
     }

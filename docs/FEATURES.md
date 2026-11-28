@@ -216,8 +216,14 @@ The full list. The [README](../README.md) carries a shorter one.
 - **Hylki address book:** a book of your own, beside the ones Evolution Data
   Server keeps, with vCard (`.vcf`) and CSV import, and import straight from
   Thunderbird's address books. It works without GNOME.
-- **CardDAV accounts:** the address books of Nextcloud, iCloud, Fastmail or
-  any CardDAV server, set up in Hylki, through Evolution Data Server. See
+- **Calendar:** day, week, month, year and list views of every calendar on
+  the desktop, beside the mail. Events are made by dragging or by typing a
+  sentence, moved and stretched by dragging, and repeat by any rule; an
+  invitation is answered, and sent, by mail from your own account. See
+  [Calendar](DOCUMENTATION.md#calendar).
+- **CalDAV and CardDAV accounts:** the calendars and address books of
+  Nextcloud, iCloud, Fastmail or any CalDAV and CardDAV server, set up in
+  Hylki, through Evolution Data Server. See
   [CardDAV accounts](DOCUMENTATION.md#carddav-accounts).
 - **Contact groups:** a name for several people that the composer offers
   like a contact, optionally sent as Bcc; Evolution's contact lists work the

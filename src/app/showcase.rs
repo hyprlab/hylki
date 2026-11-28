@@ -108,6 +108,7 @@ impl AppModel {
                 settings::stage_add_contact(sender);
                 settings::stage_dialog();
                 self.stage_contacts(sender);
+                self.stage_calendar(sender);
                 // HYLKI_SHOWCASE_SETTINGS names a Settings panel to open
                 // and to capture instead of the main window.
                 let settings = std::env::var("HYLKI_SHOWCASE_SETTINGS").ok();

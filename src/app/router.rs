@@ -76,6 +76,7 @@ impl AppModel {
             | AppMsg::NotifyCount(..)
             | AppMsg::ToggleNotifications
             | AppMsg::StatusBarShown(..)) => self.on_notifications(msg, sender),
+            msg @ (AppMsg::ShowCalendar | AppMsg::Calendar(..)) => self.on_calendar(msg, sender),
             msg @ (AppMsg::ShowAttachments
             | AppMsg::GalleryFetch { .. }
             | AppMsg::AttachmentsScanned { .. }
@@ -551,6 +552,8 @@ impl AppModel {
             | PrefOutput::SetListColumns(..)
             | PrefOutput::SetPreviewLines(..)
             | PrefOutput::SetAttachmentsRow(..)
+            | PrefOutput::SetCalendarRow(..)
+            | PrefOutput::SetCalendarPrefs(..)
             | PrefOutput::ResetColumnWidths
             | PrefOutput::SetSwipeEnabled(..)
             | PrefOutput::SetHoverActions(..)

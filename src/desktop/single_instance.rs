@@ -26,21 +26,23 @@ impl UriKind {
     }
 }
 
-/// A view a launcher action opens (`hylki --contacts`, `hylki --attachments`):
-/// the desktop file's Contacts and Attachments actions.
+/// A view a launcher action opens (`hylki --contacts`, `hylki --calendar`,
+/// `hylki --attachments`): the desktop file's actions of those names.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum StartView {
     Contacts,
+    Calendar,
     Attachments,
 }
 
 impl StartView {
-    const ALL: [StartView; 2] = [StartView::Contacts, StartView::Attachments];
+    pub(crate) const ALL: [StartView; 3] = [StartView::Contacts, StartView::Calendar, StartView::Attachments];
 
     /// The command-line flag that asks for this view.
     pub(crate) fn flag(self) -> &'static str {
         match self {
             StartView::Contacts => "--contacts",
+            StartView::Calendar => "--calendar",
             StartView::Attachments => "--attachments",
         }
     }
@@ -50,6 +52,7 @@ impl StartView {
     pub(crate) fn action(self) -> &'static str {
         match self {
             StartView::Contacts => "show-contacts",
+            StartView::Calendar => "show-calendar",
             StartView::Attachments => "show-attachments",
         }
     }

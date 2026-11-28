@@ -7,12 +7,13 @@ use gtk::gio;
 use gtk::glib;
 use gtk::prelude::*;
 
+use super::store::{CalInfo, CalKind};
 use super::{ical, AccountNames, Item, ItemKind, Source};
 use crate::desktop::platform::{keyfile, keyfile_value};
 
-const FACTORY_PATH: &str = "/org/gnome/evolution/dataserver/CalendarFactory";
-const FACTORY_IFACE: &str = "org.gnome.evolution.dataserver.CalendarFactory";
-const CALENDAR_IFACE: &str = "org.gnome.evolution.dataserver.Calendar";
+pub(super) const FACTORY_PATH: &str = "/org/gnome/evolution/dataserver/CalendarFactory";
+pub(super) const FACTORY_IFACE: &str = "org.gnome.evolution.dataserver.CalendarFactory";
+pub(super) const CALENDAR_IFACE: &str = "org.gnome.evolution.dataserver.Calendar";
 
 /// Backends that only ever read: birthdays from Contacts, the weather, and
 /// subscribed (webcal) calendars.
@@ -85,6 +86,91 @@ fn sources_from(
         )
     });
     found.into_iter().map(|(_, s)| s).collect()
+}
+
+/// Every calendar and task list EDS has that is switched on, for the
+/// calendar views: local ones first, then by account and name. `None` when
+/// EDS is not there to ask. Blocking: call it off the UI thread.
+pub(crate) fn calendars(mut names: AccountNames) -> Option<Vec<CalInfo>> {
+    crate::contacts::calendar_factory_dest()?;
+    let registry = crate::contacts::registry_sources()?;
+    let data: HashMap<String, String> = registry
+        .into_iter()
+        .map(|(_, uid, data)| (uid, data))
+        .collect();
+    names.given = crate::contacts::contact_sources::names();
+    Some(calendars_from(&data, &names))
+}
+
+/// [`calendars`], from the registry's sources by UID.
+fn calendars_from(registry: &HashMap<String, String>, names: &AccountNames) -> Vec<CalInfo> {
+    let mut identities: HashMap<String, usize> = HashMap::new();
+    for data in registry.values() {
+        if let Some(i) = keyfile_value(data, "Collection", "Identity") {
+            *identities.entry(i.to_lowercase()).or_default() += 1;
+        }
+    }
+    let mut found: Vec<CalInfo> = Vec::new();
+    for (uid, data) in registry {
+        let Some(kf) = keyfile(data) else {
+            continue;
+        };
+        if kf.boolean("Data Source", "Enabled").ok() == Some(false) {
+            continue;
+        }
+        for (section, tasks) in [("Calendar", false), ("Task List", true)] {
+            if !kf.has_group(section) || upgraded_reminders(data) {
+                continue;
+            }
+            let backend = kf.string(section, "BackendName").unwrap_or_default().to_string();
+            let account = match collection(data, registry) {
+                Some(Collection { enabled: false, .. }) => continue,
+                Some(c) => Some(c.name(names, |i| identities.get(i).copied().unwrap_or(0) > 1)),
+                None => None,
+            };
+            let kind = match backend.as_str() {
+                "local" => CalKind::Local,
+                "contacts" => CalKind::Birthdays,
+                "webcal" => CalKind::Subscription,
+                "weather" => CalKind::Other,
+                _ => CalKind::Remote,
+            };
+            let name = keyfile_value(data, "Data Source", "DisplayName").unwrap_or_else(|| uid.clone());
+            let color = kf
+                .string(section, "Color")
+                .ok()
+                .map(|c| c.to_string())
+                .filter(|c| c.starts_with('#') && c.len() >= 7)
+                .map(|c| c[..7].to_string())
+                .unwrap_or_else(|| super::palette_color(uid));
+            found.push(CalInfo {
+                uid: uid.clone(),
+                // Local calendars sit under "On This Computer", which says
+                // nothing the calendar's own name doesn't.
+                account: account.filter(|_| kind != CalKind::Local),
+                name,
+                color,
+                writable: !READ_ONLY_BACKENDS.contains(&backend.as_str()),
+                tasks,
+                kind,
+                parent: keyfile_value(data, "Data Source", "Parent").unwrap_or_default(),
+            });
+        }
+    }
+    found.sort_by_key(|c| {
+        (
+            c.tasks,
+            c.kind != CalKind::Local,
+            match c.kind {
+                CalKind::Local | CalKind::Remote => 0,
+                CalKind::Subscription => 1,
+                CalKind::Birthdays | CalKind::Other => 2,
+            },
+            c.account.as_ref().map(|a| a.to_lowercase()),
+            c.name.to_lowercase(),
+        )
+    });
+    found
 }
 
 /// iCloud's Reminders as CalDAV still sees it: once reminders are upgraded
@@ -220,7 +306,7 @@ pub(crate) fn create(source_uid: &str, item: &Item) -> Result<(), String> {
 
 /// One method call, bounded by `timeout_ms`: GIO's, as the source registry
 /// is asked, so a stuck backend can't hold the thread forever.
-fn call(
+pub(super) fn call(
     conn: &gio::DBusConnection,
     (dest, path, iface): (&str, &str, &str),
     method: &str,
@@ -242,7 +328,7 @@ fn call(
 }
 
 /// EDS's message without the D-Bus error name GIO puts in front of it.
-fn remote_message(text: &str) -> String {
+pub(super) fn remote_message(text: &str) -> String {
     match text.strip_prefix("GDBus.Error:") {
         Some(rest) => rest.split_once(": ").map_or(rest, |(_, m)| m).to_string(),
         None => text.to_string(),
@@ -387,6 +473,38 @@ mod tests {
             .map(|s| s.name)
             .collect();
         assert_eq!(listed, ["iCloud · Reminders", "Microsoft 365 · Tasks"]);
+    }
+
+    #[test]
+    fn every_calendar_is_listed_with_its_kind_and_color() {
+        let mut registry = registry();
+        registry.insert(
+            "colored".into(),
+            "[Data Source]\nDisplayName=Colored\nEnabled=true\nParent=local-stub\n\
+             [Calendar]\nBackendName=local\nColor=#ff7800ff\n"
+                .into(),
+        );
+        let cals = calendars_from(&registry, &AccountNames::default());
+        let names: Vec<String> = cals.iter().map(|c| c.full_name()).collect();
+        assert_eq!(
+            names,
+            [
+                "Colored",
+                "Personal",
+                "ada@icloud.com · Home",
+                "ada@icloud.com · Work",
+                "Holidays",
+                "Birthdays & Anniversaries",
+                "ada@icloud.com · Reminders"
+            ]
+        );
+        assert_eq!(cals[0].color, "#ff7800");
+        let birthdays = cals.iter().find(|c| c.uid == "birthdays").unwrap();
+        assert_eq!(birthdays.kind, CalKind::Birthdays);
+        assert!(!birthdays.writable);
+        let holidays = cals.iter().find(|c| c.uid == "holidays").unwrap();
+        assert_eq!(holidays.kind, CalKind::Subscription);
+        assert!(cals.iter().find(|c| c.uid == "reminders").unwrap().tasks);
     }
 
     #[test]

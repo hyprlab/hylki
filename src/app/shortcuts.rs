@@ -30,7 +30,7 @@ impl AppModel {
     fn run_shortcut(&mut self, action: Shortcut, sender: &ComponentSender<Self>) {
         // Contacts covers the list and the reader: a key there must not
         // act on mail out of sight, Delete outside its list above all.
-        if self.showing_contacts && action.acts_on_selection() {
+        if (self.showing_contacts || self.showing_calendar) && action.acts_on_selection() {
             return;
         }
         // Checking rows with none checked: say why the key did nothing

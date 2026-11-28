@@ -59,13 +59,17 @@ impl AppModel {
         }
     }
 
-    /// "Add to Calendar": hand the event, as it arrived, to whatever
-    /// application opens calendar files — the same road an attachment takes
-    /// (`.ics` and all its portal handling), because that is exactly what
-    /// this is.
+    /// "Add to Calendar": the event goes in the calendar here (#715), or
+    /// where there is none (no EDS and no calendar of Hylki's own is
+    /// possible only in a sandbox with no data folder) to whatever
+    /// application opens calendar files, the road an attachment takes.
     fn open_invite_in_calendar(&self, invite: &crate::models::Invite) {
         if invite.ics.is_empty() {
             self.notice_error(i18n("This message carries no calendar file to open."));
+            return;
+        }
+        if crate::config::data_base().is_some() || crate::contacts::calendar_factory_dest().is_some() {
+            self.invite_to_calendar(invite.ics.clone(), None, false);
             return;
         }
         // Named for the meeting so the calendar's import dialog says what it
@@ -139,6 +143,11 @@ impl AppModel {
             method: "REPLY".to_string(),
         });
         self.send_unfiled(out);
+        // Going, or maybe: the meeting goes in the calendar with the
+        // answer on it, as the organizer's copy will have it.
+        if !invite.ics.is_empty() && !matches!(rsvp, crate::models::Rsvp::Declined) {
+            self.invite_to_calendar(invite.ics.clone(), Some(rsvp.partstat().to_string()), true);
+        }
         self.record_invite_answer(invite, rsvp);
         self.notice(match rsvp {
             crate::models::Rsvp::Accepted => i18n("Your answer has been sent: accepted."),

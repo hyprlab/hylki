@@ -87,6 +87,8 @@ pub(crate) enum SidebarInput {
     SelectUnifiedRow,
     /// The "Attachments" row was chosen.
     AttachmentsRowSelected,
+    /// The "Calendar" row was chosen.
+    CalendarRowSelected,
     /// The "Contacts" row was clicked (it acts as a launcher, not a selection).
     ContactsRowClicked,
     /// The address books and groups the Contacts row lists.
@@ -177,6 +179,8 @@ pub(crate) enum SidebarInput {
     ToggleCollapsed,
     /// Show/hide the "Attachments" row in the pinned footer.
     SetAttachmentsRow(bool),
+    /// Show/hide the "Calendar" row in the pinned footer.
+    SetCalendarRow(bool),
     /// Whether any account is syncing — spins the refresh button.
     SetBusy(bool),
     /// Whether the network is down: the refresh button turns orange (#442).
@@ -312,6 +316,8 @@ pub(crate) enum SidebarOutput {
     },
     /// The attachments gallery was selected.
     AttachmentsSelected,
+    /// The calendar was selected.
+    CalendarSelected,
     /// The "Contacts" row was clicked — open the contacts browser.
     ContactsClicked,
     OutboxSelected,

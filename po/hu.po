@@ -429,6 +429,37 @@ msgid "New Message"
 msgstr "Új üzenet"
 
 #, fuzzy
+msgid "That is not a web address."
+msgstr "Ez a mappa"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "Ez az üzenet nem tartalmaz megnyitható naptárfájlt."
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr ""
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
+msgid "Personal"
+msgstr ""
+
+msgid "There is no data folder to keep calendars in."
+msgstr ""
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "Az Evolution Data Server nem érhető el"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "A fájl nem megnyitható"
+
+#, fuzzy
 msgid "A group needs a name."
 msgstr "Mappanév"
 
@@ -1616,6 +1647,10 @@ msgstr "Összes fiók"
 msgid "Contacts"
 msgstr "Névjegyek"
 
+#, fuzzy
+msgid "Calendar"
+msgstr "Hozzáadás a naptárhoz"
+
 msgid "Outbox"
 msgstr "Kimenő"
 
@@ -2135,15 +2170,6 @@ msgstr "Keresés az üzenetben (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Mellékletek letöltése…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-msgid "today tonight"
-msgstr ""
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr ""
-
 msgid "Signature"
 msgstr "Aláírás"
 
@@ -2409,9 +2435,6 @@ msgid "Import the sender’s public key to verify it."
 msgstr "Az ellenőrzéshez importálja a feladó nyilvános kulcsát."
 
 msgid "Labeled"
-msgstr ""
-
-msgid "Personal"
 msgstr ""
 
 #, fuzzy
@@ -3999,10 +4022,6 @@ msgid "Title"
 msgstr ""
 
 #, fuzzy
-msgid "Calendar"
-msgstr "Hozzáadás a naptárhoz"
-
-#, fuzzy
 msgid "Task list"
 msgstr "Ez a lista"
 
@@ -4053,6 +4072,692 @@ msgstr[1] "{n} órája"
 
 msgid "Due"
 msgstr ""
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "Áthelyzés ide: {name}"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "lejár: {date}"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "Véglegesen törli ezt az üzenetet?"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "Minden típus"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "Címke szerkesztése…"
+
+msgid "Details…"
+msgstr ""
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "Elfogadás"
+
+msgid "Maybe"
+msgstr "Talán"
+
+msgid "Decline"
+msgstr "Elutasít"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "E-mail-cím"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "Új névjegy"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "Hozzáadás a névjegyekhez"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "Nincs találat"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "Védelem jelszóval"
+
+msgid "Today"
+msgstr ""
+
+msgid "Tomorrow"
+msgstr ""
+
+msgid "Repeats"
+msgstr "Ismétlődik"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "Nem sikerült a csillagozás: {e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "Az üzenet nem frissíthető: {e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "{n} órája"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "Névjegy szerkesztése"
+
+#, fuzzy
+msgid "Event"
+msgstr "Új névjegy"
+
+#, fuzzy
+msgid "Location"
+msgstr "Műveletek"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "Ismétlődik"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "lejár: {date}"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "Vezetéknév"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "Összes küldése"
+
+#, fuzzy
+msgid "Show as"
+msgstr "Megjelenítés"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "Állapotsáv ({n})"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "Feltételesen elfogadva: {subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Lemondva"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "Cím"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "Fordította"
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "Véglegesen törli ezt az üzenetet?"
+
+#, fuzzy
+msgid "Every"
+msgstr "Vagy ahol"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "2 év"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "Az utolsó mappa"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} címzett"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "még {n} cím"
+msgstr[1] "még {n} cím"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "Megbeszélés"
+
+msgid "Edit"
+msgstr "Szerkesztés"
+
+msgid "Details"
+msgstr ""
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "{n} db üzenet címkézve"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "Nem jelenik meg"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "Még nincsenek fiókok"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name} (hivatkozás)"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "Címke színe"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "Ezen a számítógépen"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "Az üzenet nem frissíthető: {e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "Hozzáadás a naptárhoz"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "Leiratkozás"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "Az üzenet nem címkézhető: {e}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "Hozzáadás a naptárhoz"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "Aláírás importálása"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "A mappa nem hozható létre: {e}"
+
+#, fuzzy
+msgid "Import"
+msgstr "Importálás…"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not import: {e}"
+msgstr "Nem importálható: {e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "Leiratkozás innen: {name}?"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "Kiüríti ezt: „{name}”?"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "Kiszolgáló adatai"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "{n} órája"
+msgstr[1] "{n} órája"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "{n} órája"
+msgstr[1] "{n} órája"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date} {time} órakor"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "lejár: {date}"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "Vagy ahol"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "Vagy ahol"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "5 percenként"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "Percenként"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "Vagy ahol"
+
+#, fuzzy
+msgid "Custom…"
+msgstr "Egyéni szín…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "Összes küldése"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "Vagy ahol"
+msgstr[1] "Vagy ahol"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "Percenként"
+msgstr[1] "Percenként"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "Vagy ahol"
+msgstr[1] "Vagy ahol"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "Vagy ahol"
+msgstr[1] "Vagy ahol"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "Percenként"
+msgstr[1] "Percenként"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} címzett"
+msgstr[1] "{n} címzett"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "Vagy ahol"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "lejár: {date}"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Show All"
+msgstr "Csak olvasatlanok megjelenítése"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "Új mappa…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "Névjegyek rendezése"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "Fiók hozzáadása…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Műveletek"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 sor"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "Hozzáadás a naptárhoz"
+msgstr[1] "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "Olvasás"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "Megnyitás ablakban"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "Mappa átnevezése…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "Szín"
+
+msgid "Refresh"
+msgstr "Frissítés"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "Mappa törlése…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "Új névjegy"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "Névjegyek keresése"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "Feladók keresése"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "Új névjegy"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "Ezen a számítógépen"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Nincs semmi exportálható."
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "{n} órája"
+msgstr[1] "{n} órája"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "{n} órája"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "{n} órája"
+msgstr[1] "{n} órája"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "Újraindítás"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "E-mail hozzáadása"
+
+msgid "Monday to Friday"
+msgstr ""
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "Feladó és tárgy megjelenítése"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "Új névjegy"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "aláír és titkosít"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "Beszélgetés megjelenítése"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "Feladói logók megjelenítése"
+
+#, fuzzy
+msgid "Always"
+msgstr "Mindig látható"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr "Az automatikus beállítás a megfelelő címhez tartozó kulcsot használja."
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Üdvözöljük a Hylki-n, korábban {old}"
@@ -4397,9 +5102,6 @@ msgstr ""
 #, fuzzy
 msgid "Reject"
 msgstr "Projekt"
-
-msgid "Accept"
-msgstr "Elfogadás"
 
 #, fuzzy
 msgid "To:"
@@ -4876,10 +5578,6 @@ msgid "Import from Mail"
 msgstr "Fájl importálása…"
 
 #, fuzzy
-msgid "Import"
-msgstr "Importálás…"
-
-#, fuzzy
 msgid "Import into"
 msgstr "Aláírás importálása"
 
@@ -4957,6 +5655,9 @@ msgstr "Címjegyzék"
 
 msgid "Server"
 msgstr "Kiszolgáló"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "Bejelentkezés"
@@ -5117,7 +5818,7 @@ msgid "Connected to {name}"
 msgstr "Kapcsolódva erre: {name}"
 
 #, fuzzy
-msgid "CardDAV Server"
+msgid "CalDAV and CardDAV Server"
 msgstr "Kiszolgáló"
 
 msgid ""
@@ -5131,8 +5832,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 
 msgid "LDAP Directory"
@@ -5287,9 +5988,6 @@ msgstr "Hozzáadás a névjegyekhez"
 msgid "Directory"
 msgstr "Könyvtár hozzáadása"
 
-msgid "Details"
-msgstr ""
-
 msgid "Members"
 msgstr ""
 
@@ -5368,9 +6066,6 @@ msgstr "Cím"
 msgid "No birthday"
 msgstr ""
 
-msgid "Year"
-msgstr ""
-
 msgid "Change Photo…"
 msgstr ""
 
@@ -5405,9 +6100,6 @@ msgstr "Címjegyzék"
 
 msgid "Delete…"
 msgstr "Törlés…"
-
-msgid "Edit"
-msgstr "Szerkesztés"
 
 msgid "Open in GNOME Contacts"
 msgstr "Megnyitás a GNOME Névjegyekben"
@@ -5864,9 +6556,6 @@ msgstr "Kulcs importálása"
 msgid "Untagged"
 msgstr "Nincs telepítve"
 
-msgid "Today"
-msgstr ""
-
 #, fuzzy
 msgid "Customize Columns…"
 msgstr "Eszköztár testreszabása…"
@@ -6109,9 +6798,6 @@ msgid_plural "Repeats every {n} years"
 msgstr[0] "{n} évente ismétlődik"
 msgstr[1] "{n} évente ismétlődik"
 
-msgid "Repeats"
-msgstr "Ismétlődik"
-
 msgid "Somebody answered this invitation."
 msgstr "Valaki elfogadta ezt a meghívást."
 
@@ -6171,15 +6857,9 @@ msgstr "Ezt a meghívást {date} napon elutasította."
 msgid "Tells the organizer you will be there"
 msgstr "Jelezd a szervezőnek, hogy ott leszel"
 
-msgid "Maybe"
-msgstr "Talán"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "Jelzi a szervezőnek, hogy esetleg ott leszel"
-
-msgid "Decline"
-msgstr "Elutasít"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -6596,9 +7276,6 @@ msgstr "Kulcs importálása"
 msgid "OpenPGP keys"
 msgstr "OpenPGP-kulcsok"
 
-msgid "Could not import: {e}"
-msgstr "Nem importálható: {e}"
-
 msgid "Export Public Key"
 msgstr "Nyilvános kulcs exportálása"
 
@@ -6749,9 +7426,6 @@ msgstr "24 órás (17:40)"
 
 msgid "Manually"
 msgstr "Kézzel"
-
-msgid "Every minute"
-msgstr "Percenként"
 
 msgid "Every 5 minutes"
 msgstr "5 percenként"
@@ -7036,10 +7710,6 @@ msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
 "Az indítóprogram egy, a Hylki-n kívüli ikonkészletet jelenít meg. Ha itt "
 "kiválasztasz egyet, az felváltja a jelenlegit."
-
-#, fuzzy
-msgid "Always"
-msgstr "Mindig látható"
 
 #, fuzzy
 msgid "A year"
@@ -7660,6 +8330,10 @@ msgstr "Csatolmány tároló"
 msgid "Every account’s attachments in one place."
 msgstr ""
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "Hozzáadás a naptárhoz"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
 
@@ -7793,6 +8467,9 @@ msgstr "Nincs találat"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7834,10 +8511,6 @@ msgstr "A PDF nem menthető: {error}"
 
 msgid "Filled in by Mail Merge"
 msgstr ""
-
-#, fuzzy
-msgid "Custom…"
-msgstr "Egyéni szín…"
 
 msgid "Sans Serif"
 msgstr ""
@@ -7989,9 +8662,6 @@ msgstr "Almappák megjelenítése vagy elrejtése"
 
 msgid "Mark Inbox as Read"
 msgstr "Beérkezett megjelölése olvasottként"
-
-msgid "Refresh"
-msgstr "Frissítés"
 
 msgid "New Folder…"
 msgstr "Új mappa…"
@@ -8681,6 +9351,33 @@ msgstr "Kapcsolat tesztelése"
 
 msgid "runtime error: {e}"
 msgstr "futásidejű hiba: {e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "Elfogadva: {subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "Feltételesen elfogadva: {subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] "A meghívó nem nevez meg szervezőt."
+msgstr[1] "A meghívó nem nevez meg szervezőt."
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "Hozzáadás a naptárhoz"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "Az üzenet nem frissíthető: {e}"
 
 #, fuzzy
 msgid "No contacts were found in the selected files"
@@ -9636,7 +10333,8 @@ msgstr ""
 "segítségével fejlesztettek ki. Nyílt forráskódú, alapértelmezés szerint "
 "magánjellegű."
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "E-mail;Levél;IMAP;"
 
 msgid ""
@@ -9984,9 +10682,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "Megjelenítés a Hylkiben"
-
-#~ msgid "Email Address"
-#~ msgstr "E-mail-cím"
 
 #~ msgid "SMTP Username"
 #~ msgstr "SMTP Felhasználónév"
@@ -11356,10 +12051,6 @@ msgstr "Hyprlab"
 #, fuzzy
 #~ msgid "An Exchange account can't receive mail from another account yet"
 #~ msgstr "Egy POP3-fiók nem tud leveleket fogadni egy másik fióktól"
-
-#, fuzzy
-#~ msgid "Import contacts…"
-#~ msgstr "Névjegyek rendezése"
 
 #~ msgid "Contacts you add in GNOME Contacts appear here."
 #~ msgstr "A GNOME Névjegyekben hozzáadott névjegyek itt jelennek meg."

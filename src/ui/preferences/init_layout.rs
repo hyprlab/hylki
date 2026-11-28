@@ -31,6 +31,12 @@ impl Preferences {
         widgets
             .translation_slot
             .set_child(Some(&crate::ui::translation_page::build()));
+        let out = sender.output_sender().clone();
+        widgets
+            .calendar_slot
+            .set_child(Some(&crate::ui::calendar_settings::build(move |p| {
+                let _ = out.send(super::PrefOutput::SetCalendarPrefs(p));
+            })));
         self.cloud = Some(cloud);
         let contacts = crate::ui::contact_sources::ContactSources::builder()
             .launch(crate::ui::contact_sources::ContactSourcesInit {

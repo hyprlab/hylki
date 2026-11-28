@@ -385,6 +385,38 @@ msgstr "打印…"
 msgid "New Message"
 msgstr "新邮件"
 
+#, fuzzy
+msgid "That is not a web address."
+msgstr "这不是有效的文件夹名称"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "邮件对服务器来说过长。"
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "今天 今晚"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "明天"
+
+msgid "Personal"
+msgstr "个人"
+
+#, fuzzy
+msgid "There is no data folder to keep calendars in."
+msgstr "没有可用于安装的文件夹。"
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "Evolution Data Server 不可用"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "无法打开该文件"
+
 msgid "A group needs a name."
 msgstr "群组需要一个名称。"
 
@@ -1417,6 +1449,9 @@ msgstr "所有账户"
 msgid "Contacts"
 msgstr "联系人"
 
+msgid "Calendar"
+msgstr "日历"
+
 msgid "Outbox"
 msgstr "发件箱"
 
@@ -1876,15 +1911,6 @@ msgstr "在邮件中查找（Ctrl+F）"
 msgid "Downloading attachments…"
 msgstr "正在下载附件…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-msgid "today tonight"
-msgstr "今天 今晚"
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr "明天"
-
 msgid "Signature"
 msgstr "签名"
 
@@ -2121,9 +2147,6 @@ msgstr "导入发件人的公钥以进行验证。"
 
 msgid "Labeled"
 msgstr "已加标签"
-
-msgid "Personal"
-msgstr "个人"
 
 msgid "Private"
 msgstr "私有"
@@ -3581,9 +3604,6 @@ msgstr "在日历中打开"
 msgid "Title"
 msgstr "标题"
 
-msgid "Calendar"
-msgstr "日历"
-
 msgid "Task list"
 msgstr "任务列表"
 
@@ -3623,6 +3643,676 @@ msgstr[0] "{n} 分钟前"
 
 msgid "Due"
 msgstr "截止"
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "移动到 {name}"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "标题"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "删除“{name}”？"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "永久删除"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "所有密钥"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "编辑标签…"
+
+#, fuzzy
+msgid "Details…"
+msgstr "详情"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "接受"
+
+msgid "Maybe"
+msgstr "可能"
+
+msgid "Decline"
+msgstr "拒绝"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "电子邮件地址"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "新建事件"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "转到联系人"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "未找到结果"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "请输入密码。"
+
+msgid "Today"
+msgstr "今天"
+
+#, fuzzy
+msgid "Tomorrow"
+msgstr "明天"
+
+msgid "Repeats"
+msgstr "重复"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "无法添加任务：{e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "无法保存邮件：{e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "{n} 分钟前"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "编辑联系人"
+
+#, fuzzy
+msgid "Event"
+msgstr "新建事件"
+
+#, fuzzy
+msgid "Location"
+msgstr "操作"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "重复"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "自 {date} 起"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "最近 7 天"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "第二个提醒"
+
+#, fuzzy
+msgid "Show as"
+msgstr "显示"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "状态栏"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "暂定：{subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "已取消"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "添加地址"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "组织"
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr "备注"
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "创建事件…"
+
+#, fuzzy
+msgid "Every"
+msgstr "所有位置"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "年份"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "最后一个文件夹"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} 秒"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "另有 {n} 个地址"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "会议"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Details"
+msgstr "详情"
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "为 {n} 封邮件添加了标签"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "未找到"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "还没有账户"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name}（链接）"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "标签颜色"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "日历"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "本机上的文件夹"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "无法添加事件：{e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "添加到日历"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "退订"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "无法翻译：{why}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "日历"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "导入到"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "无法创建文件夹：{e}"
+
+msgid "Import"
+msgstr "导入"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+
+msgid "Could not import: {e}"
+msgstr "无法导入：{e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "退订 {name}？"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "删除“{name}”？"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "详情"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "{n} 小时前"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "{n} 分钟前"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date} {time}"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "截至 {date}"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "所有位置"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "所有位置"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "每 5 分钟"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "每分钟"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "所有位置"
+
+msgid "Custom…"
+msgstr "自定义…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "第二个提醒"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "所有位置"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "每分钟"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "所有位置"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "每小时"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "每分钟"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} 秒"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "所有位置"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "截至 {date}"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "日历"
+
+#, fuzzy
+msgid "Show All"
+msgstr "仅显示"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "添加到日历"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "新建文件夹…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "添加到日历"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "导入文件…"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "添加账户…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "区域"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 行"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "日历"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "阅读"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "在日历中打开"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "重命名文件夹…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "颜色"
+
+msgid "Refresh"
+msgstr "刷新"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "删除文件夹…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "新建事件"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "搜索联系人（Ctrl+F）"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr "年份"
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "搜索发件人"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "新建事件"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "日历"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "本机上的文件夹"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "没有可导出的内容。"
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "{n} 小时前"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "{n} 小时前"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "{n} 分钟前"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "开始时"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "全天"
+
+msgid "Monday to Friday"
+msgstr ""
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "页码"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "新建事件"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "签名并加密"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "显示列标题"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "显示发件人徽标"
+
+msgid "Always"
+msgstr "总是"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr "自动选择地址匹配的密钥。"
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "欢迎使用 Hylki（原 {old}）"
@@ -3922,9 +4612,6 @@ msgstr "在你接受之前，不会有任何更改。"
 
 msgid "Reject"
 msgstr "拒绝"
-
-msgid "Accept"
-msgstr "接受"
 
 msgid "To:"
 msgstr "收件人："
@@ -4359,9 +5046,6 @@ msgstr "所有邮件"
 msgid "Import from Mail"
 msgstr "从邮件导入"
 
-msgid "Import"
-msgstr "导入"
-
 msgid "Import into"
 msgstr "导入到"
 
@@ -4431,6 +5115,9 @@ msgstr "地址簿"
 
 msgid "Server"
 msgstr "服务器"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "登录"
@@ -4561,7 +5248,8 @@ msgstr[0] "{name} 上找到 {n} 个地址簿"
 msgid "Connected to {name}"
 msgstr "已连接到 {name}"
 
-msgid "CardDAV Server"
+#, fuzzy
+msgid "CalDAV and CardDAV Server"
 msgstr "CardDAV 服务器"
 
 #, fuzzy
@@ -4578,9 +5266,10 @@ msgstr ""
 "例如 cloud.example.org。若启用了双重验证，请在 Nextcloud 的“设置 → 安全”中创"
 "建应用密码。"
 
+#, fuzzy
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 "请使用可访问联系人的应用密码，可在 Fastmail 的“设置 → 隐私与安全”中创建。"
 
@@ -4723,9 +5412,6 @@ msgstr "添加到联系人"
 msgid "Directory"
 msgstr "目录"
 
-msgid "Details"
-msgstr "详情"
-
 msgid "Members"
 msgstr "成员"
 
@@ -4802,9 +5488,6 @@ msgstr "添加地址"
 msgid "No birthday"
 msgstr "无生日"
 
-msgid "Year"
-msgstr "年份"
-
 msgid "Change Photo…"
 msgstr "更改照片…"
 
@@ -4834,9 +5517,6 @@ msgstr "移动到地址簿…"
 
 msgid "Delete…"
 msgstr "删除…"
-
-msgid "Edit"
-msgstr "编辑"
 
 msgid "Open in GNOME Contacts"
 msgstr "在 GNOME 联系人中打开"
@@ -5233,9 +5913,6 @@ msgstr "高重要性"
 msgid "Untagged"
 msgstr "已加标签"
 
-msgid "Today"
-msgstr "今天"
-
 msgid "Customize Columns…"
 msgstr "自定义列…"
 
@@ -5450,9 +6127,6 @@ msgid "Repeats every {n} year"
 msgid_plural "Repeats every {n} years"
 msgstr[0] "每 {n} 年重复"
 
-msgid "Repeats"
-msgstr "重复"
-
 msgid "Somebody answered this invitation."
 msgstr "有人回复了此邀请。"
 
@@ -5511,15 +6185,9 @@ msgstr "你已于 {date} 拒绝了此邀请。"
 msgid "Tells the organizer you will be there"
 msgstr "告知组织者你将出席"
 
-msgid "Maybe"
-msgstr "可能"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "告知组织者你可能会出席"
-
-msgid "Decline"
-msgstr "拒绝"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -5900,9 +6568,6 @@ msgstr "导入密钥"
 msgid "OpenPGP keys"
 msgstr "OpenPGP 密钥"
 
-msgid "Could not import: {e}"
-msgstr "无法导入：{e}"
-
 msgid "Export Public Key"
 msgstr "导出公钥"
 
@@ -6040,9 +6705,6 @@ msgstr "24 小时制（17:40）"
 
 msgid "Manually"
 msgstr "手动"
-
-msgid "Every minute"
-msgstr "每分钟"
 
 msgid "Every 5 minutes"
 msgstr "每 5 分钟"
@@ -6301,9 +6963,6 @@ msgstr "主题"
 
 msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr "启动器在其他位置显示了一套图标。在此处选择一套会替换它。"
-
-msgid "Always"
-msgstr "总是"
 
 msgid "A year"
 msgstr "一年"
@@ -6885,6 +7544,10 @@ msgstr "显示附件浏览器"
 msgid "Every account’s attachments in one place."
 msgstr "在一处浏览所有账户的附件。"
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "日历"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "悬停图标栏会浮出完整侧边栏。"
 
@@ -7012,6 +7675,9 @@ msgstr "无结果"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7051,9 +7717,6 @@ msgstr "无法保存 PDF：{error}"
 
 msgid "Filled in by Mail Merge"
 msgstr "由邮件合并填写"
-
-msgid "Custom…"
-msgstr "自定义…"
 
 msgid "Sans Serif"
 msgstr "无衬线"
@@ -7189,9 +7852,6 @@ msgstr "显示或隐藏子文件夹"
 
 msgid "Mark Inbox as Read"
 msgstr "将收件箱标记为已读"
-
-msgid "Refresh"
-msgstr "刷新"
 
 msgid "New Folder…"
 msgstr "新建文件夹…"
@@ -7837,6 +8497,31 @@ msgstr "无网络连接"
 
 msgid "runtime error: {e}"
 msgstr "运行时错误：{e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "已接受：{subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "暂定：{subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] "此邀请未指定组织者，无法回复。"
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "添加到日历"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "无法添加事件：{e}"
 
 msgid "No contacts were found in the selected files"
 msgstr "所选文件中未找到联系人"
@@ -8692,7 +9377,8 @@ msgstr ""
 "一款快速的 GNOME 原生电子邮件客户端，使用 Rust 和 libadwaita 构建。开源且默认"
 "保护隐私。"
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "电子邮件;邮件;IMAP;"
 
 msgid ""
@@ -8799,9 +9485,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Hylki cannot change this kind of group"
 #~ msgstr "Hylki 无法更改此类群组"
-
-#~ msgid "Notes"
-#~ msgstr "备注"
 
 #~ msgid ""
 #~ "The directory cannot be searched without signing in. Add a sign-in to it "
@@ -9057,9 +9740,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "在 Hylki 中显示"
-
-#~ msgid "Email Address"
-#~ msgstr "电子邮件地址"
 
 #~ msgid "SMTP Username"
 #~ msgstr "SMTP 用户名"

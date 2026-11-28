@@ -234,6 +234,9 @@ pub(crate) struct PrivacyFile {
     /// gallery of every account's attachments).
     #[serde(default = "default_on")]
     pub(crate) show_attachments: bool,
+    /// Whether the sidebar's pinned footer shows the "Calendar" row (#715).
+    #[serde(default = "default_on")]
+    pub(crate) show_calendar: bool,
     /// Whether the combined Accounts & Preferences window opens showing the
     /// Accounts view instead of Preferences (the default).
     #[serde(default)]
@@ -790,6 +793,7 @@ impl Default for PrivacyFile {
             notification_content: true,
             notification_buttons: default_notification_buttons(),
             show_attachments: true,
+            show_calendar: true,
             settings_open_accounts: false,
             swipe_enabled: true,
             hover_actions: true,

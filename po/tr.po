@@ -388,6 +388,38 @@ msgstr "Yazdır…"
 msgid "New Message"
 msgstr "Yeni İleti"
 
+#, fuzzy
+msgid "That is not a web address."
+msgstr "Bu bir klasör adı değil"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "İleti sunucu için fazla uzun."
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "bugün"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "yarın"
+
+msgid "Personal"
+msgstr "Kişisel"
+
+#, fuzzy
+msgid "There is no data folder to keep calendars in."
+msgstr "Yükleme yapılacak bir klasör yok."
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "Evolution Veri Sunucusu kullanılamıyor"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "Dosya açılamadı"
+
 msgid "A group needs a name."
 msgstr "Bir grubun adı olmalıdır."
 
@@ -1487,6 +1519,9 @@ msgstr "Tüm hesaplar"
 msgid "Contacts"
 msgstr "Kişiler"
 
+msgid "Calendar"
+msgstr "Takvim"
+
 msgid "Outbox"
 msgstr "Giden Kutusu"
 
@@ -2004,15 +2039,6 @@ msgstr "İletide bul (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Ekler indiriliyor…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-msgid "today tonight"
-msgstr "bugün"
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr "yarın"
-
 msgid "Signature"
 msgstr "İmza"
 
@@ -2262,9 +2288,6 @@ msgstr "Doğrulamak için gönderenin açık anahtarını içe aktarın."
 
 msgid "Labeled"
 msgstr "Etiketlenmiş"
-
-msgid "Personal"
-msgstr "Kişisel"
 
 msgid "Private"
 msgstr "Özel"
@@ -3817,9 +3840,6 @@ msgstr "Takvimde Aç"
 msgid "Title"
 msgstr "Başlık"
 
-msgid "Calendar"
-msgstr "Takvim"
-
 msgid "Task list"
 msgstr "Görev listesi"
 
@@ -3863,6 +3883,692 @@ msgstr[1] "{n} dakika önce"
 
 msgid "Due"
 msgstr "Son tarih"
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "{name} konumuna taşı"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "Başlık"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "“{name}” silinsin mi?"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "Kalıcı Olarak Sil"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "Tüm Anahtarlar"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "Etiketi Düzenle…"
+
+#, fuzzy
+msgid "Details…"
+msgstr "Ayrıntılar"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "Kabul Et"
+
+msgid "Maybe"
+msgstr "Belki"
+
+msgid "Decline"
+msgstr "Reddet"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "E-posta Adresi"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "Yeni Etkinlik"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "Kişiler'e git"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "Sonuç Bulunamadı"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "Parolayı girin."
+
+msgid "Today"
+msgstr "Bugün"
+
+#, fuzzy
+msgid "Tomorrow"
+msgstr "yarın"
+
+msgid "Repeats"
+msgstr "Tekrarlanma"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "Görev eklenemedi: {e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "İleti kaydedilemedi: {e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "{n} dakika önce"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "Kişiyi Düzenle"
+
+#, fuzzy
+msgid "Event"
+msgstr "Yeni Etkinlik"
+
+#, fuzzy
+msgid "Location"
+msgstr "İşlem"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "Tekrarlanma"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "{date} tarihinden itibaren"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "Son 7 Gün"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "İkinci alarm"
+
+#, fuzzy
+msgid "Show as"
+msgstr "Göster"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "Durum çubuğu"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "Geçici olarak kabul edildi: {subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "Adres Ekle"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "Kuruluş"
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr "Notlar"
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "Etkinlik Oluştur…"
+
+#, fuzzy
+msgid "Every"
+msgstr "Her Yerde"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "Yıl"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "Son klasör"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} saniye"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "{n} adres daha"
+msgstr[1] "{n} adres daha"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "Toplantı"
+
+msgid "Edit"
+msgstr "Düzenle"
+
+msgid "Details"
+msgstr "Ayrıntılar"
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "{n} ileti etiketlendi"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "Bulunamadı"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "Henüz hesap yok"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name} (bağlantı)"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "Etiket Rengi"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "Takvim"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "Bu bilgisayardaki klasörler"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "Etkinlik eklenemedi: {e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "Takvime Ekle"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "Abonelikten Çık"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "Çeviri yapılamadı: {why}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "Takvim"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "Şuraya içe aktar"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "Klasör oluşturulamadı: {e}"
+
+msgid "Import"
+msgstr "İçe Aktar"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not import: {e}"
+msgstr "İçe aktarılamadı: {e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "{name} aboneliğinden çıkılsın mı?"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "“{name}” silinsin mi?"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "Ayrıntılar"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "{n} saat önce"
+msgstr[1] "{n} saat önce"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "{n} dakika önce"
+msgstr[1] "{n} dakika önce"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date}, saat {time}"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "{date} tarihine kadar"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "Her Yerde"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "Her Yerde"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "Her 5 dakikada bir"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "Her dakika"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "Her Yerde"
+
+msgid "Custom…"
+msgstr "Özel…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "İkinci alarm"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "Her Yerde"
+msgstr[1] "Her Yerde"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "Her dakika"
+msgstr[1] "Her dakika"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "Her Yerde"
+msgstr[1] "Her Yerde"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "saatte"
+msgstr[1] "saatte"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "Her dakika"
+msgstr[1] "Her dakika"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} saniye"
+msgstr[1] "{n} saniye"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "Her Yerde"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "{date} tarihine kadar"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "Takvim"
+
+#, fuzzy
+msgid "Show All"
+msgstr "Yalnızca şunları göster"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "Takvime Ekle"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "Yeni Klasör…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "Takvime Ekle"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "Dosya İçe Aktar…"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "Hesap Ekle…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Bölümler"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 satır"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "Takvim"
+msgstr[1] "Takvim"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "Okuma"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "Takvimde Aç"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "Klasörü Yeniden Adlandır…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "Renk"
+
+msgid "Refresh"
+msgstr "Yenile"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "Klasörü Sil…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "Yeni Etkinlik"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "Kişilerde ara (Ctrl+F)"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr "Yıl"
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "Gönderenlerde ara"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "Yeni Etkinlik"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "Takvim"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "Bu bilgisayardaki klasörler"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Dışa aktarılacak bir şey yok."
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "{n} saat önce"
+msgstr[1] "{n} saat önce"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "{n} saat önce"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "{n} dakika önce"
+msgstr[1] "{n} dakika önce"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "Başlangıçta"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "Tüm gün"
+
+#, fuzzy
+msgid "Monday to Friday"
+msgstr "Cuma günü öğle yemeği?"
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "Sayfa numaraları"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "Yeni Etkinlik"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "İmzalar ve şifreler"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "Sütun başlıklarını göster"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "Gönderen logolarını göster"
+
+msgid "Always"
+msgstr "Her zaman"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr "Otomatik, adresi eşleşen anahtarı kullanır."
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Hylki'ye hoş geldiniz, eski adıyla {old}"
@@ -4189,9 +4895,6 @@ msgstr "Siz kabul edene kadar hiçbir şey değiştirilmez."
 
 msgid "Reject"
 msgstr "Reddet"
-
-msgid "Accept"
-msgstr "Kabul Et"
 
 msgid "To:"
 msgstr "Kime:"
@@ -4653,9 +5356,6 @@ msgstr "Tüm postalar"
 msgid "Import from Mail"
 msgstr "Posta Uygulamasından İçe Aktar"
 
-msgid "Import"
-msgstr "İçe Aktar"
-
 msgid "Import into"
 msgstr "Şuraya içe aktar"
 
@@ -4731,6 +5431,9 @@ msgstr "Adres Defteri"
 
 msgid "Server"
 msgstr "Sunucu"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "Oturum Açma"
@@ -4873,7 +5576,8 @@ msgstr[1] "{name} üzerinde {n} adres defteri bulundu"
 msgid "Connected to {name}"
 msgstr "{name} bağlantısı kuruldu"
 
-msgid "CardDAV Server"
+#, fuzzy
+msgid "CalDAV and CardDAV Server"
 msgstr "CardDAV Sunucusu"
 
 #, fuzzy
@@ -4892,9 +5596,10 @@ msgstr ""
 "Örneğin cloud.example.org. İki faktörlü oturum açma kullanıyorsanız "
 "Nextcloud'da Ayarlar → Güvenlik bölümünden uygulama parolası oluşturun."
 
+#, fuzzy
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 "Fastmail'de Ayarlar → Gizlilik ve Güvenlik bölümünden oluşturduğunuz, "
 "kişilere erişim izni olan bir uygulama parolası kullanın."
@@ -5044,9 +5749,6 @@ msgstr "Kişilere Ekle"
 msgid "Directory"
 msgstr "Dizin"
 
-msgid "Details"
-msgstr "Ayrıntılar"
-
 msgid "Members"
 msgstr "Üyeler"
 
@@ -5127,9 +5829,6 @@ msgstr "Adres Ekle"
 msgid "No birthday"
 msgstr "Doğum tarihi yok"
 
-msgid "Year"
-msgstr "Yıl"
-
 msgid "Change Photo…"
 msgstr "Fotoğrafı Değiştir…"
 
@@ -5159,9 +5858,6 @@ msgstr "Adres Defterine Taşı…"
 
 msgid "Delete…"
 msgstr "Sil…"
-
-msgid "Edit"
-msgstr "Düzenle"
 
 msgid "Open in GNOME Contacts"
 msgstr "GNOME Kişiler'de Aç"
@@ -5598,9 +6294,6 @@ msgstr "Yüksek Önem"
 msgid "Untagged"
 msgstr "Etiketli"
 
-msgid "Today"
-msgstr "Bugün"
-
 msgid "Customize Columns…"
 msgstr "Sütunları Özelleştir…"
 
@@ -5830,9 +6523,6 @@ msgid_plural "Repeats every {n} years"
 msgstr[0] "{n} yılda bir tekrarlanır"
 msgstr[1] "{n} yılda bir tekrarlanır"
 
-msgid "Repeats"
-msgstr "Tekrarlanma"
-
 msgid "Somebody answered this invitation."
 msgstr "Birisi bu davete yanıt verdi."
 
@@ -5892,15 +6582,9 @@ msgstr "Bu daveti {date} tarihinde reddettiniz."
 msgid "Tells the organizer you will be there"
 msgstr "Düzenleyiciye katılacağınızı bildirir"
 
-msgid "Maybe"
-msgstr "Belki"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "Düzenleyiciye katılma ihtimaliniz olduğunu bildirir"
-
-msgid "Decline"
-msgstr "Reddet"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -6296,9 +6980,6 @@ msgstr "Anahtarı İçe Aktar"
 msgid "OpenPGP keys"
 msgstr "OpenPGP anahtarları"
 
-msgid "Could not import: {e}"
-msgstr "İçe aktarılamadı: {e}"
-
 msgid "Export Public Key"
 msgstr "Genel Anahtarı Dışa Aktar"
 
@@ -6443,9 +7124,6 @@ msgstr "24 saatlik (17:40)"
 
 msgid "Manually"
 msgstr "Elle"
-
-msgid "Every minute"
-msgstr "Her dakika"
 
 msgid "Every 5 minutes"
 msgstr "Her 5 dakikada bir"
@@ -6709,9 +7387,6 @@ msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
 "Başlatıcı başka yerde ayarlanmış bir simge gösterir. Buradan seçmek onun "
 "yerini alır."
-
-msgid "Always"
-msgstr "Her zaman"
 
 msgid "A year"
 msgstr "Bir yıl"
@@ -7306,6 +7981,10 @@ msgstr "Ek Tarayıcısını Göster"
 msgid "Every account’s attachments in one place."
 msgstr "Her hesabın eklerine tek bir yerden göz atın."
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "Takvim"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "Simge şeridinin üzerine gelmek tam kenar çubuğunu açar."
 
@@ -7436,6 +8115,9 @@ msgstr "Sonuç Yok"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7476,9 +8158,6 @@ msgstr "PDF kaydedilemedi: {error}"
 
 msgid "Filled in by Mail Merge"
 msgstr "Posta Birleştirme ile dolduruldu"
-
-msgid "Custom…"
-msgstr "Özel…"
 
 msgid "Sans Serif"
 msgstr "Sans Serif"
@@ -7614,9 +8293,6 @@ msgstr "Alt klasörleri göster veya gizle"
 
 msgid "Mark Inbox as Read"
 msgstr "Gelen Kutusunu Okundu İşaretle"
-
-msgid "Refresh"
-msgstr "Yenile"
 
 msgid "New Folder…"
 msgstr "Yeni Klasör…"
@@ -8292,6 +8968,33 @@ msgstr "ağ bağlantısı yok"
 
 msgid "runtime error: {e}"
 msgstr "çalışma zamanı hatası: {e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "Kabul edildi: {subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "Geçici olarak kabul edildi: {subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] "Bu davette yanıt gönderilebilecek bir düzenleyici belirtilmemiş."
+msgstr[1] "Bu davette yanıt gönderilebilecek bir düzenleyici belirtilmemiş."
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "Takvime Ekle"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "Etkinlik eklenemedi: {e}"
 
 msgid "No contacts were found in the selected files"
 msgstr "Seçilen dosyalarda kişi bulunamadı"
@@ -9180,7 +9883,8 @@ msgstr ""
 "Rust ve libadwaita ile geliştirilmiş hızlı, GNOME uyumlu bir e-posta "
 "istemcisi. Açık kaynaklı ve varsayılan olarak gizlilik odaklı."
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "E-posta;Posta;IMAP;Email;Mail;"
 
 msgid ""
@@ -9306,9 +10010,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Hylki cannot change this kind of group"
 #~ msgstr "Hylki bu tür bir grubu değiştiremez"
-
-#~ msgid "Notes"
-#~ msgstr "Notlar"
 
 #~ msgid ""
 #~ "The directory cannot be searched without signing in. Add a sign-in to it "
@@ -9593,9 +10294,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "Hylki'de göster"
-
-#~ msgid "Email Address"
-#~ msgstr "E-posta Adresi"
 
 #~ msgid "SMTP Username"
 #~ msgstr "SMTP Kullanıcı Adı"

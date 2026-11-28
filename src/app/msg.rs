@@ -123,6 +123,12 @@ pub(crate) enum AppMsg {
     // ---- on_gallery (gallery.rs) ----
     /// Show the attachments gallery (sidebar "Attachments" row).
     ShowAttachments,
+
+    // ---- on_calendar (calendar.rs) ----
+    /// Show the calendar (sidebar "Calendar" row, #715).
+    ShowCalendar,
+    /// What the calendar asks of the rest of the app.
+    Calendar(crate::ui::calendar_page::CalendarOutput),
     /// Download an attachment the gallery knows of but has never fetched.
     GalleryFetch {
         account_id: u32,

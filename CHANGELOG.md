@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **New: Calendar** (#715). **Calendar** in the sidebar's footer shows
+  every calendar Evolution Data Server keeps (GNOME Calendar's, GNOME
+  Online Accounts', CalDAV accounts set up here), or calendars of Hylki's
+  own without it, in day, week, month, year and list views. Events are made
+  by dragging, by double-clicking or by a sentence typed into quick add,
+  moved and stretched by dragging, and edited in full: repeats by any rule,
+  with changes to one occurrence, the ones after it or all of them, alerts,
+  busy or free, invitees, notes. Invitations go out by mail, answers to
+  them are mailed from the calendar, and **Add to Calendar** and **Accept**
+  on an invitation in the reader write it to the calendar. Calendars can be
+  made, subscribed to by address, imported from `.ics`, recolored, hidden
+  and searched. **Settings → Calendar** sets the week, working hours,
+  new-event defaults and reminders, which show here where the desktop's
+  alarm service does not run. **Settings → Sidebar → Show Calendar** takes
+  the row away. Keys are in [Keyboard shortcuts](docs/KEYBOARD_SHORTCUTS.md#calendar).
+
+- **New: CalDAV accounts** (#715). The account form in Settings → Contacts
+  (now **CalDAV and CardDAV Server**) has a **Calendars** switch, on by
+  default, that keeps the account's calendars too, from the service's
+  calendar server for iCloud, Fastmail and Yahoo.
+
 - **New: Send asks about an empty subject** (#726). A message with no
   subject, or spaces alone, asks "Send Without a Subject?" first. **Send
   Anyway** sends it, after the attachment reminder if that applies, and

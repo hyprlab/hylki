@@ -238,6 +238,7 @@ impl Sidebar {
         self.unified_list = None;
         self.footer_list = None;
         self.attachments_row = None;
+        self.calendar_row = None;
         self.contacts_row = None;
         self.outbox_list = None;
         self.folder_badges.clear();
@@ -505,13 +506,13 @@ impl Sidebar {
     }
 
     fn build_footer(&mut self, footer: &gtk::Box, sender: &ComponentSender<Self>) {
-        // Contacts and Attachments live in the pinned footer against the
-        // sidebar's bottom edge — they keep out of the way of the account
-        // list and never scroll off. A faint rule sets them apart from
-        // whatever the scroller above ends on. ONE list box holds both rows,
-        // so they read as one gapless section (beta 1.18.0b feedback) and
-        // selecting one automatically clears the other.
-        if self.show_attachments || self.contacts_in_footer() {
+        // Attachments, Calendar and Contacts live in the pinned footer
+        // against the sidebar's bottom edge — they keep out of the way of the
+        // account list and never scroll off. A faint rule sets them apart
+        // from whatever the scroller above ends on. ONE list box holds the
+        // rows, so they read as one gapless section (beta 1.18.0b feedback)
+        // and selecting one automatically clears the others.
+        if self.show_attachments || self.show_calendar || self.contacts_in_footer() {
             let sep = gtk::Separator::new(gtk::Orientation::Horizontal);
             sep.add_css_class("footer-separator");
             footer.append(&sep);
@@ -523,8 +524,12 @@ impl Sidebar {
 
             // "Contacts" row: the in-app contacts view, where Settings →
             // Sidebar puts it by default. Right-click offers GNOME Contacts.
+            // The rows go Attachments, Calendar, Contacts, in every
+            // language.
+            let mut rows: Vec<(u8, gtk::ListBoxRow)> = Vec::new();
             if self.contacts_in_footer() {
-                let row = self.footer_row("x-office-address-book-symbolic", &i18n("Contacts"));
+                let name = i18n("Contacts");
+                let row = self.footer_row("x-office-address-book-symbolic", &name);
                 let right_click = gtk::GestureClick::new();
                 right_click.set_button(3);
                 let s = sender.clone();
@@ -547,20 +552,33 @@ impl Sidebar {
                     );
                 });
                 row.add_controller(right_click);
-                list.append(&row);
+                rows.push((2, row.clone()));
                 self.contacts_row = Some(row);
             }
 
-            // "Attachments" row — a gallery of every inbox attachment. The
-            // very last row in the sidebar, below Contacts.
+            // "Calendar" row (#715): every calendar on the desktop.
+            if self.show_calendar {
+                let name = i18n("Calendar");
+                let row = self.footer_row("x-office-calendar-symbolic", &name);
+                rows.push((1, row.clone()));
+                self.calendar_row = Some(row);
+            }
+
+            // "Attachments" row — a gallery of every inbox attachment.
             if self.show_attachments {
-                let row = self.footer_row("mail-attachment-symbolic", &i18n("Attachments"));
-                list.append(&row);
+                let name = i18n("Attachments");
+                let row = self.footer_row("mail-attachment-symbolic", &name);
+                rows.push((0, row.clone()));
                 self.attachments_row = Some(row);
+            }
+            rows.sort_by_key(|(place, _)| *place);
+            for (_, row) in &rows {
+                list.append(row);
             }
 
             let s = sender.clone();
             let attachments_row = self.attachments_row.clone();
+            let calendar_row = self.calendar_row.clone();
             let contacts_row = self.contacts_row.clone();
             let quiet = self.quiet.clone();
             list.connect_row_selected(move |_, row| {
@@ -570,6 +588,8 @@ impl Sidebar {
                 let Some(row) = row else { return };
                 if Some(row) == attachments_row.as_ref() {
                     s.input(SidebarInput::AttachmentsRowSelected);
+                } else if Some(row) == calendar_row.as_ref() {
+                    s.input(SidebarInput::CalendarRowSelected);
                 } else if Some(row) == contacts_row.as_ref() {
                     s.input(SidebarInput::ContactsRowClicked);
                 }

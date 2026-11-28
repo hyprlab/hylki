@@ -387,6 +387,38 @@ msgstr "Печать…"
 msgid "New Message"
 msgstr "Новое сообщение"
 
+#, fuzzy
+msgid "That is not a web address."
+msgstr "Это не имя папки"
+
+#, fuzzy
+msgid "The calendar is no longer there."
+msgstr "Сообщение слишком длинное для сервера."
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr "сегодня"
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr "завтра"
+
+msgid "Personal"
+msgstr "Личное"
+
+#, fuzzy
+msgid "There is no data folder to keep calendars in."
+msgstr "Нет папки для установки."
+
+#, fuzzy
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr "Сервис Evolution Data Server недоступен"
+
+#, fuzzy
+msgid "The file holds no events."
+msgstr "Не удалось открыть файл"
+
 msgid "A group needs a name."
 msgstr "Группе необходимо название."
 
@@ -1523,6 +1555,9 @@ msgstr "Все учётные записи"
 msgid "Contacts"
 msgstr "Контакты"
 
+msgid "Calendar"
+msgstr "Календарь"
+
 msgid "Outbox"
 msgstr "Исходящие"
 
@@ -2053,15 +2088,6 @@ msgstr "Найти в сообщении (Ctrl+F)"
 msgid "Downloading attachments…"
 msgstr "Загрузка вложений…"
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-msgid "today tonight"
-msgstr "сегодня"
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr "завтра"
-
 msgid "Signature"
 msgstr "Подпись"
 
@@ -2308,9 +2334,6 @@ msgstr "Импортируйте открытый ключ отправител�
 
 msgid "Labeled"
 msgstr "С меткой"
-
-msgid "Personal"
-msgstr "Личное"
 
 msgid "Private"
 msgstr "Частный"
@@ -3869,9 +3892,6 @@ msgstr "Открыть в календаре"
 msgid "Title"
 msgstr "Название"
 
-msgid "Calendar"
-msgstr "Календарь"
-
 msgid "Task list"
 msgstr "Список задач"
 
@@ -3919,6 +3939,706 @@ msgstr[2] "за {n} минут"
 
 msgid "Due"
 msgstr "Срок"
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+#, fuzzy
+msgid "Moved to {calendar}"
+msgstr "Переместить в {name}"
+
+msgid "This calendar is read-only."
+msgstr ""
+
+#, fuzzy
+msgid "Untitled"
+msgstr "Название"
+
+#, fuzzy
+msgid "Deleted “{title}”"
+msgstr "Удалить «{name}»?"
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+#, fuzzy
+msgid "Delete a Repeating Event?"
+msgstr "Удалить навсегда"
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+#, fuzzy
+msgid "All Events"
+msgstr "Все ключи"
+
+#, fuzzy
+msgid "Edit…"
+msgstr "Редактировать метку…"
+
+#, fuzzy
+msgid "Details…"
+msgstr "Подробности"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr "Принять"
+
+msgid "Maybe"
+msgstr "Возможно"
+
+msgid "Decline"
+msgstr "Отклонить"
+
+#, fuzzy
+msgid "Email Attendees"
+msgstr "Адрес электронной почты"
+
+#, fuzzy
+msgid "New Event Here"
+msgstr "Новое событие"
+
+#, fuzzy
+msgid "Go to Today"
+msgstr "Перейти в Контакты"
+
+#, fuzzy
+msgid "No Events Found"
+msgstr "Ничего не найдено"
+
+#, fuzzy
+msgid "Try other words."
+msgstr "Введите пароль."
+
+msgid "Today"
+msgstr "Сегодня"
+
+#, fuzzy
+msgid "Tomorrow"
+msgstr "завтра"
+
+msgid "Repeats"
+msgstr "Повторяется"
+
+#, fuzzy
+msgid "Could not read the calendars: {e}"
+msgstr "Не удалось добавить задачу: {e}"
+
+#, fuzzy
+msgid "Could not save the change to {calendar}: {e}"
+msgstr "Не удалось сохранить сообщение: {e}"
+
+#, fuzzy
+msgid "{n} minutes after"
+msgstr "{n} минут назад"
+
+#, fuzzy
+msgid "Edit Event"
+msgstr "Редактировать контакт"
+
+#, fuzzy
+msgid "Event"
+msgstr "Новое событие"
+
+#, fuzzy
+msgid "Location"
+msgstr "Действие"
+
+msgid "Time zone"
+msgstr ""
+
+#, fuzzy
+msgid "Repeat"
+msgstr "Повторяется"
+
+msgid "End repeat"
+msgstr ""
+
+#, fuzzy
+msgid "On date"
+msgstr "С {date}"
+
+msgid "After a number of times"
+msgstr ""
+
+#, fuzzy
+msgid "Last day"
+msgstr "Последние 7 дней"
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+#, fuzzy
+msgid "Second alert"
+msgstr "Второй сигнал тревоги"
+
+#, fuzzy
+msgid "Show as"
+msgstr "Показать"
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+#, fuzzy
+msgid "Status"
+msgstr "Строка состояния"
+
+msgid "Confirmed"
+msgstr ""
+
+#, fuzzy
+msgid "Tentative"
+msgstr "Условно принято: {subject}"
+
+#, fuzzy
+msgid "Cancelled"
+msgstr "Отменено"
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+#, fuzzy
+msgid "Add an address"
+msgstr "Добавить адрес"
+
+#, fuzzy
+msgid "Organizer"
+msgstr "Организация"
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr "Заметки"
+
+#, fuzzy
+msgid "Delete Event"
+msgstr "Создать событие…"
+
+#, fuzzy
+msgid "Every"
+msgstr "Везде"
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+#, fuzzy
+msgid "Years"
+msgstr "Год"
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+#, fuzzy
+msgid "The last {day}"
+msgstr "Последняя открытая папка"
+
+msgid "first"
+msgstr ""
+
+#, fuzzy
+msgid "second"
+msgstr "{n} секунда"
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+#, fuzzy
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] "ещё {n} адрес"
+msgstr[1] "ещё {n} адреса"
+msgstr[2] "ещё {n} адресов"
+
+#, fuzzy
+msgid "Join Meeting"
+msgstr "Встреча"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Details"
+msgstr "Подробности"
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+#, fuzzy
+msgid "and {n} more"
+msgstr "Метка добавлена к {n} письму"
+
+msgid "Going"
+msgstr ""
+
+#, fuzzy
+msgid "Not going"
+msgstr "Не найдено"
+
+#, fuzzy
+msgid "No answer yet"
+msgstr "Учётные записи пока не добавлены"
+
+#, fuzzy
+msgid "{name} (you)"
+msgstr "{name} (ссылка)"
+
+#, fuzzy
+msgid "Name and Color"
+msgstr "Цвет тега"
+
+#, fuzzy
+msgid "New Calendar"
+msgstr "Календарь"
+
+#, fuzzy
+msgid "Kept on this computer."
+msgstr "Папки на этом компьютере"
+
+#, fuzzy
+msgid "Could not add the calendar: {e}"
+msgstr "Не удалось добавить событие: {e}"
+
+#, fuzzy
+msgid "Subscribe to a Calendar"
+msgstr "Добавить в Календарь"
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+#, fuzzy
+msgid "Subscribe"
+msgstr "Отписаться"
+
+#, fuzzy
+msgid "Could not subscribe: {e}"
+msgstr "Не удалось перевести: {why}"
+
+#, fuzzy
+msgid "Calendar files"
+msgstr "Календарь"
+
+#. Which calendar the events go to.
+#, fuzzy
+msgid "Import Events"
+msgstr "Импортировать в"
+
+#, fuzzy
+msgid "Could not read the file: {e}"
+msgstr "Не удалось создать папку: {e}"
+
+msgid "Import"
+msgstr "Импорт"
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+msgid "Could not import: {e}"
+msgstr "Не удалось импортировать: {e}"
+
+#, fuzzy
+msgid "Unsubscribe from {name}?"
+msgstr "Отписаться от «{name}»?"
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+#, fuzzy
+msgid "Delete {name}?"
+msgstr "Удалить «{name}»?"
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+#, fuzzy
+msgid "More Details…"
+msgstr "Подробности"
+
+#, fuzzy
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] "{n} ч. назад"
+msgstr[1] "{n} ч. назад"
+msgstr[2] "{n} ч. назад"
+
+#, fuzzy
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] "{n} минут назад"
+msgstr[1] "{n} минут назад"
+msgstr[2] "{n} минут назад"
+
+#, fuzzy
+msgid "{when}, at {time}"
+msgstr "{date} в {time}"
+
+#, fuzzy
+msgid "Now, until {time}"
+msgstr "До {date}"
+
+msgid "Every Day"
+msgstr ""
+
+#, fuzzy
+msgid "Every Weekday"
+msgstr "Везде"
+
+#, fuzzy
+msgid "Every Week"
+msgstr "Везде"
+
+#, fuzzy
+msgid "Every 2 Weeks"
+msgstr "Каждые 5 минут"
+
+#, fuzzy
+msgid "Every Month"
+msgstr "Каждую минуту"
+
+#, fuzzy
+msgid "Every Year"
+msgstr "Везде"
+
+msgid "Custom…"
+msgstr "Пользовательский…"
+
+msgid "last"
+msgstr ""
+
+#, fuzzy
+msgid "second to last"
+msgstr "Второй сигнал тревоги"
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] "Везде"
+msgstr[1] "Везде"
+msgstr[2] "Везде"
+
+#, fuzzy
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] "Каждую минуту"
+msgstr[1] "Каждую минуту"
+msgstr[2] "Каждую минуту"
+
+#, fuzzy
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] "Везде"
+msgstr[1] "Везде"
+msgstr[2] "Везде"
+
+#, fuzzy
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] "в час"
+msgstr[1] "в час"
+msgstr[2] "в час"
+
+#, fuzzy
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] "Каждую минуту"
+msgstr[1] "Каждую минуту"
+msgstr[2] "Каждую минуту"
+
+#, fuzzy
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] "{n} секунда"
+msgstr[1] "{n} секунды"
+msgstr[2] "{n} секунд"
+
+#, fuzzy
+msgid "Every weekday"
+msgstr "Везде"
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "{rule}, until {date}"
+msgstr "До {date}"
+
+#, fuzzy
+msgid "Calendars"
+msgstr "Календарь"
+
+#, fuzzy
+msgid "Show All"
+msgstr "Показать только"
+
+#, fuzzy
+msgid "Add Calendar"
+msgstr "Добавить в Календарь"
+
+#, fuzzy
+msgid "New Calendar…"
+msgstr "Создать папку…"
+
+#, fuzzy
+msgid "Subscribe to Calendar…"
+msgstr "Добавить в Календарь"
+
+#, fuzzy
+msgid "Import Events…"
+msgstr "Сортировка контактов"
+
+#, fuzzy
+msgid "Add CalDAV Account…"
+msgstr "Добавить учётную запись…"
+
+#, fuzzy
+msgid "Subscriptions"
+msgstr "Разделы"
+
+#, fuzzy
+msgid "Online"
+msgstr "1 строка"
+
+#, fuzzy
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] "Календарь"
+msgstr[1] "Календарь"
+msgstr[2] "Календарь"
+
+#, fuzzy
+msgid "Read-only"
+msgstr "Чтение"
+
+#, fuzzy
+msgid "Show Only This Calendar"
+msgstr "Открыть в календаре"
+
+#, fuzzy
+msgid "Name and Color…"
+msgstr "Переименовать папку…"
+
+#, fuzzy
+msgid "Color…"
+msgstr "Цвет"
+
+msgid "Refresh"
+msgstr "Обновить"
+
+#, fuzzy
+msgid "Delete Calendar…"
+msgstr "Удалить папку…"
+
+msgid "Go to today (T)"
+msgstr ""
+
+#, fuzzy
+msgid "New Event (Ctrl+N)"
+msgstr "Новое событие"
+
+#, fuzzy
+msgid "Search Events (Ctrl+F)"
+msgstr "Поиск контактов (Ctrl+F)"
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr "Год"
+
+msgid "List"
+msgstr ""
+
+#, fuzzy
+msgid "Search events"
+msgstr "Поиск отправителей"
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+#, fuzzy
+msgid "New Event…"
+msgstr "Новое событие"
+
+#, fuzzy
+msgid "No Calendars"
+msgstr "Календарь"
+
+#, fuzzy
+msgid "Calendars set up on this computer show here."
+msgstr "Папки на этом компьютере"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Нечего экспортировать."
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+#, fuzzy
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] "{n} ч. назад"
+msgstr[1] "{n} ч. назад"
+msgstr[2] "{n} ч. назад"
+
+#, fuzzy
+msgid "{n} hours"
+msgstr "{n} ч. назад"
+
+#, fuzzy
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] "{n} минут назад"
+msgstr[1] "{n} минут назад"
+msgstr[2] "{n} минут назад"
+
+msgid "First day of the week"
+msgstr ""
+
+#, fuzzy
+msgid "As the system has it"
+msgstr "В начале"
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+#, fuzzy
+msgid "All seven days"
+msgstr "Весь день"
+
+msgid "Monday to Friday"
+msgstr ""
+
+#, fuzzy
+msgid "Show week numbers"
+msgstr "Номера страниц"
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+#, fuzzy
+msgid "New Events"
+msgstr "Новое событие"
+
+msgid "Length"
+msgstr ""
+
+#, fuzzy
+msgid "Meetings and Reminders"
+msgstr "подписывает и шифрует"
+
+#, fuzzy
+msgid "Show declined meetings"
+msgstr "Показать заголовки столбцов"
+
+#, fuzzy
+msgid "Show reminders"
+msgstr "Показывать логотипы отправителей"
+
+msgid "Always"
+msgstr "Всегда"
+
+#, fuzzy
+msgid "Automatic leaves them to the desktop where it shows them."
+msgstr "В автоматическом режиме используется ключ с совпадающим адресом."
 
 msgid "Welcome to Hylki, formerly {old}"
 msgstr "Добро пожаловать в Hylki (ранее — {old})"
@@ -4242,9 +4962,6 @@ msgstr "Ничего не изменится, пока вы их не приме
 
 msgid "Reject"
 msgstr "Отклонить"
-
-msgid "Accept"
-msgstr "Принять"
 
 msgid "To:"
 msgstr "Кому:"
@@ -4706,9 +5423,6 @@ msgstr "Вся почта"
 msgid "Import from Mail"
 msgstr "Импорт файлов Mbox"
 
-msgid "Import"
-msgstr "Импорт"
-
 msgid "Import into"
 msgstr "Импортировать в"
 
@@ -4788,6 +5502,9 @@ msgstr "Адресная книга"
 
 msgid "Server"
 msgstr "Сервер"
+
+msgid "Its calendars show in Calendar."
+msgstr ""
 
 msgid "Sign-in"
 msgstr "Авторизация"
@@ -4930,7 +5647,8 @@ msgstr[2] "Найдено {n} адресных книг на {name}"
 msgid "Connected to {name}"
 msgstr "Подключено к {name}"
 
-msgid "CardDAV Server"
+#, fuzzy
+msgid "CalDAV and CardDAV Server"
 msgstr "CardDAV-сервер"
 
 #, fuzzy
@@ -4949,9 +5667,10 @@ msgstr ""
 "Например, cloud.example.org. При двухфакторном входе создайте пароль "
 "приложения в Nextcloud в разделе «Настройки» → «Безопасность»."
 
+#, fuzzy
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 "Используйте пароль приложения для доступа к контактам, созданный в Fastmail "
 "в разделе «Настройки» → «Конфиденциальность и безопасность»."
@@ -5105,9 +5824,6 @@ msgstr "Добавить в Контакты"
 msgid "Directory"
 msgstr "Каталог"
 
-msgid "Details"
-msgstr "Подробности"
-
 msgid "Members"
 msgstr "Члены"
 
@@ -5188,9 +5904,6 @@ msgstr "Добавить адрес"
 msgid "No birthday"
 msgstr "Без дня рождения"
 
-msgid "Year"
-msgstr "Год"
-
 msgid "Change Photo…"
 msgstr "Изменить фото…"
 
@@ -5220,9 +5933,6 @@ msgstr "Переместить в адресную книгу…"
 
 msgid "Delete…"
 msgstr "Удалить…"
-
-msgid "Edit"
-msgstr "Редактировать"
 
 msgid "Open in GNOME Contacts"
 msgstr "Открыть в «Контактах GNOME»"
@@ -5680,9 +6390,6 @@ msgstr "Высокая важность"
 msgid "Untagged"
 msgstr "с тегами"
 
-msgid "Today"
-msgstr "Сегодня"
-
 msgid "Customize Columns…"
 msgstr "Настроить столбцы…"
 
@@ -5919,9 +6626,6 @@ msgstr[0] "Повторяется каждые {n} г."
 msgstr[1] "Повторяется каждые {n} г."
 msgstr[2] "Повторяется каждые {n} г."
 
-msgid "Repeats"
-msgstr "Повторяется"
-
 msgid "Somebody answered this invitation."
 msgstr "Кто-то ответил на это приглашение."
 
@@ -5982,15 +6686,9 @@ msgstr "Вы отклонили это приглашение {date}."
 msgid "Tells the organizer you will be there"
 msgstr "Сообщает организатору, что вы прийдете"
 
-msgid "Maybe"
-msgstr "Возможно"
-
 #, fuzzy
 msgid "Tells the organizer you might be there"
 msgstr "Сообщает организатору, что вы можете прийти"
-
-msgid "Decline"
-msgstr "Отклонить"
 
 #, fuzzy
 msgid "Tells the organizer you will not be there"
@@ -6385,9 +7083,6 @@ msgstr "Импортировать ключ"
 msgid "OpenPGP keys"
 msgstr "Ключи OpenPGP"
 
-msgid "Could not import: {e}"
-msgstr "Не удалось импортировать: {e}"
-
 msgid "Export Public Key"
 msgstr "Экспортировать открытый ключ"
 
@@ -6532,9 +7227,6 @@ msgstr "24-часовой формат (17:40)"
 
 msgid "Manually"
 msgstr "Вручную"
-
-msgid "Every minute"
-msgstr "Каждую минуту"
 
 msgid "Every 5 minutes"
 msgstr "Каждые 5 минут"
@@ -6802,9 +7494,6 @@ msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
 msgstr ""
 "В панели запуска отображается значок, установленный в другом месте. Выбор "
 "одного здесь заменяет его."
-
-msgid "Always"
-msgstr "Всегда"
 
 msgid "A year"
 msgstr "Год"
@@ -7411,6 +8100,10 @@ msgstr "Показать браузер вложений"
 msgid "Every account’s attachments in one place."
 msgstr "Просматривайте вложения каждой учётной записи в одном месте."
 
+#, fuzzy
+msgid "Show Calendar"
+msgstr "Календарь"
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "При наведении курсора на панель значков выводится вся боковая панель."
 
@@ -7547,6 +8240,9 @@ msgstr "Ничего не найдено"
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -7587,9 +8283,6 @@ msgstr "Не удалось сохранить PDF: {error}"
 
 msgid "Filled in by Mail Merge"
 msgstr "Заполнено слиянием почты"
-
-msgid "Custom…"
-msgstr "Пользовательский…"
 
 msgid "Sans Serif"
 msgstr "Без засечек"
@@ -7725,9 +8418,6 @@ msgstr "Показать или скрыть вложенные папки"
 
 msgid "Mark Inbox as Read"
 msgstr "Отметить входящие как прочитанные"
-
-msgid "Refresh"
-msgstr "Обновить"
 
 msgid "New Folder…"
 msgstr "Создать папку…"
@@ -8414,6 +9104,35 @@ msgstr "нет подключения к сети"
 
 msgid "runtime error: {e}"
 msgstr "ошибка выполнения: {e}"
+
+#, fuzzy
+msgid "Cancelled: {subject}"
+msgstr "Принято: {subject}"
+
+#, fuzzy
+msgid "Invitation: {subject}"
+msgstr "Условно принято: {subject}"
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, fuzzy
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] "В этом приглашении не указан организатор для ответа."
+msgstr[1] "В этом приглашении не указан организатор для ответа."
+msgstr[2] "В этом приглашении не указан организатор для ответа."
+
+#, fuzzy
+msgid "Added to {calendar}"
+msgstr "Добавить в Календарь"
+
+#, fuzzy
+msgid "Could not add it to the calendar: {e}"
+msgstr "Не удалось добавить событие: {e}"
 
 msgid "No contacts were found in the selected files"
 msgstr "В выбранных файлах контакты не найдены"
@@ -9315,7 +10034,8 @@ msgstr ""
 "Быстрый почтовый клиент для GNOME, написанный на Rust и libadwaita. Открытый "
 "исходный код и конфиденциальность по умолчанию."
 
-msgid "Email;Mail;IMAP;"
+#, fuzzy
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr "Email;Mail;IMAP;Почта;Электронная почта;Письма;"
 
 msgid ""
@@ -9442,9 +10162,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Hylki cannot change this kind of group"
 #~ msgstr "Хюльки не может изменить такую группу."
-
-#~ msgid "Notes"
-#~ msgstr "Заметки"
 
 #~ msgid ""
 #~ "The directory cannot be searched without signing in. Add a sign-in to it "
@@ -9735,9 +10452,6 @@ msgstr "Hyprlab"
 
 #~ msgid "Show in Hylki"
 #~ msgstr "Отображать в Hylki"
-
-#~ msgid "Email Address"
-#~ msgstr "Адрес электронной почты"
 
 #~ msgid "SMTP Username"
 #~ msgstr "Имя пользователя SMTP"
@@ -11217,10 +11931,6 @@ msgstr "Hyprlab"
 #~ msgid "An Exchange account can't receive mail from another account yet"
 #~ msgstr ""
 #~ "Учётная запись POP3 не может получать почту из другой учётной записи"
-
-#, fuzzy
-#~ msgid "Import contacts…"
-#~ msgstr "Сортировка контактов"
 
 #~ msgid "Contacts you add in GNOME Contacts appear here."
 #~ msgstr "Контакты, добавленные в «Контактах GNOME», появятся здесь."

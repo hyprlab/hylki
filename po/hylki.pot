@@ -374,6 +374,33 @@ msgstr ""
 msgid "New Message"
 msgstr ""
 
+msgid "That is not a web address."
+msgstr ""
+
+msgid "The calendar is no longer there."
+msgstr ""
+
+#. Translators: words in a message that mean today, for Create Event
+#. from Selection; lower case, separated by spaces. English already works.
+msgid "today tonight"
+msgstr ""
+
+#. Translators: words in a message that mean tomorrow, as above.
+msgid "tomorrow"
+msgstr ""
+
+msgid "Personal"
+msgstr ""
+
+msgid "There is no data folder to keep calendars in."
+msgstr ""
+
+msgid "Subscriptions need Evolution Data Server, which is not available."
+msgstr ""
+
+msgid "The file holds no events."
+msgstr ""
+
 msgid "A group needs a name."
 msgstr ""
 
@@ -1402,6 +1429,9 @@ msgstr ""
 msgid "Contacts"
 msgstr ""
 
+msgid "Calendar"
+msgstr ""
+
 msgid "Outbox"
 msgstr ""
 
@@ -1847,15 +1877,6 @@ msgstr ""
 msgid "Downloading attachments…"
 msgstr ""
 
-#. Translators: words in a message that mean today, for Create Event
-#. from Selection; lower case, separated by spaces. English already works.
-msgid "today tonight"
-msgstr ""
-
-#. Translators: words in a message that mean tomorrow, as above.
-msgid "tomorrow"
-msgstr ""
-
 msgid "Signature"
 msgstr ""
 
@@ -2090,9 +2111,6 @@ msgid "Import the sender’s public key to verify it."
 msgstr ""
 
 msgid "Labeled"
-msgstr ""
-
-msgid "Personal"
 msgstr ""
 
 msgid "Private"
@@ -3498,9 +3516,6 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-msgid "Calendar"
-msgstr ""
-
 msgid "Task list"
 msgstr ""
 
@@ -3543,6 +3558,587 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "Due"
+msgstr ""
+
+msgid "No calendar here takes new events."
+msgstr ""
+
+msgid "Added “{title}”"
+msgstr ""
+
+msgid "Event saved"
+msgstr ""
+
+msgid "Moved to {calendar}"
+msgstr ""
+
+msgid "This calendar is read-only."
+msgstr ""
+
+msgid "Untitled"
+msgstr ""
+
+msgid "Deleted “{title}”"
+msgstr ""
+
+msgid "Change a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Change only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Delete a Repeating Event?"
+msgstr ""
+
+msgid ""
+"Delete only this event, this and the ones after it, or every event in the "
+"series."
+msgstr ""
+
+msgid "Only This Event"
+msgstr ""
+
+msgid "This and Following"
+msgstr ""
+
+msgid "All Events"
+msgstr ""
+
+msgid "Edit…"
+msgstr ""
+
+msgid "Details…"
+msgstr ""
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Maybe"
+msgstr ""
+
+msgid "Decline"
+msgstr ""
+
+msgid "Email Attendees"
+msgstr ""
+
+msgid "New Event Here"
+msgstr ""
+
+msgid "Go to Today"
+msgstr ""
+
+msgid "No Events Found"
+msgstr ""
+
+msgid "Try other words."
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Tomorrow"
+msgstr ""
+
+msgid "Repeats"
+msgstr ""
+
+msgid "Could not read the calendars: {e}"
+msgstr ""
+
+msgid "Could not save the change to {calendar}: {e}"
+msgstr ""
+
+msgid "{n} minutes after"
+msgstr ""
+
+msgid "Edit Event"
+msgstr ""
+
+msgid "Event"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "Time zone"
+msgstr ""
+
+msgid "Repeat"
+msgstr ""
+
+msgid "End repeat"
+msgstr ""
+
+msgid "On date"
+msgstr ""
+
+msgid "After a number of times"
+msgstr ""
+
+msgid "Last day"
+msgstr ""
+
+msgid "Times"
+msgstr ""
+
+msgid "Alert"
+msgstr ""
+
+msgid "Second alert"
+msgstr ""
+
+msgid "Show as"
+msgstr ""
+
+msgid "Busy"
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Confirmed"
+msgstr ""
+
+msgid "Tentative"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Others who share the calendar see only that you are busy."
+msgstr ""
+
+#. Who is invited.
+msgid "Invitees"
+msgstr ""
+
+msgid "Add an address"
+msgstr ""
+
+msgid "Organizer"
+msgstr ""
+
+msgid "URL"
+msgstr ""
+
+msgid "Notes"
+msgstr ""
+
+msgid "Delete Event"
+msgstr ""
+
+msgid "Every"
+msgstr ""
+
+msgid "Unit"
+msgstr ""
+
+msgid "Days"
+msgstr ""
+
+msgid "Weeks"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+msgid "Years"
+msgstr ""
+
+msgid "Day {n}"
+msgstr ""
+
+msgid "The {nth} {day}"
+msgstr ""
+
+msgid "The last {day}"
+msgstr ""
+
+msgid "first"
+msgstr ""
+
+msgid "second"
+msgstr ""
+
+msgid "third"
+msgstr ""
+
+msgid "fourth"
+msgstr ""
+
+msgid "fifth"
+msgstr ""
+
+msgid "all-day"
+msgstr ""
+
+msgid "{n} more"
+msgid_plural "{n} more"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Join Meeting"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "{n} invited, {yes} going"
+msgstr ""
+
+msgid "and {n} more"
+msgstr ""
+
+msgid "Going"
+msgstr ""
+
+msgid "Not going"
+msgstr ""
+
+msgid "No answer yet"
+msgstr ""
+
+msgid "{name} (you)"
+msgstr ""
+
+msgid "Name and Color"
+msgstr ""
+
+msgid "New Calendar"
+msgstr ""
+
+msgid "Kept on this computer."
+msgstr ""
+
+msgid "Could not add the calendar: {e}"
+msgstr ""
+
+msgid "Subscribe to a Calendar"
+msgstr ""
+
+msgid ""
+"The address of a published calendar, such as a webcal:// or .ics link. It is "
+"checked for changes every hour."
+msgstr ""
+
+msgid "Subscribe"
+msgstr ""
+
+msgid "Could not subscribe: {e}"
+msgstr ""
+
+msgid "Calendar files"
+msgstr ""
+
+#. Which calendar the events go to.
+msgid "Import Events"
+msgstr ""
+
+msgid "Could not read the file: {e}"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Imported {n} event into {calendar}"
+msgid_plural "Imported {n} events into {calendar}"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Could not import: {e}"
+msgstr ""
+
+msgid "Unsubscribe from {name}?"
+msgstr ""
+
+msgid "Its events go from here. The published calendar is not changed."
+msgstr ""
+
+msgid "Delete {name}?"
+msgstr ""
+
+msgid "The calendar and every event in it are deleted from this computer."
+msgstr ""
+
+msgid "More Details…"
+msgstr ""
+
+msgid "In {n} hour"
+msgid_plural "In {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "In {n} minute"
+msgid_plural "In {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{when}, at {time}"
+msgstr ""
+
+msgid "Now, until {time}"
+msgstr ""
+
+msgid "Every Day"
+msgstr ""
+
+msgid "Every Weekday"
+msgstr ""
+
+msgid "Every Week"
+msgstr ""
+
+msgid "Every 2 Weeks"
+msgstr ""
+
+msgid "Every Month"
+msgstr ""
+
+msgid "Every Year"
+msgstr ""
+
+msgid "Custom…"
+msgstr ""
+
+msgid "last"
+msgstr ""
+
+msgid "second to last"
+msgstr ""
+
+msgid "{list} and {last}"
+msgstr ""
+
+msgid "Every day"
+msgid_plural "Every {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every week"
+msgid_plural "Every {n} weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every month"
+msgid_plural "Every {n} months"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every year"
+msgid_plural "Every {n} years"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every hour"
+msgid_plural "Every {n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every minute"
+msgid_plural "Every {n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every second"
+msgid_plural "Every {n} seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Every weekday"
+msgstr ""
+
+msgid "the {nth} {day}"
+msgstr ""
+
+msgid "{every} on {days}"
+msgstr ""
+
+msgid "{every} on day {days}"
+msgstr ""
+
+msgid "{rule}, once"
+msgid_plural "{rule}, {n} times"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{rule}, until {date}"
+msgstr ""
+
+msgid "Calendars"
+msgstr ""
+
+msgid "Show All"
+msgstr ""
+
+msgid "Add Calendar"
+msgstr ""
+
+msgid "New Calendar…"
+msgstr ""
+
+msgid "Subscribe to Calendar…"
+msgstr ""
+
+msgid "Import Events…"
+msgstr ""
+
+msgid "Add CalDAV Account…"
+msgstr ""
+
+msgid "Subscriptions"
+msgstr ""
+
+msgid "Online"
+msgstr ""
+
+msgid "Calendars: {n} hidden"
+msgid_plural "Calendars: {n} hidden"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Read-only"
+msgstr ""
+
+msgid "Show Only This Calendar"
+msgstr ""
+
+msgid "Name and Color…"
+msgstr ""
+
+msgid "Color…"
+msgstr ""
+
+msgid "Refresh"
+msgstr ""
+
+msgid "Delete Calendar…"
+msgstr ""
+
+msgid "Go to today (T)"
+msgstr ""
+
+msgid "New Event (Ctrl+N)"
+msgstr ""
+
+msgid "Search Events (Ctrl+F)"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Search events"
+msgstr ""
+
+msgid "Lunch with Sam tomorrow at 12:30"
+msgstr ""
+
+msgid "Type what and when, then press Enter."
+msgstr ""
+
+msgid "New Event…"
+msgstr ""
+
+msgid "No Calendars"
+msgstr ""
+
+msgid "Calendars set up on this computer show here."
+msgstr ""
+
+msgid "Nothing Coming Up"
+msgstr ""
+
+msgid "No events in the next 60 days."
+msgstr ""
+
+msgid "{n} hour"
+msgid_plural "{n} hours"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "{n} hours"
+msgstr ""
+
+msgid "{n} minute"
+msgid_plural "{n} minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "First day of the week"
+msgstr ""
+
+msgid "As the system has it"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Week view shows"
+msgstr ""
+
+msgid "All seven days"
+msgstr ""
+
+msgid "Monday to Friday"
+msgstr ""
+
+msgid "Show week numbers"
+msgstr ""
+
+msgid "Working Hours"
+msgstr ""
+
+msgid "Shaded outside them. Day and Week open scrolled to their start."
+msgstr ""
+
+msgid "New Events"
+msgstr ""
+
+msgid "Length"
+msgstr ""
+
+msgid "Meetings and Reminders"
+msgstr ""
+
+msgid "Show declined meetings"
+msgstr ""
+
+msgid "Show reminders"
+msgstr ""
+
+msgid "Always"
+msgstr ""
+
+msgid "Automatic leaves them to the desktop where it shows them."
 msgstr ""
 
 msgid "Welcome to Hylki, formerly {old}"
@@ -3812,9 +4408,6 @@ msgid "Nothing changes until you accept them."
 msgstr ""
 
 msgid "Reject"
-msgstr ""
-
-msgid "Accept"
 msgstr ""
 
 msgid "To:"
@@ -4230,9 +4823,6 @@ msgstr ""
 msgid "Import from Mail"
 msgstr ""
 
-msgid "Import"
-msgstr ""
-
 msgid "Import into"
 msgstr ""
 
@@ -4298,6 +4888,9 @@ msgid "Address book"
 msgstr ""
 
 msgid "Server"
+msgstr ""
+
+msgid "Its calendars show in Calendar."
 msgstr ""
 
 msgid "Sign-in"
@@ -4427,7 +5020,7 @@ msgstr[1] ""
 msgid "Connected to {name}"
 msgstr ""
 
-msgid "CardDAV Server"
+msgid "CalDAV and CardDAV Server"
 msgstr ""
 
 msgid ""
@@ -4441,8 +5034,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Use an app password with access to contacts, made in Fastmail under Settings "
-"→ Privacy & Security."
+"Use an app password with access to contacts and calendars, made in Fastmail "
+"under Settings → Privacy & Security."
 msgstr ""
 
 msgid "LDAP Directory"
@@ -4576,9 +5169,6 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-msgid "Details"
-msgstr ""
-
 msgid "Members"
 msgstr ""
 
@@ -4653,9 +5243,6 @@ msgstr ""
 msgid "No birthday"
 msgstr ""
 
-msgid "Year"
-msgstr ""
-
 msgid "Change Photo…"
 msgstr ""
 
@@ -4684,9 +5271,6 @@ msgid "Move to Address Book…"
 msgstr ""
 
 msgid "Delete…"
-msgstr ""
-
-msgid "Edit"
 msgstr ""
 
 msgid "Open in GNOME Contacts"
@@ -5090,9 +5674,6 @@ msgstr ""
 msgid "Untagged"
 msgstr ""
 
-msgid "Today"
-msgstr ""
-
 msgid "Customize Columns…"
 msgstr ""
 
@@ -5303,9 +5884,6 @@ msgid_plural "Repeats every {n} years"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Repeats"
-msgstr ""
-
 msgid "Somebody answered this invitation."
 msgstr ""
 
@@ -5362,13 +5940,7 @@ msgstr ""
 msgid "Tells the organizer you will be there"
 msgstr ""
 
-msgid "Maybe"
-msgstr ""
-
 msgid "Tells the organizer you might be there"
-msgstr ""
-
-msgid "Decline"
 msgstr ""
 
 msgid "Tells the organizer you will not be there"
@@ -5736,9 +6308,6 @@ msgstr ""
 msgid "OpenPGP keys"
 msgstr ""
 
-msgid "Could not import: {e}"
-msgstr ""
-
 msgid "Export Public Key"
 msgstr ""
 
@@ -5871,9 +6440,6 @@ msgid "24-hour (17:40)"
 msgstr ""
 
 msgid "Manually"
-msgstr ""
-
-msgid "Every minute"
 msgstr ""
 
 msgid "Every 5 minutes"
@@ -6130,9 +6696,6 @@ msgid "Theme"
 msgstr ""
 
 msgid "The launcher shows an icon set elsewhere. Picking one here replaces it."
-msgstr ""
-
-msgid "Always"
 msgstr ""
 
 msgid "A year"
@@ -6693,6 +7256,9 @@ msgstr ""
 msgid "Every account’s attachments in one place."
 msgstr ""
 
+msgid "Show Calendar"
+msgstr ""
+
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
 
@@ -6812,6 +7378,9 @@ msgstr ""
 
 #. Translators: words the settings search finds the Contacts page by,
 #. separated by spaces; keep "CardDAV" and "LDAP".
+msgid "calendar week working hours events alert reminders declined CalDAV"
+msgstr ""
+
 msgid ""
 "address books CardDAV LDAP directory directories Online Accounts Nextcloud "
 "iCloud Google Microsoft vCard"
@@ -6848,9 +7417,6 @@ msgid "Could not save the PDF: {error}"
 msgstr ""
 
 msgid "Filled in by Mail Merge"
-msgstr ""
-
-msgid "Custom…"
 msgstr ""
 
 msgid "Sans Serif"
@@ -6986,9 +7552,6 @@ msgid "Show or hide sub-folders"
 msgstr ""
 
 msgid "Mark Inbox as Read"
-msgstr ""
-
-msgid "Refresh"
 msgstr ""
 
 msgid "New Folder…"
@@ -7600,6 +8163,28 @@ msgid "no network connection"
 msgstr ""
 
 msgid "runtime error: {e}"
+msgstr ""
+
+msgid "Cancelled: {subject}"
+msgstr ""
+
+msgid "Invitation: {subject}"
+msgstr ""
+
+msgid "The cancellation has been sent to {n} person."
+msgid_plural "The cancellation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "The invitation has been sent to {n} person."
+msgid_plural "The invitation has been sent to {n} people."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Added to {calendar}"
+msgstr ""
+
+msgid "Could not add it to the calendar: {e}"
 msgstr ""
 
 msgid "No contacts were found in the selected files"
@@ -8428,7 +9013,7 @@ msgstr ""
 msgid "A GNOME-native email client built with Rust and libadwaita."
 msgstr ""
 
-msgid "Email;Mail;IMAP;"
+msgid "Email;Mail;IMAP;Calendar;CalDAV;"
 msgstr ""
 
 msgid ""

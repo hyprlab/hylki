@@ -8,17 +8,17 @@ use super::Stamp;
 /// A zone the document defines itself, for when its name means nothing to
 /// the system.
 #[derive(Debug, Default)]
-pub(super) struct TimeZoneSpec {
-    pub(super) id: String,
-    pub(super) observances: Vec<Observance>,
+pub(crate) struct TimeZoneSpec {
+    pub(crate) id: String,
+    pub(crate) observances: Vec<Observance>,
 }
 
 /// One `STANDARD` or `DAYLIGHT` block: the offset it puts the clock on, and
 /// (through its yearly rule) the day it starts.
 #[derive(Debug, Default)]
-pub(super) struct Observance {
+pub(crate) struct Observance {
     /// Seconds east of UTC once this is in force.
-    offset_to: i32,
+    pub(crate) offset_to: i32,
     /// Month it begins, from the rule (`BYMONTH`) or its own `DTSTART`.
     month: i32,
     /// Day of the month it begins, when the rule gives one outright.
@@ -32,7 +32,7 @@ pub(super) struct Observance {
 }
 
 impl Observance {
-    pub(super) fn take(&mut self, line: &Line) {
+    pub(crate) fn take(&mut self, line: &Line) {
         match line.name.to_ascii_uppercase().as_str() {
             "TZOFFSETTO" => self.offset_to = utc_offset(line.raw.trim()).unwrap_or_default(),
             "DTSTART" => {
@@ -119,7 +119,7 @@ impl TimeZoneSpec {
     /// event is written in: the changeover sits at a wall time too, so no
     /// conversion is needed to place the reading either side of it. A zone
     /// with one observance (no daylight saving) answers with that one.
-    pub(super) fn offset_at(&self, when: &Stamp) -> Option<i32> {
+    pub(crate) fn offset_at(&self, when: &Stamp) -> Option<i32> {
         if self.observances.len() == 1 {
             return Some(self.observances[0].offset_to);
         }

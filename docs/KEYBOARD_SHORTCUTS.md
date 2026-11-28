@@ -259,3 +259,21 @@ was left at until Hylki is next started or the setting is changed.
 
 Keys never fire while you are typing: whatever has focus gets first refusal, so
 "archive" typed into the search box searches for it.
+
+## Calendar
+
+These work while the calendar is showing, with or without single-key
+shortcuts.
+
+| Keys | |
+| --- | --- |
+| <kbd>Ctrl</kbd>+<kbd>1</kbd> … <kbd>5</kbd>, or <kbd>d</kbd> <kbd>w</kbd> <kbd>m</kbd> <kbd>y</kbd> <kbd>l</kbd> | Day, Week, Month, Year, List |
+| <kbd>t</kbd> | Today |
+| <kbd>←</kbd> <kbd>→</kbd>, <kbd>Page Up</kbd> <kbd>Page Down</kbd> | Previous and next day, week, month or year |
+| <kbd>Ctrl</kbd>+<kbd>N</kbd> | New event |
+| <kbd>Enter</kbd> | Open the selected event |
+| <kbd>Delete</kbd> | Delete the selected event |
+| <kbd>Esc</kbd> | Clear the selection |
+| <kbd>Ctrl</kbd>+<kbd>F</kbd> | Search events |
+| <kbd>Ctrl</kbd>+<kbd>R</kbd> | Read every calendar again, and ask the servers for changes |
+| <kbd>Ctrl</kbd>+wheel | Taller or shorter hours (Day and Week) |

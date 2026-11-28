@@ -342,6 +342,7 @@ pub(super) fn sidebar_output_msg(out: SidebarOutput) -> AppMsg {
         },
         SidebarOutput::ToggleAccountTags(id) => AppMsg::ToggleAccountTags(id),
         SidebarOutput::AttachmentsSelected => AppMsg::ShowAttachments,
+        SidebarOutput::CalendarSelected => AppMsg::ShowCalendar,
         SidebarOutput::ContactsClicked => AppMsg::OpenContacts,
         SidebarOutput::RefreshRequested => AppMsg::Refresh,
         SidebarOutput::StatusBarRequested => AppMsg::ToggleNotifications,
@@ -459,6 +460,7 @@ pub(super) struct Children {
     pub(super) gallery: Controller<AttachmentsGallery>,
     pub(super) contacts_compose_revealer: gtk::Revealer,
     pub(super) contacts_page: Controller<ContactsPage>,
+    pub(super) calendar_page: Controller<crate::ui::calendar_page::CalendarPage>,
     pub(super) notifications: Controller<NotificationCenter>,
 }
 
@@ -528,6 +530,10 @@ impl Children {
             .launch(contacts_compose_revealer.clone())
             .forward(sender.input_sender(), contacts_page_output_msg);
 
+        let calendar_page = crate::ui::calendar_page::CalendarPage::builder()
+            .launch(super::calendar::calendar_init(&boot.config))
+            .forward(sender.input_sender(), AppMsg::Calendar);
+
         let notifications = NotificationCenter::builder()
             .launch(())
             .forward(sender.input_sender(), notifications_output_msg);
@@ -542,6 +548,7 @@ impl Children {
             gallery,
             contacts_compose_revealer,
             contacts_page,
+            calendar_page,
             notifications,
         }
     }

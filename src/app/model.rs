@@ -481,6 +481,8 @@ pub(crate) struct AppModel {
     pub(super) notification_buttons: config::NotificationButtons,
     /// Whether the sidebar's footer shows the "Attachments" row.
     pub(super) show_attachments: bool,
+    /// Whether the sidebar's footer shows the "Calendar" row (#715).
+    pub(super) show_calendar: bool,
     /// Whether the settings window opens on Accounts (vs Preferences).
     pub(super) settings_open_accounts: bool,
     /// The Settings category last shown this session, to reopen on.
@@ -907,6 +909,10 @@ pub(crate) struct AppModel {
     pub(super) contacts_page: Controller<ContactsPage>,
     /// Whether the content area shows the contacts view.
     pub(super) showing_contacts: bool,
+    /// The calendar behind the sidebar's Calendar row (#715).
+    pub(super) calendar_page: Controller<crate::ui::calendar_page::CalendarPage>,
+    /// Whether the content area shows the calendar.
+    pub(super) showing_calendar: bool,
     /// True when the attachments gallery replaces the mail panes.
     pub(super) showing_gallery: bool,
     /// Whether the Outbox is showing instead of the mail panes.

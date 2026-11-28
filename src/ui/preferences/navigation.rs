@@ -71,6 +71,12 @@ pub(super) const SIDE_PAGES: &[(&str, &[SidePage])] = &[
                 icon: "x-office-address-book-symbolic",
                 accounts: false,
             },
+            SidePage {
+                id: "calendar",
+                title: i18n_noop("Calendar"),
+                icon: "x-office-calendar-symbolic",
+                accounts: false,
+            },
         ],
     ),
     (

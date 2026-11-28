@@ -66,6 +66,7 @@ impl AppModel {
             notification_content: self.notification_content,
             notification_buttons: self.notification_buttons.to_list(),
             show_attachments: self.show_attachments,
+            show_calendar: self.show_calendar,
             settings_open_accounts: self.settings_open_accounts,
             swipe_enabled: self.swipe_enabled,
             hover_actions: self.hover_actions,

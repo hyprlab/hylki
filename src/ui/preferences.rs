@@ -357,6 +357,10 @@ impl Component for Preferences {
                             #[name = "contacts_slot"]
                             add_named[Some("contacts")] = &adw::Bin {},
 
+                            // The calendar's settings (#715), built by its own module.
+                            #[name = "calendar_slot"]
+                            add_named[Some("calendar")] = &adw::Bin {},
+
                             #[local_ref]
                             add_named[Some("general")] = general_page -> adw::PreferencesPage {},
 

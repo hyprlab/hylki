@@ -47,6 +47,7 @@ mod compose_host;
 mod compose_init;
 mod compose_open;
 mod consts;
+mod calendar;
 mod contacts;
 mod conversation;
 mod counts;
@@ -318,6 +319,8 @@ impl SimpleComponent for AppModel {
                             "gallery"
                         } else if model.showing_contacts {
                             "contacts"
+                        } else if model.showing_calendar {
+                            "calendar"
                         } else {
                             "mail"
                         },

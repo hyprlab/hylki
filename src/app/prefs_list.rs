@@ -120,6 +120,19 @@ impl AppModel {
                     self.sidebars_emit(SidebarInput::SetAttachmentsRow(self.attachments_row_now()));
                 }
             }
+            PrefOutput::SetCalendarRow(show) => {
+                if pref!(self.show_calendar = show) {
+                    self.sidebars_emit(SidebarInput::SetCalendarRow(show));
+                    if !show && self.showing_calendar {
+                        self.showing_calendar = false;
+                        self.mirror_selection(crate::ui::sidebar::Sel::Unified);
+                    }
+                }
+            }
+            PrefOutput::SetCalendarPrefs(p) => {
+                self.calendar_page
+                    .emit(crate::ui::calendar_page::CalendarInput::Prefs(p));
+            }
             PrefOutput::ResetColumnWidths => {
                 if pref!(self.list_column_widths = Default::default()) {
                     self.message_list

@@ -96,6 +96,7 @@ impl AppModel {
                 self.showing_outbox = false;
                 self.showing_gallery = true;
                 self.showing_contacts = false;
+                self.showing_calendar = false;
                 self.gallery.emit(GalleryInput::SetLoading(true));
                 // Handing over the folder list is what starts the load: the
                 // gallery asks for its first page once it knows the scope, so
@@ -195,6 +196,7 @@ impl AppModel {
             } => {
                 self.leave_gallery();
                 self.showing_contacts = false;
+                self.showing_calendar = false;
                 self.showing_outbox = false;
                 if let Some(folder) = self.folder_by_path(account_id, &folder_path).cloned() {
                     self.select_folder(
@@ -248,5 +250,8 @@ impl AppModel {
         widgets
             .content_stack
             .add_named(self.contacts_page.widget(), Some("contacts"));
+        widgets
+            .content_stack
+            .add_named(self.calendar_page.widget(), Some("calendar"));
     }
 }

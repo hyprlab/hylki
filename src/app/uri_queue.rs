@@ -226,6 +226,7 @@ pub(crate) fn queue_start_view(view: StartView) {
 fn view_msg(view: StartView) -> AppMsg {
     match view {
         StartView::Contacts => AppMsg::OpenContacts,
+        StartView::Calendar => AppMsg::ShowCalendar,
         StartView::Attachments => AppMsg::ShowAttachments,
     }
 }
@@ -238,7 +239,7 @@ impl AppModel {
     /// (see `relay_to_primary`): raise the window on that view.
     pub(super) fn install_view_actions(&self, sender: &ComponentSender<Self>) {
         let app = relm4::main_application();
-        for view in [StartView::Contacts, StartView::Attachments] {
+        for view in StartView::ALL {
             let action = gtk::gio::SimpleAction::new(view.action(), None);
             let win = self.window.clone();
             let s = sender.clone();

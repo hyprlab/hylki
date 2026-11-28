@@ -141,6 +141,7 @@ impl AppModel {
         });
         self.leave_gallery();
         self.showing_contacts = false;
+        self.showing_calendar = false;
         self.showing_outbox = false;
         // Another view's slices are another view's: start afresh
         // (the loads below refill them).
@@ -365,6 +366,7 @@ impl AppModel {
         }
         self.leave_gallery();
         self.showing_contacts = false;
+        self.showing_calendar = false;
         self.showing_outbox = false;
         // Mirror the selection in the sidebar. Navigation that starts in the
         // sidebar hits its already-selected guard; navigation from anywhere

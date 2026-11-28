@@ -8,6 +8,8 @@ pub(crate) mod attachment_io;
 pub(crate) mod attachments_gallery;
 pub(crate) mod cache_unlock;
 pub(crate) mod calendar_item;
+pub(crate) mod calendar_page;
+pub(crate) mod calendar_settings;
 pub(crate) mod carry_over;
 mod chip_flow;
 mod cloud_accounts;

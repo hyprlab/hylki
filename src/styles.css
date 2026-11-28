@@ -2826,3 +2826,69 @@ scrolledwindow.merge-dialog-scroll {
 .hover-preview-chip:hover {
   background: alpha(currentColor, 0.1);
 }
+
+/* The Calendar (#715). The views draw themselves; these are the parts
+   around them. */
+.calendar-title-row {
+  padding: 2px 18px 8px 18px;
+}
+.calendar-title {
+  font-size: 1.6em;
+  font-weight: 800;
+}
+.calendar-popover-row > checkbutton {
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+.calendar-popover-row > checkbutton:hover {
+  background-color: alpha(currentColor, 0.07);
+}
+.calendar-popover-more {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  opacity: 0.55;
+}
+.calendar-popover-row:hover .calendar-popover-more {
+  opacity: 1;
+}
+.calendar-popover-footer {
+  padding: 4px;
+}
+.calendar-agenda {
+  background: none;
+}
+.calendar-agenda > row {
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.calendar-agenda > row.calendar-agenda-day {
+  padding: 16px 10px 4px 10px;
+  border-radius: 0;
+}
+.calendar-agenda > row.calendar-agenda-day:not(:first-child) {
+  border-top: 1px solid alpha(currentColor, 0.08);
+  margin-top: 6px;
+}
+.calendar-inspector {
+  padding: 6px 4px 2px 4px;
+}
+.calendar-notes {
+  background: alpha(currentColor, 0.04);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.calendar-weekday-toggle {
+  min-width: 30px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.calendar-swatch {
+  padding: 4px;
+  min-width: 0;
+  min-height: 0;
+}
+.calendar-swatch:checked {
+  background: none;
+  box-shadow: 0 0 0 2px @accent_color;
+}

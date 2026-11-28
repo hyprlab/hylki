@@ -311,6 +311,18 @@ pub(crate) fn error(account_id: u32, title: &str, body: &str) {
     send(&format!("hylki-error-{account_id}"), &n);
 }
 
+/// An event's alarm (#715): what, and when or where. One per occurrence
+/// and alarm, so a second alarm for the same event replaces the first.
+pub(crate) fn event_reminder(id: &str, title: &str, body: &str) {
+    let n = gio::Notification::new(title);
+    if !body.is_empty() {
+        n.set_body(Some(body));
+    }
+    n.set_priority(gio::NotificationPriority::High);
+    n.set_default_action(&format!("app.{PRESENT_ACTION}"));
+    send(&format!("hylki-event-{id}"), &n);
+}
+
 /// A read receipt came back (#520): who read which message. A click opens
 /// the message read, `open` as `(account, folder, message)`, or raises the
 /// window when it is not to be found. One per message, so a second reader

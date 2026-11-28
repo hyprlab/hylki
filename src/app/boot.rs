@@ -209,6 +209,7 @@ pub(super) fn sidebar_init(
         contacts_expanded: state.contacts_expanded,
         contacts_folded: state.contacts_folded.clone(),
         show_attachments,
+        show_calendar: config::load_privacy().show_calendar,
         start,
     }
 }

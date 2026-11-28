@@ -150,6 +150,7 @@ pub(crate) struct PrefInit {
     pub(crate) notify_receipts: bool,
     pub(crate) notification_buttons: crate::config::NotificationButtons,
     pub(crate) show_attachments: bool,
+    pub(crate) show_calendar: bool,
     pub(crate) show_unified: bool,
     pub(crate) unified_chips: crate::config::UnifiedChips,
     pub(crate) unified_kinds: crate::config::UnifiedKinds,
@@ -520,6 +521,9 @@ pub(crate) enum PrefOutput {
     SetNotifyReceipts(bool),
     SetNotificationButtons(crate::config::NotificationButtons),
     SetAttachmentsRow(bool),
+    SetCalendarRow(bool),
+    /// Settings → Calendar changed.
+    SetCalendarPrefs(crate::calendar::prefs::CalendarPrefs),
     SetShowUnified(bool),
     SetUnifiedChips(crate::config::UnifiedChips),
     SetPrintOptions(crate::config::PrintOptions),

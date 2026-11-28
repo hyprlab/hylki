@@ -232,6 +232,7 @@ impl AppModel {
         self.showing_outbox = false;
         self.leave_gallery();
         self.showing_contacts = true;
+        self.showing_calendar = false;
         // Read EDS off the UI thread (SQLite + photo decoding); the page
         // shows its loading face until the list lands.
         self.contacts_page.emit(ContactsPageInput::SetLoading);
