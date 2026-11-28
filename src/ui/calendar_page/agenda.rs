@@ -17,20 +17,32 @@ pub(crate) struct Agenda {
     list: gtk::ListBox,
     empty: adw::StatusPage,
     ctx: Shared,
+    /// Narrow: the day panel's list, its times one column of start times.
+    compact: bool,
 }
 
 impl Agenda {
     pub(crate) fn new(ctx: Shared) -> Agenda {
+        Agenda::build(ctx, false)
+    }
+
+    /// The day panel's narrow list.
+    pub(crate) fn compact(ctx: Shared) -> Agenda {
+        Agenda::build(ctx, true)
+    }
+
+    fn build(ctx: Shared, compact: bool) -> Agenda {
         let list = gtk::ListBox::new();
         list.set_selection_mode(gtk::SelectionMode::None);
         list.add_css_class("calendar-agenda");
         let clamp = adw::Clamp::new();
         clamp.set_maximum_size(760);
         clamp.set_child(Some(&list));
+        let edge = if compact { 4 } else { 12 };
         clamp.set_margin_top(6);
         clamp.set_margin_bottom(18);
-        clamp.set_margin_start(12);
-        clamp.set_margin_end(12);
+        clamp.set_margin_start(edge);
+        clamp.set_margin_end(edge);
         let scroller = gtk::ScrolledWindow::new();
         scroller.set_hscrollbar_policy(gtk::PolicyType::Never);
         scroller.set_vexpand(true);
@@ -46,6 +58,7 @@ impl Agenda {
             list,
             empty,
             ctx,
+            compact,
         }
     }
 
@@ -70,7 +83,7 @@ impl Agenda {
             any = true;
             self.list.append(&day_heading(day));
             for o in here {
-                self.list.append(&event_row(&self.ctx, o, Some(day)));
+                self.list.append(&event_row(&self.ctx, o, Some(day), self.compact));
             }
         }
         self.empty.set_title(empty.0);
@@ -90,7 +103,7 @@ impl Agenda {
                 self.list.append(&day_heading(o.first_day));
                 last = Some(o.first_day);
             }
-            self.list.append(&event_row(&self.ctx, o, None));
+            self.list.append(&event_row(&self.ctx, o, None, self.compact));
         }
         self.empty.set_title(&i18n("No Events Found"));
         self.empty.set_description(Some(&i18n("Try other words.")));
@@ -123,7 +136,7 @@ fn day_heading(day: NaiveDate) -> gtk::ListBoxRow {
 }
 
 /// One event, as the agenda, a search or a day's list shows it.
-pub(crate) fn event_row(ctx: &Shared, o: &Occ, on: Option<NaiveDate>) -> gtk::ListBoxRow {
+pub(crate) fn event_row(ctx: &Shared, o: &Occ, on: Option<NaiveDate>, compact: bool) -> gtk::ListBoxRow {
     let c = ctx.borrow();
     let color = c.color(o);
     let standing = c.standing(o);
@@ -138,11 +151,19 @@ pub(crate) fn event_row(ctx: &Shared, o: &Occ, on: Option<NaiveDate>) -> gtk::Li
         super::paint::dot(cr, f64::from(w) / 2.0, f64::from(h) / 2.0, 5.0, color);
     });
     hbox.append(&swatch);
-    let time = gtk::Label::new(Some(&time_text(o, on)));
+    // Narrow, the start alone; the whole span is in the tooltip.
+    let full = time_text(o, on);
+    let shown = if compact && !o.all_day && o.end > o.start && o.first_day == o.last_day {
+        crate::datefmt::time(o.start)
+    } else {
+        full.clone()
+    };
+    let time = gtk::Label::new(Some(&shown));
+    time.set_tooltip_text(Some(&full));
     time.add_css_class("dim-label");
     time.add_css_class("numeric");
     time.set_xalign(0.0);
-    time.set_width_chars(18);
+    time.set_width_chars(if compact { 8 } else { 18 });
     time.set_valign(gtk::Align::Start);
     hbox.append(&time);
     let words = gtk::Box::new(gtk::Orientation::Vertical, 2);
@@ -249,7 +270,7 @@ pub(crate) fn day_popover(ctx: &Shared, day: NaiveDate, occs: &[Occ], anchor: &A
         .collect();
     here.sort_by_key(|o| (!o.all_day, o.start));
     for o in here {
-        list.append(&event_row(ctx, o, Some(day)));
+        list.append(&event_row(ctx, o, Some(day), false));
     }
     let title = gtk::Label::new(Some(&long_day(day)));
     title.add_css_class("heading");

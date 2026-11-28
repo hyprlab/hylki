@@ -253,5 +253,10 @@ impl AppModel {
         widgets
             .content_stack
             .add_named(self.calendar_page.widget(), Some("calendar"));
+        let mut headers = Vec::new();
+        for root in [gallery_tv.upcast_ref::<gtk::Widget>(), self.contacts_page.widget().upcast_ref()] {
+            super::calendar::window_control_headers(root, &mut headers);
+        }
+        let _ = self.controls_headers.set(headers);
     }
 }

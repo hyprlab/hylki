@@ -1,6 +1,7 @@
-//! Settings → Calendar (#715): the shape of the week and the working day,
-//! what a new event starts with, and declined meetings and reminders.
-//! Saved to `calendar.toml`, which the calendar reads.
+//! Settings → Calendar (#715): the calendar on or off, the shape of the
+//! week and the working day, what a new event starts with, and declined
+//! meetings and reminders. Saved to `calendar.toml`, which the calendar
+//! reads; the switch for the whole calendar is in `privacy.toml`.
 
 use std::rc::Rc;
 
@@ -32,10 +33,23 @@ fn combo(title: &str, labels: &[String], selected: usize) -> adw::ComboRow {
     row
 }
 
-/// The page. `changed` gets the settings after every change, saved.
-pub(crate) fn build(changed: impl Fn(CalendarPrefs) + 'static) -> adw::PreferencesPage {
+/// The page. `on` is whether the calendar is switched on, and `switched`
+/// gets the switch's changes; `changed` gets the settings after every
+/// change, saved.
+pub(crate) fn build(
+    on: bool,
+    switched: impl Fn(bool) + 'static,
+    changed: impl Fn(CalendarPrefs) + 'static,
+) -> adw::PreferencesPage {
     let changed: Rc<dyn Fn(CalendarPrefs)> = Rc::new(changed);
     let page = adw::PreferencesPage::new();
+    let master = adw::PreferencesGroup::new();
+    let enabled = adw::SwitchRow::new();
+    enabled.set_title(&i18n("Calendar"));
+    enabled.set_subtitle(&i18n("Off removes it from the sidebar and stops its reminders."));
+    enabled.set_active(on);
+    master.add(&enabled);
+    page.add(&master);
     let prefs = CalendarPrefs::load();
     // Each row changes one field of what is on disk now: the page keeps
     // its own layout (the view, hidden calendars) in the same file.
@@ -200,5 +214,16 @@ pub(crate) fn build(changed: impl Fn(CalendarPrefs) + 'static) -> adw::Preferenc
     });
     other.add(&reminders);
     page.add(&other);
+    // The rest only matters with the calendar on.
+    let groups = [week, day, new, other];
+    for g in &groups {
+        g.set_sensitive(on);
+    }
+    enabled.connect_active_notify(move |r| {
+        for g in &groups {
+            g.set_sensitive(r.is_active());
+        }
+        switched(r.is_active());
+    });
     page
 }

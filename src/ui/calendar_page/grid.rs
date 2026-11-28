@@ -168,6 +168,11 @@ impl TimeGrid {
         self.redraw();
     }
 
+    /// Leave out the row of day names, where the day is named elsewhere.
+    pub(crate) fn hide_days(&self) {
+        self.header.set_visible(false);
+    }
+
     /// Where an occurrence is drawn, for a popover to point at.
     pub(crate) fn anchor_of(&self, key: &crate::calendar::model::OccKey) -> Option<Anchor> {
         let m = self.model.borrow();

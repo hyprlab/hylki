@@ -369,7 +369,8 @@ impl SimpleComponent for AppModel {
                                 // unless there is no reader pane (#475).
                                 set_show_start_title_buttons: false,
                                 #[watch]
-                                set_show_end_title_buttons: model.controls_in_list(),
+                                set_show_end_title_buttons: model.controls_in_list()
+                                    && !model.day_panel_shown(),
                                 // No folder title here — the sidebar's selection
                                 // already names it. An empty label keeps the
                                 // window's "Hylki" title from appearing instead.
@@ -496,9 +497,21 @@ impl SimpleComponent for AppModel {
                                 // Below the list the window's controls are
                                 // in the list's header, at the top.
                                 #[watch]
-                                set_show_end_title_buttons: !model.controls_in_list(),
-                                // Rightmost of the packed items, beside the window
-                                // controls: the overflow ⋯ that stands in for the
+                                set_show_end_title_buttons: !model.controls_in_list()
+                                    && !model.day_panel_shown(),
+                                // Rightmost, beside the day panel it opens and
+                                // closes (#715), while the calendar is on.
+                                pack_end = &gtk::ToggleButton {
+                                    set_icon_name: "x-office-calendar-symbolic",
+                                    set_tooltip_text: Some(i18n("Day Panel (Ctrl+Shift+D)").as_str()),
+                                    add_css_class: "flat",
+                                    #[watch]
+                                    set_visible: model.show_calendar,
+                                    #[watch]
+                                    set_active: model.day_panel,
+                                    connect_clicked[sender] => move |_| sender.input(AppMsg::ToggleDayPanel),
+                                },
+                                // Then the overflow ⋯ that stands in for the
                                 // action buttons while collapsed.
                                 pack_end: &model.reader_overflow_btn,
                                 add_css_class: "flat",
@@ -854,6 +867,13 @@ impl SimpleComponent for AppModel {
                         },
                     },
                     },
+                    // The calendar's day panel (#715), right of whatever
+                    // shows, never over the calendar itself.
+                    #[local_ref]
+                    day_panel -> gtk::Revealer {
+                        #[watch]
+                        set_reveal_child: model.day_panel_shown(),
+                    },
                     },
                     },
                 },
@@ -894,6 +914,11 @@ impl SimpleComponent for AppModel {
             model.start_tray(&sender);
         }
         start_contacts_sync(&sender);
+        if model.day_panel_shown() {
+            model
+                .calendar_page
+                .emit(crate::ui::calendar_page::CalendarInput::PanelShown);
+        }
         if model.contact_names {
             model.read_contact_names(&sender);
         }
@@ -911,6 +936,7 @@ impl SimpleComponent for AppModel {
         let reader_tag_btn = model.reader_tag_btn.clone();
         let reader_move_btn = model.reader_move_btn.clone();
         let reader_snooze_btn = model.reader_snooze_btn.clone();
+        let day_panel = model.day_panel_revealer.clone();
         let widgets = view_output!();
         let _ = model.reader_header.set(widgets.reader_header.clone());
         model.mail_split.wire(widgets.mail_split.clone(), &sender);
@@ -971,6 +997,7 @@ impl SimpleComponent for AppModel {
     }
 
     fn update(&mut self, msg: Self::Input, sender: ComponentSender<Self>) {
-        self.route(msg, sender)
+        self.route(msg, sender);
+        self.sync_window_controls();
     }
 }

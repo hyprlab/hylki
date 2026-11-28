@@ -152,7 +152,14 @@ impl AppModel {
     pub(super) fn stage_calendar(&self, sender: &ComponentSender<AppModel>) {
         use crate::calendar::prefs::View;
         use crate::ui::calendar_page::CalendarInput;
-        let Ok(steps) = std::env::var("HYLKI_SHOWCASE_CALENDAR") else {
+        // HYLKI_SHOWCASE_DAY_PANEL=1: the day panel beside the mail.
+        if std::env::var_os("HYLKI_SHOWCASE_DAY_PANEL").is_some() {
+            input_after(sender, 2, AppMsg::ToggleDayPanel);
+        }
+        let Some(steps) = std::env::var("HYLKI_SHOWCASE_CALENDAR")
+            .ok()
+            .filter(|s| !s.is_empty())
+        else {
             return;
         };
         input_after(sender, 2, AppMsg::ShowCalendar);

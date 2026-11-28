@@ -74,6 +74,10 @@ pub(crate) struct CalendarPrefs {
     pub(crate) hidden: Vec<String>,
     /// The height of an hour in the day and week views, in pixels.
     pub(crate) hour_height: f64,
+    /// Whether the day panel shows on the right of the window.
+    pub(crate) day_panel: bool,
+    /// Its width, in pixels.
+    pub(crate) day_panel_width: i32,
 }
 
 impl Default for CalendarPrefs {
@@ -92,6 +96,8 @@ impl Default for CalendarPrefs {
             default_calendar: String::new(),
             hidden: Vec::new(),
             hour_height: 48.0,
+            day_panel: false,
+            day_panel_width: 320,
         }
     }
 }

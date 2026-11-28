@@ -292,6 +292,9 @@ msgstr "Lesenbereich"
 msgid "Focus Mode"
 msgstr "Fokusmodus"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "Vollbild"
 
@@ -2039,6 +2042,10 @@ msgstr "Nachrichten durchsuchen (»Strg+F«)"
 
 msgid "Search, filters and sort"
 msgstr "Suchen, Filtern und Sortieren"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Druckvorschau (»Strg+Umschalt+P«)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4261,6 +4268,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Vorherige"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Nächster Treffer"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "Nichts zu exportieren."
+
+msgid "Yesterday"
+msgstr "Gestern"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Nichts zu exportieren."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Details"
 
@@ -4496,10 +4525,6 @@ msgstr "Kalender"
 msgid "Calendars set up on this computer show here."
 msgstr "Ordner auf diesem Computer"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "Nichts zu exportieren."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4518,6 +4543,9 @@ msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "vor {n} Minute"
 msgstr[1] "vor {n} Minuten"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6396,9 +6424,6 @@ msgstr "Zurückgestellt bis {when}"
 msgid "In {folder}"
 msgstr "In {folder}"
 
-msgid "Yesterday"
-msgstr "Gestern"
-
 msgid "Last 7 days"
 msgstr "Letzte 7 Tage"
 
@@ -8003,10 +8028,6 @@ msgstr "Zeigt Bereich mit Anhängen"
 
 msgid "Every account’s attachments in one place."
 msgstr "Dateianhänge aller Konten an einem zentralen Ort."
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Kalender"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -10066,6 +10087,10 @@ msgstr "Der gemeinsame Posteingang im hellen Modus."
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Kalender"
 
 #~ msgid "Contributors and translators"
 #~ msgstr "Beitragende und Übersetzende"

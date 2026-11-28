@@ -33,6 +33,7 @@ mod grid_draw;
 mod inspect;
 mod manage;
 mod month;
+mod panel;
 mod paint;
 mod quick;
 mod reminders;
@@ -75,6 +76,16 @@ pub(crate) enum CalendarInput {
     Written(String, Result<(), String>),
     /// Put the last change back.
     Undo,
+    /// The day panel came on screen.
+    PanelShown,
+    /// The day panel's day, a day back or on.
+    PanelStep(i32),
+    PanelToday,
+    /// Open the calendar on the day panel's day.
+    PanelOpen,
+    /// Whether the calendar is switched on at all (Settings → Calendar);
+    /// off, it shows no reminders and reads nothing in the background.
+    Enabled(bool),
     /// Time to look for alarms due.
     Tick,
     /// The new-event popover's answer, for the span it was opened over.
@@ -152,6 +163,8 @@ pub(crate) enum CalendarOutput {
     Compose { to: Vec<String>, subject: String },
     /// Settings → Contacts, where CalDAV accounts are added.
     AddAccount,
+    /// Show the calendar (from the day panel).
+    Open,
 }
 
 /// The widgets the page keeps hold of.
@@ -167,6 +180,7 @@ pub(crate) struct Parts {
     toggle: adw::ToggleGroup,
     toasts: adw::ToastOverlay,
     spinner: adw::Spinner,
+    panel: panel::DayPanel,
 }
 
 pub(crate) struct CalendarPage {
@@ -195,6 +209,12 @@ pub(crate) struct CalendarPage {
     shown: Rc<Vec<Occ>>,
     /// Alarms are shown up to here (Unix seconds).
     reminded_to: Option<i64>,
+    /// The day the day panel shows.
+    panel_day: NaiveDate,
+    /// Occurrences in the day panel, for its selection.
+    panel_shown: Rc<Vec<Occ>>,
+    /// Settings → Calendar's switch for the whole calendar.
+    enabled: bool,
 }
 
 impl Component for CalendarPage {
@@ -249,6 +269,9 @@ impl Component for CalendarPage {
             listed_at: None,
             shown: Rc::new(Vec::new()),
             reminded_to: None,
+            panel_day: today,
+            panel_shown: Rc::new(Vec::new()),
+            enabled: crate::config::load_privacy().show_calendar,
         };
         reminders::start(&sender);
         model.show_view();
@@ -269,6 +292,18 @@ impl Component for CalendarPage {
             CalendarInput::Written(uid, r) => self.on_written(uid, r, &sender),
             CalendarInput::Undo => self.undo_last(&sender),
             CalendarInput::Tick => self.on_tick(&sender),
+            CalendarInput::PanelShown => self.panel_shown(&sender),
+            CalendarInput::PanelStep(n) => {
+                self.panel_day += Duration::days(i64::from(n));
+                self.refresh_panel();
+            }
+            CalendarInput::PanelToday => {
+                self.panel_day = chrono::Local::now().date_naive();
+                self.refresh_panel();
+                self.parts.panel.grid.scroll_to_start(true);
+            }
+            CalendarInput::PanelOpen => self.panel_open(&sender),
+            CalendarInput::Enabled(on) => self.enabled = on,
             CalendarInput::NewEventDone(r, span) => self.new_event_done(r, span, &sender),
             CalendarInput::EditorDone {
                 outcome,
@@ -507,6 +542,7 @@ fn build(root: &gtk::Box, ctx: &Shared, prefs: &CalendarPrefs, sender: &Componen
     root.append(&main);
 
     connect_keys(root, sender, &search_bar);
+    let panel = panel::DayPanel::new(ctx.clone(), prefs.hour_height, sender);
     Parts {
         title,
         views,
@@ -518,6 +554,7 @@ fn build(root: &gtk::Box, ctx: &Shared, prefs: &CalendarPrefs, sender: &Componen
         toggle,
         toasts,
         spinner,
+        panel,
     }
 }
 
@@ -713,6 +750,7 @@ impl CalendarPage {
         let (first, n) = self.span();
         let from = crate::calendar::time::day_start(first);
         let to = crate::calendar::time::day_start(first + Duration::days(n));
+        self.refresh_panel();
         if !self.search.is_empty() {
             let found = self.search_results();
             self.shown = Rc::new(found.clone());

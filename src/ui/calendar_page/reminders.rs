@@ -60,6 +60,9 @@ fn alarm_service() -> bool {
 
 impl CalendarPage {
     fn reminders_on(&self) -> bool {
+        if !self.enabled {
+            return false;
+        }
         match self.prefs.reminders {
             Reminders::Never => false,
             Reminders::Always => true,

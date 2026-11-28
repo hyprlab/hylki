@@ -52,7 +52,43 @@ pub(super) fn calendar_init(configs: &[AccountConfig]) -> CalendarInit {
     }
 }
 
+/// The headers under `w` that show the window's controls.
+pub(super) fn window_control_headers(w: &gtk::Widget, out: &mut Vec<adw::HeaderBar>) {
+    use adw::prelude::*;
+    if let Some(h) = w.downcast_ref::<adw::HeaderBar>() {
+        if h.shows_end_title_buttons() {
+            out.push(h.clone());
+        }
+    }
+    let mut child = w.first_child();
+    while let Some(c) = child {
+        window_control_headers(&c, out);
+        child = c.next_sibling();
+    }
+}
+
 impl AppModel {
+    /// The window's controls go to the rightmost pane: the day panel while
+    /// it shows, else the view beside it. The mail panes' headers follow
+    /// by their own watches.
+    pub(super) fn sync_window_controls(&self) {
+        let panel = self.day_panel_shown();
+        if self.panel_controls.get() == Some(panel) {
+            return;
+        }
+        self.panel_controls.set(Some(panel));
+        self.calendar_page.model().set_panel_controls(panel);
+        for h in self.controls_headers.get().into_iter().flatten() {
+            h.set_show_end_title_buttons(!panel);
+        }
+    }
+
+    /// Whether the day panel is on screen: wanted, the calendar switched
+    /// on, and the calendar itself not showing.
+    pub(super) fn day_panel_shown(&self) -> bool {
+        self.day_panel && self.show_calendar && !self.showing_calendar
+    }
+
     /// Show the calendar in place of the mail panes.
     pub(super) fn show_calendar_view(&mut self) {
         self.close_sidebar_peek();
@@ -99,6 +135,19 @@ impl AppModel {
         let out = match msg {
             AppMsg::ShowCalendar => {
                 self.show_calendar_view();
+                return;
+            }
+            AppMsg::ToggleDayPanel => {
+                if !self.show_calendar {
+                    return;
+                }
+                self.day_panel = !self.day_panel;
+                let mut p = crate::calendar::prefs::CalendarPrefs::load();
+                p.day_panel = self.day_panel;
+                p.save();
+                if self.day_panel_shown() {
+                    self.calendar_page.emit(CalendarInput::PanelShown);
+                }
                 return;
             }
             AppMsg::Calendar(out) => out,
@@ -197,6 +246,7 @@ impl AppModel {
                     &sender,
                 );
             }
+            CalendarOutput::Open => self.show_calendar_view(),
             CalendarOutput::AddAccount => {
                 sender.input(AppMsg::OpenSettings);
                 sender.input(AppMsg::ShowSettingsPage("contacts".into()));

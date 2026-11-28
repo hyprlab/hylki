@@ -913,6 +913,16 @@ pub(crate) struct AppModel {
     pub(super) calendar_page: Controller<crate::ui::calendar_page::CalendarPage>,
     /// Whether the content area shows the calendar.
     pub(super) showing_calendar: bool,
+    /// Whether the calendar's day panel is wanted on the window's right
+    /// (it never shows over the calendar itself).
+    pub(super) day_panel: bool,
+    /// The day panel's slide-in, beside the content area.
+    pub(super) day_panel_revealer: gtk::Revealer,
+    /// The headers of the gallery and Contacts that carry the window's
+    /// controls, which go to the day panel while it shows.
+    pub(super) controls_headers: std::cell::OnceCell<Vec<adw::HeaderBar>>,
+    /// Whether the day panel has the controls, as last set.
+    pub(super) panel_controls: std::cell::Cell<Option<bool>>,
     /// True when the attachments gallery replaces the mail panes.
     pub(super) showing_gallery: bool,
     /// Whether the Outbox is showing instead of the mail panes.

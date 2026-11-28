@@ -261,6 +261,9 @@ msgstr "Leesvenster"
 msgid "Focus Mode"
 msgstr "Focusmodus"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "Volledig scherm"
 
@@ -2039,6 +2042,10 @@ msgstr "Berichten zoeken (Ctrl+F)"
 
 msgid "Search, filters and sort"
 msgstr "Zoeken, filteren en sorteren"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Afdrukvoorbeeld (Ctrl+Shift+P)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4259,6 +4266,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Vorige"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Volgende overeenkomst"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "Niets om te exporteren."
+
+msgid "Yesterday"
+msgstr "Gisteren"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Niets om te exporteren."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Details"
 
@@ -4494,10 +4523,6 @@ msgstr "Kalender"
 msgid "Calendars set up on this computer show here."
 msgstr "Mappen op deze computer"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "Niets om te exporteren."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4516,6 +4541,9 @@ msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "{n} minuten geleden"
 msgstr[1] "{n} minuten geleden"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6381,9 +6409,6 @@ msgstr "Uitgesteld tot {when}"
 msgid "In {folder}"
 msgstr "In {folder}"
 
-msgid "Yesterday"
-msgstr "Gisteren"
-
 msgid "Last 7 days"
 msgstr "Laatste 7 dagen"
 
@@ -8000,10 +8025,6 @@ msgstr "Bijlagenbrowser weergeven"
 #, fuzzy
 msgid "Every account’s attachments in one place."
 msgstr "Blader door de bijlagen van elk account op één plek."
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Kalender"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -10053,6 +10074,10 @@ msgstr "De uniforme inbox in lichte modus"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Kalender"
 
 #~ msgid "Contributors and translators"
 #~ msgstr "Bijdragers en vertalers"

@@ -291,6 +291,9 @@ msgstr "Olvasás"
 msgid "Focus Mode"
 msgstr "Fókusz mód"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr ""
 
@@ -2158,6 +2161,10 @@ msgstr "Üzenetek keresése (Ctrl+F)"
 
 msgid "Search, filters and sort"
 msgstr "Keresés, szűrők és rendezés"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Nyomtatási előnézet (Ctrl+Shift+P)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4437,6 +4444,29 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Előző"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Következő találat"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "Nincs semmi exportálható."
+
+#, fuzzy
+msgid "Yesterday"
+msgstr "tegnap"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Nincs semmi exportálható."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Kiszolgáló adatai"
 
@@ -4673,10 +4703,6 @@ msgstr "Hozzáadás a naptárhoz"
 msgid "Calendars set up on this computer show here."
 msgstr "Ezen a számítógépen"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "Nincs semmi exportálható."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4695,6 +4721,9 @@ msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "{n} órája"
 msgstr[1] "{n} órája"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6644,10 +6673,6 @@ msgid "In {folder}"
 msgstr "Minden mappa megjelenítése"
 
 #, fuzzy
-msgid "Yesterday"
-msgstr "tegnap"
-
-#, fuzzy
 msgid "Last 7 days"
 msgstr "Vezetéknév"
 
@@ -8329,10 +8354,6 @@ msgstr "Csatolmány tároló"
 
 msgid "Every account’s attachments in one place."
 msgstr ""
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Hozzáadás a naptárhoz"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -10454,6 +10475,10 @@ msgstr "Az egységes beérkező levelek mappa világos üzemmódban"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Hozzáadás a naptárhoz"
 
 #~ msgid "Hylki couldn’t save your password"
 #~ msgstr "A Hylki nem tudta menteni a jelszavát"

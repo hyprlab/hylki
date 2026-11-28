@@ -598,8 +598,17 @@ impl AppModel {
             showing_gallery: false,
             contacts_page,
             showing_contacts: false,
+            day_panel_revealer: {
+                let r = gtk::Revealer::new();
+                r.set_transition_type(gtk::RevealerTransitionType::SlideLeft);
+                r.set_child(Some(&calendar_page.model().panel_widget()));
+                r
+            },
+            controls_headers: std::cell::OnceCell::new(),
+            panel_controls: std::cell::Cell::new(None),
             calendar_page,
             showing_calendar: false,
+            day_panel: crate::calendar::prefs::CalendarPrefs::load().day_panel,
             showing_outbox: false,
             outbox_by_account: HashMap::new(),
             snoozed: super::snooze::load_snoozed(),

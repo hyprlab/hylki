@@ -129,6 +129,8 @@ pub(crate) enum AppMsg {
     ShowCalendar,
     /// What the calendar asks of the rest of the app.
     Calendar(crate::ui::calendar_page::CalendarOutput),
+    /// Show or hide the calendar's day panel (Ctrl+Shift+D).
+    ToggleDayPanel,
     /// Download an attachment the gallery knows of but has never fetched.
     GalleryFetch {
         account_id: u32,

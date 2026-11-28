@@ -1039,8 +1039,18 @@ mail: every calendar Evolution Data Server keeps, which is GNOME Calendar's
 and Evolution's, the ones of GNOME Online Accounts (Google, Microsoft 365,
 Nextcloud), and [CalDAV accounts](#carddav-accounts) set up here. Without
 Evolution Data Server, Hylki keeps calendars of its own as `.ics` files in
-`~/.local/share/hylki/calendars/`. **Settings → Sidebar → Show Calendar**
-takes the row away. The launcher's **Calendar** action opens Hylki on it.
+`~/.local/share/hylki/calendars/`. The switch at the top of **Settings →
+Calendar** turns the calendar off altogether: the row, the day panel and
+the reminders go. The launcher's **Calendar** action opens Hylki on it.
+
+The **day panel** shows one day's hours down the right of the window,
+beside the mail, Contacts or the attachments, with what is coming up in the
+week after it underneath. The calendar button at the right of the reader's
+toolbar, **Main Menu → Day Panel** or Ctrl+Shift+D shows and hides it; it
+stays out of the way while the calendar itself is open. The arrows move it
+a day at a time, the calendar button returns it to today, and its last
+button opens the calendar on that day. Events are made, moved, opened and
+answered in it as in the Day view.
 
 The header switches between **Day**, **Week**, **Month**, **Year** and
 **List**, and **Today**, the arrows and the keys below move through them.

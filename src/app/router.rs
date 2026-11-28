@@ -76,7 +76,9 @@ impl AppModel {
             | AppMsg::NotifyCount(..)
             | AppMsg::ToggleNotifications
             | AppMsg::StatusBarShown(..)) => self.on_notifications(msg, sender),
-            msg @ (AppMsg::ShowCalendar | AppMsg::Calendar(..)) => self.on_calendar(msg, sender),
+            msg @ (AppMsg::ShowCalendar | AppMsg::Calendar(..) | AppMsg::ToggleDayPanel) => {
+                self.on_calendar(msg, sender)
+            }
             msg @ (AppMsg::ShowAttachments
             | AppMsg::GalleryFetch { .. }
             | AppMsg::AttachmentsScanned { .. }

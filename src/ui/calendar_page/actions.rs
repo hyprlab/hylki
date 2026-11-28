@@ -85,7 +85,7 @@ impl CalendarPage {
 
     /// The occurrence `key` names, from the screen, else from its calendar.
     fn occ(&mut self, key: &OccKey) -> Option<Occ> {
-        if let Some(o) = find_occ(&self.shown, key) {
+        if let Some(o) = find_occ(&self.shown, key).or_else(|| find_occ(&self.panel_shown, key)) {
             return Some(o.clone());
         }
         let l = self.loaded.get_mut(&key.calendar)?;

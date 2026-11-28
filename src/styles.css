@@ -2892,3 +2892,12 @@ scrolledwindow.merge-dialog-scroll {
   background: none;
   box-shadow: 0 0 0 2px @accent_color;
 }
+/* The calendar's day panel on the window's right (#715). */
+.calendar-day-panel-heading {
+  padding: 10px 14px 2px 14px;
+}
+/* The day panel's left edge, a drag handle: wider than the line drawn on
+   it, so it is easy to catch. */
+.calendar-day-panel-edge {
+  padding: 0 4px 0 2px;
+}

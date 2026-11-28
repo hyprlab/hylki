@@ -262,6 +262,9 @@ msgstr "Okuma Bölmesi"
 msgid "Focus Mode"
 msgstr "Odak Modu"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "Tam Ekran"
 
@@ -2027,6 +2030,10 @@ msgstr "İletilerde ara (Ctrl+F)"
 
 msgid "Search, filters and sort"
 msgstr "Arama, filtreler ve sıralama"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Yazdırma Önizlemesi (Ctrl+Shift+P)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4249,6 +4256,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Önceki"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Sonraki eşleşme"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "Dışa aktarılacak bir şey yok."
+
+msgid "Yesterday"
+msgstr "Dün"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Dışa aktarılacak bir şey yok."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Ayrıntılar"
 
@@ -4484,10 +4513,6 @@ msgstr "Takvim"
 msgid "Calendars set up on this computer show here."
 msgstr "Bu bilgisayardaki klasörler"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "Dışa aktarılacak bir şey yok."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4506,6 +4531,9 @@ msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "{n} dakika önce"
 msgstr[1] "{n} dakika önce"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6378,9 +6406,6 @@ msgstr "{when} tarihine kadar ertelendi"
 msgid "In {folder}"
 msgstr "{folder} içinde"
 
-msgid "Yesterday"
-msgstr "Dün"
-
 msgid "Last 7 days"
 msgstr "Son 7 Gün"
 
@@ -7980,10 +8005,6 @@ msgstr "Ek Tarayıcısını Göster"
 #, fuzzy
 msgid "Every account’s attachments in one place."
 msgstr "Her hesabın eklerine tek bir yerden göz atın."
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Takvim"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "Simge şeridinin üzerine gelmek tam kenar çubuğunu açar."
@@ -10001,6 +10022,10 @@ msgstr "Açık kipte birleşik gelen kutusu"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Takvim"
 
 #~ msgid "Contributors and translators"
 #~ msgstr "Katkıda Bulunanlar ve Çevirmenler"

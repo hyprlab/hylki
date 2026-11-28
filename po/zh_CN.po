@@ -259,6 +259,9 @@ msgstr "阅读窗格"
 msgid "Focus Mode"
 msgstr "专注模式"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "全屏"
 
@@ -1899,6 +1902,10 @@ msgstr "搜索邮件（Ctrl+F）"
 
 msgid "Search, filters and sort"
 msgstr "搜索、过滤规则和排序"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "打印预览（Ctrl+Shift+P）"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4007,6 +4014,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "上一个"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "下一个匹配项"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "没有可导出的内容。"
+
+msgid "Yesterday"
+msgstr "昨天"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "没有可导出的内容。"
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "详情"
 
@@ -4231,10 +4260,6 @@ msgstr "日历"
 msgid "Calendars set up on this computer show here."
 msgstr "本机上的文件夹"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "没有可导出的内容。"
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4251,6 +4276,9 @@ msgstr "{n} 小时前"
 msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "{n} 分钟前"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -5993,9 +6021,6 @@ msgstr "已稍后处理至 {when}"
 msgid "In {folder}"
 msgstr "在 {folder} 中"
 
-msgid "Yesterday"
-msgstr "昨天"
-
 msgid "Last 7 days"
 msgstr "最近 7 天"
 
@@ -7543,10 +7568,6 @@ msgstr "显示附件浏览器"
 #, fuzzy
 msgid "Every account’s attachments in one place."
 msgstr "在一处浏览所有账户的附件。"
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "日历"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "悬停图标栏会浮出完整侧边栏。"
@@ -9476,6 +9497,10 @@ msgstr "浅色模式下的统一收件箱"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "日历"
 
 #~ msgid "Contributors and translators"
 #~ msgstr "贡献者与翻译者"

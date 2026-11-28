@@ -123,6 +123,12 @@ impl AppModel {
             PrefOutput::SetCalendarRow(show) => {
                 if pref!(self.show_calendar = show) {
                     self.sidebars_emit(SidebarInput::SetCalendarRow(show));
+                    self.calendar_page
+                        .emit(crate::ui::calendar_page::CalendarInput::Enabled(show));
+                    if self.day_panel_shown() {
+                        self.calendar_page
+                            .emit(crate::ui::calendar_page::CalendarInput::PanelShown);
+                    }
                     if !show && self.showing_calendar {
                         self.showing_calendar = false;
                         self.mirror_selection(crate::ui::sidebar::Sel::Unified);

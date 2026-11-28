@@ -15,8 +15,13 @@
   made, subscribed to by address, imported from `.ics`, recolored, hidden
   and searched. **Settings → Calendar** sets the week, working hours,
   new-event defaults and reminders, which show here where the desktop's
-  alarm service does not run. **Settings → Sidebar → Show Calendar** takes
-  the row away. Keys are in [Keyboard shortcuts](docs/KEYBOARD_SHORTCUTS.md#calendar).
+  alarm service does not run, and its first switch turns the calendar off
+  altogether. Keys are in [Keyboard shortcuts](docs/KEYBOARD_SHORTCUTS.md#calendar).
+
+- **New: the day panel** (#715). One day's hours down the right of the
+  window, with the week ahead under them, beside the mail, Contacts or the
+  attachments. The calendar button at the right of the reader's toolbar,
+  **Main Menu → Day Panel** or Ctrl+Shift+D shows and hides it.
 
 - **New: CalDAV accounts** (#715). The account form in Settings → Contacts
   (now **CalDAV and CardDAV Server**) has a **Calendars** switch, on by

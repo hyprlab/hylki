@@ -241,6 +241,16 @@ impl AppModel {
                 &[accel],
             );
         }
+        // Ctrl+Shift+D shows or hides the calendar's day panel (#715).
+        let day_panel = gtk::gio::SimpleAction::new("day-panel", None);
+        let s = sender.clone();
+        day_panel.connect_activate(move |_, _| s.input(AppMsg::ToggleDayPanel));
+        app.add_action(&day_panel);
+        gtk::prelude::GtkApplicationExt::set_accels_for_action(
+            &app,
+            "app.day-panel",
+            &["<Ctrl><Shift>d"],
+        );
         // Ctrl+Shift+F switches Focus Mode on and off.
         gtk::prelude::GtkApplicationExt::set_accels_for_action(
             &app,

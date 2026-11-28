@@ -261,6 +261,9 @@ msgstr "Панель чтения"
 msgid "Focus Mode"
 msgstr "Режим фокусировки"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "Полный экран"
 
@@ -2076,6 +2079,10 @@ msgstr "Поиск сообщений (Ctrl+F)"
 
 msgid "Search, filters and sort"
 msgstr "Поиск, фильтры и сортировка"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Предпросмотр печати (Ctrl+Shift+P)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4307,6 +4314,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Назад"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Следующее совпадение"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "Нечего экспортировать."
+
+msgid "Yesterday"
+msgstr "Вчера"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Нечего экспортировать."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Подробности"
 
@@ -4553,10 +4582,6 @@ msgstr "Календарь"
 msgid "Calendars set up on this computer show here."
 msgstr "Папки на этом компьютере"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "Нечего экспортировать."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4577,6 +4602,9 @@ msgid_plural "{n} minutes"
 msgstr[0] "{n} минут назад"
 msgstr[1] "{n} минут назад"
 msgstr[2] "{n} минут назад"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6474,9 +6502,6 @@ msgstr "Отложено до {when}"
 msgid "In {folder}"
 msgstr "В {folder}"
 
-msgid "Yesterday"
-msgstr "Вчера"
-
 msgid "Last 7 days"
 msgstr "Последние 7 дней"
 
@@ -8099,10 +8124,6 @@ msgstr "Показать браузер вложений"
 #, fuzzy
 msgid "Every account’s attachments in one place."
 msgstr "Просматривайте вложения каждой учётной записи в одном месте."
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Календарь"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "При наведении курсора на панель значков выводится вся боковая панель."
@@ -10153,6 +10174,10 @@ msgstr "Общие входящие в светлом режиме"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Календарь"
 
 #~ msgid "Contributors and translators"
 #~ msgstr "Участники и переводчики"

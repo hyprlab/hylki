@@ -263,6 +263,9 @@ msgstr "Pannello di lettura"
 msgid "Focus Mode"
 msgstr "Modalità focus"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "Schermo intero"
 
@@ -2030,6 +2033,10 @@ msgstr "Cerca messaggi (Ctrl+F)"
 
 msgid "Search, filters and sort"
 msgstr "Cerca, filtri e ordinamento"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Anteprima di stampa (Ctrl+Shift+P)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4257,6 +4264,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Precedente"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Corrispondenza successiva"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "Niente da esportare."
+
+msgid "Yesterday"
+msgstr "Ieri"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "Niente da esportare."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Dettagli"
 
@@ -4493,10 +4522,6 @@ msgstr "Calendario"
 msgid "Calendars set up on this computer show here."
 msgstr "Cartelle su questo dispositivo"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "Niente da esportare."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4515,6 +4540,9 @@ msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "{n} minuti fa"
 msgstr[1] "{n} minuti fa"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6376,9 +6404,6 @@ msgstr "Posticipata fino a {when}"
 msgid "In {folder}"
 msgstr "In {folder}"
 
-msgid "Yesterday"
-msgstr "Ieri"
-
 msgid "Last 7 days"
 msgstr "Ultimi 7 giorni"
 
@@ -7985,10 +8010,6 @@ msgstr "Mostra il menu degli allegati"
 
 msgid "Every account’s attachments in one place."
 msgstr ""
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Calendario"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr "Al passaggio del mouse sulle icone si apre l'intera barra laterale."
@@ -10025,6 +10046,10 @@ msgstr "La posta in arrivo unificata in modalità chiara"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Calendario"
 
 #~ msgid ""
 #~ "This is a beta build for trying upcoming changes early. Expect bugs and "

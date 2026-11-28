@@ -406,11 +406,18 @@ impl AppModel {
             view.clone(),
             Box::new(|| AppMsg::OpenContacts),
         );
-        go(
-            i18n("Calendar"),
-            view.clone(),
-            Box::new(|| AppMsg::ShowCalendar),
-        );
+        if self.show_calendar {
+            go(
+                i18n("Calendar"),
+                view.clone(),
+                Box::new(|| AppMsg::ShowCalendar),
+            );
+            go(
+                i18n("Day Panel"),
+                view.clone(),
+                Box::new(|| AppMsg::ToggleDayPanel),
+            );
+        }
         go(
             i18n("Attachments"),
             view.clone(),

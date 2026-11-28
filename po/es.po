@@ -261,6 +261,9 @@ msgstr "Panel de lectura"
 msgid "Focus Mode"
 msgstr "Modo de concentración"
 
+msgid "Day Panel"
+msgstr ""
+
 msgid "Fullscreen"
 msgstr "Pantalla completa"
 
@@ -2060,6 +2063,10 @@ msgstr "Buscar mensajes (Ctrl+F)"
 
 msgid "Search, filters and sort"
 msgstr "Buscar, filtrar y ordenar"
+
+#, fuzzy
+msgid "Day Panel (Ctrl+Shift+D)"
+msgstr "Vista previa de impresión (Ctrl+Shift+P)"
 
 #. The preview, not the print dialog: it shows what will come
 #. out and prints from there (#359).
@@ -4287,6 +4294,28 @@ msgid "The calendar and every event in it are deleted from this computer."
 msgstr ""
 
 #, fuzzy
+msgid "Previous Day"
+msgstr "Anterior"
+
+#, fuzzy
+msgid "Next Day"
+msgstr "Coincidencia siguiente"
+
+#, fuzzy
+msgid "Coming Up"
+msgstr "No hay nada que exportar."
+
+msgid "Yesterday"
+msgstr "Ayer"
+
+#, fuzzy
+msgid "Nothing Coming Up"
+msgstr "No hay nada que exportar."
+
+msgid "No events in the week ahead."
+msgstr ""
+
+#, fuzzy
 msgid "More Details…"
 msgstr "Detalles"
 
@@ -4522,10 +4551,6 @@ msgstr "Calendario"
 msgid "Calendars set up on this computer show here."
 msgstr "Carpetas de este equipo"
 
-#, fuzzy
-msgid "Nothing Coming Up"
-msgstr "No hay nada que exportar."
-
 msgid "No events in the next 60 days."
 msgstr ""
 
@@ -4544,6 +4569,9 @@ msgid "{n} minute"
 msgid_plural "{n} minutes"
 msgstr[0] "hace {n} minutos"
 msgstr[1] "hace {n} minutos"
+
+msgid "Off removes it from the sidebar and stops its reminders."
+msgstr ""
 
 msgid "First day of the week"
 msgstr ""
@@ -6456,9 +6484,6 @@ msgstr "Pospuesto hasta {when}"
 msgid "In {folder}"
 msgstr "En {folder}"
 
-msgid "Yesterday"
-msgstr "Ayer"
-
 msgid "Last 7 days"
 msgstr "Últimos 7 días"
 
@@ -8085,10 +8110,6 @@ msgstr "Mostrar explorador de adjuntos"
 #, fuzzy
 msgid "Every account’s attachments in one place."
 msgstr "Explora en un solo lugar los adjuntos de todas las cuentas."
-
-#, fuzzy
-msgid "Show Calendar"
-msgstr "Calendario"
 
 msgid "Hovering the icon rail floats the full sidebar out."
 msgstr ""
@@ -10156,6 +10177,10 @@ msgstr "La bandeja de entrada unificada en modo claro"
 
 msgid "Hyprlab"
 msgstr "Hyprlab"
+
+#, fuzzy
+#~ msgid "Show Calendar"
+#~ msgstr "Calendario"
 
 #~ msgid "Hylki couldn’t save your password"
 #~ msgstr "Hylki no pudo guardar tu contraseña"

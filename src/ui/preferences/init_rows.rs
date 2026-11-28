@@ -191,10 +191,7 @@ impl Preferences {
             .sidebar
             .show_attachments_row
             .set_active(init.show_attachments);
-        widgets
-            .sidebar
-            .show_calendar_row
-            .set_active(init.show_calendar);
+
     }
 
     /// Settings → Sidebar: the unified section, placements, start view, folder

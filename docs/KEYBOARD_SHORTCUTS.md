@@ -277,3 +277,4 @@ shortcuts.
 | <kbd>Ctrl</kbd>+<kbd>F</kbd> | Search events |
 | <kbd>Ctrl</kbd>+<kbd>R</kbd> | Read every calendar again, and ask the servers for changes |
 | <kbd>Ctrl</kbd>+wheel | Taller or shorter hours (Day and Week) |
+| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>D</kbd> | Show or hide the day panel, anywhere but the calendar |
